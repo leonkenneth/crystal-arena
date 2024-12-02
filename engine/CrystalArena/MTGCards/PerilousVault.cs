@@ -1,0 +1,33 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+
+  public class PerilousVault : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Perilous Vault")
+        .ManaCost("{4}")
+        .Type("Artifact")
+        .Text("{5},{T}, RemoveFromPlay Perilous Vault: RemoveFromPlay all nonland permanents.")
+        .FlavorText("The spirit dragon Ugin arranged the hedrons of Zendikar to direct leylines of energy. To disrupt one is to unleash devastation and chaos.")
+        .ActivatedAbility(p =>
+        {
+          p.Text = "{5},{T}, RemoveFromPlay Perilous Vault: RemoveFromPlay all nonland permanents.";
+
+          p.Cost = new AggregateCost(
+            new PayMana("{5}".Parse()), 
+            new Tap(),
+            new RemoveFromPlayOwnerCost());
+
+          p.Effect = () => new RemoveFromPlayAllCards(filter: (effect, card) => !card.Is().Backup);
+
+          p.TimingRule(new WhenOpponentControllsPermanents(selector: card => !card.Is().Backup));
+        });
+    }
+  }
+}

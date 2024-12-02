@@ -1,0 +1,27 @@
+# flyctl launch added from .idea/.idea.CrystalArena/.idea/.gitignore
+# Default ignored files
+.idea/.idea.CrystalArena/.idea/shelf
+.idea/.idea.CrystalArena/.idea/workspace.xml
+# Rider ignored files
+.idea/.idea.CrystalArena/.idea/modules.xml
+.idea/.idea.CrystalArena/.idea/contentModel.xml
+.idea/.idea.CrystalArena/.idea/projectSettingsUpdater.xml
+.idea/.idea.CrystalArena/.idea/.idea.CrystalArena.iml
+# Editor-based HTTP Client requests
+.idea/.idea.CrystalArena/.idea/httpRequests
+# Datasource local storage ignored files
+.idea/.idea.CrystalArena/.idea/dataSources
+.idea/.idea.CrystalArena/.idea/dataSources.local.xml
+
+# flyctl launch added from CrystalArena/.gitignore
+CrystalArena/obj
+CrystalArena/bin
+
+# flyctl launch added from CrystalArena.Tests/.gitignore
+CrystalArena.Tests/obj
+CrystalArena.Tests/bin
+
+# flyctl launch added from CrystalArena.Utils/.gitignore
+CrystalArena.Utils/obj
+CrystalArena.Utils/bin
+fly.toml

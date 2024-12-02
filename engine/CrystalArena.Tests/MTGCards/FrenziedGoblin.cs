@@ -1,0 +1,37 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using Infrastructure;
+  using Xunit;
+
+  public class FrenziedGoblin
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void TapBearOnAttack()
+      {
+        Battlefield(P1, "Frenzied Goblin", "Mountain");
+
+        P2.Life = 1;
+        Battlefield(P2, "Grizzly Bears", "Swamp");
+
+        RunGame(1);
+
+        Equal(0, P2.Life);
+      }
+
+      [Fact (Skip = "Old card")]
+      public void CantTapBearIfNoManaIsAvailable()
+      {
+        Battlefield(P1, "Frenzied Goblin");
+
+        P2.Life = 1;
+        Battlefield(P2, "Grizzly Bears", "Swamp");
+
+        RunGame(1);
+
+        Equal(1, P2.Life);
+      }
+    }
+  }
+}

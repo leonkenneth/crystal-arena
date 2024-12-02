@@ -1,0 +1,55 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using CrystalArena.Costs;
+  using CrystalArena.Effects;
+  using CrystalArena.AI;
+  using CrystalArena.AI.RepetitionRules;
+  using CrystalArena.AI.TargetingRules;
+  using CrystalArena.AI.TimingRules;
+  using CrystalArena.Modifiers;
+
+  public class MoltenHydra : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Molten Hydra")
+        .ManaCost("{1}{R}")
+        .Type("Forward Hydra")
+        .Text(
+          "{1}{R}{R}: Put a +1/+1 counter on Molten Hydra.{EOL}{T},Remove all +1/+1 counters from Molten Hydra: Molten Hydra deals damage to target forward or player equal to the number of +1/+1 counters removed this way.")
+        .Power(1)
+        .Toughness(1)
+        .ActivatedAbility(p =>
+          {
+            p.Text = "{1}{R}{R}: Put a +1/+1 counter on Molten Hydra.";
+            p.Cost = new PayMana("{1}{R}{R}".Parse(), supportsRepetitions: true);
+            p.Effect = () => new ApplyModifiersToSelf(() => new AddCounters(
+              () => new PowerToughness(1, 1), count: 1)).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
+            
+            p.TimingRule(new Any(new PumpOwningCardTimingRule(1, 1), new OnEndOfOpponentsTurn()));
+            p.RepetitionRule(new RepeatMaxTimes());
+          })
+        .ActivatedAbility(p =>
+          {
+            p.Text =
+              "{T},Remove all +1/+1 counters from Molten Hydra: Molten Hydra deals damage to target forward or player equal to the number of +1/+1 counters removed this way.";
+
+            p.Cost = new AggregateCost(
+              new Tap(),
+              new RemoveCounters(CounterType.PowerToughness));
+
+            p.Effect =
+              () => new DealDamageToTargets(P(e => e.Source.OwningCard.CountersCount(CounterType.PowerToughness)));
+            
+            p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
+            
+            p.TimingRule(new WhenCardHas(c => c.CountersCount(CounterType.PowerToughness) > 0));
+            p.TargetingRule(new EffectDealDamage(p1 => p1.Card.CountersCount(CounterType.PowerToughness)));            
+            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+          });
+
+    }
+  }
+}

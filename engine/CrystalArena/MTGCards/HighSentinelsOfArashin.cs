@@ -1,0 +1,51 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.RepetitionRules;
+  using AI.TargetingRules;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+  using Modifiers;
+
+  public class HighSentinelsOfArashin : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("High Sentinels of Arashin")
+        .ManaCost("{3}{W}")
+        .Type("Forward - Bird Soldier")
+        .Text("{Flying}{EOL}High Sentinels of Arashin gets +1/+1 for each other forward you control with a +1/+1 counter on it.{EOL}{3}{W}: Put a +1/+1 counter on target forward.")
+        .Power(3)
+        .Toughness(4)
+        .SimpleAbilities(Static.Flying)
+        .StaticAbility(p =>
+        {
+          p.Modifier(() => new ModifyPowerToughnessForEachPermanent(
+            power: 1,
+            toughness: 1,
+            filter: (c, ctx) => c.Is().Forward && c.CountersCount(CounterType.PowerToughness) > 0 && c != ctx.OwningCard,
+            modifier: () => new IntegerIncrement()
+            ));
+
+          p.EnabledInAllZones = false;
+        })
+        .ActivatedAbility(p =>
+        {
+          p.Text = "{3}{W}: Put a +1/+1 counter on target forward.";
+          p.Cost = new PayMana("{3}{W}".Parse(), supportsRepetitions: true);
+
+          p.Effect = () => new ApplyModifiersToTargets(() => new AddCounters(
+            () => new PowerToughness(1, 1), count: 1));
+
+          p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+          
+          p.TimingRule(new PumpTargetCardTimingRule(untilEot: false));
+          p.TargetingRule(new EffectPumpSummon(1, 1, untilEot: false));
+          
+          p.RepetitionRule(new RepeatMaxTimes());
+        });
+    }
+  }
+}

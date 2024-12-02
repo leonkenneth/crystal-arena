@@ -1,0 +1,41 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using System.Collections.Generic;
+  using System.Linq;
+  using Infrastructure;
+  using Xunit;
+
+  public class AboutFace
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void SwitchToKill()
+      {
+        Hand(P1, "About Face");
+        Battlefield(P1, "Treefolk Seedlings", "Mountain", "Forest", "Forest", "Forest", "Forest", "Forest");
+
+        P2.Life = 5;
+
+        RunGame(1);
+
+        Equal(0, P2.Life);
+      }
+
+      [Fact (Skip = "Old card")]
+      public void KillWall()
+      {
+        Hand(P1, "About Face");
+
+        Battlefield(P1, "Mountain", "Grizzly Bears");
+        Battlefield(P2, "Wall of Junk");
+
+        P2.Life = 2;
+
+        RunGame(1);
+
+        Equal(0, P2.Life);
+      }
+    }
+  }
+}

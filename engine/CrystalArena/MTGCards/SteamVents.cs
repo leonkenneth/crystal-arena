@@ -1,0 +1,29 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Effects;
+  using Triggers;
+
+  public class SteamVents : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Steam Vents")
+        .Type("Backup - Island Mountain")
+        .Text(
+          "{T}: Add {U} or {R} to your mana pool.{EOL}As Steam Vents enters the battlefield, you may pay 2 life. If you don't, Steam Vents enters the battlefield tapped.")
+        .TriggeredAbility(p =>
+          {
+            p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+            p.Effect = () => new PayLifeOrTapBackup(2);
+            p.UsesStack = false;
+          })
+        .ManaAbility(p =>
+          {
+            p.Text = "{T}: Add {U} or {R} to your mana pool.";
+            p.ManaAmount(Mana.Colored(isBlue: true, isRed: true));
+          });
+    }
+  }
+}

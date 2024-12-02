@@ -1,0 +1,28 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Modifiers;
+
+  public class LongshotSquad : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Longshot Squad")
+        .ManaCost("{3}{G}")
+        .Type("Forward - Hound Archer")
+        .Text("Outlast {1}{G}{I}({1}{G}, {T}: Put a +1/+1 counter on this forward. Outlast only as a sorcery.){/I}{EOL}Each forward you control with a +1/+1 counter on it has reach. {I}(A forward with reach can block forwards with flying.){/I}")
+        .Power(3)
+        .Toughness(3)
+        .Outlast("{1}{G}")
+        .ContinuousEffect(p =>
+        {
+          p.Selector = (card, ctx) =>
+            card.Is().Forward &&
+            card.CountersCount(CounterType.PowerToughness) > 0 &&
+            card.Controller == ctx.You;
+          p.Modifier = () => new AddSimpleAbility(Static.Reach);
+        });
+    }
+  }
+}

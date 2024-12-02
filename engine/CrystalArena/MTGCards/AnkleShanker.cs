@@ -1,0 +1,37 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Effects;
+  using Modifiers;
+  using Triggers;
+
+  public class AnkleShanker : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+          .Named("Ankle Shanker")
+          .ManaCost("{2}{R}{W}{B}")
+          .Type("Forward — Goblin Berserker")
+          .Text("{Haste}{EOL}Whenever Ankle Shanker attacks, forwards you control gain first strike and deathtouch until end of turn.")
+          .FlavorText("The stature of the fighter matters less than the depth of the cut.")
+          .Power(2)
+          .Toughness(2)
+          .SimpleAbilities(Static.Haste)
+          .TriggeredAbility(p =>
+          {
+            p.Text = "Whenever Ankle Shanker attacks, forwards you control gain first strike and deathtouch until end of turn.";
+
+            p.Trigger(new WhenThisAttacks());
+
+            p.Effect = () => new ApplyModifiersToPermanents(
+              selector: (c, ctx) => c.Is().Forward && ctx.You == c.Controller,               
+              modifiers: new CardModifierFactory[]
+              {
+                () => new AddSimpleAbility(Static.FirstStrike) { UntilEot = true },
+                () => new AddSimpleAbility(Static.Deathtouch) { UntilEot = true },
+              });
+          });
+    }
+  }
+}

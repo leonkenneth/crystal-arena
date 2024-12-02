@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CrystalArena.UserInterface.Shell"
+        xmlns:startscreenvm="clr-namespace:CrystalArena.UserInterface.StartScreen"
+        xmlns:playscreenvm="clr-namespace:CrystalArena.UserInterface.PlayScreen"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CrystalArena.UserInterface.Shell.View"
+        Title="View">
+    <Grid>
+        <Viewbox Stretch="Fill">
+
+            <Border Name="Canvas" BorderThickness="2" BorderBrush="#444">
+                <Grid>
+                    <!--<ContentControl Content="{ Binding }-->
+                    <!--<ContentControl x:Name="Dialog" />-->
+                </Grid>                            
+            </Border>
+
+        </Viewbox>
+    </Grid>
+</Window>

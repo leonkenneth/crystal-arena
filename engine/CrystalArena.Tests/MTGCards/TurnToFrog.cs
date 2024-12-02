@@ -1,0 +1,51 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using Infrastructure;
+  using Xunit;
+
+  public class TurnToFrog
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void TurnJuggernautThenBlockWithBear()
+      {
+        var juggernaut = C("Juggernaut");
+        Battlefield(P1, juggernaut);
+
+        Hand(P2, "Turn to Frog");
+        Battlefield(P2, "Grizzly Bears", "Island", "Island");
+        P2.Life = 5;
+
+        RunGame(1);
+
+        Equal(Zone.BreakZone, C(juggernaut).Zone);       
+      }
+    }
+
+    public class Predefined : PredefinedScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void CastTurnToFrog()
+      {
+        var juggernaut = C("Juggernaut");
+        var spell = C("Turn to Frog");
+
+        Hand(P1, spell);
+        Battlefield(P1, juggernaut);        
+
+        Exec(
+          At(Step.FirstMain)
+          .Cast(spell, target: juggernaut)
+          .Verify(() =>
+          {
+            True(C(juggernaut).Is().Artifact);
+            True(C(juggernaut).Power == 1);
+            True(C(juggernaut).Toughness == 1);
+            True(C(juggernaut).HasColor(CardColor.Water));
+          })
+          );      
+      }
+    }
+  }
+}

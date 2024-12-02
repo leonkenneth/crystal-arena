@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalArena", "CrystalArena\CrystalArena.csproj", "{18DCCAF4-D0D9-4C24-A2AE-857F720C5D33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalArena.Tests", "CrystalArena.Tests\CrystalArena.Tests.csproj", "{F516D297-9C00-40BB-8FDB-5B3F4731709B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalArena.Utils", "CrystalArena.Utils\CrystalArena.Utils.csproj", "{724E6F5E-9258-4235-8611-6655BB861320}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18DCCAF4-D0D9-4C24-A2AE-857F720C5D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18DCCAF4-D0D9-4C24-A2AE-857F720C5D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18DCCAF4-D0D9-4C24-A2AE-857F720C5D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18DCCAF4-D0D9-4C24-A2AE-857F720C5D33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F516D297-9C00-40BB-8FDB-5B3F4731709B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F516D297-9C00-40BB-8FDB-5B3F4731709B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F516D297-9C00-40BB-8FDB-5B3F4731709B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F516D297-9C00-40BB-8FDB-5B3F4731709B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{724E6F5E-9258-4235-8611-6655BB861320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724E6F5E-9258-4235-8611-6655BB861320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724E6F5E-9258-4235-8611-6655BB861320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724E6F5E-9258-4235-8611-6655BB861320}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

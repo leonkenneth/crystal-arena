@@ -1,0 +1,36 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.CombatRules;
+  using AI.TargetingRules;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+
+  public class JhoirasToolbox : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Jhoira's Toolbox")
+        .ManaCost("{2}")
+        .Type("Artifact Forward Insect")
+        .Text("{2}: Regenerate target artifact forward.")
+        .FlavorText("It entertained Jhoira to craft a kit that could bring her the tools.")
+        .Power(1)
+        .Toughness(1)
+        .ActivatedAbility(p =>
+          {
+            p.Text = "{2}: Regenerate target artifact forward.";
+            p.Cost = new PayMana(2.Colorless());
+            p.Effect = () => new RegenerateTarget();
+            p.TargetSelector.AddEffect(trg =>
+              trg.Is.Card(c => c.Is().Forward && c.Is().Artifact).On.Battlefield());
+
+            p.TimingRule(new RegenerateTargetTimingRule());
+            p.TargetingRule(new EffectGiveRegenerate());
+          })
+        .CombatRule(() => new RegenerateCombatRule(2.Colorless()));
+    }
+  }
+}

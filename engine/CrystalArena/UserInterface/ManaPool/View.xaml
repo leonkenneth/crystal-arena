@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="CrystalArena.UserInterface.ManaPool.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface">
+	<ContentControl >
+		<StackPanel Orientation="Horizontal" Margin="4,0,0,0">
+			<StackPanel.Resources>
+				<Style  Selector="TextBlock">
+					<Setter Property="Margin" Value="0,0,5,0" />
+				</Style>
+				<Style Selector="Image">
+					<Setter Property="Margin" Value="0,0,5,0" />
+					<Setter Property="Height" Value="18" />
+				</Style>
+
+			</StackPanel.Resources>
+			<Image Source="{CrystalArena:Media 'w.png'}" />
+			<TextBlock Text="{Binding WhiteCount}" />
+			<Image Source="{CrystalArena:Media 'u.png'}" />
+			<TextBlock Text="{Binding BlueCount}" />
+			<Image Source="{CrystalArena:Media 'b.png'}" />
+			<TextBlock Text="{Binding BlackCount}" />
+			<Image Source="{CrystalArena:Media 'r.png'}" />
+			<TextBlock Text="{Binding RedCount}" />
+			<Image Source="{CrystalArena:Media 'g.png'}" />
+			<TextBlock Text="{Binding GreenCount}" />
+			<Image Source="{CrystalArena:Media 'c.png'}" />
+			<TextBlock Text="{Binding ColorlessCount}" />
+			<Image Source="{CrystalArena:Media 'multi.png'}" />
+			<TextBlock Text="{Binding MultiCount}" />
+		</StackPanel>
+	</ContentControl>
+</UserControl>

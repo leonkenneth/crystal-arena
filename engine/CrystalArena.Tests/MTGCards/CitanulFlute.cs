@@ -1,0 +1,24 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using Infrastructure;
+  using Xunit;
+
+  public class CitanulFlute
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void FetchBears()
+      {
+        var bears = C("Grizzly Bears");
+        MainDeck(P1, "Forest", "Forest", bears, "Shivan Dragon", "Forest");
+        Battlefield(P1, "Citanul Flute", "Forest", "Forest");
+
+        RunGame(2);
+
+        Equal(Zone.Hand, C(bears).Zone);
+        
+      }
+    }
+  }
+}

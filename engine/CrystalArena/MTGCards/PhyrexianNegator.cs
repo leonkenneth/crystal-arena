@@ -1,0 +1,38 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Effects;
+  using Events;
+  using Triggers;
+
+  public class PhyrexianNegator : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Phyrexian Negator")
+        .ManaCost("{2}{B}")
+        .Type("Forward Horror")
+        .Text("{Trample}{EOL}Whenever Phyrexian Negator is dealt damage, sacrifice that many permanents.")
+        .FlavorText("They exist to cease.")
+        .Power(5)
+        .Toughness(5)
+        .SimpleAbilities(Static.Trample)
+        .TriggeredAbility(p =>
+          {
+            p.Text = "Whenever Phyrexian Negator is dealt damage, sacrifice that many permanents.";
+
+            p.Trigger(new OnDamageDealt(dmg =>
+              dmg.IsDealtToOwningCard));
+
+            p.Effect = () => new PlayerSacrificePermanents(
+              count: P(e => e.TriggerMessage<DamageDealtEvent>().Damage.Amount),
+              player: P(e => e.Controller),
+              filter: c => true,
+              text: "Select permanents to sacrifice.");
+
+            p.TriggerOnlyIfOwningCardIsInPlay = true;
+          });
+    }
+  }
+}

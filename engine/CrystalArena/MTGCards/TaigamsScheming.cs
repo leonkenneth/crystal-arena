@@ -1,0 +1,31 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TimingRules;
+  using Effects;
+  using CrystalArena.AI;
+
+  public class TaigamsScheming : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Taigam's Scheming")
+        .ManaCost("{1}{U}")
+        .Type("Sorcery")
+        .Text("Look at the top five cards of your library. Put any number of them into your breakZone and the rest back on top of your library in any order.")
+        .FlavorText("\"The Jeskai would have me bow in restraint. So I have found a people unafraid of true power.\"")
+        .Cast(p =>
+        {
+          p.Effect = () => new PutSelectedCardsIntoBreakZoneOthersOnTop(5);
+          p.TimingRule(new OnSecondMain());
+        })
+        .OverrideScore(p =>
+        {
+          // override the score so ai will play it
+          p.Hand = 0;
+          p.BreakZone = 100;
+        });
+    }
+  }
+}

@@ -1,0 +1,16 @@
+﻿namespace CrystalArena
+{
+  using System;
+  using Costs;
+
+  public class ActivatedAbilityParameters : AbilityParameters
+  {
+    public bool ActivateAsSorcery;
+    public bool ActivateOnlyOnceEachTurn;
+    public bool ActivateOnlyDuringYourTurn;
+    public Zone ActivationZone = Zone.Battlefield;
+    public Cost Cost;
+    public Action<Card> PutToZoneAfterActivation = delegate { };
+    public Func<Card, Game, bool> Condition = delegate { return true; };
+  }
+}

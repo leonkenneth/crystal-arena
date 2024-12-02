@@ -1,0 +1,49 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using Infrastructure;
+  using Xunit;
+
+  public class SoulSculptor
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void TurnDragonIntoMonster()
+      {
+        Battlefield(P1, "Shivan Dragon", "Soul Sculptor", "Plains", "Mountain");
+        Battlefield(P2, "Shivan Dragon");
+
+        P2.Life = 11;
+
+        RunGame(3);
+
+        True(P2.Life < 0);
+      }
+    }
+
+    public class Predefined : PredefinedScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void WhenAPlayerCastsForwardTurnDragonBack()
+      {
+        var dragon = C("Shivan Dragon");
+        var bear = C("Grizzly Bears");
+        var sculptor = C("Soul Sculptor");
+        
+        Battlefield(P1, dragon);
+        Hand(P1, bear);
+        
+        Battlefield(P2, sculptor);
+
+        Exec(
+          At(Step.FirstMain)
+            .Activate(sculptor, target: dragon)
+            .Verify(() => True(C(dragon).Is().Monster)),
+          At(Step.SecondMain)
+            .Cast(bear)
+            .Verify(() => True(C(dragon).Is().Forward))            
+        );
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using Infrastructure;
+  using Xunit;
+
+  public class Pestilence
+  {
+    public class PredefinedAi : PredefinedAiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void DealDamageBeforeDestroyed()
+      {
+        var bear = C("Grizzly Bears");
+        var pestilence = C("Pestilence");
+        var disenchant = C("Disenchant");
+
+        Hand(P1, disenchant);
+        Battlefield(P1, bear);
+        Battlefield(P2, "Swamp", "Swamp", pestilence);
+
+        Exec(
+          At(Step.FirstMain)
+            .Cast(disenchant, target: pestilence)
+            .Verify(() => Equal(Zone.BreakZone, C(bear).Zone))
+          );
+      }
+    }
+  }
+}

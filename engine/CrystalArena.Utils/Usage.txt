@@ -1,0 +1,9 @@
+﻿usage: uCrystalArena <command> [<args>]
+
+  list    Write available card names to standard output.
+  gen     Generates decks for sealed tournaments.
+  rate    Downloads ratings from gatherer and updates ratings file.
+  debug   Reproduces an error from debug report.
+  image   Create crops of missing card images.
+
+See 'uCrystalArena help <command>' for more information on specific command.

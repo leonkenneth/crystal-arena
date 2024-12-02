@@ -1,0 +1,30 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using CrystalArena.Costs;
+  using CrystalArena.Effects;
+  using CrystalArena.AI.TimingRules;
+
+  public class CelestialPrism : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Celestial Prism")
+        .ManaCost("{3}")
+        .Type("Artifact")
+        .Text("{2},{T}: Add one mana of any color to your mana pool.")
+        .ActivatedAbility(p =>
+          {
+            p.Text = "{2},{T}: Add one mana of any color to your mana pool.";
+
+            p.Cost = new AggregateCost(
+              new PayMana(2.Colorless()),
+              new Tap());
+
+            p.Effect = () => new AddManaToPool(Mana.Any);
+            p.TimingRule(new ConvertManaTimingRule(relativeCost: 1));
+          });
+    }
+  }
+}

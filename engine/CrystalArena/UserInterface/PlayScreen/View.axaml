@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="CrystalArena.UserInterface.PlayScreen.View" xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface"
+             xmlns:local="clr-namespace:CrystalArena.UserInterface.PlayScreen"
+             xmlns:playerboxvm="clr-namespace:CrystalArena.UserInterface.PlayerBox"
+             x:DataType="local:ViewModel">
+
+	<Grid>
+		<TextBlock>Test</TextBlock>
+		<Grid Background="#aaa">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="32" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="32" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="273" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<!-- Topbar -->
+			<Border Grid.ColumnSpan="2" Grid.Row="0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+                    <ContentControl x:Name="ManaPool" Grid.Column="0" Margin="0,0,0,0" />               
+                    <ContentControl x:Name="TurnNumber" Grid.Column="1" Margin="0,0,0,0" />
+                    <ContentControl x:Name="Steps" Grid.Column="2" Margin="0,0,0,0" />
+				</Grid>
+			</Border>
+			<!-- End Topbar -->
+			<!-- Sidebar -->
+			<Border Grid.Row="1" Background="{StaticResource BarBackground}">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="380" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<ContentControl x:Name="MagnifiedCard" Grid.Row="0" />
+					<ContentControl x:Name="Zones" Grid.Row="1" />
+				</Grid>
+			</Border>
+			<!-- End Sidebar -->
+			<!-- Battlefield -->
+			<Border Grid.Column="1" Grid.Row="1" Margin="2">
+				<Border.Background>
+					<ImageBrush Source="{CrystalArena:Background}" />
+				</Border.Background>
+				<Grid>
+					<Grid>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="*" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<ContentControl x:Name="OpponentsBattlefield" Grid.Row="0" />
+							<ContentControl x:Name="YourBattlefield" Grid.Row="1" />
+						</Grid>
+
+						<!--<ContentControl x:Name="LargeDialog"  IsVisible="{Binding LargeDialog, Converter={x:Static CrystalArena:Converters.NullToCollapsed}}" />
+						<ContentControl x:Name="SmallDialog"  IsVisible="{Binding SmallDialog, Converter={x:Static CrystalArena:Converters.NullToCollapsed}}" />
+						<ContentControl x:Name="StackVm" HorizontalAlignment="Right" Margin="0,60,40,0" VerticalAlignment="Top" />-->
+					</Grid>
+
+					<!--<ContentControl  IsVisible="{Binding SearchInProgressMessage,Converter={x:Static CrystalArena:Converters.NullToCollapsed}}">
+						<StackPanel Orientation="Horizontal">
+							<Image Margin="0,0,10,0" Source="{StaticResource DialogIcon}" />
+							<TextBlock  Text="{Binding SearchInProgressMessage}" />
+						</StackPanel>
+					</ContentControl>-->
+				</Grid>
+			</Border>
+			<!-- End battlefield -->
+			<!-- Bottom bar -->
+			<Grid Grid.ColumnSpan="2" Grid.Row="2" Background="{StaticResource BarBackground}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />					
+				</Grid.ColumnDefinitions>
+				<StackPanel Orientation="Horizontal" Grid.Column="0" Margin="5,0,5,0">
+					<!--
+					<ContentControl Content="{ Binding You }">
+						
+						<ContentControl.DataTemplates>
+							<DataTemplate DataType="{x:Type playerboxvm:ViewModel}">
+								<playerboxvm:ViewModel Player="{ Binding You }"/>
+							</DataTemplate>
+							</ContentControl.DataTemplates>
+					</ContentControl>
+					<ContentControl Content="{ Binding Opponent }">
+						<ContentControl.DataTemplates>
+							<DataTemplate DataType="{x:Type playerboxvm:ViewModel}">
+								<playerboxvm:ViewModel />
+							</DataTemplate>
+						</ContentControl.DataTemplates>
+					</ContentControl>-->
+					<!--<playerboxvm:View Player="{ Binding You }"/>
+					<playerboxvm:View Player="{ Binding Opponent }"/>-->
+				</StackPanel>                                
+			</Grid>
+		</Grid>
+
+		<ContentControl VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="MessageLog" Margin="0,0,10,0" />
+		<ContentControl x:Name="QuitGameDialog" />        
+	</Grid>
+</UserControl>

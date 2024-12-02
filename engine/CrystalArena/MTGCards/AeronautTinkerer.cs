@@ -1,0 +1,26 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Modifiers;
+
+  public class AeronautTinkerer : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Aeronaut Tinkerer")
+        .ManaCost("{2}{U}")
+        .Type("Forward — Human Artificer")
+        .Text(
+          "Aeronaut Tinkerer has flying as long as you control an artifact.{I}(It can't be blocked except by forwards with flying or reach.){/I}")
+        .FlavorText("\"All tinkerers have their heads in the clouds. I don't intend to stop there.\"")
+        .Power(2)
+        .Toughness(3)
+        .StaticAbility(p =>
+          {
+            p.Modifier(() => new AddSimpleAbility(Static.Flying));
+            p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is().Artifact);
+          });
+    }
+  }
+}

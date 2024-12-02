@@ -1,0 +1,35 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using CrystalArena.Effects;
+  using CrystalArena.Modifiers;
+  using CrystalArena.Triggers;
+
+  public class EnergyField : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Energy Field")
+        .ManaCost("{1}{U}")
+        .Type("Monster")
+        .Text(
+          "Prevent all damage that would be dealt to you by sources you don't control.{EOL}When a card is put into your breakZone from anywhere, sacrifice Energy Field.")
+        .StaticAbility(p => p.Modifier(() => new AddDamagePrevention(modifier => new PreventDamageToTarget(
+          target: modifier.SourceCard.Controller,
+          sourceSelector: (card, ctx) => card.Controller != modifier.SourceCard.Controller)))
+         )                  
+        .TriggeredAbility(p =>
+          {
+            p.Text = "When a card is put into your breakZone from anywhere, sacrifice Energy Field.";
+            
+            p.Trigger(new OnZoneChanged(
+              to: Zone.BreakZone,
+              selector: (c, ctx) => ctx.You == c.Owner));
+            
+            p.Effect = () => new SacrificeOwner();
+            p.TriggerOnlyIfOwningCardIsInPlay = true;
+          });
+    }
+  }
+}

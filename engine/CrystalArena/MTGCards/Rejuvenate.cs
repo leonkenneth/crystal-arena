@@ -1,0 +1,24 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using CrystalArena.Effects;
+  using CrystalArena.AI.TimingRules;
+
+  public class Rejuvenate : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Rejuvenate")
+        .ManaCost("{3}{G}")
+        .Type("Sorcery")
+        .Text("You gain 6 life.{EOL}Cycling {2}({2}, Discard this card: Draw a card.)")
+        .Cycling("{2}")
+        .Cast(p =>
+          {
+            p.Effect = () => new ChangeLife(6, P(e => e.Controller));
+            p.TimingRule(new OnSecondMain());
+          });
+    }
+  }
+}

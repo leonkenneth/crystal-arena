@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="CrystalArena.UserInterface.MessageBox.Large" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface">
+
+	<Border>
+		<Border.Resources>
+			<Style  Selector="Button">
+				<Setter Property="FontSize" Value="16" />
+				<Setter Property="Margin" Value="0,0,20,0" />
+				<Setter Property="Foreground" Value="#fff" />
+			</Style>
+		</Border.Resources>
+		<Grid Width="400">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="36" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="50" />
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0" Background="{StaticResource BarBackground}">
+				<StackPanel Margin="10,0,10,0" Orientation="Horizontal">
+					<Image Margin="0,0,10,0" Source="{StaticResource DialogIcon}" />
+					<TextBlock  Text="{Binding Title}" />
+				</StackPanel>
+			</Border>
+			<Border Grid.Row="1" Background="#333">
+				<Grid Margin="30">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Image Height="50" Grid.Column="0" HorizontalAlignment="Center" Margin="10,0,25,0" VerticalAlignment="Center" Source="{Binding Icon, Converter={CrystalArena:Media}}" />
+
+					<TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Text="{Binding Message}" TextWrapping="Wrap" />
+				</Grid>
+			</Border>
+			<Border Grid.Row="2" Background="#1a1a1a">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+					<Button x:Name="Ok" Focusable="False" IsVisible="{Binding IsOk, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" Content="Ok" />
+					<Button x:Name="Yes" Focusable="False" IsVisible="{Binding IsYesNo, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" Content="Yes" />
+					<Button x:Name="No" Focusable="False" IsVisible="{Binding IsYesNo, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" Content="No" />
+					<Button x:Name="Cancel" Focusable="False" IsVisible="{Binding IsCancel, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" Content="Cancel" />
+				</StackPanel>
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>

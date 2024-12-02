@@ -1,0 +1,32 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TargetingRules;
+  using Effects;
+
+  public class SolemnOffering : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Solemn Offering")
+        .ManaCost("{2}{W}")
+        .Type("Sorcery")
+        .Text("Destroy target artifact or monster.{EOL}You gain 4 life.")
+        .FlavorText(
+          "\"You will be reimbursed for your donation.\"{EOL}\"The reimbursement is spiritual.\"{EOL}—Temple signs")
+        .Cast(p =>
+          {
+            p.Effect = () => new CompoundEffect(
+              new DestroyTargetPermanents(),
+              new ChangeLife(amount: 4, whos: P(e => e.Controller)));
+
+            p.TargetSelector.AddEffect(trg => trg
+              .Is.Card(card => card.Is().Artifact || card.Is().Monster)
+              .On.Battlefield());
+
+            p.TargetingRule(new EffectDestroy());
+          });
+    }
+  }
+}

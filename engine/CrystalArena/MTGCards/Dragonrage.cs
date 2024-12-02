@@ -1,0 +1,49 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using System.Linq;
+  using AI;
+  using AI.RepetitionRules;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+  using Modifiers;
+
+  public class Dragonrage : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Dragonrage")
+        .ManaCost("{2}{R}")
+        .Type("Summon")
+        .Text("Add {R} to your mana pool for each attacking forward you control. Until end of turn, attacking forwards you control gain \"{R}: This forward gets +1/+0 until end of turn.\"")
+        .FlavorText("\"Dragons in the skies of Tarkir—for the first time, it feels like my home.\"{EOL}—Sarkhan Vol")
+        .Cast(p =>
+        {
+          p.Effect = () => new CompoundEffect(
+            new AddManaToPool(P(e =>
+              Mana.Colored(ManaColor.Fire, e.Controller.Battlefield.Forwards.Count(x => x.IsAttacker)))),
+            new ApplyModifiersToPermanents(
+              selector: (c, ctx) => c.Is().Forward && c.IsAttacker && ctx.You == c.Controller,               
+              modifier: () =>
+              {
+                var ap = new ActivatedAbilityParameters
+                {
+                  Text = "{R}: This forward gets +1/+0 until end of turn.",
+                  Cost = new PayMana(Mana.Fire, supportsRepetitions: true),
+                  Effect = () => new ApplyModifiersToSelf(
+                    () => new AddPowerAndToughness(1, 0) {UntilEot = true}).SetTags(EffectTag.IncreasePower),
+                };
+
+                ap.TimingRule(new AfterYouDeclareAttackers());
+                ap.RepetitionRule(new RepeatMaxTimes());
+
+                return new AddActivatedAbility(new ActivatedAbility(ap));
+              }));
+
+          p.TimingRule(new AfterYouDeclareAttackers());
+        });
+    }
+  }
+}

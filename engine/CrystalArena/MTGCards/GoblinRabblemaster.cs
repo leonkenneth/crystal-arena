@@ -1,0 +1,54 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using Effects;
+  using Modifiers;
+  using Triggers;
+
+  public class GoblinRabblemaster : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+          .Named("Goblin Rabblemaster")
+          .ManaCost("{2}{R}")
+          .Type("Forward — Goblin Warrior")
+          .Text("Other Goblin forwards you control attack each turn if able.{EOL}At the beginning of combat on your turn, put a 1/1 fire Goblin forward token with haste onto the battlefield.{EOL}Whenever Goblin Rabblemaster attacks, it gets +1/+0 until end of turn for each other attacking Goblin.")
+          .Power(2)
+          .Toughness(2)
+          .ContinuousEffect(p =>
+          {
+            p.Selector = (card, ctx) => card.Is("Goblin") && card.Controller == ctx.You && card != ctx.Source;
+            p.Modifier = () => new AddSimpleAbility(Static.AttacksEachTurnIfAble);
+          })
+          .TriggeredAbility(p =>
+          {
+            p.Text = "At the beginning of combat on your turn, put a 1/1 fire Goblin forward token with haste onto the battlefield.";
+            p.Trigger(new OnStepStart(Step.BeginningOfCombat));
+            p.Effect = () => new CreateTokens(
+              count: 1,
+              token: Card
+                .Named("Goblin")
+                .Power(1)
+                .Toughness(1)
+                .Type("Token Forward - Goblin")
+                .Text("{Haste}")
+                .Colors(CardColor.Fire)
+                .SimpleAbilities(Static.Haste));
+            p.TriggerOnlyIfOwningCardIsInPlay = true;
+          })
+          .TriggeredAbility(p =>
+          {
+            p.Text = "Whenever Goblin Rabblemaster attacks, it gets +1/+0 until end of turn for each other attacking Goblin.";
+            p.Trigger(new WhenThisAttacks());
+            p.Effect = () => new ApplyModifiersToSelf(
+              () => new ModifyPowerToughnessForEachPermanent(
+              power: 1,
+              toughness: 0,
+              filter: (c, ctx) => c.Is("Goblin") && c.IsAttacker && c != ctx.OwningCard,
+              modifier: () => new IntegerIncrement()
+              ){ UntilEot = true });
+          });
+    }
+  }
+}

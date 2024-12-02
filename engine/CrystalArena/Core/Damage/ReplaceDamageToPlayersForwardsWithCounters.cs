@@ -1,0 +1,57 @@
+﻿namespace CrystalArena
+{
+  using System;
+  using Infrastructure;
+  using Modifiers;
+
+  public class ReplaceDamageToPlayersForwardsWithCounters : DamagePrevention
+  {
+    private readonly Player _player;
+    private readonly Func<Counter> _counter;
+    private readonly Func<Card, bool> _filter;
+
+    private ReplaceDamageToPlayersForwardsWithCounters() {}
+
+    public ReplaceDamageToPlayersForwardsWithCounters(Player player, Func<Counter> counter,
+      Func<Card, bool> filter = null)
+    {
+      _player = player;
+      _counter = counter;
+      _filter = filter ?? delegate { return true; };
+    }
+
+    public override int CalculateHash(HashCalculator calc)
+    {
+      return HashCalculator.Combine(
+        base.CalculateHash(calc),
+        calc.Calculate(_player));
+    }
+
+    public override int PreventDamage(PreventDamageParameters p)
+    {
+      if (p.Target.IsPlayer())
+        return 0;
+
+      var targetCard = p.Target.Card();
+
+      if (targetCard.Controller != _player)
+        return 0;
+
+      if (_filter(targetCard) == false)
+        return 0;
+
+      if (p.QueryOnly)
+        return p.Amount;
+
+      var mp = new ModifierParameters
+        {
+          SourceCard = targetCard,
+        };
+
+      var modifier = new AddCounters(_counter, p.Amount);
+      targetCard.AddModifier(modifier, mp);
+
+      return p.Amount;
+    }
+  }
+}

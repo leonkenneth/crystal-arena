@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="CrystalArena.UserInterface.SelectEffectChoice.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cl="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro" xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface" xmlns:SelectEffectChoice="clr-namespace:CrystalArena.UserInterface.SelectEffectChoice">
+
+	<i:Interaction.Triggers>
+	
+	</i:Interaction.Triggers>
+
+	<Border>
+		<Border.Resources>
+			<Style Selector="TextBlock"  />
+		</Border.Resources>
+		<StackPanel Orientation="Horizontal">
+			<Image Margin="0,0,10,0" Source="{StaticResource DialogIcon}" />
+
+			<ItemsControl ItemsSource="{Binding Message}">
+				<ItemsControl.Resources>
+					<DataTemplate DataType="{x:Type System:String}">
+						<TextBlock  Foreground="#FFD700" Margin="4,0,0,0" Text="{Binding }" />
+					</DataTemplate>
+
+					<DataTemplate DataType="{x:Type SelectEffectChoice:EffectChoiceViewModel}">
+                        <ComboBox Margin="4,0,0,0" FontSize="16" VerticalAlignment="Center" ItemsSource="{Binding Choice.Options}" SelectedItem="{Binding Selected}" />
+					</DataTemplate>
+				</ItemsControl.Resources>
+
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+			</ItemsControl>
+
+			<TextBlock Margin="10,0,0,0" Text="(Press Spacebar, when done.) " />
+		</StackPanel>
+	</Border>
+</UserControl>

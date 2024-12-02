@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="CrystalArena.UserInterface.LoadScreen.View"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource StartScreenBackground}">
+
+    <StackPanel  VerticalAlignment="Center">
+        <TextBlock HorizontalAlignment="Center" Foreground="#fff" FontSize="30"  Text="{Binding LoadingMessage}" />
+        <TextBlock HorizontalAlignment="Center" Foreground="#fff" FontSize="15" Margin="0,10,0,0"  Text="{Binding Completed, StringFormat={}{0} %}" />
+    </StackPanel>
+            
+</UserControl>

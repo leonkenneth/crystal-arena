@@ -1,0 +1,37 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+  using Modifiers;
+
+  public class XathridSlyblade : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Xathrid Slyblade")
+        .ManaCost("{2}{B}")
+        .Type("Forward — Human Assassin")
+        .Text("{Hexproof} {I}(This forward can't be the target of spells or abilities your opponents control.){/I}{EOL}{3}{B}: Until end of turn, Xathrid Slyblade loses hexproof and gains first strike and deathtouch. {I}(It deals combat damage before forwards without first strike. Any amount of damage it deals to a forward is enough to destroy it.){/I}")
+        .Power(2)
+        .Toughness(1)
+        .SimpleAbilities(Static.Hexproof)
+        .ActivatedAbility(p =>
+        {
+          p.Text = "{3}{B}: Until end of turn, Xathrid Slyblade loses hexproof and gains first strike and deathtouch.";
+
+          p.Cost = new PayMana("{3}{B}".Parse());
+
+          p.Effect = () => new ApplyModifiersToSelf(
+            () => new RemoveAbility(Static.Hexproof) {UntilEot = true},
+            () => new AddSimpleAbility(Static.FirstStrike) {UntilEot = true},
+            () => new AddSimpleAbility(Static.Deathtouch) { UntilEot = true });
+
+          p.TimingRule(new Any(new AfterOpponentDeclaresAttackers(), new AfterOpponentDeclaresBlockers()));
+          p.TimingRule(new WhenCardHas(c => !c.Has().Deathtouch));
+        });
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TargetingRules;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+
+  public class Raze : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Raze")
+        .ManaCost("{R}")
+        .Type("Sorcery")
+        .Text("As an additional cost to cast Raze, sacrifice a backup.{EOL}Destroy target backup.")
+        .FlavorText("The viashino believe that the oldest mountains hate everyone equally.")
+        .OverrideScore(p => p.Hand = 50)
+        .Cast(p =>
+          {
+            p.Cost = new AggregateCost(
+              new PayMana(Mana.Fire),
+              new Sacrifice());
+
+            p.Effect = () => new DestroyTargetPermanents();
+
+            p.TargetSelector.AddCost(
+              trg => trg.Is.Card(c => c.Is().Backup, ControlledBy.SpellOwner).On.Battlefield(),
+              trg => { trg.Message = "Select a backup to sacrifice."; });
+
+            p.TargetSelector.AddEffect(
+              trg => trg.Is.Card(c => c.Is().Backup).On.Battlefield(),
+              trg => { trg.Message = "Select a backup to destroy."; });
+
+            p.TimingRule(new OnFirstMain());
+            p.TargetingRule(new CostSacrificeEffectDestroy());
+          });
+    }
+  }
+}

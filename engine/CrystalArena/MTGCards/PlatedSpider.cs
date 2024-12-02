@@ -1,0 +1,20 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+
+  public class PlatedSpider : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Plated Spider")
+        .ManaCost("{4}{G}")
+        .Type("Forward Spider")
+        .Text("{Reach}")
+        .FlavorText("Most spiders wait patiently for their prey to arrive. Most spiders aren't forty feet tall.")
+        .Power(4)
+        .Toughness(4)
+        .SimpleAbilities(Static.Reach);
+    }
+  }
+}

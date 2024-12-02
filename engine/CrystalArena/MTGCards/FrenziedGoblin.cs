@@ -1,0 +1,37 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TargetingRules;
+  using Effects;
+  using Modifiers;
+  using Triggers;
+
+  public class FrenziedGoblin : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Frenzied Goblin")
+        .ManaCost("{R}")
+        .Type("Forward — Goblin Berserker")
+        .Text("Whenever Frenzied Goblin attacks, you may pay {R}. If you do, target forward can't block this turn.")
+        .FlavorText("What he lacks in stature, he makes up for with enthusiasm.")
+        .Power(1)
+        .Toughness(1)
+        .TriggeredAbility(p =>
+          {
+            p.Text =
+              "Whenever Frenzied Goblin attacks, you may pay {R}. If you do, target forward can't block this turn.";
+            p.Trigger(new WhenThisAttacks());
+
+            p.Effect = () => new PayManaThen(
+              amount: Mana.Fire,
+              effect: new ApplyModifiersToTargets(() =>
+                new AddSimpleAbility(Static.CannotBlock) {UntilEot = true}));
+
+            p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+            p.TargetingRule(new EffectTapForward());
+          });
+    }
+  }
+}

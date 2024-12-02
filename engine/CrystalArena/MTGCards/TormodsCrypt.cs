@@ -1,0 +1,37 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TargetingRules;
+  using AI.TimingRules;
+  using Costs;
+  using Effects;
+
+  public class TormodsCrypt : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Tormod's Crypt")
+        .ManaCost("{0}")
+        .Type("Artifact")
+        .Text("{T}, Sacrifice Tormod's Crypt: RemoveFromPlay all cards from target player's breakZone.")        
+        .Cast(p => p.TimingRule(new OnFirstMain()))        
+        .ActivatedAbility(p =>
+        {
+          p.Text = "{T}, Sacrifice Tormod's Crypt: RemoveFromPlay all cards from target player's breakZone.";
+          p.Cost = new AggregateCost(
+            new Tap(),
+            new Sacrifice());
+
+          p.Effect = () => new RemoveFromPlayAllCards(
+            from: Zone.BreakZone);
+
+          p.TargetSelector.AddEffect(trg => trg.Is.Player());
+          
+          p.TimingRule(new WhenTopSpellTargetsCardInBreakZone());
+          
+          p.TargetingRule(new EffectOpponent());          
+        });
+    }
+  }
+}

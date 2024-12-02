@@ -1,0 +1,131 @@
+﻿namespace CrystalArena.Tests.Cards
+{
+  using System.Linq;
+  using Infrastructure;
+  using Xunit;
+
+  public class Shock
+  {
+    public class Ai : AiScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void BugDoNotShockPlayerWhenLifeIsHigh()
+      {
+        var shock = C("Shock");
+        Battlefield(P1, "Mountain");
+        Hand(P1, shock);
+
+        RunGame(maxTurnCount: 2);
+
+        Assert.True(P1.Hand.Contains(shock));
+      }
+
+      [Fact (Skip = "Old card")]
+      public void DoNotShockForwardsWithToughness3OrMore()
+      {
+        var shock = C("Shock");
+
+        Battlefield(P1, "Elvish Warrior");
+        Battlefield(P2, "Mountain");
+        Hand(P2, shock);
+
+        RunGame(maxTurnCount: 2);
+
+        True(P2.Hand.Contains(shock));
+      }
+
+      [Fact (Skip = "Old card")]
+      public void ShockForwardsWithTougness2OrLess()
+      {
+        var shock = C("Shock");
+        var bear = C("Grizzly Bears");
+
+        Battlefield(P1, bear);
+        Battlefield(P2, "Mountain");
+        Hand(P2, shock);
+
+        RunGame(maxTurnCount: 2);
+
+        False(P2.Hand.Contains(shock));
+        False(P1.Battlefield.Contains(bear));
+      }
+
+      [Fact (Skip = "Old card")]
+      public void ShockPlayerWhenLifeIsLow()
+      {
+        var shock = C("Shock");
+
+        Battlefield(P1, "Mountain");
+        Hand(P1, shock);
+
+        P2.Life = 2;
+
+        RunGame(maxTurnCount: 2);
+
+        False(P1.Hand.Contains(shock));
+        Equal(0, P2.Life);
+      }
+    }
+
+    public class Predefined : PredefinedScenario
+    {
+      [Fact (Skip = "Old card")]
+      public void DealDamageToForwardInResponseToMonster()
+      {
+        var forest = C("Forest");
+        var shock = C("Shock");
+        var bear = C("Grizzly Bears");
+        var armor = C("Blanchwood Armor");
+
+        Battlefield(P1, bear, forest);
+        Hand(P1, armor);
+        Hand(P2, shock);
+
+        Exec(
+          At(Step.FirstMain)
+            .Cast(armor, target: bear)
+            .Cast(shock, target: bear, stackShouldBeEmpty: false),
+          At(Step.SecondMain)
+            .Verify(() =>
+              {
+                Equal(2, P1.BreakZone.Count());
+                Equal(1, P2.BreakZone.Count());
+                Equal(2, C(bear).Power);
+              }));
+      }
+
+      [Fact (Skip = "Old card")]
+      public void DealDamageToPlayer()
+      {
+        var shock = C("Shock");
+
+        Hand(P1, shock);
+
+        Exec(
+          At(Step.Upkeep)
+            .Cast(shock, target: P2)
+            .Verify(() => Assert.Equal(18, P2.Life)));
+      }
+
+      [Fact (Skip = "Old card")]
+      public void KillForwardInResponse()
+      {
+        var shock1 = C("Shock");
+        var shock2 = C("Shock");
+        var behemoth = C("Llanowar Behemoth");
+
+        Hand(P1, shock1, shock2);
+        Battlefield(P2, behemoth);
+
+        Exec(
+          At(Step.FirstMain)
+            .Cast(shock1, target: behemoth)
+            .Cast(shock2, target: behemoth)
+            .Activate(behemoth, costTarget: behemoth, stackShouldBeEmpty: false)
+            .Verify(() =>
+              Equal(1, P2.Battlefield.Count()))
+          );
+      }
+    }
+  }
+}

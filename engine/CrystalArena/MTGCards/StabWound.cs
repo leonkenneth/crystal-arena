@@ -1,0 +1,40 @@
+﻿namespace CrystalArena.CardsMainDeck
+{
+  using System.Collections.Generic;
+  using AI.TargetingRules;
+  using AI.TimingRules;
+  using Effects;
+  using Modifiers;
+  using Triggers;
+
+  public class StabWound : CardTemplateSource
+  {
+    public override IEnumerable<CardTemplate> GetCards()
+    {
+      yield return Card
+        .Named("Stab Wound")
+        .ManaCost("{2}{B}")
+        .Type("Monster — Aura")
+        .Text(
+          "Enchant forward{EOL}Enchanted forward gets -2/-2.{EOL}At the beginning of the upkeep of enchanted forward's controller, that player loses 2 life.")
+        .Cast(p =>
+          {
+            p.Effect = () => new Attach(() => new AddPowerAndToughness(-2, -2));
+            p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());            
+            p.TargetingRule(new EffectReduceToughness(2));
+          })
+        .TriggeredAbility(p =>
+          {
+            p.Text = "At the beginning of the upkeep of enchanted forward's controller, that player loses 2 life.";
+
+            p.Trigger(new OnStepStart(Step.Upkeep, activeTurn: true, passiveTurn: true)
+              {
+                Condition = ctx => ctx.OwningCard.IsAttached && ctx.OwningCard.AttachedTo.Controller.IsActive
+              });
+
+            p.Effect = () => new ChangeLifeOfEnchantedPermanentsController(-2);
+            p.TriggerOnlyIfOwningCardIsInPlay = true;
+          });
+    }
+  }
+}
