@@ -7,9 +7,9 @@ namespace CrystalArena;
 
 public static class GameRepository
 {
-    private static Dictionary<int, IoC> _containers = new Dictionary<int, IoC>();
+    private static Dictionary<string, IoC> _containers = new Dictionary<string, IoC>();
     
-    private static IoC GetContainer(int gameId)
+    private static IoC GetContainer(string gameId)
     {
         if (!_containers.TryGetValue(gameId, out var container))
         {
@@ -19,21 +19,15 @@ public static class GameRepository
         return container;
     }
 
-    public static Ui ResolveUi(int id)
+    public static Ui ResolveUi(string id)
     {
         var ui = GetContainer(id).Resolve<Ui>();
         ui.GameId = id;
         return ui;
     }
 
-    public static IEnumerable<int> GameIds()
+    public static string NextId()
     {
-        return _containers.Keys;
-    }
-
-    public static int NextId()
-    {
-        if (!GameIds().Any()) return 1;
-        return GameIds().Max() + 1;
+        return System.Guid.NewGuid().ToString();
     }
 }

@@ -23,8 +23,6 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        /*BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);*/
         var builder = WebApplication.CreateBuilder(args);
         builder.WebHost
             .UseSentry(o =>
@@ -54,42 +52,41 @@ sealed class Program
         var app = builder.Build();
 
         app.UseCors("AllowAll");
-        app.MapGet("/games", () =>
-        {
-            return GameRepository.GameIds().Select(id => new { Id = id });
-        });
-        app.MapGet("/games/{id}", (int id) =>
+        
+        // Public API
+        app.MapGet("/games/{id}", (string id) =>
         {
             var ui = GameRepository.ResolveUi(id);
             return ui.Shell.ToJson();
         });
-        app.MapGet("/games/{id}/save", (int id) =>
-        {
-            var ui = GameRepository.ResolveUi(id);
-            var savedGame = ui.Match.Game.Save();
-            
-        });
-        app.MapPost("/games", () =>
-        {
-            var nextGameId = GameRepository.NextId();
-            var ui = GameRepository.ResolveUi(nextGameId);
-            var startScreenVM = ui.Dialogs.StartScreen.Create();
-            Task.Run(() => startScreenVM.PlayRandom());
-            return new { Id = nextGameId };
-        });
-        app.MapGet("/games/{gameId}/callback/{id}/{result}", (int gameId, string id, string result) =>
+        app.MapGet("/games/{gameId}/callback/{id}/{result}", (string gameId, string id, string result) =>
         {
             var ui = GameRepository.ResolveUi(gameId);
             ui.Shell.ProcessCallback(id, result);
             return "callbacked";
         });
-        app.MapGet("/games/{gameId}/oidcallback/{oid}/{result}", (int gameId, string oid, string result) =>
+        app.MapGet("/games/{gameId}/oidcallback/{oid}/{result}", (string gameId, string oid, string result) =>
         {
             var ui = GameRepository.ResolveUi(gameId);
             ui.Shell.ProcessOidCallback(oid, result);
             return "oid callbacked";
         });
-        app.MapPost("/testsentry", () =>
+        
+        app.MapGet("/internal/games/{id}/save", (string id) =>
+        {
+            var ui = GameRepository.ResolveUi(id);
+            var savedGame = ui.Match.Game.Save();
+            
+        });
+        app.MapPost("/internal/games", () =>
+        {
+            var nextGameId = GameRepository.NextId();
+            var ui = GameRepository.ResolveUi(nextGameId);
+            var startScreenVM = ui.Dialogs.StartScreen.Create();
+            Task.Run(() => startScreenVM.PlayRandom());
+            return new { Uuid = nextGameId, ui.PlayerToken };
+        });
+        app.MapPost("/internal/testsentry", () =>
         {
             SentrySdk.CaptureMessage("This is a test, clearly");
         });
