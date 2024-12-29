@@ -69,6 +69,16 @@
       _controller = controller;
     }
 
+    public object ToJson()
+    {
+      return new
+      {
+        Message,
+        MinCount = MinCount.GetValue(null),
+        MaxCount = MaxCount.GetValue(null)
+      };
+    }
+
     public bool IsTargetValid(ITarget target, object triggerMessage = null)
     {
       var parameters = new IsValidTargetParameters(_controller,

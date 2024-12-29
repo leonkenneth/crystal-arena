@@ -30,7 +30,7 @@ namespace CrystalArena.UserInterface.Shell
             {
                 var id = _nextId.ToString();
                 var type = obj.GetType();
-                var fullId = $"{type.FullName}:{id}";
+                var fullId = Encode($"{type.FullName}:{id}");
                 _objects.Add(fullId, obj);
                 _nextId++;
                 return fullId;
@@ -50,6 +50,12 @@ namespace CrystalArena.UserInterface.Shell
                 }
 
                 return result;
+            }
+
+            private string Encode(string plainText)
+            {
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+                return Convert.ToBase64String(plainTextBytes);
             }
         }
         public object Screen { get; set; }

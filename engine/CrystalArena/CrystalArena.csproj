@@ -16,7 +16,6 @@
             <DependentUpon>%(Filename)</DependentUpon>
         </Compile>
         <AvaloniaXaml Remove="UserInterface\**\*.axaml" />
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Include="UserInterface\*\View.axaml" />
     </ItemGroup>

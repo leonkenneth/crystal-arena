@@ -96,7 +96,7 @@
         var selectTargetParameters = new SelectTargetParameters
           {
             Validator = validator,
-            Instructions = "(Press enter when done.)"
+            Instructions = ""
           };
 
         var selectDialog = Ui.Dialogs.SelectTarget.Create(selectTargetParameters);

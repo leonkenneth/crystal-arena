@@ -12,7 +12,7 @@
     private readonly BindableCollection<ITarget> _selection = new BindableCollection<ITarget>();
     private readonly Action<ITarget> _targetSelected;
     private readonly Action<ITarget> _targetUnselected;
-    private readonly object _triggerMessage;
+    private readonly object? _triggerMessage;
     private readonly int? _x;
     
     public override object ToJson()
@@ -22,6 +22,8 @@
         Type = "SelectTarget",
         Text,
         Instructions,
+        TriggerMessage = _triggerMessage?.ToString(),
+        TargetValidator = TargetValidator.ToJson(),
         CanCancel = _canCancel,
         Oid = base.ToJsonWithOid()
       };
@@ -84,19 +86,7 @@
 
     private string GetDefaultInstructions()
     {
-      if (TargetValidator.MaxCount == null ||
-        TargetValidator.MinCount.GetValue(_x) < TargetValidator.MaxCount.GetValue(_x))
-      {
-        if (_canCancel)
-          return "(Press Enter when done. Press Esc to cancel.)";
-
-        return "(Press Enter when done.)";
-      }
-
-      if (_canCancel)
-        return "(Press Esc to cancel.)";
-
-      return null;
+      return "";
     }
 
     private void DefaultTargetSelected(ITarget target)
