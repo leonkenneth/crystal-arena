@@ -1,0 +1,45 @@
+services:
+  engine:
+    build:
+      context: ./engine
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5001/
+    volumes:
+      - ./engine:/src  # Mount source code for development
+    
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:5001
+    env_file:
+      - path: ./client/.env
+        required: false
+    volumes:
+      - ./client:/app  # Mount source code for development
+      - /app/node_modules  # Prevent overwriting node_modules
+    depends_on:
+      - engine
+
+  image_proxy:
+    build:
+      context: ./image_proxy
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+    env_file:
+      - path: ./image_proxy/.env
+        required: false
+    volumes:
+      - ./image_proxy:/app  # Mount source code for development
+      - /app/node_modules  # Prevent overwriting node_modules
