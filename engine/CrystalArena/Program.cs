@@ -24,8 +24,13 @@ sealed class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.WebHost
-            .UseSentry(o =>
+        
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+        {
+            builder.WebHost.UseUrls("http://localhost:5001");
+        }
+        
+        builder.WebHost.UseSentry(o =>
         {
             var dsnEnvVar = Environment.GetEnvironmentVariable("SENTRY_DSN");
             var sampleRateEnvVar = Environment.GetEnvironmentVariable("SENTRY_TRACE_SAMPLE_RATE");
@@ -52,6 +57,20 @@ sealed class Program
         var app = builder.Build();
 
         app.UseCors("AllowAll");
+        
+        // Add exception handling middleware
+        app.Use(async (context, next) =>
+        {
+            try
+            {
+                await next();
+            }
+            catch (GameRepository.GameNotFoundException ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+            }
+        });
         
         // Public API
         app.MapGet("/games/{id}", (string id) =>
@@ -81,7 +100,7 @@ sealed class Program
         app.MapPost("/internal/games", () =>
         {
             var nextGameId = GameRepository.NextId();
-            var ui = GameRepository.ResolveUi(nextGameId);
+            var ui = GameRepository.ResolveUi(nextGameId, createIfMissing: true);
             var startScreenVM = ui.Dialogs.StartScreen.Create();
             Task.Run(() => startScreenVM.PlayRandom());
             return new { Uuid = nextGameId, ui.PlayerToken };

@@ -152,12 +152,16 @@ namespace CrystalArena.UserInterface.Shell
             var screen = Screen as ViewModelBase;
             if (screen == null)
             {
-                return "No screen set or " +
-                       "screen is not a viewmodel.";
+                return new
+                {
+                    Loaded = false,
+                };
             }
 
             return new
                 {
+                    Loaded = true,
+                    Id = Ui.GameId,
                     Screen = screen.ToJson(),
                     MessageBox,
                     CurrentDialog = CurrentDialog?.ToJson()

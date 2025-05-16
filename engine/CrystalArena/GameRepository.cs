@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CrystalArena.UserInterface;
-
+using System;
 namespace CrystalArena;
 
 public static class GameRepository
 {
+    public class GameNotFoundException : Exception
+    {
+        public GameNotFoundException(string id) : base($"Game with id {id} not found")
+        {
+        }
+    }
+    
     private static Dictionary<string, IoC> _containers = new Dictionary<string, IoC>();
     
     private static IoC GetContainer(string gameId)
@@ -19,8 +26,17 @@ public static class GameRepository
         return container;
     }
 
-    public static Ui ResolveUi(string id)
+    public static bool Exists(string id)
     {
+        return _containers.ContainsKey(id);
+    }
+
+    public static Ui ResolveUi(string id, bool createIfMissing = false)
+    {
+        if (!createIfMissing && !Exists(id))
+        {
+            throw new GameNotFoundException(id);
+        }
         var ui = GetContainer(id).Resolve<Ui>();
         ui.GameId = id;
         return ui;

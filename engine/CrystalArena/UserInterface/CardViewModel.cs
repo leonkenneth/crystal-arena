@@ -88,37 +88,42 @@
     
     public override object ToJson()
     {
-      return new
+      var json = new Dictionary<string, object?>
       {
-        Type = "Card",
-        // Card
-        CardId = Card.Id,
-        Name,
-        HasXInCost,
-        ManaCost = ManaCost?.ToString(),
-        Illustration,
-        Text = Text.ToString(),
-        CharacterCount,
-        Power,
-        Toughness,
-        BasePower,
-        BaseToughness,
-        IsVisibleInUi,
-        Colors = Colors.Select(x => x.ToString()),
-        Counters,
-        SimpleAbilities,
-        Level,
-        Damage,
-        IsTapped,
-        HasSummoningSickness,
-        Set,
-        Rarity,
-        Loyality,
-        Serial,
-        Score,
-        // End card
-        Oid = base.ToJsonWithOid(),
+        ["type"] = "Card",
+        // Card properties
+        ["cardId"] = Card.Id,
+        ["cardTypes"] = Card.Type.BaseTypes.Select(x => x.ToString()),
+        ["jobs"] = Card.Jobs.Select(x => x.ToString()),
+        ["categories"] = Card.Categories.Select(x => x.ToString()),
+        ["name"] = Name,
+        ["hasXInCost"] = HasXInCost,
+        ["manaCost"] = ManaCost?.ToString(),
+        ["illustration"] = Illustration,
+        ["text"] = Text.ToString(),
+        ["characterCount"] = CharacterCount,
+        ["power"] = Power,
+        ["toughness"] = Toughness,
+        ["basePower"] = BasePower,
+        ["baseToughness"] = BaseToughness,
+        ["isVisibleInUi"] = IsVisibleInUi,
+        ["colors"] = Colors.Select(x => x.ToString()),
+        ["counters"] = Counters,
+        ["simpleAbilities"] = SimpleAbilities,
+        ["level"] = Level,
+        ["damage"] = Damage,
+        ["isTapped"] = IsTapped,
+        ["hasSummoningSickness"] = HasSummoningSickness,
+        ["set"] = Set,
+        ["rarity"] = Rarity,
+        ["loyality"] = Loyality,
+        ["serial"] = Serial,
+        ["score"] = Score,
+        // Base properties
+        ["oid"] = base.ToJsonWithOid()
       };
+
+      return json;
     }
 
     private void Update()

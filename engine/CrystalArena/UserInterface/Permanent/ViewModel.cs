@@ -7,6 +7,7 @@
   using Infrastructure;
   using Messages;
   using SelectTarget;
+  using System.Collections.Generic;
 
   public class ViewModel : CardViewModel, IReceive<UiInteractionChanged>, IReceive<PlayersInterestChanged>,
     IReceive<AttackerSelected>, IReceive<AttackerUnselected>, IReceive<BlockerSelected>, IReceive<BlockerUnselected>,
@@ -29,42 +30,17 @@
     
     public override object ToJson()
     {
-      return new
-      {
-        Type = "Permanent",
-        // Card
-        CardId = Card.Id,
-        Name,
-        HasXInCost,
-        ManaCost = ManaCost?.ToString(),
-        Illustration,
-        Text = Text.ToString(),
-        CharacterCount,
-        Power,
-        Toughness,
-        BasePower,
-        BaseToughness,
-        IsVisibleInUi,
-        Colors = Colors.Select(x => x.ToString()),
-        Counters,
-        SimpleAbilities,
-        Level,
-        Damage,
-        IsTapped,
-        HasSummoningSickness,
-        Set,
-        Rarity,
-        Loyality,
-        Serial,
-        Score,
-        // End card
-        IsFrozen,
-        IsPlayable,
-        IsTargetOfSpell,
-        IsSelectedForCombat = Marker > 0,
-        IsSelected,
-        Oid = base.ToJsonWithOid()
-      };
+      var json = (Dictionary<string, object>)base.ToJson();
+      
+      json["type"] = "Permanent"; // Override the Type
+      json["isFrozen"] = IsFrozen;
+      json["isPlayable"] = IsPlayable;
+      json["isTargetOfSpell"] = IsTargetOfSpell;
+      json["isSelectedForCombat"] = Marker > 0;
+      json["isSelected"] = IsSelected;
+      json["oid"] = base.ToJsonWithOid();
+      
+      return json;
     }
 
     public void Receive(AttackerJoinedCombatEvent message)

@@ -20,40 +20,14 @@
     
     public override object ToJson()
     {
-      var card = base.ToJson();
-      return new
-      {
-        Type = "Spell",
-        // Card
-        CardId = Card.Id,
-        Name,
-        HasXInCost,
-        ManaCost = ManaCost?.ToString(),
-        Illustration,
-        Text = Text.ToString(),
-        CharacterCount,
-        Power,
-        Toughness,
-        BasePower,
-        BaseToughness,
-        IsVisibleInUi,
-        Colors = Colors.Select(x => x.ToString()),
-        Counters,
-        SimpleAbilities,
-        Level,
-        Damage,
-        IsTapped,
-        HasSummoningSickness,
-        Set,
-        Rarity,
-        Loyality,
-        Serial,
-        Score,
-        // End card
-        IsPlayable,
-        IsSelected,
-        Oid = base.ToJsonWithOid(),
-      };
+      var json = (Dictionary<string, object?>)base.ToJson();
+      
+      json["type"] = "Spell"; // Override the Type
+      json["isPlayable"] = IsPlayable;
+      json["isSelected"] = IsSelected;
+      json["oid"] = base.ToJsonWithOid();
+      
+      return json;
     }
 
     public override void ReceiveMessageType(string type, string message)
