@@ -131,6 +131,8 @@
       prerequisites.DistributeAmount = _p.DistributeAmount;
       prerequisites.Card = _card;
       prerequisites.Rules = _p.Rules;
+      prerequisites.PlayZone = _p.PlayZone;
+      prerequisites.AbilityId = _p.Id;
 
       return prerequisites;
     }

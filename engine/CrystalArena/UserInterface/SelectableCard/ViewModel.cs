@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace CrystalArena.UserInterface.SelectableCard
 {
@@ -15,37 +16,13 @@ namespace CrystalArena.UserInterface.SelectableCard
     
     public override object ToJson()
     {
-      return new
-      {
-        Type = "SelectableCard",
-        // Card
-        CardId = Card.Id,
-        Name,
-        HasXInCost,
-        ManaCost = ManaCost?.ToString(),
-        Illustration,
-        Text = Text.ToString(),
-        CharacterCount,
-        Power,
-        Toughness,
-        BasePower,
-        BaseToughness,
-        IsVisibleInUi,
-        Colors = Colors.Select(x => x.ToString()),
-        Counters,
-        SimpleAbilities,
-        Level,
-        Damage,
-        IsTapped,
-        HasSummoningSickness,
-        Set,
-        Rarity,
-        Loyality,
-        Serial,
-        // End card,
-        IsSelected,
-        Oid = base.ToJsonWithOid(),
-      };
+      var json = (Dictionary<string, object>)base.ToJson();
+      
+      json["type"] = "SelectableCard"; // Override the Type
+      json["isSelected"] = IsSelected;
+      json["oid"] = base.ToJsonWithOid();
+      
+      return json;
     }
 
     public virtual bool IsSelected { get; protected set; }

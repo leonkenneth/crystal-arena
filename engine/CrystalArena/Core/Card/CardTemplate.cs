@@ -63,6 +63,7 @@
           Effect = () => new AddManaToPool(new DynParam<ManaAmount>((effect, game) =>
             manaAmount, EvaluateAt.OnInit)),
           ActivationZone = Zone.Hand,
+          PlayZone = Zone.BreakZone,
           Text = $"Discard this: Add {{{manaColor}}}{{{manaColor}}} to your mana pool."
         };
         p.ManaAmount(manaAmount);
@@ -525,6 +526,7 @@
       {
         Cost = new PayMana(cp.ManaCost ?? Mana.Zero, cp.HasXInCost),
         Text = string.Format("Cast {0}.", cp.Name),
+        PlayZone = cp.Type.Summon ? Zone.Stack : Zone.Battlefield,
         Effect = () => new CastPermanent(new DynParam<bool>((effect, game) => effect.Source.OwningCard.Is().Backup, EvaluateAt.OnResolve))
       };
     }

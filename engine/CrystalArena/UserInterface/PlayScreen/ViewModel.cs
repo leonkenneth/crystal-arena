@@ -35,29 +35,6 @@
     public Zones.ViewModel Zones { get; set; }
     public virtual QuitGame.ViewModel QuitGameDialog { get; protected set; }
 
-    public override object AlternativeToJson()
-    {
-      var smallDialog = SmallDialog as ViewModelBase;
-      var largeDialog = LargeDialog as ViewModelBase;
-      return new
-      {
-        //ManaPool = ManaPool?.ToJson(),
-        //OpponentsBattlefield = OpponentsBattlefield?.ToJson(),
-        //YourBattlefield = YourBattlefield?.ToJson(),
-        You = You?.ToJson(),
-        //Opponent = Opponent?.ToJson(),
-        //SearchInProgressMessage = SearchInProgressMessage,
-        //MessageLog = MessageLog?.ToJson(),
-        Zones = Zones?.ToJson(),
-        QuitGameDialog = QuitGameDialog?.ToJson(),
-        SmallDialog = smallDialog?.ToJson(),
-        LargeDialog = largeDialog?.ToJson(),
-        Stack = StackVm?.ToJson(),
-        Steps = Steps?.ToJson(),
-        TurnNumber = TurnNumber?.ToJson(),
-      };
-    }
-
     public override object ToJson()
     {
       var smallDialog = SmallDialog as ViewModelBase;
@@ -70,7 +47,7 @@
         YourBattlefield = YourBattlefield?.ToJson(),
         You = You?.ToJson(),
         Opponent = Opponent?.ToJson(),
-        SearchInProgressMessage = SearchInProgressMessage,
+        SearchInProgressMessage,
         MessageLog = MessageLog?.ToJson(),
         Zones = Zones?.ToJson(),
         QuitGameDialog = QuitGameDialog?.ToJson(),
@@ -120,6 +97,11 @@
       }
 
       return dialog == SmallDialog;
+    }
+
+    public IEnumerable<object> GetAllDialogs()
+    {
+      return _largeDialogs.Concat(_smallDialogs).ToList();
     }
 
     public void CloseAllDialogs()

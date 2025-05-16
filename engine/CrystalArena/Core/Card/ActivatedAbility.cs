@@ -99,6 +99,8 @@
       prerequisites.Card = OwningCard;
       prerequisites.Rules = _p.Rules;
       prerequisites.MaxRepetitions = canPay.MaxRepetitions;
+      prerequisites.PlayZone = _p.PlayZone;
+      prerequisites.AbilityId = _p.Id;
 
       return prerequisites;
     }

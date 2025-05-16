@@ -10,6 +10,7 @@ namespace CrystalArena.UserInterface.Shell
   public interface IShell
   {
     public Ui Ui { get; set; }
+    public object CurrentSelectTargetDialog { get; }
     void ChangeScreen(object screen, bool blockUntilClosed = false, bool shouldClosePrevious = false);
     void ShowDialog(object dialog, DialogType type = DialogType.Large, InteractionState? interactionState = null, bool wait = false);
 

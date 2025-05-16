@@ -70,11 +70,8 @@
         _selection.Remove(message.Selection);
         return;
       }
-
-      if (TargetValidator.HasValidZone(message.Selection) == false)
-        return;
-
-      if (TargetValidator.IsTargetValid(message.Selection, _triggerMessage) == false)
+      
+      if (TargetValidator.HasValidZoneAndIsValid(message.Selection, _triggerMessage) == false)
         return;
 
       _targetSelected(message.Selection);

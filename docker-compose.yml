@@ -3,6 +3,7 @@ services:
     build:
       context: ./engine
       dockerfile: Dockerfile
+    command: ["dotnet", "watch", "CrystalArena.dll"]
     ports:
       - "5001:5001"
     environment:

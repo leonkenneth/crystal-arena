@@ -18,6 +18,21 @@
     public TargetSelector TargetSelector = new TargetSelector();
     public string Text;
     public bool UsesStack = true;
+    public Zone? PlayZone;
+
+    private string? _id;
+    public string Id
+    {
+      get
+      {
+        if (_id == null)
+        {
+          _id = System.Guid.NewGuid().ToString();
+        }
+
+        return _id;
+      }
+    }
 
     public bool HasTimingRules { get { return Rules.Any(x => x is TimingRule); } }
 

@@ -21,6 +21,7 @@ namespace CrystalArena.UserInterface.Shell
     {
         public Ui Ui { get; set; }
         
+        
         class UiObjectDatabase
         {
             private Dictionary<string, object> _objects = new Dictionary<string, object>();
@@ -41,7 +42,7 @@ namespace CrystalArena.UserInterface.Shell
                 return _objects[id];
             }
 
-            public Dictionary<string,string> InspectOids()
+            public Dictionary<string, string> InspectOids()
             {
                 var result = new Dictionary<string, string>();
                 foreach (var key in _objects.Keys)
@@ -62,6 +63,9 @@ namespace CrystalArena.UserInterface.Shell
         public object Dialog { get; set; }
         public CallbackableMessageBox? MessageBox { get; set; }
         public RemoteCallbackable? CurrentDialog { get { return _remoteCallbackables.FirstOrDefault(); }}
+
+        public object? CurrentSelectTargetDialog { get => GetCurrentSelectTargetDialog(); }
+
         private InteractionState? _interactionState;
         private List<RemoteCallbackable> _remoteCallbackables = new List<RemoteCallbackable>();
         private UiObjectDatabase _uiObjectDatabase = new UiObjectDatabase();
@@ -72,12 +76,27 @@ namespace CrystalArena.UserInterface.Shell
             Screen = screen;
         }
 
+        private object? GetCurrentSelectTargetDialog()
+        {
+            var dialogHost = Screen as IIsDialogHost;
+            var currentDialog = dialogHost?.GetAllDialogs().FirstOrDefault(x => x is SelectTarget.ViewModel);
+
+            if (currentDialog != null)
+            {
+                return currentDialog;
+            }
+
+            if (Dialog is SelectTarget.ViewModel selectTargetDialog)
+            {
+                return selectTargetDialog;
+            }
+
+            return null;
+        }
+
         public void ShowDialog(object dialog, DialogType type = DialogType.Large, InteractionState? interactionState = null, bool wait = false)
         {
             var dialogHost = Screen as IIsDialogHost;
-
-
-            var revert = ChangeMode(interactionState);
 
             if (dialogHost == null)
             {
@@ -89,7 +108,7 @@ namespace CrystalArena.UserInterface.Shell
             }
             
             
-            
+            var revert = ChangeMode(interactionState);
             var currentDialog = new CallbackableDialog()
             {
                 ViewModel = dialog
@@ -152,12 +171,16 @@ namespace CrystalArena.UserInterface.Shell
             var screen = Screen as ViewModelBase;
             if (screen == null)
             {
-                return "No screen set or " +
-                       "screen is not a viewmodel.";
+                return new
+                {
+                    Loaded = false,
+                };
             }
 
             return new
                 {
+                    Loaded = true,
+                    Id = Ui.GameId,
                     Screen = screen.ToJson(),
                     MessageBox,
                     CurrentDialog = CurrentDialog?.ToJson()

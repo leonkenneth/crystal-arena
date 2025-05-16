@@ -12,7 +12,7 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <PlayNowButton className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto">
+          <PlayNowButton className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto hover:cursor-pointer">
             Play now
           </PlayNowButton>
           <a
@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <p className="text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <p className="text-xs/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are trademarks or registered trademarks of Square Enix Holdings Co., Ltd.
         </p>
       </footer>

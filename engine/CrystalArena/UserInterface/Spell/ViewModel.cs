@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.UserInterface.Spell
+﻿using Newtonsoft.Json;
+
+namespace CrystalArena.UserInterface.Spell
 {
   using System;
   using System.Collections.Generic;
@@ -20,48 +22,48 @@
     
     public override object ToJson()
     {
-      var card = base.ToJson();
-      return new
-      {
-        Type = "Spell",
-        // Card
-        CardId = Card.Id,
-        Name,
-        HasXInCost,
-        ManaCost = ManaCost?.ToString(),
-        Illustration,
-        Text = Text.ToString(),
-        CharacterCount,
-        Power,
-        Toughness,
-        BasePower,
-        BaseToughness,
-        IsVisibleInUi,
-        Colors = Colors.Select(x => x.ToString()),
-        Counters,
-        SimpleAbilities,
-        Level,
-        Damage,
-        IsTapped,
-        HasSummoningSickness,
-        Set,
-        Rarity,
-        Loyality,
-        Serial,
-        Score,
-        // End card
-        IsPlayable,
-        IsSelected,
-        Oid = base.ToJsonWithOid(),
-      };
+      var json = (Dictionary<string, object?>)base.ToJson();
+      
+      json["type"] = "Spell"; // Override the Type
+      json["isPlayable"] = IsPlayable;
+      json["isSelected"] = IsSelected;
+      json["playableActivations"] = HandPlayableActivationsToJson();
+      json["oid"] = base.ToJsonWithOid();
+      
+      return json;
     }
 
-    public override void ReceiveMessageType(string type, string message)
+    private object HandPlayableActivationsToJson()
+    {
+      return GetPlayableActivations().Select(playableActivator =>
+      {
+        var prerequisites = playableActivator.Prerequisites;
+
+        var playZone = prerequisites.PlayZone?.ToString();
+        return new
+        {
+          PlayZone = playZone,
+          prerequisites.Index,
+          prerequisites.AbilityId
+        };
+      });
+    }
+    
+    class ActivateAbilityFromAbilityIdMessage
+    {
+      public string AbilityId { get; set; }
+    }
+
+    public override void ReceiveMessageType(string type, string jsonMessage)
     {
       switch (type)
       {
         case "Select":
           Select();
+          break;
+        case "ActivateAbilityFromAbilityId":
+          var message = JsonConvert.DeserializeObject<ActivateAbilityFromAbilityIdMessage>(jsonMessage);
+          ActivateAbilityFromAbilityId(message!.AbilityId);
           break;
         default:
           throw new ArgumentException($"Unknown message type: {type}");
@@ -104,7 +106,7 @@
 
         case (InteractionState.SelectTarget):
           _select = ChangeSelection;
-          IsPlayable = false;
+          IsPlayable = IsValidTarget();
           break;
 
         default:
@@ -126,41 +128,54 @@
       _select();
     }
 
-    private PlayableActivator SelectActivation()
+    public void ActivateAbilityFromAbilityId(string abilityId)
     {
+      var activation = GetPlayableActivations().Find(activation => activation.Prerequisites.AbilityId == abilityId);
+      ActivatePlayableActivator(activation!);
+    }
 
+    private List<PlayableActivator> GetPlayableActivations()
+    {
       var castActivations = new List<PlayableActivator>();
 
       if (Card.Zone == Zone.Hand)
       {
         castActivations.AddRange(
           Card.CanCast()
+            .Select(prerequisites => new PlayableActivator
+            {
+              Prerequisites = prerequisites,
+              GetPlayable = parameters => new PlayableSpell
+              {
+                Card = prerequisites.Card,
+                ActivationParameters = parameters,
+                Index = prerequisites.Index
+              }
+            }));
+      }
+      
+      var activations = castActivations
+        .Concat(Card.CanActivateAbilities()          
           .Select(prerequisites => new PlayableActivator
           {
             Prerequisites = prerequisites,
-            GetPlayable = parameters => new PlayableSpell
+            GetPlayable = parameters => new PlayableAbility
             {
               Card = prerequisites.Card,
               ActivationParameters = parameters,
               Index = prerequisites.Index
             }
-          }));
-      }
-
-      var activations = castActivations
-        .Concat(Card.CanActivateAbilities()          
-          .Select(prerequisites => new PlayableActivator
-          {
-              Prerequisites = prerequisites,
-              GetPlayable = parameters => new PlayableAbility
-              {
-                  Card = prerequisites.Card,
-                  ActivationParameters = parameters,
-                  Index = prerequisites.Index
-                }
-            }))
+          }))
         .ToList();
 
+      return activations;
+    }
+
+    private PlayableActivator SelectActivation()
+    {
+
+      var activations = GetPlayableActivations();
+      
       if (activations.Count == 1)
         return activations[0];
 
@@ -183,12 +198,17 @@
       if (activation == null)
         return;
 
+      ActivatePlayableActivator(activation);
+    }
+
+    private void ActivatePlayableActivator(PlayableActivator activation)
+    {
       var activationParameters = new ActivationParameters();
 
-    var proceed = SelectX(activation.Prerequisites, activationParameters) &&
-      SelectTargets(activation.Prerequisites, activationParameters) &&
-      SelectConvokeTargets(activationParameters) &&
-      SelectDelveTargets(activationParameters);
+      var proceed = SelectX(activation.Prerequisites, activationParameters) &&
+                    SelectTargets(activation.Prerequisites, activationParameters) &&
+                    SelectConvokeTargets(activationParameters) &&
+                    SelectDelveTargets(activationParameters);
     
       if (!proceed)
         return;

@@ -17,6 +17,7 @@
     public int? MaxX;    
     public List<MachinePlayRule> Rules;
     public TargetSelector Selector;
+    public Zone? PlayZone;
 
     public bool HasXInCost { get { return MaxX.HasValue; } }
     
@@ -32,6 +33,8 @@
     public bool CanBePlayedAndPayed
     {
       get { return CanBePlayed && CanBePayed; }
-    }    
+    }
+
+    public string? AbilityId;
   }
 }

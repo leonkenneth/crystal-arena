@@ -142,5 +142,10 @@
 
       return _isValidZone(new IsValidZoneParameters(zone.Value, target.Controller(), _controller));
     }
+
+    public bool HasValidZoneAndIsValid(ITarget target, object? triggerMessage = null)
+    {
+      return HasValidZone(target) && IsTargetValid(target, triggerMessage);
+    }
   }
 }

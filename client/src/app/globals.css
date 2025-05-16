@@ -23,4 +23,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  user-select: none;
+}
+
+.no-pointer-events {
+  pointer-events: none !important;
+}
+
+.pointer-events-auto-container {
+  pointer-events: none !important;
+}
+
+.pointer-events-auto-container .chakra-container * {
+  pointer-events: auto !important;
 }

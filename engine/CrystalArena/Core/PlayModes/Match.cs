@@ -173,11 +173,12 @@
 
     private bool RunGame(Game game)
     {
-      Console.WriteLine("Starting game turn " + game.Turn.TurnCount);
       Game = game;
 
       var playScreen = Ui.Dialogs.PlayScreen.Create();
       Ui.Shell.ChangeScreen(playScreen);
+      
+      Console.WriteLine("Starting game " + Ui.GameId);
 
       var blocker = new ThreadBlocker();
 
