@@ -1,20 +1,9 @@
 import { useLoadedGameContext } from "@/utils/GameContext";
 import { Drawer } from "@chakra-ui/react";
-import PassPriorityButton from "./PassPriorityButton";
-import { EffectState } from "@/types";
-import Card from "./Card";
+import PassPriorityButton from "../PassPriorityButton";
+import StackEffect from "./StackEffect";
 
-type StackEffectProps = {
-    effect: EffectState;
-}
 
-function StackEffect({ effect }: StackEffectProps) {
-    const card = effect.card;
-    const text = effect.text;
-    return <>
-        <Card card={card} text={text} />
-    </>;
-}
 
 export default function Stack() {
     const { gameState } = useLoadedGameContext();
