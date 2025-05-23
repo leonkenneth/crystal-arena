@@ -25,16 +25,18 @@ export default function GameContent() {
                     <HStack flexShrink={1} align="flex-start" justify="flex-start">
                         <Box>
                             <PlayerName player={screen.opponent} />
-                            <LifeAndDamageZone damageZone={screen.zones.opponentsDamageZone} />
+                            <LifeAndDamageZone damageZone={screen.zones.opponentsDamageZone} damageZoneName="Opponent's DamageZone" />
                         </Box>
                         <CPPool pool={screen.opponentsManaPool} />
                     </HStack>
                     <HStack>
                     <CollapsedZone
                         zone={screen.zones.opponentsMainDeck}
+                        name="Opponent's Deck"
                     />
                     <CollapsedZone
                         zone={screen.zones.opponentsBreakZone}
+                        name="Opponent's BreakZone"
                         />
                     </HStack>
                 </HStack>
@@ -56,16 +58,18 @@ export default function GameContent() {
                     <HStack flexShrink={1} align="flex-start" justify="flex-start">
                         <Box>
                             <PlayerName player={screen.you} />
-                            <LifeAndDamageZone damageZone={screen.zones.yourDamageZone} />
+                            <LifeAndDamageZone damageZone={screen.zones.yourDamageZone} damageZoneName="Your DamageZone" />
                         </Box>
                         <CPPool pool={screen.yourManaPool} />
                     </HStack>
                     <HStack>
                     <CollapsedZone
                         zone={screen.zones.yourMainDeck}
+                        name="Your Deck"
                     />
                     <CollapsedZone
                         zone={screen.zones.yourBreakZone}
+                        name="Your BreakZone"
                         />
                     </HStack>
                 </HStack>

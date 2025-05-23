@@ -13,7 +13,8 @@ function AbilityButton({ description, onClick }: { description: string, onClick:
 
 export default function SelectAbilityDialog() {
     const { gameState } = useLoadedGameContext();
-    const { oid, canCancel, descriptions } = gameState.screen.largeDialog as SelectAbilityDialogState;
+    const dialog = gameState.screen.largeDialog || gameState.screen.smallDialog;
+    const { oid, canCancel, descriptions } = dialog as SelectAbilityDialogState;
     const doAction = useDoAction(oid);
 
     const onCancelClick = () => doAction("Cancel");

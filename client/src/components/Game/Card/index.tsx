@@ -2,8 +2,8 @@ import { CardState } from "@/types";
 import { CardBody, Card as ChakraCard, Text } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
-import CardBack from "./CardBack";
-import CardContainer from "./CardContainer";
+import CardBack, { CardBackImage } from "./CardBack";
+import CardContainer, { type Props as CardContainerProps } from "./CardContainer";
 import CardText from "./CardText";
 
 const imageProxyBaseUrl = process.env.IMAGE_PROXY_BASE_URL || 'http://localhost:4000'
@@ -35,15 +35,12 @@ type Props = {
     card: CardState;
     text?: string;
     size?: "small" | "large";
+    containerProps?: Partial<CardContainerProps>
 }
 
-export default function Card({ card, text, size }: Props) {
+export default function Card({ card, text, size, containerProps }: Props) {
     const doAction = useDoAction(card.oid);
     const displayedText = text || card.text;
-    
-    if (!card.isVisibleInUi) {
-        return <CardBack />
-    }
     
     const imageUrl = buildUrl(card);
 
@@ -59,9 +56,11 @@ export default function Card({ card, text, size }: Props) {
             isTapped={card.isTapped}
             isPlayable={card.isPlayable}
             isSelected={isSelected}
+            isInteractable={card.isPlayable}
             onClick={onClick}
-            size={size}>
-        <Image src={imageUrl} alt={card.serial} />
+            size={size}
+            {...containerProps}>
+        {card.isVisibleInUi ? <><Image src={imageUrl} alt={card.serial} />
         <CardBody style={{
             position: "absolute",
             bottom: "12%",
@@ -73,7 +72,7 @@ export default function Card({ card, text, size }: Props) {
             color: "white",
         }} bg="blackAlpha.800">
             <CardText text={displayedText} />    
-        </CardBody>
+        </CardBody></> : <CardBackImage />}
     </CardContainer>
 }
 
