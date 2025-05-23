@@ -1,8 +1,10 @@
 import { useLoadedGameContext } from "@/utils/GameContext";
-import { Dialog, DialogHeader, DialogTitle } from "@chakra-ui/react";
+import Dialog from "@/components/ui/Dialog";
+import { PriorityDialogState } from "@/types";
+import { Text } from "@chakra-ui/react";
 export default function PriorityDialog() {
     const { gameState } = useLoadedGameContext();
-    const priorityDialog = gameState.smallDialog;
+    const priorityDialog = gameState.screen.smallDialog as PriorityDialogState;
 
     const stackOpened = gameState.screen.stack.effects.length > 0;
 
@@ -12,10 +14,7 @@ export default function PriorityDialog() {
     
 
     return (
-        <Dialog>
-            <DialogHeader>
-                <DialogTitle>Priority</DialogTitle>
-            </DialogHeader>
+        <Dialog isModal={false} title="You have priority">
         </Dialog>
     );
 }

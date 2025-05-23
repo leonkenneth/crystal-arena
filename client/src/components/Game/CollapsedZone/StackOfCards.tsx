@@ -1,14 +1,9 @@
 import { CardState } from "@/types";
 import Card from "../Card"
-import { Card as ChakraCard, Text } from "@chakra-ui/react";
-import { CardContainer } from "../Card";
+import EmptyCardSlot from "../Card/EmptyCardSlot";
 
 function NoCards() {
-    return <CardContainer isPlayable={false} border="dashed">
-        <ChakraCard.Body>
-            
-        </ChakraCard.Body>
-    </CardContainer>
+    return <EmptyCardSlot />
 }
 
 export default function StackOfCards({ cards }: { cards: CardState[] }) {

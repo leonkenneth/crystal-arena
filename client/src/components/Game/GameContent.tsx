@@ -4,7 +4,7 @@ import BattlefieldRow from "./BattlefieldRow/index";
 import PlayerName from "./PlayerName";
 import LifeAndDamageZone from "./LifeAndDamageZone";
 import CollapsedZone from "./CollapsedZone/index";
-import MessageBox from "./MessageBox";
+import MessageBox from "./Dialogs/MessageBox";
 import { useLoadedGameContext } from "@/utils/GameContext";
 import { VStack, HStack, StackSeparator, Box } from "@chakra-ui/react";
 import Dialogs from "./Dialogs/index";
@@ -18,7 +18,7 @@ export default function GameContent() {
     const screen = gameState.screen;
 
     return (
-        <VStack h="100dvh" w="100vw" bg="cyan.950" overflowX="hidden" overflowY="auto">
+        <VStack h="100dvh" w="100vw" bg="cyan.950" overflowX="hidden" overflowY="auto" userSelect="none">
             {/* Opponent Area */}
             <VStack p={4} bg="cyan.900" w="full">
                 <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">

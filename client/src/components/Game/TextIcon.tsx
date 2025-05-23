@@ -40,6 +40,6 @@ type Props = {
 }
 export default function TextIcon({ icon }: Props) {
     return (
-        <Image src={icons[icon].src} alt={icon} w={4} h={4} style={{ objectFit: "contain", objectPosition: "center", display: "inline", verticalAlign: "middle" }} />
+        <img src={icons[icon].src} alt={icon} style={{ width: '1rem', height: '1rem', objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
     );
 }
