@@ -22,7 +22,7 @@ function DialogBody({ cards, title }: { cards: CardState[], title: string }) {
         <HStack w="full" justify="center" align="center" overflow="scroll">
             {cards.map((card) => (
                 <Card card={card} key={card.cardId} containerProps={{
-                    size: "large"
+                    size: "lg"
                 }} />
             ))}
         </HStack>

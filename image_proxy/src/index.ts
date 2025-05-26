@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { generatePlaceholderImage, CardInfo } from './generatePlaceholder';
+import { join } from 'path';
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,7 @@ app.get('/images/cards/full/:serial(\\d+-\\d+[a-zA-Z]*)_:lang.jpg', async (req: 
     return res.send(await generatePlaceholderImage(serial, cardInfo));
   }
 
-  const targetUrl = `${ORIGIN_SERVER}${requestPath}`;
+  const targetUrl = join(ORIGIN_SERVER, requestPath);
   res.redirect(targetUrl);
 });
 

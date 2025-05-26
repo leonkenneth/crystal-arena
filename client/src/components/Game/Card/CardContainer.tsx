@@ -1,19 +1,19 @@
 import { Card as ChakraCard } from "@chakra-ui/react";
 import { useState } from "react";
+import { getCardSize, CardSize } from "./size";
 
 export type Props = {
     children: React.ReactNode,
     isPlayable?: boolean,
     isTapped?: boolean,
     isSelected?: boolean,
-    size?: "small" | "large",
+    size?: CardSize,
     isInteractable?: boolean,
 } & ChakraCard.RootProps;
 
 export default function CardContainer({ children, isInteractable, isPlayable, isTapped, isSelected, size, ...props }: Props) {
-    const aspectRatio = 1.4;
-    const actualSize = size || "small";
-    const baseWidth = actualSize === "small" ? 80 : 120;
+    const actualSize = size || "sm";
+    const { width, height } = getCardSize(actualSize);
 
     const [isHovered, setIsHovered] = useState(false);
     const isDisplayedHovered = isInteractable && isHovered;
@@ -45,8 +45,8 @@ export default function CardContainer({ children, isInteractable, isPlayable, is
     return <ChakraCard.Root
         transform={getTransform()}
         size="sm"
-        w={`${baseWidth}px`}
-        h={`${baseWidth * aspectRatio}px`} borderRadius="md"
+        w={`${width}px`}
+        h={`${height}px`} borderRadius="md"
         overflow="hidden" flexShrink={0} flexGrow={0}
         bg="transparent"
         borderWidth="2px"

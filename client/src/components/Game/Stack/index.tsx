@@ -1,9 +1,9 @@
 import { useLoadedGameContext } from "@/utils/GameContext";
-import { Drawer } from "@chakra-ui/react";
+import { Container, Drawer } from "@chakra-ui/react";
 import PassPriorityButton from "../PassPriorityButton";
 import StackEffect from "./StackEffect";
 import StackDrawer from "./StackDrawer";
-
+import { EffectState } from "@/types";
 
 
 export default function Stack() {
@@ -15,8 +15,10 @@ export default function Stack() {
     }
 
     return <StackDrawer footer={<PassPriorityButton />}>
-        {stack.effects.map((effect) => (
+        <Container display="flex" alignItems="center" justifyContent="center">
+        {stack.effects.map((effect : EffectState) => (
                 <StackEffect key={`effect-${effect.card.cardId}-${effect.text}`} effect={effect} />
             ))}
+        </Container>
     </StackDrawer>
 }

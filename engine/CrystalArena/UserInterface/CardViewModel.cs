@@ -126,6 +126,27 @@
       return json;
     }
 
+    protected bool IsValidTarget()
+    {
+      var currentDialog = Ui.Shell.Dialog;
+
+      if (currentDialog == null)
+      {
+        return false;
+      }
+      
+      var selectTargetDialog = currentDialog as SelectTarget.ViewModel;
+
+      if (selectTargetDialog == null)
+      {
+        return false;
+      }
+      
+      var targetValidator = selectTargetDialog.TargetValidator;
+
+      return targetValidator.IsTargetValid(Card);
+    }
+
     private void Update()
     {
       Update(() => Power != Card.Power, () =>

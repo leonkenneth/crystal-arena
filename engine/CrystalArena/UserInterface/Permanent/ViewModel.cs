@@ -143,7 +143,7 @@
         case (InteractionState.SelectTarget):
           {
             _select = ChangeSelection;
-            IsPlayable = false;
+            IsPlayable = IsValidTarget();
             break;
           }
         case (InteractionState.Disabled):

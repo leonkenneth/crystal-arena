@@ -6,16 +6,16 @@ type Props = {
     footer?: React.ReactNode;
     children?: React.ReactNode;
     isModal?: boolean;
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
-}
+} & ChakraDialog.RootProps;
 
-export default function Dialog({ title, children, footer, isModal = true, size = "xs" }: Props) {
+export default function Dialog({ title, children, footer, isModal = true, ...props }: Props) {
     return <ChakraDialog.Root 
     open={true}
     modal={isModal}
     closeOnInteractOutside={!isModal}
     preventScroll={isModal}
-    size={size}
+    size={props.size || "sm"}
+    {...props}
     >
     <Portal>
     {isModal && <ChakraDialog.Backdrop />}

@@ -76,9 +76,6 @@ namespace CrystalArena.UserInterface.Shell
         {
             var dialogHost = Screen as IIsDialogHost;
 
-
-            var revert = ChangeMode(interactionState);
-
             if (dialogHost == null)
             {
                 Dialog = dialog;
@@ -89,7 +86,7 @@ namespace CrystalArena.UserInterface.Shell
             }
             
             
-            
+            var revert = ChangeMode(interactionState);
             var currentDialog = new CallbackableDialog()
             {
                 ViewModel = dialog

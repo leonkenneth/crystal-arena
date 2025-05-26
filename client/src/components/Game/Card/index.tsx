@@ -5,6 +5,7 @@ import useDoAction from "@/utils/useDoAction";
 import CardBack, { CardBackImage } from "./CardBack";
 import CardContainer, { type Props as CardContainerProps } from "./CardContainer";
 import CardText from "./CardText";
+import { CardSize } from "./size";
 
 const imageProxyBaseUrl = process.env.IMAGE_PROXY_BASE_URL || 'http://localhost:4000'
 
@@ -34,7 +35,7 @@ function buildUrl(card: CardState) {
 type Props = {
     card: CardState;
     text?: string;
-    size?: "small" | "large";
+    size?: CardSize;
     containerProps?: Partial<CardContainerProps>
 }
 
