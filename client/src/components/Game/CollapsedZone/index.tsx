@@ -24,7 +24,7 @@ export default function CollapsedZone({ zone, linkOnly, children, name }: Props)
 
     return (
         <div>
-            {linkOnly && children ? <Text textDecoration="underline" color="fg.muted" onClick={onClick} cursor="pointer">{children}</Text> : <StackOfCards cards={cards} onClick={onClick} />}
+            {linkOnly && children ? <Text as="div" textDecoration="underline" color="fg.muted" onClick={onClick} cursor="pointer">{children}</Text> : <StackOfCards cards={cards} onClick={onClick} />}
             {isOpened && <ExpandedZoneDialog cards={cards} title={name} onClose={onClose} />}
         </div>
     );

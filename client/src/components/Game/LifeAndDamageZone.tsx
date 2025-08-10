@@ -12,18 +12,21 @@ type Props = {
 export default function LifeAndDamageZone({ damageZone, damageZoneName }: Props) {
     return (
         <div>
-            <Text color="fg.muted">Damage: {damageZone.cards.length}</Text>
             <CollapsedZone
                 zone={damageZone}
                 linkOnly
                 name={damageZoneName}
             >
+            <Text color="fg.muted">Damage: {damageZone.cards.length}</Text>
+            
                 <Container cursor="pointer">
                 {damageZone.cards.map((card : CardState) => (
                     <Card key={card.cardId} card={card} containerProps={{
                         size: "xs",
                         isInteractable: true,
-                        isTapped: true,
+                        style:{
+                            transform: "scale(0.7)"
+                        }
                     }} />
                 ))}
                 </Container>

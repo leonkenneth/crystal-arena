@@ -11,7 +11,7 @@ import { useEffect } from "react";
 function Game({ id }: { id: string }) {
     const refreshInterval = 1000;
     const queryClient = useQueryClient();
-    const { data: gameState, isFetching, isError, isRefetching } = useQuery<GameState>({
+    const queryResult = useQuery<GameState>({
         queryKey: ["game", id],
         queryFn: async () => {
             const response = await get(`/games/${id}`);
@@ -19,6 +19,8 @@ function Game({ id }: { id: string }) {
         },
         placeholderData: (prev) => prev
     });
+    const { data: gameState, isFetching, isError, isRefetching } = queryResult;
+    console.log(JSON.stringify(queryResult));
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
@@ -34,6 +36,11 @@ function Game({ id }: { id: string }) {
             clearTimeout(timeoutId);
         };
     }, [id, queryClient]);
+
+    // @ts-ignore
+    if (gameState?.error?.match(/not found/i)) {
+        return <div>Game not found</div>;
+    }
 
     if (isFetching && !isRefetching) {
         return <div>Loading...</div>;
