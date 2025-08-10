@@ -1,4 +1,4 @@
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import Dialog from "@/components/ui/Dialog";
 import { CardActivationDialogState } from "@/types";
 

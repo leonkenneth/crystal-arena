@@ -4,7 +4,7 @@ import {
     Button,
 } from "@chakra-ui/react";
 import { get } from "@/utils/api";
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import Dialog from "@/components/ui/Dialog";
 function ButtonSet({ type, onCallback }: { type: "YesNo" | "Cancel" | "CancelOk", onCallback: (button: string) => void }) {
     if (type === "YesNo") {

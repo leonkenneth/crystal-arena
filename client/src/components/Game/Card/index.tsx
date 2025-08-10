@@ -6,6 +6,9 @@ import CardBack, { CardBackImage } from "./CardBack";
 import CardContainer, { type Props as CardContainerProps } from "./CardContainer";
 import CardText from "./CardText";
 import { CardSize } from "./size";
+import useHover from "@/utils/useHover";
+import { ClientContext } from "@/utils/ClientContext";
+import { useContext } from "react";
 
 const imageProxyBaseUrl = process.env.IMAGE_PROXY_BASE_URL || 'http://localhost:4000'
 
@@ -41,6 +44,15 @@ type Props = {
 
 export default function Card({ card, text, size, containerProps }: Props) {
     const doAction = useDoAction(card.oid);
+    const { setHoveredCard } = useContext(ClientContext);
+    const { isHovered, ref } = useHover({
+        onHoverIn: () => {
+            setHoveredCard(card);
+        },
+        onHoverOut: () => {
+            setHoveredCard(null);
+        }
+    });
     const displayedText = text || card.text;
     
     const imageUrl = buildUrl(card);
@@ -60,6 +72,7 @@ export default function Card({ card, text, size, containerProps }: Props) {
             isInteractable={card.isPlayable}
             onClick={onClick}
             size={size}
+            ref={ref}
             {...containerProps}>
         {card.isVisibleInUi ? <><Image src={imageUrl} alt={card.serial} />
         <CardBody style={{

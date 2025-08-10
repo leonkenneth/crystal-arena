@@ -1,4 +1,4 @@
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import { Container, Drawer } from "@chakra-ui/react";
 import PassPriorityButton from "../PassPriorityButton";
 import StackEffect from "./StackEffect";

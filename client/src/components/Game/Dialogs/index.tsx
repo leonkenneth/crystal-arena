@@ -1,4 +1,4 @@
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import PriorityDialog from "./PriorityDialog";
 import SelectTargetDialog from "./SelectTargetDialog";
 import SelectAbilityDialog from "./SelectAbilityDialog";

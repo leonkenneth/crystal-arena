@@ -1,5 +1,5 @@
 import { SelectAbilityDialogState } from "@/types";
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import { Button } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useLoadedGameContext } from "./GameContext";
+import { useLoadedGameContext } from "./LoadedGameContext";
 import { get } from "./api";
 import { ObjectIdContainer } from "@/types";
 

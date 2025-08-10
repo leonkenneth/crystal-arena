@@ -1,5 +1,5 @@
 import { Card as ChakraCard } from "@chakra-ui/react";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { getCardSize, CardSize } from "./size";
 
 export type Props = {
@@ -11,7 +11,7 @@ export type Props = {
     isInteractable?: boolean,
 } & ChakraCard.RootProps;
 
-export default function CardContainer({ children, isInteractable, isPlayable, isTapped, isSelected, size, ...props }: Props) {
+export default forwardRef(function CardContainer({ children, isInteractable, isPlayable, isTapped, isSelected, size, ...props }: Props, ref: React.Ref<HTMLDivElement>) {
     const actualSize = size || "sm";
     const { width, height } = getCardSize(actualSize);
 
@@ -56,7 +56,8 @@ export default function CardContainer({ children, isInteractable, isPlayable, is
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
         cursor={isInteractable ? "pointer" : "default"}
+        ref={ref}
         {...props}>
         {children}
     </ChakraCard.Root>
-}
+});

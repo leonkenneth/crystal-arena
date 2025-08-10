@@ -5,7 +5,7 @@ import { get } from "@/utils/api";
 import { GameState } from "@/types";
 import GameContent from "./GameContent";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GameContext } from "@/utils/GameContext";
+import { LoadedGameContext } from "@/utils/LoadedGameContext";
 import { useEffect } from "react";
 
 function Game({ id }: { id: string }) {
@@ -20,7 +20,6 @@ function Game({ id }: { id: string }) {
         placeholderData: (prev) => prev
     });
     const { data: gameState, isFetching, isError, isRefetching } = queryResult;
-    console.log(JSON.stringify(queryResult));
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
@@ -58,13 +57,13 @@ function Game({ id }: { id: string }) {
         return <div>Loading...</div>;
     }
 
-    return <GameContext.Provider value={{ 
+    return <LoadedGameContext.Provider value={{ 
         gameId: id, 
         gameState,
         refresh: () => queryClient.invalidateQueries({ queryKey: ["game", id] })
     }}>
         <GameContent />
-    </GameContext.Provider>;
+    </LoadedGameContext.Provider>;
 }
 
 export default function GameWithQueryProvider({ id }: { id: string }) {

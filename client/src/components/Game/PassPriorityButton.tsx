@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { useLoadedGameContext } from "@/utils/GameContext";
+import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import { get } from "@/utils/api";
 
 export default function PassPriorityButton() {
