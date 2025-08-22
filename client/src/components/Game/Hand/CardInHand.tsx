@@ -6,5 +6,5 @@ type Props = {
 }
 
 export default function CardInHand({ card }: Props) {
-    return <Card card={card} />
+    return <Card card={card} size="xl" />
 }

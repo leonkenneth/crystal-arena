@@ -21,6 +21,7 @@ namespace CrystalArena.UserInterface.Shell
     {
         public Ui Ui { get; set; }
         
+        
         class UiObjectDatabase
         {
             private Dictionary<string, object> _objects = new Dictionary<string, object>();
@@ -41,7 +42,7 @@ namespace CrystalArena.UserInterface.Shell
                 return _objects[id];
             }
 
-            public Dictionary<string,string> InspectOids()
+            public Dictionary<string, string> InspectOids()
             {
                 var result = new Dictionary<string, string>();
                 foreach (var key in _objects.Keys)
@@ -62,6 +63,9 @@ namespace CrystalArena.UserInterface.Shell
         public object Dialog { get; set; }
         public CallbackableMessageBox? MessageBox { get; set; }
         public RemoteCallbackable? CurrentDialog { get { return _remoteCallbackables.FirstOrDefault(); }}
+
+        public object CurrentSelectTargetDialog { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         private InteractionState? _interactionState;
         private List<RemoteCallbackable> _remoteCallbackables = new List<RemoteCallbackable>();
         private UiObjectDatabase _uiObjectDatabase = new UiObjectDatabase();

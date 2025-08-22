@@ -8,9 +8,7 @@ import lightIcon from "@/assets/icons/light.png";
 import lightningIcon from "@/assets/icons/lightning.png";
 import windIcon from "@/assets/icons/wind.png";
 import waterIcon from "@/assets/icons/water.png";
-import { Image } from "@chakra-ui/react";
-
-type IconType = 
+export type ImageIconType = 
     "crystal" |
     "dark" |
     "dull" |
@@ -21,6 +19,8 @@ type IconType =
     "lightning" |
     "wind" |
     "water";
+
+
 
 const icons = {
     crystal: crystalIcon,
@@ -34,12 +34,11 @@ const icons = {
     wind: windIcon,
     water: waterIcon,
 }
-
 type Props = {
-    icon: IconType;
+    icon: ImageIconType;
 }
-export default function TextIcon({ icon }: Props) {
+export default function ImageIcon({ icon }: Props) {
     return (
-        <img src={icons[icon].src} alt={icon} style={{ width: '1rem', height: '1rem', objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
+        <img src={icons[icon].src} alt={icon} style={{ objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
     );
 }

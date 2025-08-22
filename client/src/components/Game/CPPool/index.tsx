@@ -1,6 +1,6 @@
 import { ManaPoolState } from "@/types";
 import { Box, Text } from "@chakra-ui/react";
-import TextIcon from "../TextIcon";
+import Icon from "../Icon";
 
 type Props = {
     pool: ManaPoolState;
@@ -22,7 +22,7 @@ function CPPoolItem({ color, amount }: ManaPoolItem) {
 
     return (
         <Box>
-            <Text verticalAlign="middle" color="fg.muted"><TextIcon icon={color} /> {amount}</Text>
+            <Text verticalAlign="middle" color="fg.muted"><Icon icon={color} /> {amount}</Text>
         </Box>
     );
 }

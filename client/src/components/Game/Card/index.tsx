@@ -39,18 +39,19 @@ type Props = {
     card: CardState;
     text?: string;
     size?: CardSize;
-    containerProps?: Partial<CardContainerProps>
+    containerProps?: Partial<CardContainerProps>;
+    displayTextOverlay?: boolean;
 }
 
-export default function Card({ card, text, size, containerProps }: Props) {
+export default function Card({ card, text, size, containerProps, displayTextOverlay = true }: Props) {
     const doAction = useDoAction(card.oid);
     const { setHoveredCard } = useContext(ClientContext);
     const { isHovered, ref } = useHover({
         onHoverIn: () => {
-            setHoveredCard(card);
+            card.isVisibleInUi && setHoveredCard(card);
         },
         onHoverOut: () => {
-            setHoveredCard(null);
+            card.isVisibleInUi && setHoveredCard(null);
         }
     });
     const displayedText = text || card.text;
@@ -75,18 +76,18 @@ export default function Card({ card, text, size, containerProps }: Props) {
             ref={ref}
             {...containerProps}>
         {card.isVisibleInUi ? <><Image src={imageUrl} alt={card.serial} />
-        <CardBody style={{
+        {displayTextOverlay && <CardBody style={{
             position: "absolute",
-            bottom: "12%",
-            height: "35%",
+            bottom: "13%",
+            height: "22%",
             overflow: "scroll",
             padding: "0.2rem",
             fontSize: "0.5rem",
             lineHeight: "0.6rem",
             color: "white",
-        }} bg="blackAlpha.800">
+        }} bg="blackAlpha.950">
             <CardText text={displayedText} />    
-        </CardBody></> : <CardBackImage />}
+        </CardBody>}</> : <CardBackImage />}
     </CardContainer>
 }
 

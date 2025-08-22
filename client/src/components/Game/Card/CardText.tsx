@@ -1,35 +1,87 @@
-import TextIcon from "../TextIcon";
+import Icon from "../Icon";
 
 
 // R: Fire, I: Ice, G: Wind, Y: Earth, P: Lightning, U: Water
 // W: Light, B: Dark, Z: Crystal, T: Dull, S: Special
-const replacementMap: Record<string, (key: string) => React.ReactNode> = {
-    "{R}": (key) => <TextIcon key={key} icon="fire" />,
-    "{I}": (key) => <TextIcon key={key} icon="ice" />,
-    "{G}": (key) => <TextIcon key={key} icon="wind" />,
-    "{Y}": (key) => <TextIcon key={key} icon="earth" />,
-    "{P}": (key) => <TextIcon key={key} icon="lightning" />,
-    "{U}": (key) => <TextIcon key={key} icon="water" />,
-    "{W}": (key) => <TextIcon key={key} icon="light" />,
-    "{B}": (key) => <TextIcon key={key} icon="dark" />,
-    "{Z}": (key) => <TextIcon key={key} icon="crystal" />,
-    "{T}": (key) => <TextIcon key={key} icon="dull" />,
+const iconsMap: Record<string, (key: string) => React.ReactNode> = {
+    "{R}": (key) => <Icon key={key} icon="fire" />,
+    "{I}": (key) => <Icon key={key} icon="ice" />,
+    "{G}": (key) => <Icon key={key} icon="wind" />,
+    "{Y}": (key) => <Icon key={key} icon="earth" />,
+    "{P}": (key) => <Icon key={key} icon="lightning" />,
+    "{U}": (key) => <Icon key={key} icon="water" />,
+    "{W}": (key) => <Icon key={key} icon="light" />,
+    "{B}": (key) => <Icon key={key} icon="dark" />,
+    "{Z}": (key) => <Icon key={key} icon="crystal" />,
+    "{T}": (key) => <Icon key={key} icon="dull" />,
     "{EX BURST}": (key) => <i key={key}><small style={{ fontWeight: "bold", color: "blue", textShadow: "0 0 2px white", textTransform: "capitalize" }}>EX BURST</small></i>,
-    "\n": (key) => <br key={key} />,
 }
 
 for (let i = 0; i < 10; i++) {
-    replacementMap[i.toString()] = (key) => <span key={key} style={{ color: "black" }}>{i}</span>;
+    iconsMap[`{${i}}`] = (key) => <Icon key={key} icon="X" x={i} />;
 }
 
 type Props = {
     text: string;
 }
 
-export default function CardText({ text } : Props) {
-    const parts = text.split(/({[^}]+})|(\n)/);
-    return parts.map((part, index) => {
-        const replacement = replacementMap[part];
-        return replacement ? replacement(index.toString()) : part;
+function applyStringTransform(textParts: (string | React.ReactNode)[], transform: (text: string, index: number) => string | React.ReactNode) : React.ReactNode[] {
+    return textParts.map((part, index) => {
+        if (typeof part === "string") {
+            return transform(part, index);
+        }
+        return part;
+    }).flat();
+}
+
+function replaceIcons(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
+    return applyStringTransform(textParts, (text, i) => {
+        const parts = text.split(/({[^}]+})/g);
+        return parts.map((part, index) => {
+            console.log(part, iconsMap);
+
+            const replacement = iconsMap[part];
+            return replacement ? replacement(`icon-${i}-${index}`) : part;
+        });
     });
+}
+
+function replaceDamageX(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
+    return applyStringTransform(textParts, (text, i) => {
+        const parts = text.split(/Damage (\d+) -- /g);
+        return parts.map((part, index) => {
+            if (index % 2 === 1) {
+                return <span style={{ fontStyle: "italic" }} key={`damage-x-${i}-${index}`}>Damage {part} ᠆ </span>;
+            }
+            return part;
+        });
+    });
+}
+
+function replaceNewLine(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
+    return applyStringTransform(textParts, (text, i) => {
+        const parts = text.split(/\n+/g);
+        return parts.map((part, index) => {
+            if (index === 0) {
+                return part;
+            }
+            return <br key={`newline-${i}-${index}`} />;
+        });
+    });
+}
+
+function wrapStringsInSpans(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
+    return applyStringTransform(textParts, (text, index) => {
+        return <span key={`span-${index}`}>{text}</span>;
+    });
+}
+    
+
+export default function CardText({ text } : Props) {
+    let processedText : (string | React.ReactNode)[] = [text.trim()];
+    processedText = replaceIcons(processedText);
+    processedText = replaceDamageX(processedText);
+    processedText = replaceNewLine(processedText);
+    processedText = wrapStringsInSpans(processedText);
+    return <div>{processedText}</div>;
 }

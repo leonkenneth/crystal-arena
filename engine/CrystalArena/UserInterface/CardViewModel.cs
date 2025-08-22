@@ -128,7 +128,7 @@
 
     protected bool IsValidTarget()
     {
-      var currentDialog = Ui.Shell.Dialog;
+      var currentDialog = Ui.Shell.CurrentSelectTargetDialog;
 
       if (currentDialog == null)
       {

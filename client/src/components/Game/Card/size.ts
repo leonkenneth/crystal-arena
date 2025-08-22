@@ -1,6 +1,6 @@
 const aspectRatio = 1.4;
 
-export type CardSize = "xs" | "sm" | "md" | "lg";
+export type CardSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 function getBaseWidth(size: CardSize) {
     if (size === "xs") {
@@ -15,6 +15,9 @@ function getBaseWidth(size: CardSize) {
     }
     if (size === "lg") {
         return 120;
+    }
+    if (size === "xl") {
+        return 180;
     }
 
     return 100;

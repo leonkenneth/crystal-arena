@@ -59,7 +59,7 @@
         return;
       }
 
-      text = Regex.Replace(text, Environment.NewLine, String.Empty);
+      // text = Regex.Replace(text, Environment.NewLine, String.Empty);
 
       Tokens =
         MarkManaSymbolGroups(
