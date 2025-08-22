@@ -35,8 +35,9 @@ export default function HoveredCard() {
                         isFrozen: false,
                         isSelected: false,
                         isSelectedForCombat: false,
-                        isTargetOfSpell: false
-                    }} size="xl" displayTextOverlay={false} />
+                        isTargetOfSpell: false,
+                        isPlayable: false,
+                    }} size="xl" />
                 </Flex>
             </ChakraDialog.Body>
             </ChakraDialog.Content>

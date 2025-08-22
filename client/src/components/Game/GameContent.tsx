@@ -24,7 +24,7 @@ export default function GameContent() {
 
     return (
         <ClientContext.Provider value={{ hoveredCard, setHoveredCard }}>
-        <VStack h="100dvh" w="100vw" bg="cyan.950" overflowX="hidden" overflowY="auto" userSelect="none">
+        <VStack h="100dvh" w="100vw" bg="cyan.950" overflowX="hidden" overflowY="auto" userSelect="none" gap={0}>
             {/* Opponent Area */}
             <VStack p={4} bg="cyan.900" w="full">
                 <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
@@ -81,20 +81,23 @@ export default function GameContent() {
                         />
                     </HStack>
                 </HStack>
-                <HStack w="full" flexGrow={1} flexShrink={1} overflowX="auto" justifyContent="center">
+            </VStack>
+            <VStack w="full" position="sticky" bottom={0} zIndex="sticky" gap={0}>
+                <HStack w="full"  p={4} flexGrow={1} bg="cyan.900"  flexShrink={1} overflowX="auto" justifyContent="center">
                     <Hand hand={screen.zones.yourHand} />
+                </HStack>
+                {/* Steps and Pass Priority Button */}
+                <HStack w="full" p={4} justify="space-between" align="flex-start" maxW="100vw" bg="cyan.800">
+                    <Box flexGrow={1} flexShrink={1} overflowX="auto">
+                        <Steps steps={screen.steps} />
+                    </Box>
+                    <Box flexGrow={0} flexShrink={0}>
+                        <PassPriorityButton />
+                    </Box>
                 </HStack>
             </VStack>
 
-            {/* Steps and Pass Priority Button */}
-            <HStack w="full" p={4} justify="space-between" align="flex-start" maxW="100vw" bg="cyan.800">
-                <Box flexGrow={1} flexShrink={1} overflowX="auto">
-                    <Steps steps={screen.steps} />
-                </Box>
-                <Box flexGrow={0} flexShrink={0}>
-                    <PassPriorityButton />
-                </Box>
-            </HStack>
+            
 
             {/* Global dialogs */}
             {gameState.messageBox && <MessageBox messageBox={gameState.messageBox} />}
