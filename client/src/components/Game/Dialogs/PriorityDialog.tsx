@@ -14,7 +14,8 @@ export default function PriorityDialog() {
     }
 
     return (
-        <Dialog isModal={false} title="You have priority" footer={<PassPriorityButton />}>
+        <Dialog size="xs" isModal={false} transparent
+        title="You have priority" footer={<PassPriorityButton />}>
             <Text textAlign="center" color="fg">Play a card or ability, or pass priority</Text>
         </Dialog>
     );

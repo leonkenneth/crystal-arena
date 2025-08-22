@@ -17,11 +17,11 @@ export default function StackDrawer({ children, footer }: Props) {
     >
     <Portal>
     <ChakraDialog.Positioner pointerEvents="none">
-        <ChakraDialog.Content boxShadow="none" borderColor="transparent" backgroundColor="transparent" transform="translateX(-30vw)">
-        <ChakraDialog.Header justifyContent="center">
-            <ChakraDialog.Title color="fg">Stack</ChakraDialog.Title>
+        <ChakraDialog.Content boxShadow="none" borderColor="transparent" backgroundColor="transparent" transform="translateX(-30vw)" pointerEvents="none">
+        <ChakraDialog.Header justifyContent="center" pointerEvents="none">
+            <ChakraDialog.Title color="fg" textStyle="outline">Stack</ChakraDialog.Title>
         </ChakraDialog.Header>
-            <ChakraDialog.Body>
+            <ChakraDialog.Body pointerEvents="auto">
                 {children}
             </ChakraDialog.Body>
         <ChakraDialog.Footer justifyContent="center" pointerEvents="auto">
