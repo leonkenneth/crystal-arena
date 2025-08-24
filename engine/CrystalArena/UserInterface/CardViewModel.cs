@@ -144,7 +144,7 @@
       
       var targetValidator = selectTargetDialog.TargetValidator;
 
-      return targetValidator.IsTargetValid(Card);
+      return targetValidator.HasValidZoneAndIsValid(Card);
     }
 
     private void Update()

@@ -99,6 +99,11 @@
       return dialog == SmallDialog;
     }
 
+    public IEnumerable<object> GetAllDialogs()
+    {
+      return _largeDialogs.Concat(_smallDialogs).ToList();
+    }
+
     public void CloseAllDialogs()
     {
       foreach (var largeDialog in _largeDialogs.ToList())

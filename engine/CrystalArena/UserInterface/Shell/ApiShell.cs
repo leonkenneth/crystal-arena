@@ -64,7 +64,7 @@ namespace CrystalArena.UserInterface.Shell
         public CallbackableMessageBox? MessageBox { get; set; }
         public RemoteCallbackable? CurrentDialog { get { return _remoteCallbackables.FirstOrDefault(); }}
 
-        public object CurrentSelectTargetDialog { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public object? CurrentSelectTargetDialog { get => GetCurrentSelectTargetDialog(); }
 
         private InteractionState? _interactionState;
         private List<RemoteCallbackable> _remoteCallbackables = new List<RemoteCallbackable>();
@@ -74,6 +74,24 @@ namespace CrystalArena.UserInterface.Shell
         public void ChangeScreen(object screen, bool blockUntilClosed = false, bool shouldClosePrevious = false)
         {
             Screen = screen;
+        }
+
+        private object? GetCurrentSelectTargetDialog()
+        {
+            var dialogHost = Screen as IIsDialogHost;
+            var currentDialog = dialogHost?.GetAllDialogs().FirstOrDefault(x => x is SelectTarget.ViewModel);
+
+            if (currentDialog != null)
+            {
+                return currentDialog;
+            }
+
+            if (Dialog is SelectTarget.ViewModel selectTargetDialog)
+            {
+                return selectTargetDialog;
+            }
+
+            return null;
         }
 
         public void ShowDialog(object dialog, DialogType type = DialogType.Large, InteractionState? interactionState = null, bool wait = false)

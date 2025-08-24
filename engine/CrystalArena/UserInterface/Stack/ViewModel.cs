@@ -52,6 +52,7 @@ namespace CrystalArena.UserInterface.Stack
             Type = ability.GetType().Name,
             Text = ability.Text.ToString(),
             Card = ViewModels.Card.Create(ability.SourceCard).ToJson(),
+            Targets = effect.Targets.Select(t => t.TargetTypeAndId()).ToList(),
             ControllerId = effect.Controller.Id,
           };
         case "CastRule":
@@ -61,7 +62,7 @@ namespace CrystalArena.UserInterface.Stack
             Type = "CastRule",
             Text = castRule.SourceCard.Text.ToString(),
             Card = ViewModels.Card.Create(castRule.SourceCard).ToJson(),
-            Target = effect.Target?.TargetTypeAndId(),
+            Targets = effect.Targets.Select(t => t.TargetTypeAndId()).ToList(),
             ControllerId = effect.Controller.Id,
           };
         default:

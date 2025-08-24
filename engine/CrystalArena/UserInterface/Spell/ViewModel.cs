@@ -78,7 +78,7 @@
 
         case (InteractionState.SelectTarget):
           _select = ChangeSelection;
-          IsPlayable = false;// IsValidTarget();
+          IsPlayable = IsValidTarget();
           break;
 
         default:
