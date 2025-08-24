@@ -6,14 +6,6 @@ import useHover from "@/utils/useHover";
 
 export default function HoveredCard() {
     const { hoveredCard, setHoveredCard } = useContext(ClientContext);
-    const { ref } = useHover({
-        onHoverIn: () => {
-            setHoveredCard(hoveredCard);
-        },
-        onHoverOut: () => {
-            setHoveredCard(null);
-        }
-    });
     if (!hoveredCard) return null;
 
     return <ChakraDialog.Root 
@@ -26,8 +18,8 @@ export default function HoveredCard() {
     >
     <Portal>
     <ChakraDialog.Positioner pointerEvents="none">
-        <ChakraDialog.Content ref={ref} boxShadow="none" borderColor="transparent" backgroundColor="transparent" pointerEvents="none" >
-            <ChakraDialog.Body>
+        <ChakraDialog.Content boxShadow="none" borderColor="transparent" backgroundColor="transparent" pointerEvents="none" >
+            <ChakraDialog.Body pointerEvents="none">
                 <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
                     <Card card={{
                         ...hoveredCard,
@@ -37,7 +29,7 @@ export default function HoveredCard() {
                         isSelectedForCombat: false,
                         isTargetOfSpell: false,
                         isPlayable: false,
-                    }} size="xl" />
+                    }} size="xl" displayHoverCard={false}/>
                 </Flex>
             </ChakraDialog.Body>
             </ChakraDialog.Content>

@@ -41,17 +41,18 @@ type Props = {
     size?: CardSize;
     containerProps?: Partial<CardContainerProps>;
     displayTextOverlay?: boolean;
+    displayHoverCard?: boolean
 }
 
-export default function Card({ card, text, size, containerProps, displayTextOverlay = true }: Props) {
+export default function Card({ card, text, size, containerProps, displayTextOverlay = true, displayHoverCard = card.isVisibleInUi }: Props) {
     const doAction = useDoAction(card.oid);
     const { setHoveredCard } = useContext(ClientContext);
     const { isHovered, ref } = useHover({
         onHoverIn: () => {
-            card.isVisibleInUi && setHoveredCard(card);
+            displayHoverCard && setHoveredCard(card);
         },
         onHoverOut: () => {
-            card.isVisibleInUi && setHoveredCard(null);
+            displayHoverCard && setHoveredCard(null);
         }
     });
     const displayedText = text || card.text;
