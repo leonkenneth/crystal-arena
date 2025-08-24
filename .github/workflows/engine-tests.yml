@@ -1,0 +1,44 @@
+name: Engine Tests
+
+on:
+  pull_request:
+    branches: ["**"]
+    paths:
+      - 'engine/**'
+      - '.github/workflows/engine-tests.yml'
+
+jobs:
+  test:
+    name: Run .NET tests (engine)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore CrystalArena.Tests/CrystalArena.Tests.csproj
+
+      - name: Build tests
+        run: dotnet build CrystalArena.Tests/CrystalArena.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test CrystalArena.Tests/CrystalArena.Tests.csproj --configuration Release --no-build --logger trx --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-test-results
+          path: engine/TestResults
+          if-no-files-found: warn
+
+
