@@ -59,18 +59,13 @@ function replaceDamageX(textParts: (string | React.ReactNode)[]) : React.ReactNo
 function replaceNewLine(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
     return applyStringTransform(textParts, (text, i) => {
         const parts = text.split(/\n+/g);
+        console.log(parts);
         return parts.map((part, index) => {
             if (index === 0) {
                 return part;
             }
-            return <br key={`newline-${i}-${index}`} />;
+            return <span key={`newline-${i}-${index}`}><br />{part}</span>;
         });
-    });
-}
-
-function wrapStringsInSpans(textParts: (string | React.ReactNode)[]) : React.ReactNode[] {
-    return applyStringTransform(textParts, (text, index) => {
-        return <span key={`span-${index}`}>{text}</span>;
     });
 }
     
@@ -80,6 +75,5 @@ export default function CardText({ text } : Props) {
     processedText = replaceIcons(processedText);
     processedText = replaceDamageX(processedText);
     processedText = replaceNewLine(processedText);
-    processedText = wrapStringsInSpans(processedText);
     return <div>{processedText}</div>;
 }
