@@ -4,6 +4,7 @@ import SelectTargetDialog from "./SelectTargetDialog";
 import SelectAbilityDialog from "./SelectAbilityDialog";
 import NextTurnDialog from "./NextTurnDialog";
 import CardActivationDialog from "./CardActivationDialog";
+import GameResultsDialog from "./GameResultsDialog";
 
 export default function Dialogs() {
     const { gameState } = useLoadedGameContext();
@@ -26,6 +27,8 @@ export default function Dialogs() {
             return <PriorityDialog />;
         case "CardActivation":
             return <CardActivationDialog />;
+        case "GameResults":
+            return <GameResultsDialog />;
         default:
             throw new Error(`Unimplemented dialog type: ${dialogType}`);
     }

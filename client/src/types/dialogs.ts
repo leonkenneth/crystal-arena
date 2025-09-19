@@ -39,10 +39,15 @@ export type NextTurnDialogState = {
     message: string;
 }
 
+export type GameResultsDialogState = {
+    type: "GameResults";
+    message: string;
+}
+
 export type CardActivationDialogState = {
     type: "CardActivation";
     title: string;
 }
 
 export type SmallDialogState = PriorityDialogState | SelectTargetDialogState | CardActivationDialogState;
-export type LargeDialogState = SelectAbilityDialogState | NextTurnDialogState;
+export type LargeDialogState = SelectAbilityDialogState | NextTurnDialogState | GameResultsDialogState;
