@@ -17,15 +17,19 @@ export default function StackDrawer({ children, footer }: Props) {
     >
     <Portal>
     <ChakraDialog.Positioner pointerEvents="none">
-        <ChakraDialog.Content boxShadow="none" borderColor="transparent" backgroundColor="transparent" transform="translateX(-30vw)" pointerEvents="none">
+        <ChakraDialog.Content className="no-pointer-events" boxShadow="none" borderColor="transparent" backgroundColor="transparent" transform="translateX(-30vw)" pointerEvents="none">
         <ChakraDialog.Header justifyContent="center" pointerEvents="none">
             <ChakraDialog.Title color="fg" textStyle="outline">Stack</ChakraDialog.Title>
         </ChakraDialog.Header>
-            <ChakraDialog.Body pointerEvents="auto">
-                {children}
+            <ChakraDialog.Body pointerEvents="none">
+                <div className="pointer-events-auto">
+                    {children}
+                </div>
             </ChakraDialog.Body>
-        <ChakraDialog.Footer justifyContent="center" pointerEvents="auto">
-            {footer}
+        <ChakraDialog.Footer justifyContent="center" pointerEvents="none">
+            <div className="pointer-events-auto">
+                {footer}
+            </div>
         </ChakraDialog.Footer>
             </ChakraDialog.Content>
         </ChakraDialog.Positioner>

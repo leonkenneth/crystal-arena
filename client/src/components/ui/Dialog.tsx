@@ -10,6 +10,7 @@ type Props = {
 } & ChakraDialog.RootProps;
 
 export default function Dialog({ title, children, footer, isModal = true, transparent = false, ...props }: Props) {
+
     return <ChakraDialog.Root 
     open={true}
     modal={isModal}

@@ -38,8 +38,6 @@ function replaceIcons(textParts: (string | React.ReactNode)[]) : React.ReactNode
     return applyStringTransform(textParts, (text, i) => {
         const parts = text.split(/({[^}]+})/g);
         return parts.map((part, index) => {
-            console.log(part, iconsMap);
-
             const replacement = iconsMap[part];
             return replacement ? replacement(`icon-${i}-${index}`) : part;
         });

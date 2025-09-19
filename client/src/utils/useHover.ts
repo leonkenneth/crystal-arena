@@ -25,15 +25,12 @@ export default function useHover({ onHoverIn,  onHoverOut} : UseHoverProps) {
                 if (hoverTimeout) {
                     clearTimeout(hoverTimeout);
                 }
-                console.log("hover in", hoverId);
                 hoverTimeout = setTimeout(() => {
-                    console.log("hover in timeout", hoverId);
                     onHoverIn();
                     setIsHovered(true);
                 }, hoverTriggerTimeout);
             };
             mouseLeaveListener = () => {
-                console.log("hover out", hoverId);
                 if (hoverTimeout) {
                     clearTimeout(hoverTimeout);
                 }
