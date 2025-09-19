@@ -61,15 +61,15 @@ export default function Steps({ steps }: Props) {
     const activeStepIndex = stepsToDisplay.findIndex(step => step.isCurrent);
 
     return (
-        <StepsComponent.Root step={activeStepIndex + 1} size="sm">
+        <StepsComponent.Root step={stepsToDisplay.length} size="sm" variant="subtle" colorPalette="cyan">
             <StepsComponent.List>
                 {stepsToDisplay.map((step, index) => {
                     const stepInfo = stepsInfo[step.name];
                     return (
                         <StepsComponent.Item key={step.oid.oid} index={index}>
-                            <StepsComponent.Indicator color="fg.muted">{stepInfo.indicator}</StepsComponent.Indicator>
-                            <StepsComponent.Title color="fg.muted">{stepInfo.name}</StepsComponent.Title>
-                            <StepsComponent.Separator color="gray.100" />
+                            <StepsComponent.Indicator borderColor="fg.muted" border={activeStepIndex === index ? '1px solid' : 'none'}>{stepInfo.indicator}</StepsComponent.Indicator>
+                            <StepsComponent.Title>{stepInfo.name}</StepsComponent.Title>
+                            <StepsComponent.Separator />
                         </StepsComponent.Item>
                     )
                 })}

@@ -6,7 +6,7 @@ import LifeAndDamageZone from "./LifeAndDamageZone";
 import CollapsedZone from "./CollapsedZone/index";
 import MessageBox from "./Dialogs/MessageBox";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-import { VStack, HStack, StackSeparator, Box } from "@chakra-ui/react";
+import { VStack, HStack, StackSeparator, Box, Flex } from "@chakra-ui/react";
 import Dialogs from "./Dialogs/index";
 import Stack from "./Stack";
 import CPPool from "./CPPool";
@@ -88,9 +88,9 @@ export default function GameContent() {
                 </HStack>
                 {/* Steps and Pass Priority Button */}
                 <HStack w="full" p={4} justify="space-between" align="flex-start" maxW="100vw" bg="cyan.800">
-                    <Box flexGrow={1} flexShrink={1} overflowX="auto">
+                    <Flex flexGrow={1} flexShrink={1} overflowX="auto" h="full" placeItems="center">
                         <Steps steps={screen.steps} />
-                    </Box>
+                    </Flex>
                     <Box flexGrow={0} flexShrink={0}>
                         <PassPriorityButton />
                     </Box>
