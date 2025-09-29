@@ -89,7 +89,7 @@ export default function GameContent() {
                 {/* Steps and Pass Priority Button */}
                 <HStack w="full" p={4} justify="space-between" align="flex-start" maxW="100vw" bg="cyan.800">
                     <Flex flexGrow={1} flexShrink={1} overflowX="auto" h="full" placeItems="center">
-                        <Steps steps={screen.steps} />
+                        <Steps />
                     </Flex>
                     <Box flexGrow={0} flexShrink={0}>
                         <PassPriorityButton />

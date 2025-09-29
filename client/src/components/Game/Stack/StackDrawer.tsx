@@ -22,7 +22,7 @@ export default function StackDrawer({ children, footer }: Props) {
             <ChakraDialog.Title color="fg" textStyle="outline">Stack</ChakraDialog.Title>
         </ChakraDialog.Header>
             <ChakraDialog.Body pointerEvents="none">
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto-container">
                     {children}
                 </div>
             </ChakraDialog.Body>

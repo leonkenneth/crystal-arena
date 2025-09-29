@@ -29,6 +29,10 @@ body {
   pointer-events: none !important;
 }
 
-.pointer-events-auto {
+.pointer-events-auto-container {
+  pointer-events: none !important;
+}
+
+.pointer-events-auto-container .chakra-container * {
   pointer-events: auto !important;
 }
