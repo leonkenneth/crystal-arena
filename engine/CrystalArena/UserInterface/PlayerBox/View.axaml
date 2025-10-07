@@ -21,8 +21,6 @@
 
         <TextBlock Margin="0,0,5,0" FontSize="17" Text="{Binding Player.Name}" />
 
-        <TextBlock Margin="0,0,5,0" FontSize="12" Text="⟳" Foreground="#FFA0A0A0" 
-                   IsVisible="{Binding IsSearchInProgress}" />
 
         <Grid>
           <TextBlock x:Name="LifeIncrease" Text="{Binding LifeChange, StringFormat=+\{0\}}" Opacity="0.0" Foreground="#ffb1FF00" />

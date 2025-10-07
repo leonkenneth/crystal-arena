@@ -6,6 +6,7 @@ export type PlayerState = {
     breakZoneCount: number;
     life: number;
     isActive: boolean;
+    isSearchInProgress: boolean;
     playerName: string;
     oid: ObjectIdContainer;
 }
