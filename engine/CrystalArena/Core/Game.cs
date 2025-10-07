@@ -114,6 +114,7 @@ namespace CrystalArena
     public Stack Stack { get; private set; }
     public TurnInfo Turn { get; private set; }
     public SearchRunner Ai { get; private set; }
+    public bool IsSearchInProgress { get { return Ai?.IsSearchInProgress ?? false; } }
     public RandomGenerator Random { get; private set; }
     public GameRecorder Recorder { get; private set; }    
     public Settings Settings { get; private set; }

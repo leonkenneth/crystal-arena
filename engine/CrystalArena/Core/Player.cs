@@ -100,6 +100,8 @@
 
     public bool HasAttackedThisTurn { get { return IsActive && Game.Turn.Events.HasActivePlayerAttackedThisTurn; } }
 
+    public bool IsSearchInProgress { get { return Game?.IsSearchInProgress == true && Game?.Players?.Searching == this; } }
+
     public int NumberOfCardsAboveMaximumHandSize { get { return Math.Max(0, _hand.Count - 5); } }
 
     public IEnumerable<Emblem> Emblems { get { return _emblems; } }    

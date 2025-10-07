@@ -37,6 +37,7 @@
     public virtual bool IsActive { get; protected set; }    
     public virtual int LifeChange { get; protected set; }
     public virtual List<string> Emblems { get; protected set; }
+    public virtual bool IsSearchInProgress { get; protected set; }
 
     public Animation IncreaseLifeAnimation { get; private set; }
     public Animation DecreaseLifeAnimation { get; private set; }    
@@ -54,6 +55,7 @@
         IsActive,
         LifeChange,
         Emblems,
+        IsSearchInProgress,
         PlayerName = Player.Name,
         PlayerId = Player.Id,
         PlayerType = Player.Type.ToString(),
@@ -93,6 +95,8 @@
         });
 
       Update(() => IsActive = Player.IsActive, () => IsActive = Player.IsActive);
+      
+      Update(() => IsSearchInProgress != Player.IsSearchInProgress, () => IsSearchInProgress = Player.IsSearchInProgress);
     }
 
     private void AnimateLifeChange(int oldLife, int newLife)
