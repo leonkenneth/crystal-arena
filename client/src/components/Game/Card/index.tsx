@@ -1,5 +1,5 @@
 import { CardState } from "@/types";
-import { CardBody, Card as ChakraCard, Text } from "@chakra-ui/react";
+import { CardBody } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
 import CardBack, { CardBackImage } from "./CardBack";
@@ -47,12 +47,12 @@ type Props = {
 export default function Card({ card, text, size, containerProps, displayTextOverlay = true, displayHoverCard = card.isVisibleInUi }: Props) {
     const doAction = useDoAction(card.oid);
     const { setHoveredCard } = useContext(ClientContext);
-    const { isHovered, ref } = useHover({
+    const { ref } = useHover({
         onHoverIn: () => {
-            displayHoverCard && setHoveredCard(card);
+            if (displayHoverCard) setHoveredCard(card);
         },
         onHoverOut: () => {
-            displayHoverCard && setHoveredCard(null);
+            if (displayHoverCard) setHoveredCard(null);
         }
     });
     const displayedText = text || card.text;
@@ -64,7 +64,7 @@ export default function Card({ card, text, size, containerProps, displayTextOver
         return doAction("Select");
     }
 
-    // @ts-ignore
+    // @ts-expect-error - isSelectedForCombat may not exist on all CardState types
     const isSelected = card.isSelected || card.isSelectedForCombat;
 
     return <CardContainer

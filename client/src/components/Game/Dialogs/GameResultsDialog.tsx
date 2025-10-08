@@ -8,7 +8,7 @@ export default function GameResultsDialog() {
     const { message } = gameState.screen.largeDialog as GameResultsDialogState;
 
     return <Dialog title="Game results" footer={
-        // @ts-ignore
+        // @ts-expect-error - Button does not have href prop in type definition but works at runtime
     <Button as="a" href="/">New game</Button>
     }>
             <Text color="fg">{message}</Text>

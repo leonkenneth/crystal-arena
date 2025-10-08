@@ -1,10 +1,6 @@
-import { StepsState, StepState } from "@/types";
+import { StepState } from "@/types";
 import { Steps as StepsComponent, Box } from "@chakra-ui/react";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-
-interface Props {
-    steps: StepsState;
-}
 
 const nonCombatStepsToDisplay = ["Draw", "1st main", "Beg. of combat", "2nd main", "End of turn"];
 const combatSteps = ["Dec. attackers", "Dec. blockers", "Combat damage"];

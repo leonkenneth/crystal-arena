@@ -1,3 +1,4 @@
+import Image from "next/image";
 import crystalIcon from "@/assets/icons/crystal.png";
 import darkIcon from "@/assets/icons/dark.png";
 import dullIcon from "@/assets/icons/dull.png";
@@ -39,6 +40,6 @@ type Props = {
 }
 export default function ImageIcon({ icon }: Props) {
     return (
-        <img src={icons[icon].src} alt={icon} style={{ objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
+        <Image src={icons[icon]} alt={icon} style={{ objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
     );
 }

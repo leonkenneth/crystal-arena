@@ -7,6 +7,7 @@ function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export default function useDoAction<T extends {} | undefined>(oid: ObjectIdContainer) {
     const { gameId, refresh } = useLoadedGameContext();
 

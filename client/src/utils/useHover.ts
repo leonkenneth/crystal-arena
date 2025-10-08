@@ -20,7 +20,6 @@ export default function useHover({ onHoverIn,  onHoverOut} : UseHoverProps) {
             if (!node.getAttribute("data-hover-id")) {
                 node.setAttribute("data-hover-id", divid());
             }
-            const hoverId = node.getAttribute("data-hover-id");
             mouseEnterListener = () => {
                 if (hoverTimeout) {
                     clearTimeout(hoverTimeout);
@@ -48,6 +47,6 @@ export default function useHover({ onHoverIn,  onHoverOut} : UseHoverProps) {
             node?.removeEventListener("mouseenter", mouseEnterListener, true);
             node?.removeEventListener("mouseleave", mouseLeaveListener, true);
         }
-    }, []);
+    }, [onHoverIn, onHoverOut]);
     return { isHovered, ref };
 }
