@@ -1,6 +1,5 @@
 import { Dialog as ChakraDialog, Portal } from "@chakra-ui/react";
-import { useEffect } from "react";
-import Dialog from "@/components/ui/Dialog";
+
 type Props = {
   children: React.ReactNode;
   footer: React.ReactNode;

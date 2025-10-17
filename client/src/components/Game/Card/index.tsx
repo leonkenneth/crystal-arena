@@ -1,16 +1,16 @@
 import { CardState, ObjectIdContainer, PlayableActivationState } from "@/types";
-import { CardBody, Card as ChakraCard, Text } from "@chakra-ui/react";
+import { CardBody } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
 import CardBack, { CardBackImage } from "./CardBack";
 import CardContainer, { type Props as CardContainerProps } from "./CardContainer";
-import CardText from "./CardText";
 import { CardSize } from "./size";
 import useHover from "@/utils/useHover";
 import { ClientContext } from "@/utils/ClientContext";
 import { useContext } from "react";
 import { isTargeted } from "@/utils/gameStateQueries";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
+import CardText from "./CardText";
 
 const imageProxyBaseUrl = process.env.IMAGE_PROXY_BASE_URL || "http://localhost:4000";
 
@@ -78,12 +78,16 @@ export default function Card({
   const doAction = useDoAction(card.oid);
   const { gameState } = useLoadedGameContext();
   const { setHoveredCard } = useContext(ClientContext);
-  const { isHovered, ref } = useHover({
+  const { ref } = useHover({
     onHoverIn: () => {
-      displayHoverCard && setHoveredCard(card);
+      if (displayHoverCard) {
+        setHoveredCard(card);
+      }
     },
     onHoverOut: () => {
-      displayHoverCard && setHoveredCard(null);
+      if (displayHoverCard) {
+        setHoveredCard(null);
+      }
     },
   });
   const displayedText = text || card.text;
@@ -95,7 +99,7 @@ export default function Card({
   };
 
   const cardIsTargeted = isTargeted(gameState, card.cardId);
-  // @ts-ignore
+  // @ts-expect-error - card.isSelected is not defined in the CardState type
   const isSelected = card.isSelected || card.isSelectedForCombat || cardIsTargeted;
   const playableActivations = card.playableActivations;
 
@@ -131,6 +135,7 @@ export default function Card({
               {playableActivations && (
                 <SelectQuickActivation cardOid={card.oid} activations={playableActivations} />
               )}
+              {displayedText && <CardText text={displayedText} />}
             </CardBody>
           )}
         </>

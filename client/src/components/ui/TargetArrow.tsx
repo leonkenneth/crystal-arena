@@ -7,8 +7,6 @@ type Props = {
   toCardId: number;
 };
 
-type ElementLocation = { x: number; y: number };
-
 export const ArrowPortal = ({
   x1,
   y1,
@@ -101,10 +99,6 @@ export default function TargetArrow({ fromCardId, toCardId }: Props) {
 
   const targetZone = getCardZone(gameState, toCardId);
 
-  if (targetZone === null || targetZone === "BreakZone" || targetZone === "MainDeck") {
-    return null;
-  }
-
   const to = `card-${toCardId}`;
 
   const updateArrow = useCallback(
@@ -129,9 +123,13 @@ export default function TargetArrow({ fromCardId, toCardId }: Props) {
 
   useEffect(() => {
     requestAnimationFrame(updateArrow);
-  }, [attr, from, to]);
+  }, [attr, from, to, updateArrow]);
 
   if (!fromLocation || !toLocation) return null;
+  if (targetZone === null || targetZone === "BreakZone" || targetZone === "MainDeck") {
+    return null;
+  }
+
 
   const top = fromLocation.y + fromLocation.height / 2;
   const bottom = toLocation.y + toLocation.height / 2;

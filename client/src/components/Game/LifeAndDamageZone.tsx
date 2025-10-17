@@ -1,6 +1,6 @@
 import { DamageZoneState } from "@/types";
 import CollapsedZone from "./CollapsedZone";
-import { Container, HStack, Text } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import Card from "./Card";
 import { CardState } from "@/types";
 

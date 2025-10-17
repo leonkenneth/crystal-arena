@@ -1,6 +1,6 @@
 import { EffectState } from "@/types";
 import Card from "../Card";
-import TargetArrow, { ArrowPortal } from "@/components/ui/TargetArrow";
+import TargetArrow from "@/components/ui/TargetArrow";
 
 type StackEffectProps = {
   effect: EffectState;

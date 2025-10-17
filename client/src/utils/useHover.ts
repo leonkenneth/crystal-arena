@@ -1,9 +1,5 @@
 import { useCallback, useState } from "react";
 
-function divid() {
-  return performance.now().toString();
-}
-
 type UseHoverProps = {
   onHoverIn: () => void;
   onHoverOut: () => void;
@@ -17,10 +13,6 @@ export default function useHover({ onHoverIn, onHoverOut }: UseHoverProps) {
     let mouseLeaveListener: () => void;
     let hoverTimeout: NodeJS.Timeout | null = null;
     if (node) {
-      if (!node.getAttribute("data-hover-id")) {
-        node.setAttribute("data-hover-id", divid());
-      }
-      const hoverId = node.getAttribute("data-hover-id");
       mouseEnterListener = () => {
         if (hoverTimeout) {
           clearTimeout(hoverTimeout);

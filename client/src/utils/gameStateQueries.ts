@@ -4,6 +4,7 @@ import {
   ZoneType,
   BattlefieldRowState,
   TargetTypeAndId,
+  ZoneState,
 } from "@/types";
 
 export function getCard(gameState: LoadedGameState, id: number) {
@@ -85,8 +86,7 @@ export function selection(
   gameState: LoadedGameState,
   options: { only?: "yours" | "opponents" } = {}
 ): CardState[] {
-  // @ts-ignore
-  return cards(gameState, options).filter(
+  return cards(gameState, options).filter(  // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
     (card: CardState) => card.isSelected || card.isSelectedForCombat
   );
 }

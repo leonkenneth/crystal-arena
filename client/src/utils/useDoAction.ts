@@ -7,11 +7,11 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export async function doAction(
+export async function doAction<T extends Record<string, unknown>>(
   gameId: string,
   oid: ObjectIdContainer,
   action: string,
-  otherParams?: {}
+  otherParams?: T
 ) {
   const capitalizedParams = Object.fromEntries(
     Object.entries(otherParams || {}).map(([key, value]) => [capitalize(key), value])
@@ -21,7 +21,7 @@ export async function doAction(
   await get(`/games/${gameId}/oidcallback/${oid.oid}/${base64message}`);
 }
 
-export default function useDoAction<T extends {} | undefined>(oid: ObjectIdContainer) {
+export default function useDoAction<T extends Record<string, unknown> | undefined>(oid: ObjectIdContainer) {
   const { gameId, refresh } = useLoadedGameContext();
 
   return useCallback(

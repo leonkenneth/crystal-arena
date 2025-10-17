@@ -37,4 +37,4 @@ export type LoadedGameState = {
   currentDialog: CurrentDialogState | null;
 };
 
-export type GameState = { loaded: false } | LoadedGameState;
+export type GameState = { loaded: false; error: string } | LoadedGameState;

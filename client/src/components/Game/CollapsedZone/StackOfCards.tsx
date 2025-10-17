@@ -1,8 +1,6 @@
 import { CardState } from "@/types";
 import Card from "../Card";
 import EmptyCardSlot from "../Card/EmptyCardSlot";
-import { useState } from "react";
-import ExpandedZoneDialog from "./ExpandedZoneDialog";
 
 function NoCards() {
   return <EmptyCardSlot />;

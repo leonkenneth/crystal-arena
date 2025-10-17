@@ -1,5 +1,4 @@
 import { Dialog as ChakraDialog, Portal } from "@chakra-ui/react";
-import { useEffect } from "react";
 
 type Props = {
   title?: string | React.ReactNode;

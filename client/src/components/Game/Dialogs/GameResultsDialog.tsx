@@ -11,7 +11,7 @@ export default function GameResultsDialog() {
     <Dialog
       title="Game results"
       footer={
-        // @ts-ignore
+        // @ts-expect-error - href is not defined in the ButtonProps type
         <Button as="a" href="/">
           New game
         </Button>

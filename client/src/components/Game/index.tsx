@@ -6,7 +6,6 @@ import { GameState } from "@/types";
 import GameContent from "./GameContent";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LoadedGameContext } from "@/utils/LoadedGameContext";
-import { useEffect } from "react";
 
 function Game({ id }: { id: string }) {
   const refreshInterval = 1000;
@@ -24,8 +23,7 @@ function Game({ id }: { id: string }) {
   const { data: gameState, isFetching, isError, isRefetching } = queryResult;
 
   // Polling is handled by react-query's refetchInterval. No manual timers.
-
-  // @ts-ignore
+  // @ts-expect-error - gameState.error is not defined on GameState type
   if (gameState?.error?.match(/not found/i)) {
     return <div>Game not found</div>;
   }
