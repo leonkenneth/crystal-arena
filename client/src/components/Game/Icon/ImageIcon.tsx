@@ -8,37 +8,44 @@ import lightIcon from "@/assets/icons/light.png";
 import lightningIcon from "@/assets/icons/lightning.png";
 import windIcon from "@/assets/icons/wind.png";
 import waterIcon from "@/assets/icons/water.png";
-export type ImageIconType = 
-    "crystal" |
-    "dark" |
-    "dull" |
-    "earth" |
-    "fire" |
-    "ice" |
-    "light" |
-    "lightning" |
-    "wind" |
-    "water";
-
-
+export type ImageIconType =
+  | "crystal"
+  | "dark"
+  | "dull"
+  | "earth"
+  | "fire"
+  | "ice"
+  | "light"
+  | "lightning"
+  | "wind"
+  | "water";
 
 const icons = {
-    crystal: crystalIcon,
-    dark: darkIcon,
-    dull: dullIcon,
-    earth: earthIcon,
-    fire: fireIcon,
-    ice: iceIcon,
-    light: lightIcon,
-    lightning: lightningIcon,
-    wind: windIcon,
-    water: waterIcon,
-}
+  crystal: crystalIcon,
+  dark: darkIcon,
+  dull: dullIcon,
+  earth: earthIcon,
+  fire: fireIcon,
+  ice: iceIcon,
+  light: lightIcon,
+  lightning: lightningIcon,
+  wind: windIcon,
+  water: waterIcon,
+};
 type Props = {
-    icon: ImageIconType;
-}
+  icon: ImageIconType;
+};
 export default function ImageIcon({ icon }: Props) {
-    return (
-        <img src={icons[icon].src} alt={icon} style={{ objectFit: "contain", objectPosition: "center", display: "inline-block", verticalAlign: "middle" }} />
-    );
+  return (
+    <img
+      src={icons[icon].src}
+      alt={icon}
+      style={{
+        objectFit: "contain",
+        objectPosition: "center",
+        display: "inline-block",
+        verticalAlign: "middle",
+      }}
+    />
+  );
 }

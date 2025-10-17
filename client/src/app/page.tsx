@@ -4,9 +4,7 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold">
-          💎 Crystal Arena
-        </h1>
+        <h1 className="text-4xl font-bold">💎 Crystal Arena</h1>
         <p className="text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           An FFTCG simulation engine for fun and learning.
         </p>
@@ -27,7 +25,8 @@ export default function Home() {
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <p className="text-xs/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are trademarks or registered trademarks of Square Enix Holdings Co., Ltd.
+          FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are trademarks or registered
+          trademarks of Square Enix Holdings Co., Ltd.
         </p>
       </footer>
     </div>
