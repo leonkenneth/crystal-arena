@@ -7,7 +7,10 @@ type Props = {
 };
 
 export default function Icon({ icon, x }: Props) {
-  if (icon === "X" && x !== undefined) {
+  if (icon === "X") {
+    if (typeof x !== "number") {
+      throw new Error("X icon must have a number value");
+    }
     return <IconContainer shape="circle">{x}</IconContainer>;
   }
 

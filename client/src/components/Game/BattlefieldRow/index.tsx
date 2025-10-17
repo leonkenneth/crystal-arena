@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function BattlefieldRow({ row }: Props) {
-  const { height } = getCardSize("small");
+  const { height } = getCardSize("md");
   return (
     <HStack w="full" overflowX="scroll" justifyContent="center" minH={height}>
       {row.slots.map((slot: SlotState, i: number) => (

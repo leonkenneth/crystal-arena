@@ -63,6 +63,7 @@ export default function SelectTargetDialog() {
   }
 
   return (
+    // @ts-expect-error - children is not defined in the DialogProps type
     <Dialog
       title={text}
       footer={
