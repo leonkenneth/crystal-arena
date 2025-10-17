@@ -2,11 +2,11 @@ import { CardState } from "@/types";
 import { createContext } from "react";
 
 export const ClientContext = createContext<ClientContextType>({
-    hoveredCard: null,
-    setHoveredCard: () => {}
+  hoveredCard: null,
+  setHoveredCard: () => {},
 });
 
 export type ClientContextType = {
-    hoveredCard: null | CardState;
-    setHoveredCard: (card: null | CardState) => void;
-}
+  hoveredCard: null | CardState;
+  setHoveredCard: (card: null | CardState) => void;
+};

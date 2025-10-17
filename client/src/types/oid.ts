@@ -1,3 +1,3 @@
 export type ObjectIdContainer = {
-    oid: string;
-}
+  oid: string;
+};
