@@ -12,7 +12,7 @@ import { isTargeted } from "@/utils/gameStateQueries";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import CardText from "./CardText";
 
-const imageProxyBaseUrl = process.env.IMAGE_PROXY_BASE_URL || "http://localhost:4000";
+const imageProxyBaseUrl = process.env.NEXT_PUBLIC_IMAGE_PROXY_BASE_URL || "http://localhost:4000";
 
 function addArrayToQueryParams(searchParams: URLSearchParams, key: string, array: string[]) {
   array.forEach((item) => {

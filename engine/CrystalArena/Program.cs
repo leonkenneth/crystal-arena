@@ -91,12 +91,7 @@ sealed class Program
             return "oid callbacked";
         });
         
-        app.MapGet("/internal/games/{id}/save", (string id) =>
-        {
-            var ui = GameRepository.ResolveUi(id);
-            var savedGame = ui.Match.Game.Save();
-            
-        });
+        app.MapGet("/internal/region", () => new { Region = Environment.GetEnvironmentVariable("FLY_REGION") });
         app.MapPost("/internal/games", () =>
         {
             var nextGameId = GameRepository.NextId();
