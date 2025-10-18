@@ -1,5 +1,6 @@
 import { CardState } from "@/types";
-import { Button, CloseButton, Dialog, HStack, Portal, VStack, Text } from "@chakra-ui/react";
+import { CloseButton, Dialog, HStack, Portal, VStack, Text } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 import Card from "../Card";
 
 type Props = {
@@ -49,7 +50,7 @@ export default function ExpandedZoneDialog({ title, cards, onClose }: Props) {
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline" onClick={onClose}>
+                <Button variant="secondary" onClick={onClose}>
                   Close
                 </Button>
               </Dialog.ActionTrigger>

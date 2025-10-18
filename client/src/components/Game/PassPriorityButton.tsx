@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import { get } from "@/utils/api";
 
@@ -15,7 +15,11 @@ export default function PassPriorityButton() {
   };
 
   return (
-    <Button onClick={passPriority} disabled={!priorityEnabled || !priorityCallbackId}>
+    <Button
+      variant="primary"
+      onClick={passPriority}
+      disabled={!priorityEnabled || !priorityCallbackId}
+    >
       {label}
     </Button>
   );

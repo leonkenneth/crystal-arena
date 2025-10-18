@@ -2,11 +2,12 @@
 
 import { post } from "@/utils/api";
 import { useRouter } from "next/navigation";
-import { Button } from "@chakra-ui/react";
-import type { ButtonProps } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
+import type { ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
 
-type Props = ButtonProps & {
+type Props = ChakraButtonProps & {
   children: React.ReactNode;
+  variant?: "primary" | "secondary";
 };
 
 export default function PlayNowButton({ children, ...props }: Props) {

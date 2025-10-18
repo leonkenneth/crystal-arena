@@ -1,7 +1,8 @@
 import { GameResultsDialogState } from "@/types";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import Dialog from "@/components/ui/Dialog";
-import { Text, Button } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 
 export default function GameResultsDialog() {
   const { gameState } = useLoadedGameContext();
@@ -12,12 +13,12 @@ export default function GameResultsDialog() {
       title="Game results"
       footer={
         // @ts-expect-error - href is not defined in the ButtonProps type
-        <Button as="a" href="/">
+        <Button variant="primary" as="a" href="/">
           New game
         </Button>
       }
     >
-      <Text color="fg">{message}</Text>
+      <Text color="fg" textAlign="center">{message}</Text>
     </Dialog>
   );
 }

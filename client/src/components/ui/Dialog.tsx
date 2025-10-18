@@ -13,7 +13,7 @@ export default function Dialog({
   children,
   footer,
   isModal = true,
-  transparent = false,
+  transparent = true,
   ...props
 }: Props) {
   return (
@@ -48,6 +48,7 @@ export default function Dialog({
             {children && (
               <ChakraDialog.Body
                 textStyle={transparent ? "outline" : undefined}
+                justifyContent="center"
                 p={transparent ? 0 : 4}
                 pointerEvents={transparent ? "none" : "auto"}
               >

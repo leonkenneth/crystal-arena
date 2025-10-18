@@ -9,7 +9,7 @@ export default function NextTurnDialog() {
 
   return (
     <Dialog title="New turn starts">
-      <Text color="fg">{message}</Text>
+      <Text color="fg" textAlign="center">{message}</Text>
     </Dialog>
   );
 }

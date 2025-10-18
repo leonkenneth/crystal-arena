@@ -25,24 +25,7 @@ export default function Home() {
         </Text>
 
         <HStack gap={4} align="center" flexDirection={{ base: "column", sm: "row" }} w={{ base: "full", sm: "auto" }}>
-          <PlayNowButton
-            bg="white"
-            color="black"
-            borderRadius="full"
-            border="none"
-            transition="all 0.2s"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            gap={2}
-            _hover={{ bg: "gray.300" }}
-            fontWeight="medium"
-            fontSize={{ base: "sm", sm: "md" }}
-            h={{ base: 10, sm: 12 }}
-            px={{ base: 4, sm: 5 }}
-            w={{ base: "full", sm: "auto" }}
-            cursor="pointer"
-          >
+          <PlayNowButton variant="primary" gap={2}>
             Play now
           </PlayNowButton>
           <Link

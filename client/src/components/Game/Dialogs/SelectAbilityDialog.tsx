@@ -1,13 +1,19 @@
 import { SelectAbilityDialogState } from "@/types";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-import { Button } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";
 import CardText from "../Card/CardText";
 
 function AbilityButton({ description, onClick }: { description: string; onClick: () => void }) {
   return (
-    <Button display="block" onClick={onClick} marginBottom="0.5rem" width="100%">
+    <Button
+      variant="secondary"
+      display="block"
+      onClick={onClick}
+      marginBottom="0.5rem"
+      width="100%"
+    >
       <CardText text={description} />
     </Button>
   );
@@ -24,7 +30,13 @@ export default function SelectAbilityDialog() {
   return (
     <Dialog
       title="Select an ability"
-      footer={canCancel && <Button onClick={onCancelClick}>Cancel</Button>}
+      footer={
+        canCancel && (
+          <Button variant="secondary" onClick={onCancelClick}>
+            Cancel
+          </Button>
+        )
+      }
     >
       {descriptions.map((description, index) => (
         <AbilityButton

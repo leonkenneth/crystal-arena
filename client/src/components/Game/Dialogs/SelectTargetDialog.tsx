@@ -1,6 +1,7 @@
 import { CardOutsideFieldState, SelectTargetDialogState } from "@/types";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-import { Button } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";
 import { selection } from "@/utils/gameStateQueries";
@@ -67,10 +68,16 @@ export default function SelectTargetDialog() {
     <Dialog
       title={text}
       footer={
-        <>
-          {canCancel && <Button onClick={onCancelClick}>Cancel</Button>}
-          <Button onClick={onOkClick}>{validateButtonText}</Button>
-        </>
+        <HStack gap={3}>
+          {canCancel && (
+            <Button variant="secondary" onClick={onCancelClick}>
+              Cancel
+            </Button>
+          )}
+          <Button variant="primary" onClick={onOkClick}>
+            {validateButtonText}
+          </Button>
+        </HStack>
       }
       isModal={false}
     ></Dialog>

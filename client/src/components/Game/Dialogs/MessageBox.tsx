@@ -1,6 +1,6 @@
 import { MessageBoxState } from "@/types";
-import { Text } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
+import { Text, HStack } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 import { get } from "@/utils/api";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import Dialog from "@/components/ui/Dialog";
@@ -13,14 +13,14 @@ function ButtonSet({
 }) {
   if (type === "YesNo") {
     return (
-      <>
-        <Button colorScheme="green" mr={3} onClick={() => onCallback("Yes")}>
+      <HStack gap={3}>
+        <Button variant="primary" onClick={() => onCallback("Yes")}>
           Yes
         </Button>
-        <Button variant="ghost" onClick={() => onCallback("No")}>
+        <Button variant="secondary" onClick={() => onCallback("No")}>
           No
         </Button>
-      </>
+      </HStack>
     );
   }
   throw new Error(`Unknown button type: ${type}`);
@@ -46,7 +46,7 @@ export default function MessageBox({ messageBox }: Props) {
       title={title}
       footer={<ButtonSet type={messageBox.buttons} onCallback={handleCallback} />}
     >
-      {message && <Text color="fg">{message}</Text>}
+      {message && <Text color="fg" textAlign="center">{message}</Text>}
     </Dialog>
   );
 }
