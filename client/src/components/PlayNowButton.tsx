@@ -2,12 +2,14 @@
 
 import { post } from "@/utils/api";
 import { useRouter } from "next/navigation";
-type Props = {
-  className: string;
+import { Button } from "@chakra-ui/react";
+import type { ButtonProps } from "@chakra-ui/react";
+
+type Props = ButtonProps & {
   children: React.ReactNode;
 };
 
-export default function PlayNowButton({ className, children }: Props) {
+export default function PlayNowButton({ children, ...props }: Props) {
   const router = useRouter();
 
   const onPlayNowClick = async () => {
@@ -17,8 +19,8 @@ export default function PlayNowButton({ className, children }: Props) {
   };
 
   return (
-    <button className={className} onClick={onPlayNowClick}>
+    <Button onClick={onPlayNowClick} {...props}>
       {children}
-    </button>
+    </Button>
   );
 }

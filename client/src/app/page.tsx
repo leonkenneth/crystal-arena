@@ -1,34 +1,81 @@
+"use client";
+
 import PlayNowButton from "@/components/PlayNowButton";
+import { VStack, Heading, Text, HStack, Link } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold">💎 Crystal Arena</h1>
-        <p className="text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          An FFTCG simulation engine for fun and learning.
-        </p>
+    <VStack
+      minH="100vh"
+      bg="cyan.950"
+      p={{ base: 8, sm: 20 }}
+      justify="space-between"
+      align="center"
+    >
+      {/* Spacer */}
+      <VStack />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <PlayNowButton className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto hover:cursor-pointer">
+      {/* Main Content - Centered */}
+      <VStack gap={8} align="center" maxW="2xl">
+        <Heading size="4xl" fontWeight="bold" color="white" textAlign="center">
+          💎 Crystal Arena
+        </Heading>
+        <Text fontSize="sm" textAlign="center" fontFamily="mono" color="gray.300">
+          An FFTCG simulation engine for fun and learning.
+        </Text>
+
+        <HStack gap={4} align="center" flexDirection={{ base: "column", sm: "row" }} w={{ base: "full", sm: "auto" }}>
+          <PlayNowButton
+            bg="white"
+            color="black"
+            borderRadius="full"
+            border="none"
+            transition="all 0.2s"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            gap={2}
+            _hover={{ bg: "gray.300" }}
+            fontWeight="medium"
+            fontSize={{ base: "sm", sm: "md" }}
+            h={{ base: 10, sm: 12 }}
+            px={{ base: 4, sm: 5 }}
+            w={{ base: "full", sm: "auto" }}
+            cursor="pointer"
+          >
             Play now
           </PlayNowButton>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
+          <Link
             href="https://github.com/leonkenneth/crystal-arena"
             target="_blank"
             rel="noopener noreferrer"
+            borderRadius="full"
+            border="1px solid"
+            borderColor="whiteAlpha.200"
+            transition="all 0.2s"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            _hover={{ bg: "whiteAlpha.100", borderColor: "transparent" }}
+            fontWeight="medium"
+            fontSize={{ base: "sm", sm: "md" }}
+            h={{ base: 10, sm: 12 }}
+            px={{ base: 4, sm: 5 }}
+            w={{ base: "full", sm: "auto", md: "158px" }}
+            textDecoration="none"
           >
             See on GitHub
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <p className="text-xs/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          </Link>
+        </HStack>
+      </VStack>
+
+      {/* Footer - Bottom */}
+      <VStack gap={6} align="center" justify="center">
+        <Text fontSize="xs" textAlign="center" fontFamily="mono" color="whiteAlpha.700" maxW="lg">
           FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are trademarks or registered
           trademarks of Square Enix Holdings Co., Ltd.
-        </p>
-      </footer>
-    </div>
+        </Text>
+      </VStack>
+    </VStack>
   );
 }
