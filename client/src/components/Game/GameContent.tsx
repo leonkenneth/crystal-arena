@@ -15,37 +15,17 @@ import { useState } from "react";
 import { CardState } from "@/types";
 import { ClientContext } from "@/utils/ClientContext";
 import HoveredCard from "./HoveredCard";
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
 import { DroppableZone } from "../ui/DroppableZone";
-import Card from "./Card";
-import { doAction } from "@/utils/useDoAction";
+import DragAndDropHandler from "./Card/DragAndDropHandler";
 
 export default function GameContent() {
   const { gameState } = useLoadedGameContext();
   const [hoveredCard, setHoveredCard] = useState<CardState | null>(null);
-  const [draggedCard, setDraggedCard] = useState<CardState | null>(null);
   const screen = gameState.screen;
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const card = event.active.data.current as CardState;
-    setDraggedCard(null);
-    setHoveredCard(null);
-    if (event.over) {
-      const zoneId = event.over.id as string;
-      const abilityId = card.playableActivations?.find((a) => a.playZone === zoneId)?.abilityId;
-      if (abilityId) {
-        doAction(gameState.id, card.oid, "ActivateAbilityFromAbilityId", { abilityId });
-      }
-    }
-  };
-
-  const handleDragStart = (event: DragStartEvent) => {
-    setDraggedCard(event.active.data.current as CardState);
-  };
-
   return (
-    <ClientContext.Provider value={{ hoveredCard, setHoveredCard, draggedCard, setDraggedCard }}>
-      <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+    <ClientContext.Provider value={{ hoveredCard, setHoveredCard }}>
+      <DragAndDropHandler onDraggedCardEnd={() => { setHoveredCard(null); }} onDraggedCardStart={() => { setHoveredCard(null); }}>
         <VStack
           h="100dvh"
           w="100vw"
@@ -147,10 +127,7 @@ export default function GameContent() {
           <Stack />
           <HoveredCard />
         </VStack>
-        <DragOverlay style={{ zIndex: 100000000 }}>
-          {draggedCard && <Card card={draggedCard} />}
-        </DragOverlay>
-      </DndContext>
+      </DragAndDropHandler>
     </ClientContext.Provider>
   );
 }
