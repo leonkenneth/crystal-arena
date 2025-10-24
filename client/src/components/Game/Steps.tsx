@@ -81,7 +81,7 @@ export default function Steps() {
               <Box>
                 <StepsComponent.Title>{stepInfo.name}</StepsComponent.Title>
                 {step.isCurrent && (
-                  <StepsComponent.Description>
+                  <StepsComponent.Description hideBelow="sm">
                     {isYourTurn ? "It's your turn" : "It's your opponent's turn"}
                   </StepsComponent.Description>
                 )}

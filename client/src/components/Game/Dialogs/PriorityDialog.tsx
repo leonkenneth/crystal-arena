@@ -13,6 +13,8 @@ export default function PriorityDialog() {
     return null;
   }
 
+  const isYourTurn = gameState.screen.you.isActive;
+
   return (
     <Dialog
       size="xs"
@@ -22,6 +24,8 @@ export default function PriorityDialog() {
       footer={<PassPriorityButton />}
     >
       <Text textAlign="center" color="fg">
+        {isYourTurn ? <span>It&apos;s your turn.</span> : <span>It&apos;s your opponent&apos;s turn.</span>}
+        <br />
         Play a card or ability, or pass priority
       </Text>
     </Dialog>
