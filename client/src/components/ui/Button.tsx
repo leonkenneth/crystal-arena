@@ -12,7 +12,7 @@ export default function Button({ children, variant = "primary", ...props }: Prop
   const variantStyles = getVariantStyles(variant);
 
   return (
-    <ChakraButton {...variantStyles} {...props}>
+    <ChakraButton {...variantStyles} {...props} pointerEvents="auto">
       {children}
     </ChakraButton>
   );
@@ -45,11 +45,11 @@ function getVariantStyles(variant: ButtonVariant): ChakraButtonProps {
     case "secondary":
       return {
         ...baseStyles,
-        bg: "transparent",
+        bg: "cyan.950",
         color: "white",
         border: "1px solid",
-        borderColor: "whiteAlpha.200",
-        _hover: { bg: "whiteAlpha.100", borderColor: "transparent" },
+        borderColor:"whiteAlpha.200",
+        _hover: { bg: "cyan.900", borderColor: "transparent" },
       };
   }
 }

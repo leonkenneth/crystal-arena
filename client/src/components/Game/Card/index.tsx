@@ -1,4 +1,4 @@
-import { CardState, ObjectIdContainer, PlayableActivationState } from "@/types";
+import { CardState } from "@/types";
 import { CardBody } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
@@ -32,28 +32,6 @@ function buildUrl(card: CardState) {
   addArrayToQueryParams(query, "jobs", card.jobs);
   addArrayToQueryParams(query, "categories", card.categories);
   return `${imageProxyBaseUrl}/images/cards/full/${serial}_eg.jpg?${query}`;
-}
-
-function SelectQuickActivation({
-  cardOid,
-  activations,
-}: {
-  cardOid: ObjectIdContainer;
-  activations: PlayableActivationState[];
-}) {
-  const doAction = useDoAction(cardOid);
-  const activateAbilityId = (abilityId: string) => {
-    doAction("ActivateAbilityFromAbilityId", { abilityId });
-  };
-  return (
-    <div>
-      {activations.map((activation) => (
-        <button key={activation.abilityId} onClick={() => activateAbilityId(activation.abilityId)}>
-          To {activation.playZone}
-        </button>
-      ))}
-    </div>
-  );
 }
 
 type Props = {
@@ -101,7 +79,6 @@ export default function Card({
   const cardIsTargeted = isTargeted(gameState, card.cardId);
   // @ts-expect-error - card.isSelected is not defined in the CardState type
   const isSelected = card.isSelected || card.isSelectedForCombat || cardIsTargeted;
-  const playableActivations = card.playableActivations;
 
   return (
     <CardContainer
@@ -132,9 +109,6 @@ export default function Card({
               }}
               bg="blackAlpha.950"
             >
-              {playableActivations && (
-                <SelectQuickActivation cardOid={card.oid} activations={playableActivations} />
-              )}
               {displayedText && <CardText text={displayedText} />}
             </CardBody>
           )}

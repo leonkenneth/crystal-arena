@@ -6,6 +6,7 @@ type Props = {
   children?: React.ReactNode;
   isModal?: boolean;
   transparent?: boolean;
+  compact?: boolean;
 } & ChakraDialog.RootProps;
 
 export default function Dialog({
@@ -14,6 +15,7 @@ export default function Dialog({
   footer,
   isModal = true,
   transparent = true,
+  compact = true,
   ...props
 }: Props) {
   return (
@@ -36,7 +38,7 @@ export default function Dialog({
           >
             <ChakraDialog.Header
               justifyContent="center"
-              p={transparent ? 0 : 4}
+              p={compact ? 0 : 4}
               pointerEvents={transparent ? "none" : "auto"}
             >
               {title && (
@@ -49,7 +51,7 @@ export default function Dialog({
               <ChakraDialog.Body
                 textStyle={transparent ? "outline" : undefined}
                 justifyContent="center"
-                p={transparent ? 0 : 4}
+                p={compact ? 0 : 4}
                 pointerEvents={transparent ? "none" : "auto"}
               >
                 {children}
@@ -57,7 +59,7 @@ export default function Dialog({
             )}
             <ChakraDialog.Footer
               justifyContent="center"
-              p={transparent ? 2 : 4}
+              p={compact ? 2 : 4}
               pointerEvents="auto"
             >
               {footer}

@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import Card from "../Card";
 import { doAction } from "@/utils/useDoAction";
 import { CardState } from "@/types";
@@ -15,6 +15,16 @@ type Props = {
 export default function DragAndDropHandler({ children, onDraggedCardEnd, onDraggedCardStart }: Props) {
   const { gameState } = useLoadedGameContext();
   const [draggedCard, setDraggedCard] = useState<CardState | null>(null);
+  const sensor = useSensor(PointerSensor, {
+    // Press delay of 250ms, with tolerance of 5px of movement
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(
+    sensor,
+  );
   const handleDragEnd = (event: DragEndEvent) => {
     const card = event.active.data.current as CardState;
     setDraggedCard(null);
@@ -33,7 +43,7 @@ export default function DragAndDropHandler({ children, onDraggedCardEnd, onDragg
     onDraggedCardStart(event.active.data.current as CardState);
   };    
   return (
-    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
       {children}
       <DragOverlay style={{ zIndex: 100000000 }}>
           {draggedCard && <Card card={draggedCard} />}

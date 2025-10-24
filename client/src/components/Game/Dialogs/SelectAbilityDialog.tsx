@@ -30,6 +30,7 @@ export default function SelectAbilityDialog() {
   return (
     <Dialog
       title="Select an ability"
+      compact={false}
       footer={
         canCancel && (
           <Button variant="secondary" onClick={onCancelClick}>

@@ -39,7 +39,7 @@ export default function Home() {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            _hover={{ bg: "whiteAlpha.100", borderColor: "transparent" }}
+            _hover={{ bg: "cyan.900", borderColor: "transparent" }}
             fontWeight="medium"
             fontSize={{ base: "sm", sm: "md" }}
             h={{ base: 10, sm: 12 }}
