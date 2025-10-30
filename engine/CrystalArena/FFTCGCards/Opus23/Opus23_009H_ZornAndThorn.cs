@@ -27,6 +27,7 @@ public class Opus23_009H_ZornAndThorn : CardTemplateSource
 
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Zorn & Thorn enters the field or attacks, choose 1 Forward opponent controls. It gains \"If possible, this Forward must block.\" until the end of the turn.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

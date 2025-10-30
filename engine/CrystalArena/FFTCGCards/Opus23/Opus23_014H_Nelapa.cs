@@ -28,6 +28,7 @@ public class Opus23_014H_Nelapa : CardTemplateSource
                 "When your opponent casts a Summon, select up to 2 of the 2 following actions.\n\"Choose 1 Forward. Deal it 10000 damage.\"\n\"Nelapa deals your opponent 1 point of damage.\"")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.TriggerOnlyIfOwningCardIsInPlay = true;
                 p.Trigger(new OnCastedSpell((c, ctx) =>
                     ctx.Opponent == c.Owner && c.Is().Summon));

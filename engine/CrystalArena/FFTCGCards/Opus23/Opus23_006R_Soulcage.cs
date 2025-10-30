@@ -34,6 +34,7 @@ public class Opus23_006R_Soulcage : CardTemplateSource
                 })
                 .TriggeredAbility(p =>
                    {
+                       p.ExBurst();
                      p.Text =
                        "When Soulcage is put from the field into the Break Zone, you may remove Soulcage from the game. When you do so, choose 1 Monster in your Break Zone. Add it to your hand.";
                      p.Trigger(new OnZoneChanged(from: Zone.Battlefield, to: Zone.BreakZone));

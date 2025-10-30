@@ -27,6 +27,7 @@ public class Opus23_020C_FireMage : CardTemplateSource
                 "When Fire Mage enters the field, your opponent discards 1 card. If you control 5 or more Backups, your opponent reveals their hand, and you select 1 card for your opponent to discard instead.")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Fire Mage enters the field, your opponent discards 1 card. If you control 5 or more Backups, your opponent reveals their hand, and you select 1 card for your opponent to discard instead.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

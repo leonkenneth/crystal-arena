@@ -40,6 +40,7 @@ public class Opus23_001C_Garland : CardTemplateSource
             .Categories("PICTLOGICA", "I")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

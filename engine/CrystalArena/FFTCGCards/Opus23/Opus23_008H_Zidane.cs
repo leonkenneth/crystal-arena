@@ -27,6 +27,7 @@ public class Opus23_008H_Zidane : CardTemplateSource
 
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Zidane enters the field, you may search for 2 Category IX Forwards with different names other than Card Name Zidane and add them to your hand.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

@@ -22,6 +22,7 @@ public class Opus23_002L_Caius : CardTemplateSource
             .Power(9000)
             .TriggeredAbility(p =>
                 {
+                    p.ExBurst();
                     p.Text =
                         "When Caius enters the field, you may search for 1 Card Name Bahamut and add it to your hand. During this turn, the cost required to cast your next Card Name Bahamut is reduced by 5.";
                     p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

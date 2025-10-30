@@ -8,6 +8,7 @@
   {
     private readonly CardBase _cardBase;
     private readonly Characteristic<List<CastRule>> _castRules;
+    public List<CastRule> Rules { get { return _castRules.Value; } }
 
     private CastRules() {}
 

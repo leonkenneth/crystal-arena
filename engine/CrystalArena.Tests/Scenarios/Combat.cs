@@ -121,11 +121,48 @@
             .Verify(() =>
               True(Combat.Attackers.None())));
       }
-    }
-
-    public class PredefinedAi : PredefinedAiScenario
-    {
       
+      [Fact]
+      public void SummonExBurst()
+      {
+        var exBurstSummon = C("0-005X");
+        var attacker = C("0-002X");
+        Battlefield(P1, attacker);
+        MainDeck(P2, exBurstSummon);
+        
+        Exec(
+          // P1 attacks
+          At(Step.DeclareAttackers, turn: 1)
+            .DeclareAttackers(attacker),
+          // P2 chooses to use ex-burst when card goes to DamageZone
+          At(Step.CombatDamage, turn: 1)
+            .Answer(true)
+            .Cast(exBurstSummon, target:attacker),
+          // Attacker is killed
+          At(Step.SecondMain, turn: 1)
+            .Verify(() => Equal(0, P1.Battlefield.Count())));
+      }
+      
+      [Fact]
+      public void TriggeredAbilityExBurst()
+      {
+        var forwardWithExBurst = C("0-006X");
+        var attacker = C("0-002X");
+        Battlefield(P1, attacker);
+        MainDeck(P2, forwardWithExBurst);
+        
+        Exec(
+          // P1 attacks
+          At(Step.DeclareAttackers, turn: 1)
+            .DeclareAttackers(attacker),
+          // P2 chooses to use ex-burst when card goes to DamageZone
+          At(Step.CombatDamage, turn: 1)
+            .Answer(true)
+            .Target(attacker),
+          // Attacker is killed
+          At(Step.SecondMain, turn: 1)
+            .Verify(() => Equal(0, P1.Battlefield.Count())));
+      }
     }
   }
 }

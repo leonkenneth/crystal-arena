@@ -28,6 +28,7 @@ public class Opus23_012C_Tifa : CardTemplateSource
                 "When a Forward damaged by Tifa is put from the field into the Break Zone on the same turn, gain {Z}.\nWhen Tifa attacks, choose 1 Forward. Deal it 2000 damage.\n{Z}: Until the end of the turn, Tifa gains +2000 power and Haste.")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When a Forward damaged by Tifa is put from the field into the Break Zone on the same turn, gain {Z}.";
                 p.Trigger(new OnForwardDamagedBySelfDiesInSameTurn());

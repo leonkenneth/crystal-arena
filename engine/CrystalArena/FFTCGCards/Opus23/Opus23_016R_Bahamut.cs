@@ -26,6 +26,7 @@ public class Opus23_016R_Bahamut : CardTemplateSource
                 "Choose 1 Forward with 9000 power or less and up to 1 Forward in your opponent's Break Zone. Remove them from the game.")
             .Cast(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "Choose 1 Forward with 9000 power or less and up to 1 Forward in your opponent's Break Zone. Remove them from the game.";
                 p.Effect = () => new RemoveFromPlayTargets();

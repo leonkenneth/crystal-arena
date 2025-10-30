@@ -121,7 +121,8 @@
       {
         var activationParameters = new ActivationParameters
           {
-            PayManaCost = D._p.PayManaCost
+            PayManaCost = D._p.PayManaCost,
+            SkipStack = D._p.SkipStack
           };
 
         var spellPrerequisites = SelectSpell();
@@ -166,6 +167,7 @@
     {
       public Card Card;
       public bool PayManaCost = true;
+      public bool SkipStack = false;
     }
 
   }

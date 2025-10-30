@@ -6,6 +6,7 @@
   {
     Card OwningCard { get; }
     Card SourceCard { get; }
+    bool HasExBurst { get; }
 
     void EffectCountered(SpellCounterReason reason);
     void EffectPushedOnStack();

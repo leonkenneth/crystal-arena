@@ -114,7 +114,7 @@
       }
     }
 
-    protected virtual void Execute(object triggerMessage)
+    public virtual void Execute(object triggerMessage)
     {
       var effectParameters = new EffectParameters
       {

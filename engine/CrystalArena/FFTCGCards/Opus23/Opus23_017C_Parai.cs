@@ -28,6 +28,7 @@ public class Opus23_017C_Parai : CardTemplateSource
                 "When Parai enters the field, you may receive 1 point of damage. When you do so, search for 1 Category FFL Character and add it to your hand.")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Parai enters the field, you may receive 1 point of damage. When you do so, search for 1 Category FFL Character and add it to your hand.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

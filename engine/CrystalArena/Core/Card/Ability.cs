@@ -27,6 +27,7 @@
     {
       get { return _owningCard; }
     }
+    public bool HasExBurst => _p.HasExBurst;
 
     public void EffectCountered(SpellCounterReason reason) {}
     void IEffectSource.EffectPushedOnStack() {}

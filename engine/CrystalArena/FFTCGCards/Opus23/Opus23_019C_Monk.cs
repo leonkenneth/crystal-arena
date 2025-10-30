@@ -27,6 +27,7 @@ public class Opus23_019C_Monk : CardTemplateSource
                 "When Monk enters the field, choose 1 Forward. Deal it 4000 damage. If you control 5 or more Backups, deal it 8000 damage instead.")
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text =
                     "When Monk enters the field, choose 1 Forward. Deal it 4000 damage. If you control 5 or more Backups, deal it 8000 damage instead.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

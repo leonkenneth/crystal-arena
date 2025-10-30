@@ -22,6 +22,7 @@ public class Opus23_004R_Kefka : CardTemplateSource
             .Power(7000)
             .TriggeredAbility(p =>
             {
+                p.ExBurst();
                 p.Text = "When Kefka attacks, choose 1 Forward opponent controls. Deal it 4000 damage.";
                 p.Trigger(new WhenThisAttacks());
                 p.Effect = () => new DealDamageToTargets(4000);

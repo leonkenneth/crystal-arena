@@ -24,6 +24,7 @@ public class Opus23_003C_Kain : CardTemplateSource
             .SimpleAbilities(Static.Haste, Static.FirstStrike)
             .TriggeredAbility(p =>
                 {
+                    p.ExBurst();
                     p.Text =
                         "When Kain attacks, all the Forwards with Haste or First Strike you control gain +2000 power until the end of the turn.";
                     p.Trigger(new WhenThisAttacks());

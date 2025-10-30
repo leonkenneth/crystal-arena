@@ -22,6 +22,7 @@
     }
 
     public bool HasXInCost { get { return _p.Cost.HasX; } }
+    public bool HasExBurst { get { return _p.HasExBurst; } }
 
     public Card OwningCard { get { return _card; } }
 

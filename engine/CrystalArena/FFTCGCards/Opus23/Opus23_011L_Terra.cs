@@ -30,7 +30,7 @@ public class Opus23_011L_Terra : CardTemplateSource
             {
                 p.Text =
                     "When Terra enters the field or is put from the field into the Break Zone, choose 1 Summon in your Break Zone. Add it to your hand. During this turn, the cost required to cast your next Summon is reduced by 2 (it cannot become 0).";
-                p.IsExBurst = true;
+                p.ExBurst();
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
                 p.Trigger(new OnZoneChanged(from: Zone.Battlefield, to: Zone.BreakZone));
                 p.Effect = () => new CompoundEffect(

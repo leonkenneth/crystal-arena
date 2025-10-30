@@ -26,6 +26,7 @@ public class Opus23_007C_Samurai : CardTemplateSource
                 
                 .TriggeredAbility(p =>
                    {
+                       p.ExBurst();
                      p.Text =
                        "When Samurai enters the field, gain {Z}.";
                      p.Trigger(new OnZoneChanged(to: Zone.Battlefield));

@@ -9,6 +9,7 @@
   {
     private readonly Characteristic<List<TriggeredAbility>> _abilities;
     private readonly CardBase _cardBase;
+    public List<TriggeredAbility> Abilities { get { return _abilities.Value; } }
 
     private TriggeredAbilities() {}
 

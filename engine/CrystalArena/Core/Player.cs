@@ -173,7 +173,12 @@
     {
       for (var i = 0; i < count; i++)
       {
-        PutCardToDamageZone(MainDeck.Top);
+        var milledCard = MainDeck.Top;
+        if (milledCard.HasExBurst)
+        {
+          Enqueue(new ChooseToUseExBurst(this, milledCard.GetExBurstEffectSource()));
+        }
+        PutCardToDamageZone(milledCard);
       }
     }
 

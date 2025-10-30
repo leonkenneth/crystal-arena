@@ -1,4 +1,6 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Effects;
+
+namespace CrystalArena
 {
   using System;
   using System.Collections.Generic;
@@ -1293,14 +1295,6 @@
       Owner.DiscardCard(this);
     }
 
-    public void ShuffleIntoMainDeckFrom(Zone from)
-    {
-      if (Zone != from)
-        return;
-
-      ShuffleIntoMainDeck();
-    }
-
     public void ShuffleIntoMainDeck()
     {
       Owner.ShuffleIntoMainDeck(this);
@@ -1451,5 +1445,18 @@
     public int? LimitBreakLevel => _base.Value.LimitBreakLevel;
     public bool IsLimitBreak => LimitBreakLevel.HasValue;
     public bool IsRevealed => _isRevealed.Value;
+    public bool HasExBurst
+    {
+      get => GetExBurstEffectSource() != null;
+    }
+
+    public IEffectSource? GetExBurstEffectSource()
+    {
+      var castRulesWithExBurst = _castRules.Rules.Where(rule => rule.HasExBurst);
+      var abilitiesWithExBurst = _triggeredAbilities.Abilities.Where(ability => ability.HasExBurst);
+      IEffectSource? castRuleWithExBurst = castRulesWithExBurst.FirstOrDefault();
+      IEffectSource? abilityWithExBurst = abilitiesWithExBurst.FirstOrDefault();
+      return castRuleWithExBurst ?? abilityWithExBurst;
+    }
   }
 }
