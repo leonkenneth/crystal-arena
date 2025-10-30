@@ -6,6 +6,14 @@ import { GameState } from "@/types";
 import GameContent from "./GameContent";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LoadedGameContext } from "@/utils/LoadedGameContext";
+import { Center, Text } from "@chakra-ui/react";
+
+
+function ErrorMessage({ children }: { children: React.ReactNode }) {
+  return <Center h="100dvh" w="100vw">
+    <Text color="black">{children}</Text>
+  </Center>;
+}
 
 function Game({ id }: { id: string }) {
   const refreshInterval = 1000;
@@ -25,15 +33,15 @@ function Game({ id }: { id: string }) {
   // Polling is handled by react-query's refetchInterval. No manual timers.
   // @ts-expect-error - gameState.error is not defined on GameState type
   if (gameState?.error?.match(/not found/i)) {
-    return <div>Game not found</div>;
+    return <ErrorMessage>🔍 Game not found</ErrorMessage>;
   }
 
   if (isFetching && !isRefetching) {
-    return <div>Loading...</div>;
+    return <ErrorMessage>Loading...</ErrorMessage>;
   }
 
   if (isError) {
-    return <div>Error loading game</div>;
+    return <ErrorMessage>❌ Error loading game</ErrorMessage>;
   }
 
   if (gameState === undefined) {
