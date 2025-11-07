@@ -14,9 +14,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: var(--chakra-colors-cyan-900);
     --foreground: #ededed;
   }
+}
+
+html {
+  background: var(--background);
 }
 
 body {

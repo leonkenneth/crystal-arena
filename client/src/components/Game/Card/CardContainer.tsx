@@ -60,6 +60,7 @@ export default forwardRef(function CardContainer(
       borderWidth="2px"
       boxShadow={isDisplayedHovered ? "lg" : "none"}
       boxShadowColor={getBorderColor()}
+      bgColor="gray.500"
       borderColor={getBorderColor()}
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}

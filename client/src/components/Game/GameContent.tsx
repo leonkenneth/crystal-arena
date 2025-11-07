@@ -29,14 +29,13 @@ export default function GameContent() {
         <VStack
           h="100dvh"
           w="100vw"
-          bg="cyan.950"
           overflowX="hidden"
           overflowY="auto"
           userSelect="none"
           gap={0}
         >
           {/* Opponent Area */}
-          <VStack p={4} bg="cyan.900" w="full">
+          <VStack p={4} w="full">
             <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
               <HStack flexShrink={1} align="flex-start" justify="flex-start">
                 <Box>
@@ -60,7 +59,7 @@ export default function GameContent() {
 
           {/* Battlefield */}
 
-          <VStack gap={4} w="full">
+          <VStack gap={4} w="full" bg="cyan.950">
             <BattlefieldRow row={screen.opponentsBattlefield.row2} />
             <BattlefieldRow row={screen.opponentsBattlefield.row1} />
             <StackSeparator />
@@ -71,7 +70,7 @@ export default function GameContent() {
           </VStack>
 
           {/* Your Area */}
-          <VStack p={4} w="full" bg="cyan.900">
+          <VStack p={4} w="full">
             <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
               <HStack flexShrink={1} align="flex-start" justify="flex-start">
                 <Box>
@@ -91,12 +90,16 @@ export default function GameContent() {
               </HStack>
             </HStack>
           </VStack>
-          <VStack w="full" position="sticky" bottom={0} zIndex="sticky" gap={0}>
+          <VStack w="full" position="sticky" bottom={0} zIndex="sticky" gap={0}
+
+          pointerEvents="none"
+          >
             <HStack
               w="full"
               p={4}
               flexGrow={1}
-              bg="cyan.900"
+              pointerEvents="none"
+              bg="transparent"
               flexShrink={1}
               overflowX="auto"
               justifyContent="center"
@@ -110,7 +113,8 @@ export default function GameContent() {
               justify="space-between"
               align="flex-start"
               maxW="100vw"
-              bg="cyan.800"
+              bg="cyan.900"
+              pointerEvents="auto"
             >
               <Flex flexGrow={1} flexShrink={1} overflowX="auto" h="full" placeItems="center">
                 <Steps />

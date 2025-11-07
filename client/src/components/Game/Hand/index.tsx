@@ -22,7 +22,7 @@ export default function Hand({ hand, upsideDown }: Props) {
       flexShrink={0}
       flexGrow={0}
       gap={2}
-      style={{ scrollSnapType: "x mandatory", transform: `rotateX(${upsideDown ? 180 : 0}deg)` }}
+      style={{ pointerEvents: "none", scrollSnapType: "x mandatory", transform: `rotateX(${upsideDown ? 180 : 0}deg)` }}
     >
       {hand.cards.map((card) => {
         return (

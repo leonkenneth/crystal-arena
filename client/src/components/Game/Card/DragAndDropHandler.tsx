@@ -16,9 +16,9 @@ export default function DragAndDropHandler({ children, onDraggedCardEnd, onDragg
   const { gameState } = useLoadedGameContext();
   const [draggedCard, setDraggedCard] = useState<CardState | null>(null);
   const sensor = useSensor(PointerSensor, {
-    // Press delay of 250ms, with tolerance of 5px of movement
+    // Press delay of 150ms, with tolerance of 5px of movement
     activationConstraint: {
-      delay: 250,
+      delay: 150,
       tolerance: 5,
     },
   });

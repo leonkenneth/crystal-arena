@@ -17,6 +17,7 @@ export default function CardInHand({ card }: Props) {
     transform: CSS.Translate.toString(transform),
     zIndex: 1000,
     touchAction: "none",
+    pointerEvents: "auto"
   };
 
   return (
