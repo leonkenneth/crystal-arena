@@ -14,11 +14,14 @@ export default function PassPriorityButton() {
     );
   };
 
+  const disabled = !priorityEnabled || !priorityCallbackId;
+
   return (
     <Button
+      cursor={disabled ? "not-allowed" : "pointer"}
       variant="primary"
       onClick={passPriority}
-      disabled={!priorityEnabled || !priorityCallbackId}
+      disabled={disabled}
     >
       {label}
     </Button>

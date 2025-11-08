@@ -15,6 +15,7 @@ export type BattlefieldState = {
 
 export type ZoneState = { cards: CardOutsideFieldState[] };
 export type BreakZoneState = ZoneState & { type: "BreakZone" };
+export type LimitBreakState = ZoneState & { type: "LimitBreak" };
 export type HandState = ZoneState & { type: "Hand" };
 export type MainDeckState = ZoneState & { type: "MainDeck" };
 export type RemoveFromPlayState = ZoneState & { type: "RemoveFromPlay" };
@@ -25,7 +26,8 @@ export type ZoneType =
   | "MainDeck"
   | "RemoveFromPlay"
   | "DamageZone"
-  | "Battlefield";
+  | "Battlefield"
+  | "LimitBreak";
 
 export type ZonesState = {
   opponentsBreakZone: BreakZoneState;
@@ -33,9 +35,11 @@ export type ZonesState = {
   opponentsMainDeck: MainDeckState;
   opponentsRemoveFromPlay: RemoveFromPlayState;
   opponentsDamageZone: DamageZoneState;
+  opponentsLimitBreak: LimitBreakState;
   yourBreakZone: BreakZoneState;
   yourHand: HandState;
   yourMainDeck: MainDeckState;
   yourRemoveFromPlay: RemoveFromPlayState;
   yourDamageZone: DamageZoneState;
+  yourLimitBreak: LimitBreakState;
 };

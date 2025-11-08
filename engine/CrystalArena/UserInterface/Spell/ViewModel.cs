@@ -100,7 +100,7 @@ namespace CrystalArena.UserInterface.Spell
           }        
 
           IsPlayable = 
-            (Card.Zone == Zone.Hand && Card.CanCast().Count > 0) ||
+            (Card.CanCast().Count > 0) ||
             (Card.CanActivateAbilities().Count > 0);
           break;
 
@@ -138,21 +138,19 @@ namespace CrystalArena.UserInterface.Spell
     {
       var castActivations = new List<PlayableActivator>();
 
-      if (Card.Zone == Zone.Hand)
-      {
-        castActivations.AddRange(
-          Card.CanCast()
-            .Select(prerequisites => new PlayableActivator
+      
+      castActivations.AddRange(
+        Card.CanCast()
+          .Select(prerequisites => new PlayableActivator
+          {
+            Prerequisites = prerequisites,
+            GetPlayable = parameters => new PlayableSpell
             {
-              Prerequisites = prerequisites,
-              GetPlayable = parameters => new PlayableSpell
-              {
-                Card = prerequisites.Card,
-                ActivationParameters = parameters,
-                Index = prerequisites.Index
-              }
-            }));
-      }
+              Card = prerequisites.Card,
+              ActivationParameters = parameters,
+              Index = prerequisites.Index
+            }
+          }));
       
       var activations = castActivations
         .Concat(Card.CanActivateAbilities()          

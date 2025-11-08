@@ -136,6 +136,19 @@
         p.StackShouldBeEmpty = stackShouldBeEmpty;
       });
     }
+    
+    public ScenarioStep Cast(Card card, ITarget[] targets, ITarget[] costTargets, int index = 0, int? x = null, bool stackShouldBeEmpty = true)
+    {
+      return Cast(p =>
+      {
+        p.Card = card;
+        p.Targets(targets);
+        p.CostTargets(costTargets);
+        p.Index = index;
+        p.X = x;
+        p.StackShouldBeEmpty = stackShouldBeEmpty;
+      });
+    }
 
     public ScenarioStep Cast(Card card, int index = 0, int? x = null, bool stackShouldBeEmpty = true)
     {

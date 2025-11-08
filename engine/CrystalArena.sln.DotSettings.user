@@ -1,6 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a88c63d0_002D0958_002D48f5_002D87f4_002Def474d19f28c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;CrystalArena.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/leo/code/arena/CrystalArena/CrystalArena.Tests" Presentation="&amp;lt;CrystalArena.Tests&amp;gt;" /&gt;
+  &lt;Project Location="/Users/leo/code/crystal-arena-next/engine/CrystalArena.Tests" Presentation="&amp;lt;CrystalArena.Tests&amp;gt;" /&gt;
 &lt;/SessionState&gt;</s:String>
 	
 	

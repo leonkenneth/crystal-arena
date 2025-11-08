@@ -257,6 +257,23 @@
       }
     }
 
+    protected void LimitBreak(Player player, params ScenarioCard[] cards)
+    {
+      var limitBreak = (LimitBreak) player.LimitBreak;
+
+      foreach (var scenarioCard in cards)
+      {
+        scenarioCard.Initialize(name =>
+          {
+            var card = CrystalArena.Cards.Create(name);
+            card.Initialize(player, Game);
+            limitBreak.Add(card);
+
+            return card;
+          });
+      }
+    }
+    
     protected void Null(object obj)
     {
       Assert.Null(obj);

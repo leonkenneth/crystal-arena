@@ -26,6 +26,7 @@ export default function CollapsedZone({ zone, linkOnly, children, name }: Props)
     <div>
       {linkOnly && children ? (
         <Text
+          pointerEvents="auto"
           as="div"
           textDecoration="underline"
           color="fg.muted"

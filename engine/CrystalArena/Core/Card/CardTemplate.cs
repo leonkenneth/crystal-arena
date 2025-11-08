@@ -444,6 +444,12 @@
       return this;
     }
 
+    public CardTemplate LimitBreak(int i)
+    {
+      _init.Add(p => p.LimitBreakLevel = i);
+      return this;
+    }
+
 
     public CardTemplate Text(string text)
     {
@@ -522,13 +528,35 @@
 
     private CastRule.Parameters GetDefaultCastInstructionParameters(CardParameters cp)
     {
-      return new CastRule.Parameters
+      var castParams = new CastRule.Parameters
       {
-        Cost = new PayMana(cp.ManaCost ?? Mana.Zero, cp.HasXInCost),
+        Cost = GetDefaultCastCost(cp),
         Text = string.Format("Cast {0}.", cp.Name),
         PlayZone = cp.Type.Summon ? Zone.Stack : Zone.Battlefield,
         Effect = () => new CastPermanent(new DynParam<bool>((effect, game) => effect.Source.OwningCard.Is().Backup, EvaluateAt.OnResolve))
       };
+
+      if (cp.LimitBreakLevel.HasValue)
+      {
+        castParams.TargetSelector.AddCost(t => t.Is.Card(card => !card.IsRevealed, canTargetSelf: false).In.OwnersLBDeck(), parameters =>
+        {
+          parameters.MinCount = cp.LimitBreakLevel;
+          parameters.MaxCount = cp.LimitBreakLevel;
+        });
+      }
+      return castParams;
+    }
+    
+    private Cost GetDefaultCastCost(CardParameters cp)
+    {
+      var manaCost = new PayMana(cp.ManaCost ?? Mana.Zero, cp.HasXInCost);
+      var limitBreakLevel = cp.LimitBreakLevel;
+      if (limitBreakLevel.HasValue)
+      {
+        return new AggregateCost(manaCost, new RevealLimitBreakCards(limitBreakLevel.Value));
+      }
+
+      return manaCost;
     }
 
     private static IEnumerable<CardColor> GetCardColorsFromManaCost(ManaAmount manaCost)

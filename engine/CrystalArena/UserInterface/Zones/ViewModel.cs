@@ -10,6 +10,8 @@
     public Hand.ViewModel YourHand { get; private set; }
     public MainDeck.ViewModel YourMainDeck { get; private set; }
     public MainDeck.ViewModel OpponentsMainDeck { get; private set; }
+    public LimitBreak.ViewModel YourLimitBreak { get; private set; }
+    public LimitBreak.ViewModel OpponentsLimitBreak { get; private set; }
 
     public RemoveFromPlay.ViewModel YourRemoveFromPlay { get; private set; }
     public RemoveFromPlay.ViewModel OpponentsRemoveFromPlay { get; private set; }
@@ -32,6 +34,9 @@
       
       OpponentsDamageZone = ViewModels.DamageZone.Create(Players.Computer);
       YourDamageZone = ViewModels.DamageZone.Create(Players.Human);
+
+      OpponentsLimitBreak = ViewModels.LimitBreak.Create(Players.Computer);
+      YourLimitBreak = ViewModels.LimitBreak.Create(Players.Human);
     }
 
     public override object ToJson()
@@ -47,7 +52,9 @@
         YourRemoveFromPlay = YourRemoveFromPlay.ToJson(),
         OpponentsRemoveFromPlay = OpponentsRemoveFromPlay.ToJson(),
         YourDamageZone = YourDamageZone.ToJson(),
-        OpponentsDamageZone = OpponentsDamageZone.ToJson()
+        OpponentsDamageZone = OpponentsDamageZone.ToJson(),
+        YourLimitBreak = YourLimitBreak.ToJson(),
+        OpponentsLimitBreak = OpponentsLimitBreak.ToJson()
       };
     }
 

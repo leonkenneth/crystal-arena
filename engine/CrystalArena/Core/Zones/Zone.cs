@@ -9,6 +9,7 @@
     BreakZone = 4,
     Stack = 5,
     RemovedFromPlay = 6,
-    DamageZone = 7
+    DamageZone = 7,
+    LimitBreak = 8
   }
 }

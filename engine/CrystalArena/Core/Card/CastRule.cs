@@ -100,6 +100,11 @@
       if (_card.Is().Summon || _card.Has().Flash)
         return true;
 
+      if (_card.IsLimitBreak)
+      {
+        return _card.Zone == Zone.LimitBreak && _card.Controller.IsActive && Turn.Step.IsMain() && Stack.IsEmpty;
+      }
+      
       return _card.Zone == Zone.Hand && _card.Controller.IsActive && Turn.Step.IsMain() && Stack.IsEmpty;
     }
 

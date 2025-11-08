@@ -78,6 +78,8 @@ namespace CrystalArena
       }
     }
 
+    public int? LimitBreakLevel { get; set; }
+
     public void Initialize(Card owningCard, Game game)
     {
       foreach (var ability in ActivatedAbilities)

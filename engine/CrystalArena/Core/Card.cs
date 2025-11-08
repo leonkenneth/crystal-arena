@@ -944,7 +944,8 @@
 
     public List<ActivationPrerequisites> CanCast(bool payManaCost = true)
     {
-      return _castRules
+      
+     return _castRules
         .GetPrerequisites(payManaCost, shouldFullyEvaluateEvenIfCannotBePlayed: false)
         .Where(x => x.CanBePlayedAndPayed)
         .ToList();
@@ -1447,5 +1448,8 @@
 
     public bool HasDeathtouch => Has().Deathtouch;
     public bool IsFrozen => _modifiers.Any(modifier => modifier is Freeze);
+    public int? LimitBreakLevel => _base.Value.LimitBreakLevel;
+    public bool IsLimitBreak => LimitBreakLevel.HasValue;
+    public bool IsRevealed => _isRevealed.Value;
   }
 }

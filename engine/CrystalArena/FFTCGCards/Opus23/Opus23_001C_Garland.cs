@@ -9,6 +9,24 @@ namespace CrystalArena.FFTCGCards.Opus23;
 
 public class Opus23_001C_Garland : CardTemplateSource
 {
+    /*
+    Rarity	Common
+    Set	Opus XXIII (Hidden Trials)
+    Element	
+    Fire
+    Type	Backup
+    Cost	2
+    Power	
+    Job	Knight
+    Categories	
+    PICTLOGICA
+    I
+    EX Burst	no
+    Multiplayable	no
+    Limit Break	no
+    Abilities	
+    When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.
+    */
     public override IEnumerable<CardTemplate> GetCards()
     {
         yield return Card
@@ -16,8 +34,10 @@ public class Opus23_001C_Garland : CardTemplateSource
             .Named("Garland")
             .Text(
                 "When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.")
-            .ManaCost("{1}{R}")
+            .Cost(2, "R")
             .Backup()
+            .Job("Knight")
+            .Categories("PICTLOGICA", "I")
             .TriggeredAbility(p =>
             {
                 p.Text =

@@ -57,5 +57,12 @@
       MustBeTargetable = true;
       return _p;
     }
+
+    public IsValidTargetBuilder OwnersLBDeck()
+    {
+      IsValidZone = p => p.Zone == Zone.LimitBreak && p.ZoneOwner == p.Controller;
+      MustBeTargetable = true;
+      return _p;
+    }
   }
 }

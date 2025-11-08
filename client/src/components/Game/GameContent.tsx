@@ -17,6 +17,7 @@ import { ClientContext } from "@/utils/ClientContext";
 import HoveredCard from "./HoveredCard";
 import { DroppableZone } from "../ui/DroppableZone";
 import DragAndDropHandler from "./Card/DragAndDropHandler";
+import LimitBreak from "./LimitBreak";
 
 export default function GameContent() {
   const { gameState } = useLoadedGameContext();
@@ -106,6 +107,7 @@ export default function GameContent() {
             >
               <Hand hand={screen.zones.yourHand} />
             </HStack>
+            <LimitBreak limitBreak={screen.zones.yourLimitBreak} />
             {/* Steps and Pass Priority Button */}
             <HStack
               w="full"

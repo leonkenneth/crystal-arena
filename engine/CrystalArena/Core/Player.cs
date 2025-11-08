@@ -25,6 +25,7 @@
     private readonly BackupLimit _backupLimit = new BackupLimit(7);
     private readonly Trackable<int> _backupsPlayedCount = new Trackable<int>(0);
     private readonly MainDeck _library;
+    private readonly LimitBreak _limitBreak;
     private readonly Life _life = new Life(7);
     private readonly TrackableList<IPlayerModifier> _modifiers = new TrackableList<IPlayerModifier>();
     private readonly TrackableList<Emblem> _emblems = new TrackableList<Emblem>();
@@ -41,6 +42,7 @@
       _hand = new Hand(this);
       _breakZone = new BreakZone(this);
       _library = new MainDeck(this);
+      _limitBreak = new LimitBreak(this);
       _removedFromPlay = new RemovedFromPlay(this);
       _damageZone = new DamageZone(this);
       _deck = p.Deck;
@@ -79,6 +81,7 @@
     public IBreakZoneQuery BreakZone { get { return _breakZone; } }
 
     public IHandQuery Hand { get { return _hand; } }
+    public LimitBreak LimitBreak { get { return _limitBreak; } }
 
     public bool HasLost { get { return _hasLost.Value; } set { _hasLost.Value = value; } }
 
@@ -289,7 +292,7 @@
       _skipSteps.Initialize(ChangeTracker);
       _emblems.Initialize(ChangeTracker);
 
-      LoadMainDeck();
+      new PlayerDeckLoader(Game, this, _deck).LoadDeck();
     }
 
     public void PutCardToBattlefield(Card card)
@@ -549,6 +552,11 @@
       _library.PutOnBottom(card);
     }
 
+    public void AddToLimitBreakZone(Card card)
+    {
+      _limitBreak.Add(card);
+    }
+
     public override string ToString()
     {
       return Name;
@@ -582,25 +590,6 @@
       return _skipSteps.Contains(step);
     }
 
-    private void LoadMainDeck()
-    {
-      var cards = _deck.Select(cardInfo =>
-        {
-          var card = Cards.Create(cardInfo.Name);
-          card.Rarity = cardInfo.Rarity;
-          card.Serial = cardInfo.Serial;
-          card.Set = cardInfo.Set;
-
-          card.Initialize(this, Game);
-
-          return card;
-        });
-
-      foreach (var card in cards)
-      {
-        _library.PutOnBottom(card);
-      }
-    }
 
     public void AddEmblem(Emblem emblem)
     {

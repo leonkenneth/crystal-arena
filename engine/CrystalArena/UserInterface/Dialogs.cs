@@ -37,6 +37,7 @@
     public CardActivation.ViewModel.IFactory EffectActivation { get; set; }
     public LoadScreen.ViewModel.IFactory LoadScreen { get; set; }
     public DamageZone.ViewModel.IFactory DamageZone { get; set; }
+    public LimitBreak.ViewModel.IFactory LimitBreak { get; set; }
     public ManaPool.ViewModel.IFactory ManaPool { get; set; }
   }
 }
