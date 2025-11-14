@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.AI
+﻿using CrystalArena.Infrastructure;
+
+namespace CrystalArena.AI
 {
   using System.Collections.Generic;
   using System.Linq;

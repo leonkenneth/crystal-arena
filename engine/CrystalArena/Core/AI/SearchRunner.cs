@@ -103,7 +103,7 @@
           bestChoice = StartNewSearch(searchNode, cachedResults);
         }
       }
-
+      
       searchNode.SetResult(bestChoice);
     }
 
@@ -146,6 +146,8 @@
 
       var parameters = new SearchParameters(CurrentDepth, CurrentTargetCount,
         _searchParameters.SearchPartitioningStrategy);
+      
+      LogFile.Info("↓ Starting new search at: {0}", searchNode);     
 
       CurrentSearch = new Search(parameters,
         searchNode.Controller, cachedResults, _game);

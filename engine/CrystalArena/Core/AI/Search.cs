@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.AI
+﻿using System.Text;
+
+namespace CrystalArena.AI
 {
   using System;
   using System.Collections.Generic;
@@ -44,7 +46,7 @@
 
       // Lock original changer tracker. 
       // So we are sure that original game state stays intact.
-      // This is usefull for debuging state copy issues.      
+      // This is useful for debugging state copy issues.      
       _game.ChangeTracker.Lock();
 
       // Both original and copied tracker will be enabled,
@@ -68,6 +70,9 @@
 
       _root.EvaluateSubtree();
       _stopwatch.Stop();
+      var sb = new StringBuilder();
+      _root.OutputBestPath(sb);
+      LogFile.Debug("Best path: {0}", sb.ToString());
 
       return GetSearchStatistics();
     }

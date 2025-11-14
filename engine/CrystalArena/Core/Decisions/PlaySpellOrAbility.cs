@@ -61,7 +61,10 @@
       public void SetResult(int index)
       {
         Result = new ChosenPlayable {Playable = _playables[index]};
-        LogFile.Debug("Move is {0}", _playables[index]);
+        if (Ai.IsSearchInProgress)
+          LogFile.Debug("Move is {0}", _playables[index]);
+        else
+          LogFile.Debug("⮑ Played Move is {0}", _playables[index], Game.Turn.Step, Controller);
       }
 
       public override void Execute()

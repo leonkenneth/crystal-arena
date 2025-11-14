@@ -202,12 +202,12 @@ namespace CrystalArena
         calc.Calculate(_decisionQueue));
     }
 
-    public void RollbackToSnapshot(object snaphost)
+    public void RollbackToSnapshot(Snapshot snaphost)
     {
-      ChangeTracker.RollbackToSnapshot((Snapshot) snaphost);
+      ChangeTracker.RollbackToSnapshot(snaphost);
     }
 
-    public object CreateSnapshot()
+    public Snapshot CreateSnapshot()
     {
       return ChangeTracker.CreateSnapshot();
     }

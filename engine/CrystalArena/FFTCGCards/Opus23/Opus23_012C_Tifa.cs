@@ -51,6 +51,7 @@ public class Opus23_012C_Tifa : CardTemplateSource
                 p.Effect = () => new ApplyModifiersToSelf(
                     () => new AddPowerAndToughness(+2000, +2000) { UntilEot = true },
                     () => new AddSimpleAbility(Static.Haste) { UntilEot = true });
+                p.TimingRule(new PumpOwningCardTimingRule(2000, 2000));
             });
     }
 }

@@ -188,8 +188,10 @@
 
     protected void EnableLogging(string level)
     {
-      var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-        String.Format("CrystalArena.Tests.Infrastructure.Logger.{0}.xml", level));
+      var binDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+      var relativeFilePath = $"../../../Infrastructure/Logger.{level}.xml";
+      var configFile = Path.Combine(binDir!, relativeFilePath);
+      var stream = File.OpenRead(configFile); 
 
       XmlConfigurator.Configure(stream);
     }

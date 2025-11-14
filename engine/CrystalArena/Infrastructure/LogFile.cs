@@ -7,7 +7,6 @@
   {
     private static readonly ILog Logger = LogManager.GetLogger("Global");
 
-    
     public static void Error(string message, params object[] args)
     {
       if (args.Length == 0)

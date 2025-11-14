@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.Tests.Scenarios
+﻿using CrystalArena.Effects;
+
+namespace CrystalArena.Tests.Scenarios
 {
   using System.Linq;
   using Infrastructure;
@@ -223,6 +225,27 @@
                 Equal(Zone.BreakZone, C(baloth).Zone);
                 Equal(Zone.Battlefield, C(thrun).Zone);
               })
+          );
+      }
+
+      [Fact]
+      public void BugAiBuffsTifaNeedlessly()
+      {
+        EnableLogging("Debug");
+        var tifa = C("23-012C");
+        Battlefield(P2, tifa);
+        P2.ManaCache.AddManaToPool("{Z}".Parse(), ManaUsage.Any);
+        True(P2.HasMana("{Z}".Parse()));
+        
+        Exec(
+          At(Step.FirstMain, turn: 1).Verify(() =>
+            {
+              True(P2.HasMana("{Z}".Parse()));
+            }),
+        At(Step.FirstMain, turn: 2).Verify(() =>
+          {
+            True(P2.HasMana("{Z}".Parse()));
+          })
           );
       }
 

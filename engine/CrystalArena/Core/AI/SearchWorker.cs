@@ -84,7 +84,7 @@
 
       // Create a snapshot, of the game before traversing 
       // a branch.
-      var snaphost = _game.CreateSnapshot();
+      var snapshot = _game.CreateSnapshot();
 
       searchNode.SetResult(index);
       ParentResult = parentResult;
@@ -103,7 +103,7 @@
       }
 
       // Restore the game from the snapshot.
-      _game.RollbackToSnapshot(snaphost);
+      _game.RollbackToSnapshot(snapshot);
 
       LogFile.Debug("{0} stop eval move {1}", searchNode, index);
     }
