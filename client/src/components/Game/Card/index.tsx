@@ -31,7 +31,7 @@ function buildUrl(card: CardState) {
   const query = new URLSearchParams(queryParams);
   addArrayToQueryParams(query, "jobs", card.jobs);
   addArrayToQueryParams(query, "categories", card.categories);
-  return `${imageProxyBaseUrl}/images/cards/full/${serial}_eg.jpg?${query}`;
+  return new URL(`/images/cards/full/${serial}_eg.jpg?${query}`, imageProxyBaseUrl).toString();
 }
 
 type Props = {
