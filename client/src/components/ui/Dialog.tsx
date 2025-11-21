@@ -57,11 +57,7 @@ export default function Dialog({
                 {children}
               </ChakraDialog.Body>
             )}
-            <ChakraDialog.Footer
-              justifyContent="center"
-              p={compact ? 2 : 4}
-              pointerEvents="auto"
-            >
+            <ChakraDialog.Footer justifyContent="center" p={compact ? 2 : 4} pointerEvents="auto">
               {footer}
             </ChakraDialog.Footer>
           </ChakraDialog.Content>

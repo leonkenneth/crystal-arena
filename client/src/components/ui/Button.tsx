@@ -48,7 +48,7 @@ function getVariantStyles(variant: ButtonVariant): ChakraButtonProps {
         bg: "cyan.950",
         color: "white",
         border: "1px solid",
-        borderColor:"whiteAlpha.200",
+        borderColor: "whiteAlpha.200",
         _hover: { bg: "cyan.900", borderColor: "transparent" },
       };
   }

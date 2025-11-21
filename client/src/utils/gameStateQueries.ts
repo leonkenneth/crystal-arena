@@ -86,7 +86,8 @@ export function selection(
   gameState: LoadedGameState,
   options: { only?: "yours" | "opponents" } = {}
 ): CardState[] {
-  return cards(gameState, options).filter(  // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
+  return cards(gameState, options).filter(
+    // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
     (card: CardState) => card.isSelected || card.isSelectedForCombat
   );
 }

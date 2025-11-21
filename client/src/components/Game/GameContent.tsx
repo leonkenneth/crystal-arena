@@ -26,15 +26,15 @@ export default function GameContent() {
 
   return (
     <ClientContext.Provider value={{ hoveredCard, setHoveredCard }}>
-      <DragAndDropHandler onDraggedCardEnd={() => { setHoveredCard(null); }} onDraggedCardStart={() => { setHoveredCard(null); }}>
-        <VStack
-          h="100dvh"
-          w="100vw"
-          overflowX="hidden"
-          overflowY="auto"
-          userSelect="none"
-          gap={0}
-        >
+      <DragAndDropHandler
+        onDraggedCardEnd={() => {
+          setHoveredCard(null);
+        }}
+        onDraggedCardStart={() => {
+          setHoveredCard(null);
+        }}
+      >
+        <VStack h="100dvh" w="100vw" overflowX="hidden" overflowY="auto" userSelect="none" gap={0}>
           {/* Opponent Area */}
           <VStack p={4} w="full">
             <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
@@ -91,9 +91,13 @@ export default function GameContent() {
               </HStack>
             </HStack>
           </VStack>
-          <VStack w="full" position="sticky" bottom={0} zIndex="sticky" gap={0}
-
-          pointerEvents="none"
+          <VStack
+            w="full"
+            position="sticky"
+            bottom={0}
+            zIndex="sticky"
+            gap={0}
+            pointerEvents="none"
           >
             <HStack
               w="full"

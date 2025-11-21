@@ -21,7 +21,9 @@ export async function doAction<T extends Record<string, unknown>>(
   await get(`/games/${gameId}/oidcallback/${oid.oid}/${base64message}`);
 }
 
-export default function useDoAction<T extends Record<string, unknown> | undefined>(oid: ObjectIdContainer) {
+export default function useDoAction<T extends Record<string, unknown> | undefined>(
+  oid: ObjectIdContainer
+) {
   const { gameId, refresh } = useLoadedGameContext();
 
   return useCallback(

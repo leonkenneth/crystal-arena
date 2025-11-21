@@ -46,7 +46,11 @@ export default function MessageBox({ messageBox }: Props) {
       title={title}
       footer={<ButtonSet type={messageBox.buttons} onCallback={handleCallback} />}
     >
-      {message && <Text color="fg" textAlign="center">{message}</Text>}
+      {message && (
+        <Text color="fg" textAlign="center">
+          {message}
+        </Text>
+      )}
     </Dialog>
   );
 }

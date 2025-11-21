@@ -130,7 +130,6 @@ export default function TargetArrow({ fromCardId, toCardId }: Props) {
     return null;
   }
 
-
   const top = fromLocation.y + fromLocation.height / 2;
   const bottom = toLocation.y + toLocation.height / 2;
   const left = fromLocation.x + fromLocation.width + 10;

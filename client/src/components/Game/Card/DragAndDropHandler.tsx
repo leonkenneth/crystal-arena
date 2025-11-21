@@ -1,10 +1,17 @@
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import Card from "../Card";
 import { doAction } from "@/utils/useDoAction";
 import { CardState } from "@/types";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import { useState } from "react";
-
 
 type Props = {
   children: React.ReactNode;
@@ -12,7 +19,11 @@ type Props = {
   onDraggedCardStart: (card: CardState) => void;
 };
 
-export default function DragAndDropHandler({ children, onDraggedCardEnd, onDraggedCardStart }: Props) {
+export default function DragAndDropHandler({
+  children,
+  onDraggedCardEnd,
+  onDraggedCardStart,
+}: Props) {
   const { gameState } = useLoadedGameContext();
   const [draggedCard, setDraggedCard] = useState<CardState | null>(null);
   const sensor = useSensor(PointerSensor, {
@@ -22,9 +33,7 @@ export default function DragAndDropHandler({ children, onDraggedCardEnd, onDragg
       tolerance: 5,
     },
   });
-  const sensors = useSensors(
-    sensor,
-  );
+  const sensors = useSensors(sensor);
   const handleDragEnd = (event: DragEndEvent) => {
     const card = event.active.data.current as CardState;
     setDraggedCard(null);
@@ -41,13 +50,13 @@ export default function DragAndDropHandler({ children, onDraggedCardEnd, onDragg
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedCard(event.active.data.current as CardState);
     onDraggedCardStart(event.active.data.current as CardState);
-  };    
+  };
   return (
     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
       {children}
       <DragOverlay style={{ zIndex: 100000000 }}>
-          {draggedCard && <Card card={draggedCard} />}
-        </DragOverlay>
+        {draggedCard && <Card card={draggedCard} />}
+      </DragOverlay>
     </DndContext>
   );
 }

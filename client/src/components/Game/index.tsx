@@ -8,11 +8,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LoadedGameContext } from "@/utils/LoadedGameContext";
 import { Center, Text } from "@chakra-ui/react";
 
-
 function ErrorMessage({ children }: { children: React.ReactNode }) {
-  return <Center h="100dvh" w="100vw">
-    <Text color="black">{children}</Text>
-  </Center>;
+  return (
+    <Center h="100dvh" w="100vw">
+      <Text color="black">{children}</Text>
+    </Center>
+  );
 }
 
 function Game({ id }: { id: string }) {

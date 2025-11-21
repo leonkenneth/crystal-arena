@@ -1,7 +1,7 @@
 import { ClientContext } from "@/utils/ClientContext";
 import { useContext } from "react";
 import Card from "./Card";
-import {  Portal, Drawer as ChakraDialog, Flex } from "@chakra-ui/react";
+import { Portal, Drawer as ChakraDialog, Flex } from "@chakra-ui/react";
 
 export default function HoveredCard() {
   const { hoveredCard } = useContext(ClientContext);

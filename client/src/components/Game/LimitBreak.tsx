@@ -11,11 +11,13 @@ export default function LimitBreak({ limitBreak }: Props) {
   if (cards.length === 0) {
     return null;
   }
-  return <HStack pointerEvents="auto">
-    {cards.map((card) => (
-      <Card key={card.cardId} card={card} containerProps={{ size: "xs" }} />
-    ))}
-  </HStack>
+  return (
+    <HStack pointerEvents="auto">
+      {cards.map((card) => (
+        <Card key={card.cardId} card={card} containerProps={{ size: "xs" }} />
+      ))}
+    </HStack>
+  );
   /*
   return (
     <CollapsedZone zone={limitBreak} linkOnly name="LimitBreak">

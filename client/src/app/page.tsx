@@ -24,7 +24,12 @@ export default function Home() {
           An FFTCG simulation engine for fun and learning.
         </Text>
 
-        <HStack gap={4} align="center" flexDirection={{ base: "column", sm: "row" }} w={{ base: "full", sm: "auto" }}>
+        <HStack
+          gap={4}
+          align="center"
+          flexDirection={{ base: "column", sm: "row" }}
+          w={{ base: "full", sm: "auto" }}
+        >
           <PlayNowButton variant="primary" gap={2}>
             Play now
           </PlayNowButton>

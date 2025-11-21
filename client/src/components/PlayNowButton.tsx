@@ -33,10 +33,18 @@ export default function PlayNowButton({ children, ...props }: Props) {
 
   return (
     <VStack gap={2}>
-    {!error && <Button onClick={onPlayNowClick} loading={isLoading} {...props}>
-      {buttonContent}
-    </Button>}
-    {error && <><Text fontSize="sm">{error} <Link onClick={onPlayNowClick}>Try again</Link></Text></>}
+      {!error && (
+        <Button onClick={onPlayNowClick} loading={isLoading} {...props}>
+          {buttonContent}
+        </Button>
+      )}
+      {error && (
+        <>
+          <Text fontSize="sm">
+            {error} <Link onClick={onPlayNowClick}>Try again</Link>
+          </Text>
+        </>
+      )}
     </VStack>
   );
 }

@@ -18,7 +18,9 @@ export default function GameResultsDialog() {
         </Button>
       }
     >
-      <Text color="fg" textAlign="center">{message}</Text>
+      <Text color="fg" textAlign="center">
+        {message}
+      </Text>
     </Dialog>
   );
 }
