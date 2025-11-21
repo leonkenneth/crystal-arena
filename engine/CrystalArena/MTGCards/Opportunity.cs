@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.AI.TimingRules;
+    using System.Collections.Generic;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Effects;
 
-  public class Opportunity : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Opportunity : CardTemplateSource
     {
-      yield return Card
-        .Named("Opportunity")
-        .ManaCost("{4}{U}{U}")
-        .Type("Summon")
-        .Text("Target player draws four cards.")
-        .FlavorText(
-          "He cocooned himself alone in his workshop for months. When he finally emerged, all broad grins and excited chatter, I knew he'd found his answer.")
-        .Cast(p =>
-          {
-            p.Effect = () => new TargetPlayerDrawsCards(4);
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Opportunity")
+                .ManaCost("{4}{U}{U}")
+                .Type("Summon")
+                .Text("Target player draws four cards.")
+                .FlavorText(
+                    "He cocooned himself alone in his workshop for months. When he finally emerged, all broad grins and excited chatter, I knew he'd found his answer."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new TargetPlayerDrawsCards(4);
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
 
-            p.TimingRule(new OnEndOfOpponentsTurn());
-            p.TargetingRule(new EffectYou());
-          });
+                    p.TimingRule(new OnEndOfOpponentsTurn());
+                    p.TargetingRule(new EffectYou());
+                });
+        }
     }
-  }
 }

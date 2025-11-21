@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class IronMaiden
-  {
-    public class Ai : AiScenario
+    public class IronMaiden
     {
-      [Fact (Skip = "Old card")]
-      public void Deal3Damage()
-      {
-        Hand(P1, "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest");
-        Battlefield(P2, "Iron Maiden");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal3Damage()
+            {
+                Hand(P1, "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest");
+                Battlefield(P2, "Iron Maiden");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(17, P1.Life);
-      }
+                Equal(17, P1.Life);
+            }
+        }
     }
-  }
 }

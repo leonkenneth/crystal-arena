@@ -1,30 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class FledglingOsprey
-  {
-    public class Predefined : PredefinedScenario
+    public class FledglingOsprey
     {
-      [Fact (Skip = "Old card")]
-      public void OspreyHasFlyingAsLongItsEnchanted()
-      {
-        var osprey = C("Fledgling Osprey");
-        var rancor = C("Rancor");
-        var disenchant = C("Disenchant");
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void OspreyHasFlyingAsLongItsEnchanted()
+            {
+                var osprey = C("Fledgling Osprey");
+                var rancor = C("Rancor");
+                var disenchant = C("Disenchant");
 
-        Battlefield(P1, osprey);        
-        Hand(P1, rancor, disenchant);
+                Battlefield(P1, osprey);
+                Hand(P1, rancor, disenchant);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(rancor, target: osprey)
-            .Verify(() => True(C(osprey).Has().Flying))
-            .Cast(disenchant, rancor)
-            .Verify(() => False(C(osprey).Has().Flying))
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(rancor, target: osprey)
+                        .Verify(() => True(C(osprey).Has().Flying))
+                        .Cast(disenchant, rancor)
+                        .Verify(() => False(C(osprey).Has().Flying))
+                );
+            }
+        }
     }
-  }
 }

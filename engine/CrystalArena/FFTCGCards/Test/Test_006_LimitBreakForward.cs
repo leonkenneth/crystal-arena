@@ -6,8 +6,7 @@ public class Test_006_LimitBreakForward : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("0-006X")
+        yield return Card.Code("0-006X")
             .Named("Test LimitBreak Forward")
             .Cost(2, "R")
             .Forward(multiplayable: true)

@@ -1,26 +1,31 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using System;
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using System;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class OnCounteredSpell : Trigger, IReceive<SpellCounteredEvent>
-  {
-    private readonly Func<TriggeredAbility, Card, bool> _filter;
-
-    private OnCounteredSpell() {}
-
-    public OnCounteredSpell(Func<TriggeredAbility, Card, bool> filter = null)
+    public class OnCounteredSpell : Trigger, IReceive<SpellCounteredEvent>
     {
-      _filter = filter ?? delegate { return true; };
-    }
+        private readonly Func<TriggeredAbility, Card, bool> _filter;
 
-    public void Receive(SpellCounteredEvent message)
-    {
-      if (_filter(Ability, message.Card))
-      {
-        Set(message);
-      }
+        private OnCounteredSpell() { }
+
+        public OnCounteredSpell(Func<TriggeredAbility, Card, bool> filter = null)
+        {
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
+        }
+
+        public void Receive(SpellCounteredEvent message)
+        {
+            if (_filter(Ability, message.Card))
+            {
+                Set(message);
+            }
+        }
     }
-  }
 }

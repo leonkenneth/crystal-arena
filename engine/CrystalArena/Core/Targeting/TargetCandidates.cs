@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections;
-  using System.Collections.Generic;
-  using CrystalArena.Infrastructure;
+    using System.Collections;
+    using System.Collections.Generic;
+    using CrystalArena.Infrastructure;
 
-  [Copyable]
-  public class TargetCandidates : IEnumerable<ITarget>
-  {
-    private readonly List<ITarget> _candidates = new List<ITarget>();
-
-    public IEnumerator<ITarget> GetEnumerator()
+    [Copyable]
+    public class TargetCandidates : IEnumerable<ITarget>
     {
-      return _candidates.GetEnumerator();
-    }
+        private readonly List<ITarget> _candidates = new List<ITarget>();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
+        public IEnumerator<ITarget> GetEnumerator()
+        {
+            return _candidates.GetEnumerator();
+        }
 
-    public void Add(ITarget target)
-    {
-      _candidates.Add(target);
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(ITarget target)
+        {
+            _candidates.Add(target);
+        }
     }
-  }
 }

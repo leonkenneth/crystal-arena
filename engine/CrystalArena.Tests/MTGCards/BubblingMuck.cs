@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BubblingMuck
-  {
-    public class Ai : AiScenario
+    public class BubblingMuck
     {
-      [Fact (Skip = "Old card")]
-      public void CastDragon()
-      {
-        var kite = C("Shivan Hellkite");
-        Hand(P1, kite, "Bubbling Muck");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Swamp", "Swamp", "Swamp");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastDragon()
+            {
+                var kite = C("Shivan Hellkite");
+                Hand(P1, kite, "Bubbling Muck");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Swamp", "Swamp", "Swamp");
 
-        RunGame(3);
+                RunGame(3);
 
-        Equal(Zone.Battlefield, C(kite).Zone);
-      }
+                Equal(Zone.Battlefield, C(kite).Zone);
+            }
+        }
     }
-  }
 }

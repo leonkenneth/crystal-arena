@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CruelSadist
-  {
-    public class Ai : AiScenario
+    public class CruelSadist
     {
-      [Fact (Skip = "Old card")]
-      public void KillElves()
-      {
-        var saddist = C("Cruel Sadist").AddCounters(2, CounterType.PowerToughness);
-        
-        Battlefield(P1, "Juggernaut", saddist, "Swamp", "Swamp", "Swamp");
-        Battlefield(P2, "Llanowar Elves");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillElves()
+            {
+                var saddist = C("Cruel Sadist").AddCounters(2, CounterType.PowerToughness);
 
-        P2.Life = 5;
+                Battlefield(P1, "Juggernaut", saddist, "Swamp", "Swamp", "Swamp");
+                Battlefield(P2, "Llanowar Elves");
 
-        RunGame(1);
+                P2.Life = 5;
 
-        Equal(1, C(saddist).CountersCount(CounterType.PowerToughness));
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(1, C(saddist).CountersCount(CounterType.PowerToughness));
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

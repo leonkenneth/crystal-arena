@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena
 {
-  using System;
+    using System;
 
-  [Serializable]
-  public class PlayerParameters
-  {
-    public string Name;
-    public int AvatarId;
-    public Deck Deck;
-  }
+    [Serializable]
+    public class PlayerParameters
+    {
+        public string Name;
+        public int AvatarId;
+        public Deck Deck;
+    }
 }

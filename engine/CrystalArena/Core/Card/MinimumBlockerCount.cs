@@ -1,17 +1,17 @@
 ﻿namespace CrystalArena
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class MinimumBlockerCount : Characteristic<int?>, IAcceptsCardModifier
-  {
-    private MinimumBlockerCount() {}
-
-    public MinimumBlockerCount(int value)
-      : base(value) {}
-
-    public void Accept(ICardModifier modifier)
+    public class MinimumBlockerCount : Characteristic<int?>, IAcceptsCardModifier
     {
-      modifier.Apply(this);
+        private MinimumBlockerCount() { }
+
+        public MinimumBlockerCount(int value)
+            : base(value) { }
+
+        public void Accept(ICardModifier modifier)
+        {
+            modifier.Apply(this);
+        }
     }
-  }
 }

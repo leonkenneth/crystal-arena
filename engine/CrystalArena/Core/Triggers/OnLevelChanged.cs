@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class OnLevelChanged : Trigger, IReceive<LevelChangedEvent>
-  {
-    private readonly int _level;
-
-    private OnLevelChanged() {}
-
-    public OnLevelChanged(int level)
+    public class OnLevelChanged : Trigger, IReceive<LevelChangedEvent>
     {
-      _level = level;
-    }
+        private readonly int _level;
 
-    public void Receive(LevelChangedEvent message)
-    {
-      if (message.Card == Ability.OwningCard)
-      {
-        if (message.Card.Level == _level)
+        private OnLevelChanged() { }
+
+        public OnLevelChanged(int level)
         {
-          Set();
+            _level = level;
         }
-      }
+
+        public void Receive(LevelChangedEvent message)
+        {
+            if (message.Card == Ability.OwningCard)
+            {
+                if (message.Card.Level == _level)
+                {
+                    Set();
+                }
+            }
+        }
     }
-  }
 }

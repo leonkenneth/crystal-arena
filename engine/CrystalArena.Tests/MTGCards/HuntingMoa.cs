@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class HuntingMoa
-  {
-    public class Ai : AiScenario
+    public class HuntingMoa
     {
-      [Fact (Skip = "Old card")]
-      public void Put11CounterOfFaeries()
-      {
-        Hand(P1, "Hunting Moa");
-        Battlefield(P1, "Cloud of Faeries", "Forest", "Forest", "Forest");
-        Battlefield(P2, "Wall of Blossoms");
-        
-        P2.Life = 2;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Put11CounterOfFaeries()
+            {
+                Hand(P1, "Hunting Moa");
+                Battlefield(P1, "Cloud of Faeries", "Forest", "Forest", "Forest");
+                Battlefield(P2, "Wall of Blossoms");
 
-        RunGame(1);
+                P2.Life = 2;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

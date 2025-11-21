@@ -1,23 +1,20 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
-  using CrystalArena.Infrastructure;
+    using System;
+    using CrystalArena.Infrastructure;
 
-  [Copyable, Serializable]
-  public class ChosenPlayable
-  {
-    public IPlayable Playable { get; set; }
-    public bool WasPriorityPassed { get { return Playable.WasPriorityPassed; } }
-
-    public static ChosenPlayable Pass
+    [Copyable, Serializable]
+    public class ChosenPlayable
     {
-      get
-      {
-        return new ChosenPlayable
-          {
-            Playable = new Pass()
-          };
-      }
+        public IPlayable Playable { get; set; }
+        public bool WasPriorityPassed
+        {
+            get { return Playable.WasPriorityPassed; }
+        }
+
+        public static ChosenPlayable Pass
+        {
+            get { return new ChosenPlayable { Playable = new Pass() }; }
+        }
     }
-  }
 }

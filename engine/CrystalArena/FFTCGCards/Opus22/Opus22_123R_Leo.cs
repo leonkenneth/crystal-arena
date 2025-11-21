@@ -27,8 +27,7 @@ public class Opus22_123R_Leo : CardTemplateSource
        Limit Break ― 1
        When Leo enters the field, draw 1 card.
      */
-        yield return Card
-            .Code("22-123R")
+        yield return Card.Code("22-123R")
             .Named("Leo")
             .Cost(3, "U")
             .Category("FFCC")

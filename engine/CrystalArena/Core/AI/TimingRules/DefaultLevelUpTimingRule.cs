@@ -1,48 +1,48 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class DefaultLevelUpTimingRule : TimingRule
-  {
-    private readonly ManaAmount _cost;
-    private readonly List<LevelDefinition> _levelDefinitions = new List<LevelDefinition>();
-
-    private DefaultLevelUpTimingRule() {}
-
-    public DefaultLevelUpTimingRule(ManaAmount cost, params LevelDefinition[] levelDefinitions)
+    public class DefaultLevelUpTimingRule : TimingRule
     {
-      _cost = cost;
-      _levelDefinitions.AddRange(levelDefinitions);
-    }
+        private readonly ManaAmount _cost;
+        private readonly List<LevelDefinition> _levelDefinitions = new List<LevelDefinition>();
 
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
-    {
-      var level = p.Card.Level ?? 0;
-      int? costToNextLevel = null;
+        private DefaultLevelUpTimingRule() { }
 
-      foreach (var definition in _levelDefinitions)
-      {
-        if (definition.Max == null)
-          break;
-
-        if (level < definition.Min)
+        public DefaultLevelUpTimingRule(ManaAmount cost, params LevelDefinition[] levelDefinitions)
         {
-          costToNextLevel = definition.Min - level;
-          break;
+            _cost = cost;
+            _levelDefinitions.AddRange(levelDefinitions);
         }
 
-        if (definition.Min <= level && definition.Max >= level)
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
         {
-          costToNextLevel = definition.Max + 1 - level;
-          break;
+            var level = p.Card.Level ?? 0;
+            int? costToNextLevel = null;
+
+            foreach (var definition in _levelDefinitions)
+            {
+                if (definition.Max == null)
+                    break;
+
+                if (level < definition.Min)
+                {
+                    costToNextLevel = definition.Min - level;
+                    break;
+                }
+
+                if (definition.Min <= level && definition.Max >= level)
+                {
+                    costToNextLevel = definition.Max + 1 - level;
+                    break;
+                }
+            }
+
+            if (costToNextLevel == null)
+                return false;
+
+            var totalCostToNextLevel = _cost.Repeat(costToNextLevel.Value);
+            return p.Controller.HasMana(totalCostToNextLevel, ManaUsage.Abilities);
         }
-      }
-
-      if (costToNextLevel == null)
-        return false;
-
-      var totalCostToNextLevel = _cost.Repeat(costToNextLevel.Value);
-      return p.Controller.HasMana(totalCostToNextLevel, ManaUsage.Abilities);
     }
-  }
 }

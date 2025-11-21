@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.Events
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class PermanentModifiedEvent
-  {
-    public readonly Card Card;
-    public readonly IModifier Modifier;
-
-    public PermanentModifiedEvent(Card card, IModifier modifier)
+    public class PermanentModifiedEvent
     {
-      Card = card;
-      Modifier = modifier;
+        public readonly Card Card;
+        public readonly IModifier Modifier;
+
+        public PermanentModifiedEvent(Card card, IModifier modifier)
+        {
+            Card = card;
+            Modifier = modifier;
+        }
     }
-  }
 }

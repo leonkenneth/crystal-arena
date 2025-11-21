@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Fatigue
-  {
-    public class Ai : AiScenario
+    public class Fatigue
     {
-      [Fact (Skip = "Old card")]
-      public void OpponentSkipsNextDraw()
-      {
-        Hand(P1, "Fatigue");
-        Battlefield(P1, "Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void OpponentSkipsNextDraw()
+            {
+                Hand(P1, "Fatigue");
+                Battlefield(P1, "Island", "Island");
 
-        RunGame(4);
+                RunGame(4);
 
-        Equal(1, P2.Hand.Count);
-      }
+                Equal(1, P2.Hand.Count);
+            }
+        }
     }
-  }
 }

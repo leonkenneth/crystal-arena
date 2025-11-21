@@ -1,83 +1,80 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using Costs;
-  using Decisions;
-  using Modifiers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Costs;
+    using Decisions;
+    using Modifiers;
 
-  public class ForwardsOfChosenTypeCostLess : CustomizableEffect
-  {
-    private readonly int _amount;
-    private string _mostCommonType;
-
-    private ForwardsOfChosenTypeCostLess() {}
-
-    public ForwardsOfChosenTypeCostLess(int amount)
+    public class ForwardsOfChosenTypeCostLess : CustomizableEffect
     {
-      _amount = amount;
-    }
+        private readonly int _amount;
+        private string _mostCommonType;
 
-    public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
-    {
-      return new ChosenOptions(_mostCommonType);
-    }
+        private ForwardsOfChosenTypeCostLess() { }
 
-    public override void ProcessResults(ChosenOptions results)
-    {
-      var chosenType = (string) results.Options[0];
-
-      var costModifier = new ChangeManaCostOfSpellsOrAbilities(
-        -_amount,
-        (card, usage, self) => 
-          usage == CostType.Spell && card.Is().Forward && card.Is(chosenType));
-
-      var addCostModifier = new AddCostModifier(costModifier);
-
-      addCostModifier.AddLifetime(new PermanentLeavesBattlefieldLifetime(
-        self => self.Modifier.SourceCard
-        ));
-
-      var mp = new ModifierParameters
+        public ForwardsOfChosenTypeCostLess(int amount)
         {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this
-        };
-
-      Game.AddModifier(addCostModifier, mp);
-    }
-
-    public override string GetText()
-    {
-      return "Choose forward type: #0.";
-    }
-
-    public override IEnumerable<IEffectChoice> GetChoices()
-    {
-      var subtypes = new Dictionary<string, int>();
-
-      var cards = Controller.MainDeck.Concat(Controller.Hand).Where(x => x.Is().Forward);
-
-      foreach (var card in cards)
-      {
-        foreach (var subType in card.Subtypes)
-        {
-          if (!subtypes.ContainsKey(subType))
-            subtypes.Add(subType, 1);
-          else
-          {
-            subtypes[subType]++;
-          }
+            _amount = amount;
         }
-      }
 
-      if (subtypes.Count == 0)
-      {
-        subtypes["elf"] = 1;
-      }
+        public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
+        {
+            return new ChosenOptions(_mostCommonType);
+        }
 
-      _mostCommonType = subtypes.OrderByDescending(x => x.Value).First().Key;
-      yield return new DiscreteEffectChoice(subtypes.Keys.ToArray());
+        public override void ProcessResults(ChosenOptions results)
+        {
+            var chosenType = (string)results.Options[0];
+
+            var costModifier = new ChangeManaCostOfSpellsOrAbilities(
+                -_amount,
+                (card, usage, self) =>
+                    usage == CostType.Spell && card.Is().Forward && card.Is(chosenType)
+            );
+
+            var addCostModifier = new AddCostModifier(costModifier);
+
+            addCostModifier.AddLifetime(
+                new PermanentLeavesBattlefieldLifetime(self => self.Modifier.SourceCard)
+            );
+
+            var mp = new ModifierParameters { SourceCard = Source.OwningCard, SourceEffect = this };
+
+            Game.AddModifier(addCostModifier, mp);
+        }
+
+        public override string GetText()
+        {
+            return "Choose forward type: #0.";
+        }
+
+        public override IEnumerable<IEffectChoice> GetChoices()
+        {
+            var subtypes = new Dictionary<string, int>();
+
+            var cards = Controller.MainDeck.Concat(Controller.Hand).Where(x => x.Is().Forward);
+
+            foreach (var card in cards)
+            {
+                foreach (var subType in card.Subtypes)
+                {
+                    if (!subtypes.ContainsKey(subType))
+                        subtypes.Add(subType, 1);
+                    else
+                    {
+                        subtypes[subType]++;
+                    }
+                }
+            }
+
+            if (subtypes.Count == 0)
+            {
+                subtypes["elf"] = 1;
+            }
+
+            _mostCommonType = subtypes.OrderByDescending(x => x.Value).First().Key;
+            yield return new DiscreteEffectChoice(subtypes.Keys.ToArray());
+        }
     }
-  }
 }

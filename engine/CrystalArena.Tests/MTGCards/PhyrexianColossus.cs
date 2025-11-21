@@ -1,38 +1,38 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PhyrexianColossus
-  {
-    public class Ai : AiScenario
+    public class PhyrexianColossus
     {
-      [Fact (Skip = "Old card")]
-      public void CanBeBlockedBy3()
-      {
-        Battlefield(P1, "Phyrexian Colossus");
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CanBeBlockedBy3()
+            {
+                Battlefield(P1, "Phyrexian Colossus");
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
 
-        P2.Life = 8;
-        
-        RunGame(1);
+                P2.Life = 8;
 
-        Equal(0, P2.Battlefield.Count);
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void HasToBeUntappedByPaying8Life()
-      {
-        Battlefield(P1, C("Phyrexian Colossus").Tap());
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+                Equal(0, P2.Battlefield.Count);
+            }
 
-        P2.Life = 8;
-        
-        RunGame(1);
+            [Fact(Skip = "Old card")]
+            public void HasToBeUntappedByPaying8Life()
+            {
+                Battlefield(P1, C("Phyrexian Colossus").Tap());
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        Equal(12, P1.Life);
-        Equal(0, P2.Life);
-      }
+                P2.Life = 8;
+
+                RunGame(1);
+
+                Equal(12, P1.Life);
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

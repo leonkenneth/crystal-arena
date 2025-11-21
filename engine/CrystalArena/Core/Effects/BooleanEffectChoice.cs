@@ -1,14 +1,14 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class BooleanEffectChoice : IEffectChoice
-  {
-    public BooleanEffectChoice()
+    public class BooleanEffectChoice : IEffectChoice
     {
-      Options = new object[] {"True", "False"};
-    }
+        public BooleanEffectChoice()
+        {
+            Options = new object[] { "True", "False" };
+        }
 
-    public object[] Options { get; private set; }
-  }
+        public object[] Options { get; private set; }
+    }
 }

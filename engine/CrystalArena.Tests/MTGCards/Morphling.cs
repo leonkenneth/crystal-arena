@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Morphling : AiScenario
-  {
-    [Fact (Skip = "Old card")]
-    public void FlyingPump()
+    public class Morphling : AiScenario
     {
-      Battlefield(P1, "Morphling", "Island", "Island", "Island", "Island", "Island");
-      Battlefield(P2, "Grizzly Bears");
+        [Fact(Skip = "Old card")]
+        public void FlyingPump()
+        {
+            Battlefield(P1, "Morphling", "Island", "Island", "Island", "Island", "Island");
+            Battlefield(P2, "Grizzly Bears");
 
-      P2.Life = 5;
+            P2.Life = 5;
 
-      RunGame(1);
+            RunGame(1);
 
-      Equal(0, P2.Life);
+            Equal(0, P2.Life);
+        }
     }
-  }
 }

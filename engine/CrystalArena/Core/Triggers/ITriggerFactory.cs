@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena.Triggers
 {
-  public interface ITriggerFactory
-  {
-    Trigger CreateTrigger(TriggeredAbility triggeredAbility, Game game);
-  }
+    public interface ITriggerFactory
+    {
+        Trigger CreateTrigger(TriggeredAbility triggeredAbility, Game game);
+    }
 }

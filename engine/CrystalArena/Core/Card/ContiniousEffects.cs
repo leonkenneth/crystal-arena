@@ -1,33 +1,34 @@
 ﻿namespace CrystalArena
 {
-  using Infrastructure;
-  using Modifiers;
+    using Infrastructure;
+    using Modifiers;
 
-  public class ContiniousEffects : GameObject, IAcceptsPlayerModifier
-  {
-    private readonly TrackableList<ContinuousEffect> _continiousEffects = new TrackableList<ContinuousEffect>();
-
-    public void Accept(IPlayerModifier modifier)
+    public class ContiniousEffects : GameObject, IAcceptsPlayerModifier
     {
-      modifier.Apply(this);
-    }
+        private readonly TrackableList<ContinuousEffect> _continiousEffects =
+            new TrackableList<ContinuousEffect>();
 
-    public void Initialize(Card source, Game game)
-    {
-      Game = game;
+        public void Accept(IPlayerModifier modifier)
+        {
+            modifier.Apply(this);
+        }
 
-      _continiousEffects.Initialize(ChangeTracker);
-    }
+        public void Initialize(Card source, Game game)
+        {
+            Game = game;
 
-    public void Add(ContinuousEffect effect)
-    {
-      _continiousEffects.Add(effect);
-    }
+            _continiousEffects.Initialize(ChangeTracker);
+        }
 
-    public void Remove(ContinuousEffect effect)
-    {
-      _continiousEffects.Remove(effect);
-      effect.Deactivate();
+        public void Add(ContinuousEffect effect)
+        {
+            _continiousEffects.Add(effect);
+        }
+
+        public void Remove(ContinuousEffect effect)
+        {
+            _continiousEffects.Remove(effect);
+            effect.Deactivate();
+        }
     }
-  }
 }

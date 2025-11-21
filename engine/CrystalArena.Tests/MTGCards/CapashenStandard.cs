@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CapashenStandard
-  {
-    public class Ai : AiScenario
+    public class CapashenStandard
     {
-      [Fact (Skip = "Old card")]
-      public void SacrificeStandardToDrawCard()
-      {
-        var bear1 = C("Grizzly Bears");
-        Battlefield(P1, bear1.IsEnchantedWith("Capashen Standard"), "Plains", "Plains");
-        
-        Hand(P2, "Expunge");
-        Battlefield(P2, "Swamp", "Swamp", "Swamp");
-        P2.Life = 3;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SacrificeStandardToDrawCard()
+            {
+                var bear1 = C("Grizzly Bears");
+                Battlefield(P1, bear1.IsEnchantedWith("Capashen Standard"), "Plains", "Plains");
 
-        RunGame(1);
+                Hand(P2, "Expunge");
+                Battlefield(P2, "Swamp", "Swamp", "Swamp");
+                P2.Life = 3;
 
-        Equal(3, P2.Life);
-        Equal(1, P1.Hand.Count);
-        Equal(Zone.BreakZone, C(bear1).Zone);
-      }
+                RunGame(1);
+
+                Equal(3, P2.Life);
+                Equal(1, P1.Hand.Count);
+                Equal(Zone.BreakZone, C(bear1).Zone);
+            }
+        }
     }
-  }
 }

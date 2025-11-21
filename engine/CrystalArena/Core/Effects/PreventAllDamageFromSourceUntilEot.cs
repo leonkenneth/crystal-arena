@@ -1,36 +1,33 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class PreventAllDamageFromSourceUntilEot : Effect
-  {
-    private readonly bool _preventCombatOnly;
-
-    private PreventAllDamageFromSourceUntilEot() {}
-
-    public PreventAllDamageFromSourceUntilEot(bool preventCombatOnly = false)
+    public class PreventAllDamageFromSourceUntilEot : Effect
     {
-      _preventCombatOnly = preventCombatOnly;
-    }
+        private readonly bool _preventCombatOnly;
 
-    protected override void ResolveEffect()
-    {
-      var source = Target.IsEffect()
-        ? Target.Effect().Source.OwningCard
-        : Target.Card();
+        private PreventAllDamageFromSourceUntilEot() { }
 
-      var mp = new ModifierParameters
+        public PreventAllDamageFromSourceUntilEot(bool preventCombatOnly = false)
         {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this,
-          X = X
-        };
+            _preventCombatOnly = preventCombatOnly;
+        }
 
-      var prevention = new CrystalArena.PreventDamageFromSource(
-        source, _preventCombatOnly);
+        protected override void ResolveEffect()
+        {
+            var source = Target.IsEffect() ? Target.Effect().Source.OwningCard : Target.Card();
 
-      var modifier = new AddDamagePrevention(prevention) {UntilEot = true};
-      Game.AddModifier(modifier, mp);
+            var mp = new ModifierParameters
+            {
+                SourceCard = Source.OwningCard,
+                SourceEffect = this,
+                X = X,
+            };
+
+            var prevention = new CrystalArena.PreventDamageFromSource(source, _preventCombatOnly);
+
+            var modifier = new AddDamagePrevention(prevention) { UntilEot = true };
+            Game.AddModifier(modifier, mp);
+        }
     }
-  }
 }

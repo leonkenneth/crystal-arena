@@ -1,26 +1,35 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BeastOfBurden
-  {
-    public class Ai : AiScenario
+    public class BeastOfBurden
     {
-      [Fact (Skip = "Old card")]
-      public void PowerToughnessEqualToTotalForwardCount()
-      {
-        var beast = C("Beast of Burden");
-        
-        Hand(P1, "Grizzly Bears", "Grizzly Bears");
-        Battlefield(P1, "Wall of Blossoms", "Wall of Blossoms", "Forest", "Forest", "Forest", "Forest", beast);
-        Battlefield(P2, "Mountain", "Wall of Denial");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PowerToughnessEqualToTotalForwardCount()
+            {
+                var beast = C("Beast of Burden");
 
-        RunGame(1);
+                Hand(P1, "Grizzly Bears", "Grizzly Bears");
+                Battlefield(
+                    P1,
+                    "Wall of Blossoms",
+                    "Wall of Blossoms",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    beast
+                );
+                Battlefield(P2, "Mountain", "Wall of Denial");
 
-        Equal(6, C(beast).Power);
-        Equal(6, C(beast).Toughness);
-      }
+                RunGame(1);
+
+                Equal(6, C(beast).Power);
+                Equal(6, C(beast).Toughness);
+            }
+        }
     }
-  }
 }

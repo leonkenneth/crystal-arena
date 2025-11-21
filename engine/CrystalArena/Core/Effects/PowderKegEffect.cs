@@ -1,33 +1,35 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Linq;
-  using AI;
+    using System.Linq;
+    using AI;
 
-  public class PowderKegEffect : Effect
-  {
-    private int _countersCount;
-
-    public PowderKegEffect()
+    public class PowderKegEffect : Effect
     {
-      SetTags(EffectTag.Destroy);
-    }
+        private int _countersCount;
 
-    protected override void ResolveEffect()
-    {
-      var permanentsToDestroy = Players.Permanents()
-        .Where(x => (x.Is().Artifact || x.Is().Forward) && x.ConvertedCost == _countersCount)
-        .ToList();
+        public PowderKegEffect()
+        {
+            SetTags(EffectTag.Destroy);
+        }
 
-      foreach (var card in permanentsToDestroy)
-      {
-        card.Destroy();
-      }
-    }
+        protected override void ResolveEffect()
+        {
+            var permanentsToDestroy = Players
+                .Permanents()
+                .Where(x =>
+                    (x.Is().Artifact || x.Is().Forward) && x.ConvertedCost == _countersCount
+                )
+                .ToList();
 
-    protected override void Initialize()
-    {
-      _countersCount = Source.OwningCard
-        .CountersCount(CounterType.Fuse);
+            foreach (var card in permanentsToDestroy)
+            {
+                card.Destroy();
+            }
+        }
+
+        protected override void Initialize()
+        {
+            _countersCount = Source.OwningCard.CountersCount(CounterType.Fuse);
+        }
     }
-  }
 }

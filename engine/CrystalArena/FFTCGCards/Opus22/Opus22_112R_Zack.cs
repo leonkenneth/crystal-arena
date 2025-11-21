@@ -11,24 +11,23 @@ public class Opus22_112R_Zack : CardTemplateSource
         /*
            Rarity	Rare
            Set	Opus XXII (Hidden Hope)
-           Element	
+           Element
            Fire
            Type	Forward
            Cost	3
            Power	7000
            Job	SOLDIER
-           Categories	
+           Categories
            VII
            EX Burst	no
            Multiplayable	no
            Limit Break	yes
-           Abilities	
+           Abilities
            (Cards with {LB} cannot be included in your main deck.)
            Limit Break ― 1
            When Zack enters the field, choose 1 Forward. Deal it 3000 damage.
      */
-        yield return Card
-            .Code("22-112R")
+        yield return Card.Code("22-112R")
             .Named("Zack")
             .Cost(3, "R")
             .Category("VII")
@@ -36,7 +35,9 @@ public class Opus22_112R_Zack : CardTemplateSource
             .Forward()
             .Power(7000)
             .LimitBreak(1)
-            .Text("Limit Break ― 1\nWhen Zack enters the field, choose 1 Forward. Deal it 3000 damage.")
+            .Text(
+                "Limit Break ― 1\nWhen Zack enters the field, choose 1 Forward. Deal it 3000 damage."
+            )
             .TriggeredAbility(p =>
             {
                 p.Text = "When Zack enters the field, choose 1 Forward. Deal it 3000 damage.";

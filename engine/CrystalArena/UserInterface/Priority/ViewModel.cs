@@ -2,52 +2,51 @@
 
 namespace CrystalArena.UserInterface.Priority
 {
-  using Decisions;
-  using Infrastructure;
-  using Messages;
+    using Decisions;
+    using Infrastructure;
+    using Messages;
 
-  public class ViewModel : ViewModelBase, IReceive<PlayableSelected>
-  {
-    public IPlayable Playable { get; private set; }
-    
-    public override object ToJson()
+    public class ViewModel : ViewModelBase, IReceive<PlayableSelected>
     {
-      return new
-      {
-        Type = "Priority",
-      };
-    }
+        public IPlayable Playable { get; private set; }
 
-    public void Receive(PlayableSelected message)
-    {
-      Playable = message.Playable;
-      this.Close();
-    }
+        public override object ToJson()
+        {
+            return new { Type = "Priority" };
+        }
 
-    public override void ReceiveMessageType(string type, string message)
-    {
-      switch (type)
-      {
-        case "PlayableSelected":
-          Receive(Newtonsoft.Json.JsonConvert.DeserializeObject<PlayableSelected>(message));
-          break;
-        case "PassPriority":
-          PassPriority();
-          break;
-        default:
-          throw new ArgumentException("Unknown message type: " + type);
-      }
-    }
+        public void Receive(PlayableSelected message)
+        {
+            Playable = message.Playable;
+            this.Close();
+        }
 
-    public void PassPriority()
-    {
-      Playable = new Pass();
-      this.Close();
-    }
+        public override void ReceiveMessageType(string type, string message)
+        {
+            switch (type)
+            {
+                case "PlayableSelected":
+                    Receive(
+                        Newtonsoft.Json.JsonConvert.DeserializeObject<PlayableSelected>(message)
+                    );
+                    break;
+                case "PassPriority":
+                    PassPriority();
+                    break;
+                default:
+                    throw new ArgumentException("Unknown message type: " + type);
+            }
+        }
 
-    public interface IFactory
-    {
-      ViewModel Create();
+        public void PassPriority()
+        {
+            Playable = new Pass();
+            this.Close();
+        }
+
+        public interface IFactory
+        {
+            ViewModel Create();
+        }
     }
-  }
 }

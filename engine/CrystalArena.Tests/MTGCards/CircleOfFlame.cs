@@ -1,37 +1,37 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CircleOfFlame
-  {
-    public class Ai : AiScenario
+    public class CircleOfFlame
     {
-      [Fact (Skip = "Old card")]
-      public void DealDamagesToAttackerWithoutFlying()
-      {
-        Battlefield(P1, "Fugitive Wizard");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DealDamagesToAttackerWithoutFlying()
+            {
+                Battlefield(P1, "Fugitive Wizard");
 
-        P2.Life = 1;
-        Battlefield(P2, "Circle Of Flame");
+                P2.Life = 1;
+                Battlefield(P2, "Circle Of Flame");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-      }
+                Equal(1, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void DoNotDealDamagesToAttackerWithFlying()
-      {
-        Battlefield(P1, "Angelic Page");
+            [Fact(Skip = "Old card")]
+            public void DoNotDealDamagesToAttackerWithFlying()
+            {
+                Battlefield(P1, "Angelic Page");
 
-        P2.Life = 1;
-        Battlefield(P2, "Circle Of Flame");
+                P2.Life = 1;
+                Battlefield(P2, "Circle Of Flame");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

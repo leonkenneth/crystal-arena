@@ -1,57 +1,57 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using Modifiers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Modifiers;
 
-  public class Attach : Effect
-  {
-    private readonly List<ModifierFactory> _modifiers = new List<ModifierFactory>();
-
-    private Attach() {}
-
-    public Attach(params ModifierFactory[] modifiers)
+    public class Attach : Effect
     {
-      _modifiers.AddRange(modifiers);
-    }
+        private readonly List<ModifierFactory> _modifiers = new List<ModifierFactory>();
 
-    public override int CalculateToughnessReduction(Card card)
-    {
-      if (Target == card)
-      {
-        return ToughnessReduction.GetValue(X);
-      }
-      return 0;
-    }
+        private Attach() { }
 
-    protected override void ResolveEffect()
-    {
-      // Fix: when equipment becomes forward (e.g Ensoul Artifact, Haunted Plate Mail) it tries to equip self. It caused StackOverflow exception
-      if (Source.OwningCard.Is().Forward && Source.OwningCard.Is().Equipment)
-        return;
-
-      var attachTo = (Card) Target;
-
-      attachTo.Attach(Source.OwningCard);
-      
-      var p = new ModifierParameters
+        public Attach(params ModifierFactory[] modifiers)
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
-
-      foreach (var modifier in _modifiers.Select(factory => factory()))
-      {
-        if (modifier is ICardModifier)
-        {
-          attachTo.AddModifier((ICardModifier) modifier, p);
+            _modifiers.AddRange(modifiers);
         }
-        else if (modifier is IGameModifier)
+
+        public override int CalculateToughnessReduction(Card card)
         {
-          Game.AddModifier((IGameModifier) modifier, p);
+            if (Target == card)
+            {
+                return ToughnessReduction.GetValue(X);
+            }
+            return 0;
         }
-      }
+
+        protected override void ResolveEffect()
+        {
+            // Fix: when equipment becomes forward (e.g Ensoul Artifact, Haunted Plate Mail) it tries to equip self. It caused StackOverflow exception
+            if (Source.OwningCard.Is().Forward && Source.OwningCard.Is().Equipment)
+                return;
+
+            var attachTo = (Card)Target;
+
+            attachTo.Attach(Source.OwningCard);
+
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            foreach (var modifier in _modifiers.Select(factory => factory()))
+            {
+                if (modifier is ICardModifier)
+                {
+                    attachTo.AddModifier((ICardModifier)modifier, p);
+                }
+                else if (modifier is IGameModifier)
+                {
+                    Game.AddModifier((IGameModifier)modifier, p);
+                }
+            }
+        }
     }
-  }
 }

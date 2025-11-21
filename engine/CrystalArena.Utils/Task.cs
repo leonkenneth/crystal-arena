@@ -1,8 +1,8 @@
 ﻿namespace CrystalArena.Utils
 {
-  public abstract class Task
-  {
-    public abstract bool Execute(Arguments arguments);
-    public abstract void Usage();
-  }
+    public abstract class Task
+    {
+        public abstract bool Execute(Arguments arguments);
+        public abstract void Usage();
+    }
 }

@@ -2,84 +2,91 @@
 
 namespace CrystalArena.UserInterface.SelectAbility
 {
-  using System.Collections.Generic;
-  using Infrastructure;
+    using System.Collections.Generic;
+    using Infrastructure;
 
-  public class ViewModel : ViewModelBase
-  {    
-    private readonly List<CardText> _descriptions = new List<CardText>();
-    private int _selectedIndex;
-    
-    public override object ToJson()
+    public class ViewModel : ViewModelBase
     {
-      return new
-      {
-        Type = "SelectAbility",
-        CanCancel,
-        Descriptions = Descriptions.Select(d => d.ToString()),
-        SelectedIndex,
-        Oid = base.ToJsonWithOid()
-      };
-    }
+        private readonly List<CardText> _descriptions = new List<CardText>();
+        private int _selectedIndex;
 
-    public ViewModel(IEnumerable<CardText> descriptions, bool canCancel = true)
-    {      
-      _descriptions.AddRange(descriptions);
-      _selectedIndex = -1;
-      CanCancel = canCancel;
-    }
+        public override object ToJson()
+        {
+            return new
+            {
+                Type = "SelectAbility",
+                CanCancel,
+                Descriptions = Descriptions.Select(d => d.ToString()),
+                SelectedIndex,
+                Oid = base.ToJsonWithOid(),
+            };
+        }
 
-    public IEnumerable<CardText> Descriptions { get { return _descriptions; } }
-    public bool CanCancel { get; private set; }
+        public ViewModel(IEnumerable<CardText> descriptions, bool canCancel = true)
+        {
+            _descriptions.AddRange(descriptions);
+            _selectedIndex = -1;
+            CanCancel = canCancel;
+        }
 
-    public bool WasCanceled { get; private set; }
+        public IEnumerable<CardText> Descriptions
+        {
+            get { return _descriptions; }
+        }
+        public bool CanCancel { get; private set; }
 
-    public virtual int SelectedIndex
-    {
-      get { return _selectedIndex; }
-      set
-      {
-        _selectedIndex = value;
-        this.Close();
-      }
-    }
+        public bool WasCanceled { get; private set; }
 
-    public void Cancel()
-    {      
-      WasCanceled = true;
-      this.Close();
-    }
-    
-    public void SetSelectedIndex(int index)
-    {
-      SelectedIndex = index;
-    }
+        public virtual int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set
+            {
+                _selectedIndex = value;
+                this.Close();
+            }
+        }
 
-    class SetSelectedIndexMessage
-    {
-      public int Index { get; set; }
-      public string Type { get; set; }
-    }
-    public override void ReceiveMessageType(string type, string message)
-    {
-      switch (type)
-      {
-        case "SetSelectedIndex":
-          var parsedMessage = Newtonsoft.Json.JsonConvert.DeserializeObject<SetSelectedIndexMessage>(message);
-          SetSelectedIndex(parsedMessage.Index);
-          break;
-        case "Cancel":
-          Cancel();
-          break;
-        default:
-          base.ReceiveMessageType(type, message);
-          break;
-      }
-    }
+        public void Cancel()
+        {
+            WasCanceled = true;
+            this.Close();
+        }
 
-    public interface IFactory
-    {
-      ViewModel Create(IEnumerable<CardText> descriptions, bool canCancel = true);
+        public void SetSelectedIndex(int index)
+        {
+            SelectedIndex = index;
+        }
+
+        class SetSelectedIndexMessage
+        {
+            public int Index { get; set; }
+            public string Type { get; set; }
+        }
+
+        public override void ReceiveMessageType(string type, string message)
+        {
+            switch (type)
+            {
+                case "SetSelectedIndex":
+                    var parsedMessage =
+                        Newtonsoft.Json.JsonConvert.DeserializeObject<SetSelectedIndexMessage>(
+                            message
+                        );
+                    SetSelectedIndex(parsedMessage.Index);
+                    break;
+                case "Cancel":
+                    Cancel();
+                    break;
+                default:
+                    base.ReceiveMessageType(type, message);
+                    break;
+            }
+        }
+
+        public interface IFactory
+        {
+            ViewModel Create(IEnumerable<CardText> descriptions, bool canCancel = true);
+        }
     }
-  }
 }

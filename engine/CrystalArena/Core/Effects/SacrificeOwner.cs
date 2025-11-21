@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class SacrificeOwner : Effect
-  {
-    protected override void ResolveEffect()
-    {                  
-      Source.OwningCard.Sacrifice();
+    public class SacrificeOwner : Effect
+    {
+        protected override void ResolveEffect()
+        {
+            Source.OwningCard.Sacrifice();
+        }
     }
-  }
 }

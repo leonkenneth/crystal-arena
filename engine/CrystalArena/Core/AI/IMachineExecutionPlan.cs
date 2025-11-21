@@ -1,8 +1,8 @@
 ﻿namespace CrystalArena.AI
 {
-  public interface IMachineExecutionPlan
-  {    
-    void ExecuteQuery();    
-    void SaveAndProcessResults();    
-  }
+    public interface IMachineExecutionPlan
+    {
+        void ExecuteQuery();
+        void SaveAndProcessResults();
+    }
 }

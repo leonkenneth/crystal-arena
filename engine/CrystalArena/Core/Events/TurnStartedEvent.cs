@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class TurnStartedEvent
-  {
-    public TurnStartedEvent(int turnCount)
+    public class TurnStartedEvent
     {
-      TurnCount = turnCount;
-    }
+        public TurnStartedEvent(int turnCount)
+        {
+            TurnCount = turnCount;
+        }
 
-    public readonly int TurnCount;
-  }
+        public readonly int TurnCount;
+    }
 }

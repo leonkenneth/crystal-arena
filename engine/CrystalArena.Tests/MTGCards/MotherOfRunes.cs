@@ -1,44 +1,41 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MotherOfRunes
-  {
-    public class Ai : AiScenario
+    public class MotherOfRunes
     {
-      [Fact (Skip = "Old card")]
-      public void AttackForKill()
-      {
-        Battlefield(P1, "Mother Of Runes", "Grizzly Bears");
-        Battlefield(P2, "Trained Armodon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackForKill()
+            {
+                Battlefield(P1, "Mother Of Runes", "Grizzly Bears");
+                Battlefield(P2, "Trained Armodon");
 
-        P2.Life = 2;
-        RunGame(1);
+                P2.Life = 2;
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
-      
+                Equal(0, P2.Life);
+            }
+        }
+
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DeflectShock()
+            {
+                var shock = C("Shock");
+                var bears = C("Grizzly Bears");
+
+                Hand(P1, shock);
+                Battlefield(P2, "Mother Of Runes", bears);
+
+                Exec(
+                    At(Step.FirstMain).Cast(shock, target: bears),
+                    At(Step.SecondMain).Verify(() => Equal(Zone.Battlefield, C(bears).Zone))
+                );
+            }
+        }
     }
-
-    public class PredefinedAi : PredefinedAiScenario
-    {
-      [Fact (Skip = "Old card")]
-      public void DeflectShock()
-      {
-        var shock = C("Shock");
-        var bears = C("Grizzly Bears");
-        
-        Hand(P1, shock);        
-        Battlefield(P2, "Mother Of Runes", bears);
-
-        Exec(
-          At(Step.FirstMain)
-            .Cast(shock, target: bears),
-          At(Step.SecondMain)
-            .Verify(() => Equal(Zone.Battlefield, C(bears).Zone))
-          );
-      }
-    }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class DarkRitual
-  {
-    public class Ai : AiScenario
+    public class DarkRitual
     {
-      [Fact (Skip = "Old card")]
-      public void CastDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        Hand(P1, "Dark Ritual", dragon);
-        Battlefield(P1, "Mountain", "Mountain", "Swamp", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastDragon()
+            {
+                var dragon = C("Shivan Dragon");
+                Hand(P1, "Dark Ritual", dragon);
+                Battlefield(P1, "Mountain", "Mountain", "Swamp", "Mountain");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(dragon).Zone);
-      }
+                Equal(Zone.Battlefield, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

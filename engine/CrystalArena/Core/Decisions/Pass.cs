@@ -1,22 +1,25 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
+    using System;
 
-  [Serializable]
-  public class Pass : IPlayable
-  {
-    public bool WasPriorityPassed { get { return true; } }
-
-    public bool CanPlay()
+    [Serializable]
+    public class Pass : IPlayable
     {
-      return true;
-    }
+        public bool WasPriorityPassed
+        {
+            get { return true; }
+        }
 
-    public void Play() {}
+        public bool CanPlay()
+        {
+            return true;
+        }
 
-    public override string ToString()
-    {
-      return "pass";
+        public void Play() { }
+
+        public override string ToString()
+        {
+            return "pass";
+        }
     }
-  }
 }

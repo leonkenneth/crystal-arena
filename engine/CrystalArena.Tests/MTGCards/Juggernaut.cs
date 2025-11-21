@@ -8,7 +8,7 @@
     {
         public class Ai : AiScenario
         {
-            [Fact (Skip = "Old card")]
+            [Fact(Skip = "Old card")]
             public void AttackWallWithJuggernaut()
             {
                 Battlefield(P1, "Juggernaut");

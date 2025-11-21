@@ -1,34 +1,34 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class SwitchController : Effect
-  {
-    private Player _opponent;
-
-    protected override void Initialize()
+    public class SwitchController : Effect
     {
-      _opponent = Controller.Opponent;
-    }
-        
-    protected override void ResolveEffect()
-    {
-      if (Source.OwningCard.Zone != Zone.Battlefield)
-        return;
+        private Player _opponent;
 
-      if (Source.OwningCard.Controller == _opponent)
-        return;
-      
-      var sourceModifier = new ChangeController(_opponent);      
-
-      var p = new ModifierParameters
+        protected override void Initialize()
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,          
-          X = X,          
-        };
-      
-      Source.OwningCard.AddModifier(sourceModifier, p);
+            _opponent = Controller.Opponent;
+        }
+
+        protected override void ResolveEffect()
+        {
+            if (Source.OwningCard.Zone != Zone.Battlefield)
+                return;
+
+            if (Source.OwningCard.Controller == _opponent)
+                return;
+
+            var sourceModifier = new ChangeController(_opponent);
+
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            Source.OwningCard.AddModifier(sourceModifier, p);
+        }
     }
-  }
 }

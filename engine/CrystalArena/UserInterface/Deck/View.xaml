@@ -1,15 +1,19 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.Deck.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
-             xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface"
-             xmlns:CrystalArena="clr-namespace:CrystalArena">
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.Deck.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+  xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+  xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface"
+  xmlns:CrystalArena="clr-namespace:CrystalArena"
+>
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <ScrollViewer.Resources>
       <DataTemplate DataType="{x:Type CrystalArena:DeckRow}">
         <ContentControl>
           <Grid Margin="5,0,20,0">
             <Grid.Resources>
-              <Style x:Key="CardName" Selector="TextBlock">
-              </Style>
-
+              <Style x:Key="CardName" Selector="TextBlock"></Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
@@ -18,11 +22,32 @@
               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Foreground="#fff" FontSize="15" Text="{Binding Count, StringFormat=' {0}x'}" />
+            <TextBlock
+              Foreground="#fff"
+              FontSize="15"
+              Text="{Binding Count, StringFormat=' {0}x'}"
+            />
 
-            <TextBlock  Margin="5,0,0,0" Grid.Column="1" Cursor="Hand" Foreground="#FFD700"  FontSize="15" Text="{Binding Card.Name}" />
-            <Image Source="{UserInterface:Media 'x.png'}" Height="20" Grid.Column="2" Margin="0,3,2,0" IsVisible="{Binding Path=CardData.HasXInCost, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}" />
-            <ItemsControl Grid.Column="3" Margin="0,3,10,0" ItemsSource="{Binding Path=CardData.ManaCost, Converter={x:Static UserInterface:Converters.ManaCostToManaSymbolImages}}">
+            <TextBlock
+              Margin="5,0,0,0"
+              Grid.Column="1"
+              Cursor="Hand"
+              Foreground="#FFD700"
+              FontSize="15"
+              Text="{Binding Card.Name}"
+            />
+            <Image
+              Source="{UserInterface:Media 'x.png'}"
+              Height="20"
+              Grid.Column="2"
+              Margin="0,3,2,0"
+              IsVisible="{Binding Path=CardData.HasXInCost, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}"
+            />
+            <ItemsControl
+              Grid.Column="3"
+              Margin="0,3,10,0"
+              ItemsSource="{Binding Path=CardData.ManaCost, Converter={x:Static UserInterface:Converters.ManaCostToManaSymbolImages}}"
+            >
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <StackPanel Orientation="Horizontal" />
@@ -35,11 +60,8 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
           </Grid>
-          <i:Interaction.Triggers>
-          </i:Interaction.Triggers>
-
+          <i:Interaction.Triggers></i:Interaction.Triggers>
         </ContentControl>
       </DataTemplate>
 
@@ -50,11 +72,20 @@
       </Style>
     </ScrollViewer.Resources>
     <StackPanel Margin="30,0,0,10">
-      <TextBlock  Text="{Binding CreatureCount, StringFormat='Creatures ({0})'}" IsVisible="{Binding Path=CreatureCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}" />
+      <TextBlock
+        Text="{Binding CreatureCount, StringFormat='Creatures ({0})'}"
+        IsVisible="{Binding Path=CreatureCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}"
+      />
       <ItemsControl ItemsSource="{Binding Path=Creatures}" />
-      <TextBlock  Text="{Binding SpellCount, StringFormat='Spells ({0})'}" IsVisible="{Binding Path=SpellCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}" />
+      <TextBlock
+        Text="{Binding SpellCount, StringFormat='Spells ({0})'}"
+        IsVisible="{Binding Path=SpellCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}"
+      />
       <ItemsControl ItemsSource="{Binding Path=Spells}" />
-      <TextBlock  Text="{Binding LandCount, StringFormat='Lands ({0})'}" IsVisible="{Binding Path=LandCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}" />
+      <TextBlock
+        Text="{Binding LandCount, StringFormat='Lands ({0})'}"
+        IsVisible="{Binding Path=LandCount, Converter={x:Static UserInterface:Converters.ZeroToCollapsed}}"
+      />
       <ItemsControl ItemsSource="{Binding Path=Lands}" />
     </StackPanel>
   </ScrollViewer>

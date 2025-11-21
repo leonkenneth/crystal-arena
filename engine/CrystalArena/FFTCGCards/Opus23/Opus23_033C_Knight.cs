@@ -21,19 +21,18 @@ public class Opus23_033C_Knight : CardTemplateSource
 
     private CardTemplate Card(string code)
     {
-        return base.Card
-            .Code(code)
+        return base
+            .Card.Code(code)
             .Named("Knight")
             .Cost(2, "I")
             .Backup(multiplayable: true)
             .Job("Standard Unit")
             .Text(
-                "When Knight enters the field, gain {Z}.\n{T}, put Knight into the Break Zone: Choose 1 Forward of cost 3 or less. Dull it. You can only use this ability during your turn.")
-                
+                "When Knight enters the field, gain {Z}.\n{T}, put Knight into the Break Zone: Choose 1 Forward of cost 3 or less. Dull it. You can only use this ability during your turn."
+            )
             .TriggeredAbility(p =>
             {
-                p.Text =
-                    "When Samurai enters the field, gain {Z}.";
+                p.Text = "When Samurai enters the field, gain {Z}.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
 
                 p.Effect = () => new AddManaToPool("{Z}".Parse());
@@ -44,7 +43,9 @@ public class Opus23_033C_Knight : CardTemplateSource
                     "{T}, put Knight into the Break Zone: Choose 1 Forward of cost 3 or less. Dull it. You can only use this ability during your turn.";
                 p.Cost = new AggregateCost(new Tap(), new SacrificeThis());
                 p.Effect = () => new TapTargets();
-                p.TargetSelector.AddEffect(trg => trg.Is.Card(c => c.Is().Forward && c.ConvertedCost <= 3).On.Battlefield());
+                p.TargetSelector.AddEffect(trg =>
+                    trg.Is.Card(c => c.Is().Forward && c.ConvertedCost <= 3).On.Battlefield()
+                );
                 p.ActivateOnlyDuringYourTurn = true;
             });
     }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class IdentityManager
-  {
-    private readonly Dictionary<int, object> _objects = new Dictionary<int, object>();
-    private int _nextId = 1;
-
-    public int GetId(object obj)
+    public class IdentityManager
     {
-      var id = _nextId;
-      _objects.Add(id, obj);
+        private readonly Dictionary<int, object> _objects = new Dictionary<int, object>();
+        private int _nextId = 1;
 
-      _nextId++;
+        public int GetId(object obj)
+        {
+            var id = _nextId;
+            _objects.Add(id, obj);
 
-      return id;
+            _nextId++;
+
+            return id;
+        }
+
+        public object GetObject(int id)
+        {
+            return _objects[id];
+        }
     }
-
-    public object GetObject(int id)
-    {
-      return _objects[id];
-    }
-  }
 }

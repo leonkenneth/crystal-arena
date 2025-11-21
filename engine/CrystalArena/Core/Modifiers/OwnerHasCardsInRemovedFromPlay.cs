@@ -1,30 +1,38 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System;
-  using System.Linq;
-  using Events;
-  using Infrastructure;
+    using System;
+    using System.Linq;
+    using Events;
+    using Infrastructure;
 
-  public class OwnerHasCardsInRemovedFromPlay : Lifetime, IReceive<ZoneChangedEvent>
-  {
-    private readonly Func<Card, bool> _selector;
-
-    private OwnerHasCardsInRemovedFromPlay() { }
-
-    public OwnerHasCardsInRemovedFromPlay(Func<Card, bool> selector)
+    public class OwnerHasCardsInRemovedFromPlay : Lifetime, IReceive<ZoneChangedEvent>
     {
-      _selector = selector ?? delegate { return true; };
-    }
+        private readonly Func<Card, bool> _selector;
 
-    public void Receive(ZoneChangedEvent message)
-    {
-      if (message.From != Zone.RemovedFromPlay)
-        return;
+        private OwnerHasCardsInRemovedFromPlay() { }
 
-      if (_selector(message.Card) && !(Modifier.SourceCard.Controller.RemovedFromPlay.Any(_selector)))
-      {
-        End();
-      }
+        public OwnerHasCardsInRemovedFromPlay(Func<Card, bool> selector)
+        {
+            _selector =
+                selector
+                ?? delegate
+                {
+                    return true;
+                };
+        }
+
+        public void Receive(ZoneChangedEvent message)
+        {
+            if (message.From != Zone.RemovedFromPlay)
+                return;
+
+            if (
+                _selector(message.Card)
+                && !(Modifier.SourceCard.Controller.RemovedFromPlay.Any(_selector))
+            )
+            {
+                End();
+            }
+        }
     }
-  }
 }

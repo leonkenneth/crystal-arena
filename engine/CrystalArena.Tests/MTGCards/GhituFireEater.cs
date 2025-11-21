@@ -1,26 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GhituFireEater
-  {
-    public class Ai : AiScenario
+    public class GhituFireEater
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantAndDamage()
-      {
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantAndDamage()
+            {
+                Hand(P1, "Rancor");
+                Battlefield(P1, "Ghitu Fire-Eater", "Forest");
+                Battlefield(P2, "Wall of Junk");
 
-        Hand(P1, "Rancor");
-        Battlefield(P1, "Ghitu Fire-Eater", "Forest");
-        Battlefield(P2, "Wall of Junk");
+                P2.Life = 4;
 
-        P2.Life = 4;
+                RunGame(1);
 
-        RunGame(1);
-
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

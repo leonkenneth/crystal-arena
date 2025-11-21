@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class OpalAvenger
-  {
-    public class Ai : AiScenario
+    public class OpalAvenger
     {
-      [Fact (Skip = "Old card")]
-      public void TurnIntoForwardImmediately  ()
-      {
-        var avenger = C("Opal Avenger");
-        
-        Hand(P1, avenger);
-        Battlefield(P1, "Plains", "Swamp", "Swamp");
-        P1.Life = 10;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void TurnIntoForwardImmediately()
+            {
+                var avenger = C("Opal Avenger");
 
-        RunGame(1);
+                Hand(P1, avenger);
+                Battlefield(P1, "Plains", "Swamp", "Swamp");
+                P1.Life = 10;
 
-        True(C(avenger).Is().Forward);
-      }
+                RunGame(1);
+
+                True(C(avenger).Is().Forward);
+            }
+        }
     }
-  }
 }

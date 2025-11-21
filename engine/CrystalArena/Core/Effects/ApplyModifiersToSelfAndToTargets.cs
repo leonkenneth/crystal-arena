@@ -1,83 +1,86 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using Modifiers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Modifiers;
 
-  public class ApplyModifiersToSelfAndToTargets : Effect
-  {
-    private readonly List<CardModifierFactory> _selfModifiers = new List<CardModifierFactory>();
-    private readonly List<CardModifierFactory> _targetModifiers = new List<CardModifierFactory>();
-
-    private readonly Value _toughnessReductionSelf;
-    private readonly Value _toughnessReductionTargets;
-
-    private ApplyModifiersToSelfAndToTargets() {}
-
-    public ApplyModifiersToSelfAndToTargets(
-      CardModifierFactory self,
-      CardModifierFactory target,
-      Value toughnessReductionSelf = null,
-      Value toughnessReductionTargets = null)
+    public class ApplyModifiersToSelfAndToTargets : Effect
     {
-      _selfModifiers.Add(self);
-      _targetModifiers.Add(target);
+        private readonly List<CardModifierFactory> _selfModifiers = new List<CardModifierFactory>();
+        private readonly List<CardModifierFactory> _targetModifiers =
+            new List<CardModifierFactory>();
 
-      _toughnessReductionSelf = toughnessReductionSelf ?? 0;
-      _toughnessReductionTargets = toughnessReductionTargets ?? 0;
-    }
+        private readonly Value _toughnessReductionSelf;
+        private readonly Value _toughnessReductionTargets;
 
-    public ApplyModifiersToSelfAndToTargets(
-      IEnumerable<CardModifierFactory> self,
-      IEnumerable<CardModifierFactory> target,
-      Value toughnessReductionSelf = null,
-      Value toughnessReductionTargets = null)
-    {
-      _selfModifiers.AddRange(self);
-      _targetModifiers.AddRange(target);
+        private ApplyModifiersToSelfAndToTargets() { }
 
-      _toughnessReductionSelf = toughnessReductionSelf ?? 0;
-      _toughnessReductionTargets = toughnessReductionTargets ?? 0;
-    }
-
-    public override int CalculateToughnessReduction(Card card)
-    {
-      if (card == Source.OwningCard)
-        return _toughnessReductionSelf.GetValue(X);
-
-      if (card == Target)
-      {
-        return _toughnessReductionTargets.GetValue(X);
-      }
-
-      return 0;
-    }
-
-    protected override void ResolveEffect()
-    {
-      if (Source.OwningCard.Zone != Zone.Battlefield)
-        return;
-
-      var p = new ModifierParameters
+        public ApplyModifiersToSelfAndToTargets(
+            CardModifierFactory self,
+            CardModifierFactory target,
+            Value toughnessReductionSelf = null,
+            Value toughnessReductionTargets = null
+        )
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
+            _selfModifiers.Add(self);
+            _targetModifiers.Add(target);
 
-      var selfModifiers = _selfModifiers.Select(factory => factory());
+            _toughnessReductionSelf = toughnessReductionSelf ?? 0;
+            _toughnessReductionTargets = toughnessReductionTargets ?? 0;
+        }
 
-      foreach (var modifier in selfModifiers)
-      {
-        Source.OwningCard.AddModifier(modifier, p);
-      }
+        public ApplyModifiersToSelfAndToTargets(
+            IEnumerable<CardModifierFactory> self,
+            IEnumerable<CardModifierFactory> target,
+            Value toughnessReductionSelf = null,
+            Value toughnessReductionTargets = null
+        )
+        {
+            _selfModifiers.AddRange(self);
+            _targetModifiers.AddRange(target);
 
-      var targetModifiers = _targetModifiers.Select(factory => factory());
+            _toughnessReductionSelf = toughnessReductionSelf ?? 0;
+            _toughnessReductionTargets = toughnessReductionTargets ?? 0;
+        }
 
-      foreach (var modifier in targetModifiers)
-      {
-        Target.Card().AddModifier(modifier, p);
-      }
+        public override int CalculateToughnessReduction(Card card)
+        {
+            if (card == Source.OwningCard)
+                return _toughnessReductionSelf.GetValue(X);
+
+            if (card == Target)
+            {
+                return _toughnessReductionTargets.GetValue(X);
+            }
+
+            return 0;
+        }
+
+        protected override void ResolveEffect()
+        {
+            if (Source.OwningCard.Zone != Zone.Battlefield)
+                return;
+
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            var selfModifiers = _selfModifiers.Select(factory => factory());
+
+            foreach (var modifier in selfModifiers)
+            {
+                Source.OwningCard.AddModifier(modifier, p);
+            }
+
+            var targetModifiers = _targetModifiers.Select(factory => factory());
+
+            foreach (var modifier in targetModifiers)
+            {
+                Target.Card().AddModifier(modifier, p);
+            }
+        }
     }
-  }
 }

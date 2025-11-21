@@ -1,36 +1,38 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class ThranFoundry : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ThranFoundry : CardTemplateSource
     {
-      yield return Card
-        .Named("Thran Foundry")
-        .ManaCost("{1}")
-        .Type("Artifact")
-        .Text("{1},{T}, RemoveFromPlay Thran Foundry: Target player shuffles his or her breakZone into his or her library.")
-        .FlavorText("What we do not use up, we use again.")
-        .ActivatedAbility(p =>
-          {
-            p.Text =
-              "{1},{T}, RemoveFromPlay Thran Foundry: Target player shuffles his or her breakZone into his or her library.";
-            p.Cost = new AggregateCost(
-              new PayMana(1.Colorless()),
-              new Tap(),
-              new RemoveFromPlayOwnerCost());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Thran Foundry")
+                .ManaCost("{1}")
+                .Type("Artifact")
+                .Text(
+                    "{1},{T}, RemoveFromPlay Thran Foundry: Target player shuffles his or her breakZone into his or her library."
+                )
+                .FlavorText("What we do not use up, we use again.")
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{1},{T}, RemoveFromPlay Thran Foundry: Target player shuffles his or her breakZone into his or her library.";
+                    p.Cost = new AggregateCost(
+                        new PayMana(1.Colorless()),
+                        new Tap(),
+                        new RemoveFromPlayOwnerCost()
+                    );
 
-            p.Effect = () => new ShuffleTargetBreakZoneIntoMainDeck(c => true);
+                    p.Effect = () => new ShuffleTargetBreakZoneIntoMainDeck(c => true);
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
-            p.TargetingRule(new EffectAnyPlayer());
-            p.TimingRule(new OnEndOfOpponentsTurn());
-          });
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
+                    p.TargetingRule(new EffectAnyPlayer());
+                    p.TimingRule(new OnEndOfOpponentsTurn());
+                });
+        }
     }
-  }
 }

@@ -1,25 +1,32 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.Step.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro" xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface">
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.Step.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+  xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+  xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface"
+>
+  <UserControl.Resources>
+    <Style Selector="ContentControl"></Style>
 
-	<UserControl.Resources>
+    <Style Selector="TextBlock"></Style>
+  </UserControl.Resources>
 
-		<Style Selector="ContentControl" >
-		</Style>
+  <ContentControl>
+    <StackPanel Orientation="Horizontal">
+      <i:Interaction.Triggers></i:Interaction.Triggers>
 
-		<Style Selector="TextBlock" ></Style>
+      <Image
+        Height="12"
+        Margin="0,0,4,0"
+        Source="{Binding AutoPass, Converter={x:Static UserInterface:Converters.AutoPassToImage}}"
+      />
 
-	</UserControl.Resources>
-
-	<ContentControl>
-		<StackPanel Orientation="Horizontal">
-
-			<i:Interaction.Triggers>
-			</i:Interaction.Triggers>
-
-			<Image Height="12" Margin="0,0,4,0" Source="{Binding AutoPass, Converter={x:Static UserInterface:Converters.AutoPassToImage}}" />
-
-
-			<TextBlock Foreground="{StaticResource InactiveColor}" FontSize="13" Text="{Binding DisplayName}" />
-		</StackPanel>
-	</ContentControl>
-
+      <TextBlock
+        Foreground="{StaticResource InactiveColor}"
+        FontSize="13"
+        Text="{Binding DisplayName}"
+      />
+    </StackPanel>
+  </ContentControl>
 </UserControl>

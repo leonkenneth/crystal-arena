@@ -1,20 +1,20 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectRemoveFromPlayBreakZone : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectRemoveFromPlayBreakZone : TargetingRule
     {
-      var candidates = p.Candidates<Card>(ControlledBy.Opponent)
-        .OrderByDescending(x => x.Score)
-        .ToList();
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>(ControlledBy.Opponent)
+                .OrderByDescending(x => x.Score)
+                .ToList();
 
-      var pickedCount = Math.Min(p.TotalMaxTargetCount(), candidates.Count);
+            var pickedCount = Math.Min(p.TotalMaxTargetCount(), candidates.Count);
 
-      return Group(candidates, pickedCount);
+            return Group(candidates, pickedCount);
+        }
     }
-  }
 }

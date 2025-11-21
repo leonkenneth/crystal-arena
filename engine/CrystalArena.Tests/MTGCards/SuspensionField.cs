@@ -1,39 +1,39 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SuspensionField
-  {
-    public class Ai : AiScenario
+    public class SuspensionField
     {
-      [Fact (Skip = "Old card")]
-      public void RemoveFromPlayDragon()
-      {
-        Hand(P1, "Suspension Field");
-        Battlefield(P1, "Plains", "Plains");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void RemoveFromPlayDragon()
+            {
+                Hand(P1, "Suspension Field");
+                Battlefield(P1, "Plains", "Plains");
 
-        Battlefield(P2, "Shivan Dragon");
+                Battlefield(P2, "Shivan Dragon");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Battlefield.Count);
-      }
+                Equal(0, P2.Battlefield.Count);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void ReturnDragonFromRemoveFromPlay()
-      {
-        Hand(P1, "Suspension Field");
-        Battlefield(P1, "Plains", "Plains");
+            [Fact(Skip = "Old card")]
+            public void ReturnDragonFromRemoveFromPlay()
+            {
+                Hand(P1, "Suspension Field");
+                Battlefield(P1, "Plains", "Plains");
 
-        Hand(P2, "Naturalize");
-        Battlefield(P2, "Shivan Dragon", "Forest", "Plains");
+                Hand(P2, "Naturalize");
+                Battlefield(P2, "Shivan Dragon", "Forest", "Plains");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(3, P2.Battlefield.Count);
-        Equal(1, P1.BreakZone.Count);
-      }
+                Equal(3, P2.Battlefield.Count);
+                Equal(1, P1.BreakZone.Count);
+            }
+        }
     }
-  }
 }

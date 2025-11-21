@@ -1,78 +1,77 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class FerociousEffect : CompoundEffect
-  {
-    private int _feroucionIndex;
-    private readonly bool _instead;
-
-    private FerociousEffect() {}
-
-    public FerociousEffect(Effect[] normal, Effect[] ferocious, bool instead = false)
-      : base(normal.Concat(ferocious).ToArray())
+    public class FerociousEffect : CompoundEffect
     {
-      _feroucionIndex = normal.Length;
-      _instead = instead;
-    }
+        private int _feroucionIndex;
+        private readonly bool _instead;
 
-    public override void FinishResolve()
-    {
-      if (IsFerocious())
-      {
-        
-        if (!_instead)
+        private FerociousEffect() { }
+
+        public FerociousEffect(Effect[] normal, Effect[] ferocious, bool instead = false)
+            : base(normal.Concat(ferocious).ToArray())
         {
-          base.FinishResolve();
+            _feroucionIndex = normal.Length;
+            _instead = instead;
         }
-        else
+
+        public override void FinishResolve()
         {
-          foreach (var effect in ChildEffects.Skip(_feroucionIndex))
-          {
-            effect.AfterResolve(new Context(this, Game));
-          }
+            if (IsFerocious())
+            {
+                if (!_instead)
+                {
+                    base.FinishResolve();
+                }
+                else
+                {
+                    foreach (var effect in ChildEffects.Skip(_feroucionIndex))
+                    {
+                        effect.AfterResolve(new Context(this, Game));
+                    }
 
-          EffectFinishResolve();
+                    EffectFinishResolve();
+                }
+                return;
+            }
+
+            foreach (var effect in ChildEffects.Take(_feroucionIndex))
+            {
+                effect.AfterResolve(new Context(this, Game));
+            }
+
+            EffectFinishResolve();
         }
-        return;
-      }
-      
-      foreach (var effect in ChildEffects.Take(_feroucionIndex))
-      {
-        effect.AfterResolve(new Context(this, Game));
-      }
 
-      EffectFinishResolve();
-    }
-
-    protected override void ResolveEffect()
-    {
-      if (IsFerocious())
-      {
-        if (!_instead)
+        protected override void ResolveEffect()
         {
-          base.ResolveEffect();
+            if (IsFerocious())
+            {
+                if (!_instead)
+                {
+                    base.ResolveEffect();
+                }
+                else
+                {
+                    foreach (var effect in ChildEffects.Skip(_feroucionIndex))
+                    {
+                        effect.BeginResolve();
+                    }
+                }
+
+                return;
+            }
+
+            foreach (var effect in ChildEffects.Take(_feroucionIndex))
+            {
+                effect.BeginResolve();
+            }
         }
-        else
+
+        private bool IsFerocious()
         {
-          foreach (var effect in ChildEffects.Skip(_feroucionIndex))
-          {
-            effect.BeginResolve();
-          }
+            return Controller.Battlefield.Forwards.Any(x => x.Power >= 4);
         }
-        
-        return;
-      }
-
-      foreach (var effect in ChildEffects.Take(_feroucionIndex))
-      {
-        effect.BeginResolve();
-      }
     }
-
-    private bool IsFerocious()
-    {
-      return Controller.Battlefield.Forwards.Any(x => x.Power >= 4);
-    }
-  }
 }

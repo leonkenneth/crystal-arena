@@ -18,11 +18,13 @@ public class PartyDamage
         }
     }
 
-    public PartyDamage(AggregateDamage.AggregateType aggregateType = AggregateDamage.AggregateType.Sum)
+    public PartyDamage(
+        AggregateDamage.AggregateType aggregateType = AggregateDamage.AggregateType.Sum
+    )
     {
         _aggregateType = aggregateType;
     }
-    
+
     public void Add(Card card, int damage)
     {
         if (_contributions.ContainsKey(card))

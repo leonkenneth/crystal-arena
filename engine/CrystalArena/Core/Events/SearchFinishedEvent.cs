@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena.Events
 {
-  public class SearchFinishedEvent {}
+    public class SearchFinishedEvent { }
 }

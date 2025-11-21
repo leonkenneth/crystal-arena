@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SageEyeAvengers
-  {
-    public class Ai : AiScenario
+    public class SageEyeAvengers
     {
-      [Fact (Skip = "Old card")]
-      public void ReturnBearToHand()
-      {
-        Battlefield(P1, "Sage-Eye Avengers");
-        Battlefield(P2, "Grizzly Bears", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ReturnBearToHand()
+            {
+                Battlefield(P1, "Sage-Eye Avengers");
+                Battlefield(P2, "Grizzly Bears", "Forest");
 
-        P2.Life = 4;
-        RunGame(1);
+                P2.Life = 4;
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

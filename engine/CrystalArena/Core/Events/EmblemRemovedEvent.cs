@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class EmblemRemovedEvent
-  {
-    public readonly Emblem Emblem;
-
-    public EmblemRemovedEvent(Emblem emblem)
+    public class EmblemRemovedEvent
     {
-      Emblem = emblem;
+        public readonly Emblem Emblem;
+
+        public EmblemRemovedEvent(Emblem emblem)
+        {
+            Emblem = emblem;
+        }
     }
-  }
 }

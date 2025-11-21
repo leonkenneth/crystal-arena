@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena
 {
-  using Modifiers;
+    using Modifiers;
 
-  public interface IModifiable
-  {
-    void RemoveModifier(IModifier modifier);
-  }
+    public interface IModifiable
+    {
+        void RemoveModifier(IModifier modifier);
+    }
 }

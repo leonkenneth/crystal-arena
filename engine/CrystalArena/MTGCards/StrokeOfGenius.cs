@@ -1,33 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.CostRules;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.AI.TimingRules;
-  using CrystalArena.Modifiers;
+    using System.Collections.Generic;
+    using CrystalArena.AI.CostRules;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Effects;
+    using CrystalArena.Modifiers;
 
-  public class StrokeOfGenius : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class StrokeOfGenius : CardTemplateSource
     {
-      yield return Card
-        .Named("Stroke of Genius")
-        .ManaCost("{2}{U}").HasXInCost()
-        .Type("Summon")
-        .Text("Target player draws X cards.")
-        .FlavorText(
-          "After a hundred failed experiments, Urza was stunned to find that common silver passed through the portal undamaged. He immediately designed a golem made of the metal.")
-        .Cast(p =>
-          {
-            p.Effect = () => new TargetPlayerDrawsCards(cardCount: Value.PlusX);
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Stroke of Genius")
+                .ManaCost("{2}{U}")
+                .HasXInCost()
+                .Type("Summon")
+                .Text("Target player draws X cards.")
+                .FlavorText(
+                    "After a hundred failed experiments, Urza was stunned to find that common silver passed through the portal undamaged. He immediately designed a golem made of the metal."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new TargetPlayerDrawsCards(cardCount: Value.PlusX);
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
 
-            p.TimingRule(new OnEndOfOpponentsTurn());
-            p.TimingRule(new WhenYouHaveMana(6));
-            p.TargetingRule(new EffectYou());
-            p.CostRule(new XIsAvailableMana());
-          });
+                    p.TimingRule(new OnEndOfOpponentsTurn());
+                    p.TimingRule(new WhenYouHaveMana(6));
+                    p.TargetingRule(new EffectYou());
+                    p.CostRule(new XIsAvailableMana());
+                });
+        }
     }
-  }
 }

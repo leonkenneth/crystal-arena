@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class RuptureSpire
-  {
-    public class Ai : AiScenario
+    public class RuptureSpire
     {
-      [Fact (Skip = "Old card")]
-      public void Pay1()
-      {
-        var backup = C("Mountain");
-        var spire = C("Rupture Spire");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Pay1()
+            {
+                var backup = C("Mountain");
+                var spire = C("Rupture Spire");
 
-        Hand(P1, spire);
-        Battlefield(P1, backup);
+                Hand(P1, spire);
+                Battlefield(P1, backup);
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(spire).Zone);
-        True(C(backup).IsTapped);
-      }
+                Equal(Zone.Battlefield, C(spire).Zone);
+                True(C(backup).IsTapped);
+            }
+        }
     }
-  }
 }

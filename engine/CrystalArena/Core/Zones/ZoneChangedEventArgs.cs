@@ -1,14 +1,14 @@
 ﻿namespace CrystalArena
 {
-  using System;
+    using System;
 
-  public class ZoneChangedEventArgs : EventArgs
-  {
-    public ZoneChangedEventArgs(Card card)
+    public class ZoneChangedEventArgs : EventArgs
     {
-      Card = card;      
-    }
+        public ZoneChangedEventArgs(Card card)
+        {
+            Card = card;
+        }
 
-    public Card Card { get; private set; }    
-  }
+        public Card Card { get; private set; }
+    }
 }

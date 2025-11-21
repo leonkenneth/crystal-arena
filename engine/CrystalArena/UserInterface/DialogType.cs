@@ -1,10 +1,9 @@
 ﻿namespace CrystalArena.UserInterface
-{  
-  
-  public enum DialogType
-  {
-    Small,
-    Large,
-    Notification
-  }
+{
+    public enum DialogType
+    {
+        Small,
+        Large,
+        Notification,
+    }
 }

@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class FieldSurgeon
-  {
-    public class Ai : AiScenario
+    public class FieldSurgeon
     {
-      [Fact (Skip = "Old card")]
-      public void SaveArmodon()
-      {
-        var armodon1 = C("Trained Armodon");
-        var armodon2 = C("Trained Armodon");
-        
-        Battlefield(P1, armodon1, "Field Surgeon", "Wall of Blossoms");        
-        Battlefield(P2, armodon2);
-        P2.Life = 3;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SaveArmodon()
+            {
+                var armodon1 = C("Trained Armodon");
+                var armodon2 = C("Trained Armodon");
 
-        RunGame(1);
+                Battlefield(P1, armodon1, "Field Surgeon", "Wall of Blossoms");
+                Battlefield(P2, armodon2);
+                P2.Life = 3;
 
-        Equal(Zone.Battlefield, C(armodon1).Zone);
-        Equal(Zone.BreakZone, C(armodon2).Zone);        
-      }
+                RunGame(1);
+
+                Equal(Zone.Battlefield, C(armodon1).Zone);
+                Equal(Zone.BreakZone, C(armodon2).Zone);
+            }
+        }
     }
-  }
 }

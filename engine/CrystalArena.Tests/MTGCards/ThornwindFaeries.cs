@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ThornwindFaeries
-  {
-    public class Ai : AiScenario
+    public class ThornwindFaeries
     {
-      [Fact (Skip = "Old card")]
-      public void KillRaptor()
-      {
-        var raptor = C("Shivan Raptor");
-        
-        Battlefield(P1, "Thornwind Faeries", "Grizzly Bears");        
-        Battlefield(P2, raptor);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillRaptor()
+            {
+                var raptor = C("Shivan Raptor");
 
-        RunGame(1);
+                Battlefield(P1, "Thornwind Faeries", "Grizzly Bears");
+                Battlefield(P2, raptor);
 
-        Equal(Zone.BreakZone, C(raptor).Zone);
-      }
+                RunGame(1);
+
+                Equal(Zone.BreakZone, C(raptor).Zone);
+            }
+        }
     }
-  }
 }

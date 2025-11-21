@@ -1,5 +1,7 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.Exile.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-	<ItemsControl x:Name="Cards" />
-
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.Exile.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+  <ItemsControl x:Name="Cards" />
 </UserControl>

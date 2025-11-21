@@ -1,46 +1,53 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using Effects;
+    using Triggers;
 
-  public class KapshoKitefins : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class KapshoKitefins : CardTemplateSource
     {
-      yield return Card
-        .Named("Kapsho Kitefins")
-        .ManaCost("{4}{U}{U}")
-        .Type("Forward - Fish")
-        .Text(
-          "{Flying}{EOL}Whenever Kapsho Kitefins or another forward enters the battlefield under your control, tap target forward an opponent controls.")
-        .FlavorText("\"It's a truly disconcerting sight to see their shadows cast upon the deck.\"{EOL}—Captain Triff")
-        .Power(3)
-        .Toughness(3)
-        .SimpleAbilities(Static.Flying)
-        .TriggeredAbility(p =>
-          {
-            p.Text =
-              "Whenever Kapsho Kitefins or another forward enters the battlefield under your control, tap target forward an opponent controls.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Kapsho Kitefins")
+                .ManaCost("{4}{U}{U}")
+                .Type("Forward - Fish")
+                .Text(
+                    "{Flying}{EOL}Whenever Kapsho Kitefins or another forward enters the battlefield under your control, tap target forward an opponent controls."
+                )
+                .FlavorText(
+                    "\"It's a truly disconcerting sight to see their shadows cast upon the deck.\"{EOL}—Captain Triff"
+                )
+                .Power(3)
+                .Toughness(3)
+                .SimpleAbilities(Static.Flying)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "Whenever Kapsho Kitefins or another forward enters the battlefield under your control, tap target forward an opponent controls.";
 
-            p.Trigger(new OnZoneChanged(
-              to: Zone.Battlefield,
-              selector: (card, ctx) =>
-              {
-                if (ctx.OwningCard == card)
-                  return true;
+                    p.Trigger(
+                        new OnZoneChanged(
+                            to: Zone.Battlefield,
+                            selector: (card, ctx) =>
+                            {
+                                if (ctx.OwningCard == card)
+                                    return true;
 
-                return card.Is().Forward && 
-                  ctx.OwningCard.Controller == card.Controller;
-              }));
-            
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
+                                return card.Is().Forward
+                                    && ctx.OwningCard.Controller == card.Controller;
+                            }
+                        )
+                    );
 
-            p.Effect = () => new TapTargets();
-            p.TargetSelector.AddEffect(trg => trg.Is.Forward(ControlledBy.Opponent).On.Battlefield());
-            p.TargetingRule(new EffectTapForward());
-          });
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+
+                    p.Effect = () => new TapTargets();
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Forward(ControlledBy.Opponent).On.Battlefield()
+                    );
+                    p.TargetingRule(new EffectTapForward());
+                });
+        }
     }
-  }
 }

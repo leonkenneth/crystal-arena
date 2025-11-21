@@ -1,25 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BrawlersPlate
-  {
-    public class Ai : AiScenario
+    public class BrawlersPlate
     {
-      [Fact (Skip = "Old card")]
-      public void EquipWithBrawlersPlate()
-      {
-        Battlefield(P1, "Grizzly Bears", "Brawler's Plate", "Mountain", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EquipWithBrawlersPlate()
+            {
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Brawler's Plate",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
 
-        P2.Life = 4;
-        Battlefield(P2, "Grizzly Bears");
+                P2.Life = 4;
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P2.Life);
-        Equal(1, P2.BreakZone.Count);
-      }
+                Equal(2, P2.Life);
+                Equal(1, P2.BreakZone.Count);
+            }
+        }
     }
-  }
 }

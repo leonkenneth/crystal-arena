@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena.UserInterface.Messages
 {
-  public class BlockerSelected
-  {
-    public Card Blocker { get; set; }
-  }
+    public class BlockerSelected
+    {
+        public Card Blocker { get; set; }
+    }
 }

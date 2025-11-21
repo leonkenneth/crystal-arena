@@ -1,45 +1,44 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ClawsOfGix
-  {
-    public class PredefinedAi : PredefinedAiScenario
+    public class ClawsOfGix
     {
-      [Fact (Skip = "Old card")]
-      public void SacInResponse()
-      {
-        var shock = C("Shock");
-        var bear = C("Grizzly Bears");
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SacInResponse()
+            {
+                var shock = C("Shock");
+                var bear = C("Grizzly Bears");
 
-        Battlefield(P2, "Claws of Gix", bear, "Mountain");
-        Hand(P1, shock);
+                Battlefield(P2, "Claws of Gix", bear, "Mountain");
+                Hand(P1, shock);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(shock, target: bear)
-            .Verify(() => Equal(21, P2.Life))
-          );
-      }
+                Exec(At(Step.FirstMain).Cast(shock, target: bear).Verify(() => Equal(21, P2.Life)));
+            }
 
-      [Fact (Skip = "Old card")]
-      public void SacBackupWhenLifeIsLow()
-      {
-        var shock = C("Shock");
+            [Fact(Skip = "Old card")]
+            public void SacBackupWhenLifeIsLow()
+            {
+                var shock = C("Shock");
 
-        Hand(P1, shock);
-        Battlefield(P1, "Mountain");
+                Hand(P1, shock);
+                Battlefield(P1, "Mountain");
 
-        Battlefield(P2, "Claws of Gix", "Mountain");
-        P2.Life = 2;
+                Battlefield(P2, "Claws of Gix", "Mountain");
+                P2.Life = 2;
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(shock, target: P2)
-            .Verify(() => { Equal(1, P2.Life); })
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(shock, target: P2)
+                        .Verify(() =>
+                        {
+                            Equal(1, P2.Life);
+                        })
+                );
+            }
+        }
     }
-  }
 }

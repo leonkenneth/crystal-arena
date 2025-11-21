@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  public class SwitchPowerAndToughness : Modifier, ICardModifier
-  {
-    private Strength _strength;
-
-    public override void Apply(Strength strength)
+    public class SwitchPowerAndToughness : Modifier, ICardModifier
     {
-      _strength = strength;
-      _strength.SwitchPowerAndToughness();
-    }
+        private Strength _strength;
 
-    protected override void Unapply()
-    {
-      _strength.SwitchPowerAndToughness();
+        public override void Apply(Strength strength)
+        {
+            _strength = strength;
+            _strength.SwitchPowerAndToughness();
+        }
+
+        protected override void Unapply()
+        {
+            _strength.SwitchPowerAndToughness();
+        }
     }
-  }
 }

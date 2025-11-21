@@ -1,56 +1,59 @@
 ﻿namespace CrystalArena.Tests.Unit
 {
-  using System.ComponentModel;
-  using CrystalArena.Infrastructure;
-  using Xunit;
+    using System.ComponentModel;
+    using CrystalArena.Infrastructure;
+    using Xunit;
 
-  public class DataBindingFacts
-  {
-    [Fact]
-    public void UpdateViaMethod()
+    public class DataBindingFacts
     {
-      var changed = false;
-      var dog = Bindable.Create<Dog>();
-      var notify = dog as INotifyPropertyChanged;
-
-      notify.PropertyChanged += (s, e) =>
+        [Fact]
+        public void UpdateViaMethod()
         {
-          if (e.PropertyName == "Description")
-            changed = true;
-        };
+            var changed = false;
+            var dog = Bindable.Create<Dog>();
+            var notify = dog as INotifyPropertyChanged;
 
-      dog.ChangeDestription();
+            notify.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == "Description")
+                    changed = true;
+            };
 
-      Assert.True(changed);
-    }
+            dog.ChangeDestription();
 
-    [Fact]
-    public void UpdateViaProperty()
-    {
-      var changed = false;
-      var dog = Bindable.Create<Dog>();
-      var notify = dog as INotifyPropertyChanged;
+            Assert.True(changed);
+        }
 
-      notify.PropertyChanged += (s, e) =>
+        [Fact]
+        public void UpdateViaProperty()
         {
-          if (e.PropertyName == "Description")
-            changed = true;
-        };
+            var changed = false;
+            var dog = Bindable.Create<Dog>();
+            var notify = dog as INotifyPropertyChanged;
 
-      dog.Age = 5;
+            notify.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == "Description")
+                    changed = true;
+            };
 
-      Assert.True(changed);
+            dog.Age = 5;
+
+            Assert.True(changed);
+        }
+
+        public class Dog
+        {
+            [Updates("Description")]
+            public virtual int Age { get; set; }
+
+            public virtual string Description
+            {
+                get { return "I am " + Age + " years old."; }
+            }
+
+            [Updates("Description")]
+            public virtual void ChangeDestription() { }
+        }
     }
-
-    public class Dog
-    {
-      [Updates("Description")]
-      public virtual int Age { get; set; }
-
-      public virtual string Description { get { return "I am " + Age + " years old."; } }
-
-      [Updates("Description")]
-      public virtual void ChangeDestription() {}
-    }
-  }
 }

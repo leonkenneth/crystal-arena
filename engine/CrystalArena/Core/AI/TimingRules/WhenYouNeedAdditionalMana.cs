@@ -1,73 +1,74 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class WhenYouNeedAdditionalMana : TimingRule
-  {
-    private readonly int? _amount;
-
-    private WhenYouNeedAdditionalMana() {}
-
-    public WhenYouNeedAdditionalMana(int? amount = null)
+    public class WhenYouNeedAdditionalMana : TimingRule
     {
-      _amount = amount;
-    }
+        private readonly int? _amount;
 
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
-    {
-      if (!Stack.IsEmpty)
-        return false;
+        private WhenYouNeedAdditionalMana() { }
 
-      if (!p.Controller.IsActive)
-        return false;
-      
-      if (Turn.Step != Step.SecondMain)
-        return false;
-
-      var availableMana = p.Controller.GetAvailableManaCount(
-        new ConvokeAndDelveOptions
+        public WhenYouNeedAdditionalMana(int? amount = null)
         {
-          CanUseConvoke = p.Card.Has().Convoke,
-          CanUseDelve = p.Card.Has().Delve
-        });
+            _amount = amount;
+        }
 
-      return SpellsNeedMana(p, availableMana) || AbilitiesNeedMana(p, availableMana);
-    }
-
-    private bool SpellsNeedMana(TimingRuleParameters p, int availableMana)
-    {
-      return p.Controller.Hand.Any(x =>
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
         {
-          if (x.ConvertedCost <= availableMana)
-            return false;
+            if (!Stack.IsEmpty)
+                return false;
 
-          if (_amount == null)
-            return true;
+            if (!p.Controller.IsActive)
+                return false;
 
-          return x.ConvertedCost <= availableMana + _amount;
-        });
-    }
+            if (Turn.Step != Step.SecondMain)
+                return false;
 
-    private bool AbilitiesNeedMana(TimingRuleParameters p, int availableMana)
-    {
-      return p.Controller.Battlefield.Any(x =>
+            var availableMana = p.Controller.GetAvailableManaCount(
+                new ConvokeAndDelveOptions
+                {
+                    CanUseConvoke = p.Card.Has().Convoke,
+                    CanUseDelve = p.Card.Has().Delve,
+                }
+            );
+
+            return SpellsNeedMana(p, availableMana) || AbilitiesNeedMana(p, availableMana);
+        }
+
+        private bool SpellsNeedMana(TimingRuleParameters p, int availableMana)
         {
-          var manaCosts = x.GetActivatedAbilitiesManaCost();
+            return p.Controller.Hand.Any(x =>
+            {
+                if (x.ConvertedCost <= availableMana)
+                    return false;
 
-          foreach (var manaCost in manaCosts)
-          {
-            if (manaCost.Converted <= availableMana)
-              continue;
+                if (_amount == null)
+                    return true;
 
-            if (_amount == null)
-              return true;
+                return x.ConvertedCost <= availableMana + _amount;
+            });
+        }
 
-            if (manaCost.Converted <= availableMana + _amount)
-              return true;
-          }
+        private bool AbilitiesNeedMana(TimingRuleParameters p, int availableMana)
+        {
+            return p.Controller.Battlefield.Any(x =>
+            {
+                var manaCosts = x.GetActivatedAbilitiesManaCost();
 
-          return false;
-        });
+                foreach (var manaCost in manaCosts)
+                {
+                    if (manaCost.Converted <= availableMana)
+                        continue;
+
+                    if (_amount == null)
+                        return true;
+
+                    if (manaCost.Converted <= availableMana + _amount)
+                        return true;
+                }
+
+                return false;
+            });
+        }
     }
-  }
 }

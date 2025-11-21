@@ -1,32 +1,32 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System;
+    using System;
 
-  public class AddDamageRedirection : Modifier, IGameModifier
-  {
-    private readonly Func<Modifier, DamageRedirection> _damageRedirectionFactory;
-    private DamageRedirections _damageRedirections;
-    private DamageRedirection _damageRedirection;
-
-    private AddDamageRedirection() {}
-
-    public AddDamageRedirection(Func<Modifier, DamageRedirection> damageRedirectionFactory)
+    public class AddDamageRedirection : Modifier, IGameModifier
     {
-      _damageRedirectionFactory = damageRedirectionFactory;
-    }
+        private readonly Func<Modifier, DamageRedirection> _damageRedirectionFactory;
+        private DamageRedirections _damageRedirections;
+        private DamageRedirection _damageRedirection;
 
-    public override void Apply(DamageRedirections damageRedirections)
-    {
-      _damageRedirections = damageRedirections;
-      _damageRedirection = _damageRedirectionFactory(this);
-      _damageRedirection.Initialize(this, Game);
+        private AddDamageRedirection() { }
 
-      damageRedirections.Add(_damageRedirection);
-    }
+        public AddDamageRedirection(Func<Modifier, DamageRedirection> damageRedirectionFactory)
+        {
+            _damageRedirectionFactory = damageRedirectionFactory;
+        }
 
-    protected override void Unapply()
-    {
-      _damageRedirections.Remove(_damageRedirection);
+        public override void Apply(DamageRedirections damageRedirections)
+        {
+            _damageRedirections = damageRedirections;
+            _damageRedirection = _damageRedirectionFactory(this);
+            _damageRedirection.Initialize(this, Game);
+
+            damageRedirections.Add(_damageRedirection);
+        }
+
+        protected override void Unapply()
+        {
+            _damageRedirections.Remove(_damageRedirection);
+        }
     }
-  }
 }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SleeperAgent
-  {
-    public class Ai : AiScenario
+    public class SleeperAgent
     {
-      [Fact (Skip = "Old card")]
-      public void AgentDeal2DamageToOpponent()
-      {
-        var agent = C("Sleeper Agent");
-        Hand(P1, agent);
-        Battlefield(P1, "Swamp", "Wall of Blossoms");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AgentDeal2DamageToOpponent()
+            {
+                var agent = C("Sleeper Agent");
+                Hand(P1, agent);
+                Battlefield(P1, "Swamp", "Wall of Blossoms");
 
-        RunGame(4);
+                RunGame(4);
 
-        Equal(P2, C(agent).Controller);
-        Equal(20, P1.Life);
-        Equal(16, P2.Life);
-      }
+                Equal(P2, C(agent).Controller);
+                Equal(20, P1.Life);
+                Equal(16, P2.Life);
+            }
+        }
     }
-  }
 }

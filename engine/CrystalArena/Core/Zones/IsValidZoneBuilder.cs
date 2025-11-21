@@ -1,68 +1,74 @@
 ﻿namespace CrystalArena
 {
-  using System;
+    using System;
 
-  public class IsValidZoneBuilder
-  {
-    private readonly IsValidTargetBuilder _p;
-    public Func<IsValidZoneParameters, bool> IsValidZone { get; private set; }
-    public bool MustBeTargetable { get; private set; }
-
-    public IsValidZoneBuilder(IsValidTargetBuilder parent)
+    public class IsValidZoneBuilder
     {
-      _p = parent;
-    }
+        private readonly IsValidTargetBuilder _p;
+        public Func<IsValidZoneParameters, bool> IsValidZone { get; private set; }
+        public bool MustBeTargetable { get; private set; }
 
-    public IsValidZoneBuilder In { get { return this; } }
-    public IsValidZoneBuilder On { get { return this; } }
+        public IsValidZoneBuilder(IsValidTargetBuilder parent)
+        {
+            _p = parent;
+        }
 
-    public IsValidTargetBuilder OwnersHand()
-    {
-      IsValidZone = p => p.Zone == Zone.Hand && p.ZoneOwner == p.Controller;
-      MustBeTargetable = false;
-      return _p;
-    }
+        public IsValidZoneBuilder In
+        {
+            get { return this; }
+        }
+        public IsValidZoneBuilder On
+        {
+            get { return this; }
+        }
 
-    public IsValidTargetBuilder Battlefield()
-    {
-      IsValidZone = p => p.Zone == Zone.Battlefield;
-      MustBeTargetable = true;
-      return _p;
-    }
+        public IsValidTargetBuilder OwnersHand()
+        {
+            IsValidZone = p => p.Zone == Zone.Hand && p.ZoneOwner == p.Controller;
+            MustBeTargetable = false;
+            return _p;
+        }
 
-    public IsValidTargetBuilder Stack()
-    {
-      IsValidZone = p => p.Zone == Zone.Stack;
-      MustBeTargetable = false;
-      return _p;
-    }
+        public IsValidTargetBuilder Battlefield()
+        {
+            IsValidZone = p => p.Zone == Zone.Battlefield;
+            MustBeTargetable = true;
+            return _p;
+        }
 
-    public IsValidTargetBuilder BreakZone()
-    {
-      IsValidZone = p => p.Zone == Zone.BreakZone;
-      MustBeTargetable = false;
-      return _p;
-    }
+        public IsValidTargetBuilder Stack()
+        {
+            IsValidZone = p => p.Zone == Zone.Stack;
+            MustBeTargetable = false;
+            return _p;
+        }
 
-    public IsValidTargetBuilder YourBreakZone()
-    {
-      IsValidZone = p => p.Zone == Zone.BreakZone && p.ZoneOwner == p.Controller;
-      MustBeTargetable = false;
-      return _p;
-    }
+        public IsValidTargetBuilder BreakZone()
+        {
+            IsValidZone = p => p.Zone == Zone.BreakZone;
+            MustBeTargetable = false;
+            return _p;
+        }
 
-    public IsValidTargetBuilder BattlefieldOrStack()
-    {
-      IsValidZone = p => p.Zone == Zone.Stack || p.Zone == Zone.Battlefield;
-      MustBeTargetable = true;
-      return _p;
-    }
+        public IsValidTargetBuilder YourBreakZone()
+        {
+            IsValidZone = p => p.Zone == Zone.BreakZone && p.ZoneOwner == p.Controller;
+            MustBeTargetable = false;
+            return _p;
+        }
 
-    public IsValidTargetBuilder OwnersLBDeck()
-    {
-      IsValidZone = p => p.Zone == Zone.LimitBreak && p.ZoneOwner == p.Controller;
-      MustBeTargetable = true;
-      return _p;
+        public IsValidTargetBuilder BattlefieldOrStack()
+        {
+            IsValidZone = p => p.Zone == Zone.Stack || p.Zone == Zone.Battlefield;
+            MustBeTargetable = true;
+            return _p;
+        }
+
+        public IsValidTargetBuilder OwnersLBDeck()
+        {
+            IsValidZone = p => p.Zone == Zone.LimitBreak && p.ZoneOwner == p.Controller;
+            MustBeTargetable = true;
+            return _p;
+        }
     }
-  }
 }

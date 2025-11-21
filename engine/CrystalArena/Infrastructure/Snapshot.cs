@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  public class Snapshot
-  {
-    public Snapshot(int count)
+    public class Snapshot
     {
-      History = count;
-    }
+        public Snapshot(int count)
+        {
+            History = count;
+        }
 
-    public int History { get; set; }
-  }
+        public int History { get; set; }
+    }
 }

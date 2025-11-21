@@ -1,33 +1,38 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System;
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using System;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class EndOfStep : Lifetime, IReceive<StepFinishedEvent>
-  {
-    private readonly Step _step;
-    private readonly Func<EndOfStep, bool> _filter;
-
-    private EndOfStep() {}
-
-    public EndOfStep(Step step, Func<EndOfStep, bool> filter = null)
+    public class EndOfStep : Lifetime, IReceive<StepFinishedEvent>
     {
-      _step = step;
-      _filter = filter ?? delegate { return true; };
-    }
+        private readonly Step _step;
+        private readonly Func<EndOfStep, bool> _filter;
 
-    public void Receive(StepFinishedEvent message)
-    {
-      if (message.Step == _step)
-      {
-        if (_filter != null && _filter(this))
+        private EndOfStep() { }
+
+        public EndOfStep(Step step, Func<EndOfStep, bool> filter = null)
         {
-          return;
+            _step = step;
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
         }
 
-        End();
-      }
+        public void Receive(StepFinishedEvent message)
+        {
+            if (message.Step == _step)
+            {
+                if (_filter != null && _filter(this))
+                {
+                    return;
+                }
+
+                End();
+            }
+        }
     }
-  }
 }

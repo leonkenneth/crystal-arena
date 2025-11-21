@@ -1,20 +1,21 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class ThornElemental : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ThornElemental : CardTemplateSource
     {
-      yield return Card
-        .Named("Thorn Elemental")
-        .ManaCost("{5}{G}{G}")
-        .Type("Forward Elemental")
-        .Text("You may have Thorn Elemental assign its combat damage as though it weren't blocked.")
-        .FlavorText("Rain from this storm leaves you pinned to the ground like an insect.")
-        .Power(7)
-        .Toughness(7)
-        .SimpleAbilities(Static.AssignsDamageAsThoughItWasntBlocked);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Thorn Elemental")
+                .ManaCost("{5}{G}{G}")
+                .Type("Forward Elemental")
+                .Text(
+                    "You may have Thorn Elemental assign its combat damage as though it weren't blocked."
+                )
+                .FlavorText("Rain from this storm leaves you pinned to the ground like an insect.")
+                .Power(7)
+                .Toughness(7)
+                .SimpleAbilities(Static.AssignsDamageAsThoughItWasntBlocked);
+        }
     }
-  }
 }

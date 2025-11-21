@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class OnYourTurn : TimingRule
-  {
-    private readonly Step _step;
-
-    private OnYourTurn() {}
-
-    public OnYourTurn(Step step)
+    public class OnYourTurn : TimingRule
     {
-      _step = step;
-    }
+        private readonly Step _step;
 
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
-    {
-      return p.Controller.IsActive && Turn.Step == _step && Stack.IsEmpty;
+        private OnYourTurn() { }
+
+        public OnYourTurn(Step step)
+        {
+            _step = step;
+        }
+
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return p.Controller.IsActive && Turn.Step == _step && Stack.IsEmpty;
+        }
     }
-  }
 }

@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class BeforeYouDeclareAttackers : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class BeforeYouDeclareAttackers : TimingRule
     {
-      return IsBeforeYouDeclareAttackers(p.Controller);
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return IsBeforeYouDeclareAttackers(p.Controller);
+        }
     }
-  }
 }

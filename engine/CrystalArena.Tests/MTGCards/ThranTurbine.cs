@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ThranTurbine
-  {
-    public class Ai : AiScenario
-    {      
-      [Fact (Skip = "Old card")]
-      public void PayEcho()
-      {
-        var raptor = C("Shivan Raptor");
+    public class ThranTurbine
+    {
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PayEcho()
+            {
+                var raptor = C("Shivan Raptor");
 
-        Battlefield(P1, "Thran Turbine", raptor, "Mountain");
-        RunGame(1);
+                Battlefield(P1, "Thran Turbine", raptor, "Mountain");
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(raptor).Zone);
-      }
+                Equal(Zone.Battlefield, C(raptor).Zone);
+            }
+        }
     }
-  }
 }

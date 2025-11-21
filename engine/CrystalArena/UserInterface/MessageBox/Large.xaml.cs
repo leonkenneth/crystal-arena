@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.UserInterface.MessageBox
 {
-  using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+    using Avalonia.Controls;
+    using Avalonia.Markup.Xaml;
 
-  /// <summary>
-  ///     Interaction logic for View.xaml
-  /// </summary>
-  public partial class Large : UserControl
-  {
-    public Large()
+    /// <summary>
+    ///     Interaction logic for View.xaml
+    /// </summary>
+    public partial class Large : UserControl
     {
-      AvaloniaXamlLoader.Load(this);
+        public Large()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
     }
-  }
 }

@@ -1,38 +1,38 @@
 ﻿namespace CrystalArena.UserInterface
 {
-  using Infrastructure;
-  using Shell;
+    using Infrastructure;
+    using Shell;
 
-  public class Ui
-  {
-    private string? _playerToken;
-    public IShell Shell;
-    public Match Match;
-    public Dialogs Dialogs;
-    public Configuration Configuration;
-    public Publisher Publisher = new Publisher();
-
-    public Ui(IShell shell, Dialogs dialogs)
+    public class Ui
     {
-      Shell = shell;
-      Shell.Ui = this;
-      Dialogs = dialogs;
-      Configuration = Configuration.Default;
-    }
+        private string? _playerToken;
+        public IShell Shell;
+        public Match Match;
+        public Dialogs Dialogs;
+        public Configuration Configuration;
+        public Publisher Publisher = new Publisher();
 
-    public string GameId { get; set; }
-
-    public string PlayerToken
-    {
-      get
-      {
-        if (_playerToken == null)
+        public Ui(IShell shell, Dialogs dialogs)
         {
-          _playerToken = System.Guid.NewGuid().ToString();
+            Shell = shell;
+            Shell.Ui = this;
+            Dialogs = dialogs;
+            Configuration = Configuration.Default;
         }
 
-        return _playerToken;
-      }
+        public string GameId { get; set; }
+
+        public string PlayerToken
+        {
+            get
+            {
+                if (_playerToken == null)
+                {
+                    _playerToken = System.Guid.NewGuid().ToString();
+                }
+
+                return _playerToken;
+            }
+        }
     }
-  }
 }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ElvishHerder
-  {
-    public class Ai : AiScenario
+    public class ElvishHerder
     {
-      [Fact (Skip = "Old card")]
-      public void GiveTrampleToForce()
-      {
-        var force = C("Verdant Force");
-        Battlefield(P1, force, "Elvish Herder", "Forest");
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GiveTrampleToForce()
+            {
+                var force = C("Verdant Force");
+                Battlefield(P1, force, "Elvish Herder", "Forest");
+                Battlefield(P2, "Grizzly Bears");
 
-        P2.Life = 5;
+                P2.Life = 5;
 
-        RunGame(1);
+                RunGame(1);
 
-        True(C(force).Has().Trample);
-      }
+                True(C(force).Has().Trample);
+            }
+        }
     }
-  }
 }

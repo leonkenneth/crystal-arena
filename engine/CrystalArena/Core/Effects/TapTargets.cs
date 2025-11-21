@@ -1,13 +1,13 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class TapTargets : Effect
-  {
-    protected override void ResolveEffect()
+    public class TapTargets : Effect
     {
-      foreach (var target in ValidEffectTargets)
-      {
-        target.Card().Tap();
-      }
+        protected override void ResolveEffect()
+        {
+            foreach (var target in ValidEffectTargets)
+            {
+                target.Card().Tap();
+            }
+        }
     }
-  }
 }

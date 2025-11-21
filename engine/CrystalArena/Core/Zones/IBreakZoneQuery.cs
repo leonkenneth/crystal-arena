@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public interface IBreakZoneQuery : IZoneQuery
-  {
-    IEnumerable<Card> Forwards { get; }
-  }
+    public interface IBreakZoneQuery : IZoneQuery
+    {
+        IEnumerable<Card> Forwards { get; }
+    }
 }

@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GargoyleSentinel
-  {
-    public class Ai : AiScenario
+    public class GargoyleSentinel
     {
-      [Fact (Skip = "Old card")]
-      public void GainsFlying()
-      {
-        Battlefield(P1, "Gargoyle Sentinel", "Swamp", "Swamp", "Swamp");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GainsFlying()
+            {
+                Battlefield(P1, "Gargoyle Sentinel", "Swamp", "Swamp", "Swamp");
 
-        P2.Life = 3;
-        Battlefield(P2, "Blood Host");
+                P2.Life = 3;
+                Battlefield(P2, "Blood Host");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

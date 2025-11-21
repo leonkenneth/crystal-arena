@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using Avalonia;
-using Avalonia.Xaml.Interactivity;
 using Avalonia.Controls;
+using Avalonia.Xaml.Interactivity;
 
 namespace CrystalArena.UserInterface
 {
@@ -10,7 +10,6 @@ namespace CrystalArena.UserInterface
     // http://www.felicepollano.com/2011/05/02/InputBindingKeyBindingWithCaliburnMicro.aspx
     public class InputBindingTrigger : Trigger<Control>
     {
-
         public event EventHandler CanExecuteChanged = delegate { };
 
         public bool CanExecute(object parameter)
@@ -18,9 +17,7 @@ namespace CrystalArena.UserInterface
             return true;
         }
 
-        public void Execute(object parameter)
-        {
-        }
+        public void Execute(object parameter) { }
 
         private Window GetWindow(Control control)
         {

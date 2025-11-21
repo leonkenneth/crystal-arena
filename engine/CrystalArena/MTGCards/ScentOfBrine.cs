@@ -1,29 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class ScentOfBrine : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ScentOfBrine : CardTemplateSource
     {
-      yield return Card
-        .Named("Scent of Brine")
-        .ManaCost("{1}{U}")
-        .Type("Summon")
-        .Text(
-          "Reveal any number of water cards in your hand. Counter target spell unless its controller pays {1} for each card revealed this way.")
-        .Cast(p =>
-          {
-            p.Effect = () => new CounterTargetSpellUnlessControllerPays1ForEachRevealedCard();
-            p.TargetSelector.AddEffect(trg => trg.Is.CounterableSpell().On.Stack());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Scent of Brine")
+                .ManaCost("{1}{U}")
+                .Type("Summon")
+                .Text(
+                    "Reveal any number of water cards in your hand. Counter target spell unless its controller pays {1} for each card revealed this way."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new CounterTargetSpellUnlessControllerPays1ForEachRevealedCard();
+                    p.TargetSelector.AddEffect(trg => trg.Is.CounterableSpell().On.Stack());
 
-            p.TimingRule(new WhenTopSpellIsCounterable(tp => tp.Controller.Hand.Count(x => x.HasColor(CardColor.Water))));
-            p.TargetingRule(new EffectCounterspell());
-          });
+                    p.TimingRule(
+                        new WhenTopSpellIsCounterable(tp =>
+                            tp.Controller.Hand.Count(x => x.HasColor(CardColor.Water))
+                        )
+                    );
+                    p.TargetingRule(new EffectCounterspell());
+                });
+        }
     }
-  }
 }

@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GoblinRabblemaster
-  {
-    public class Ai : AiScenario
+    public class GoblinRabblemaster
     {
-      [Fact (Skip = "Old card")]
-      public void GetTokenWithHasteAndAttackFor4()
-      {
-        Battlefield(P1, "Goblin Rabblemaster");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GetTokenWithHasteAndAttackFor4()
+            {
+                Battlefield(P1, "Goblin Rabblemaster");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(16, P2.Life);
-      }
+                Equal(16, P2.Life);
+            }
+        }
     }
-  }
 }

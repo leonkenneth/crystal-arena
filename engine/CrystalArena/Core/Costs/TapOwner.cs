@@ -1,15 +1,15 @@
 ﻿namespace CrystalArena.Costs
 {
-  public class TapOwner : Cost
-  {
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class TapOwner : Cost
     {
-      return Card.CanTap;
-    }       
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            return Card.CanTap;
+        }
 
-    public override void PayPartial(PayCostParameters p)
-    {
-      Card.Tap();
+        public override void PayPartial(PayCostParameters p)
+        {
+            Card.Tap();
+        }
     }
-  }
 }

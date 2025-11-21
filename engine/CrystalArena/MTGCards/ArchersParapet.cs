@@ -1,38 +1,37 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class ArchersParapet : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ArchersParapet : CardTemplateSource
     {
-      yield return Card
-        .Named("Archers' Parapet")
-        .ManaCost("{1}{G}")
-        .Type("Forward — Wall")
-        .Text("{Defender}{EOL}{1}{B},{T}: Each opponent loses 1 life.")
-        .FlavorText("Every shaft is graven with a name from a kin tree, calling upon the spirits of the ancestors to make it fly true.")
-        .Power(0)
-        .Toughness(5)
-        .SimpleAbilities(Static.Defender)
-        .ActivatedAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{1}{B},{T}: Each opponent loses 1 life.";
+            yield return Card.Named("Archers' Parapet")
+                .ManaCost("{1}{G}")
+                .Type("Forward — Wall")
+                .Text("{Defender}{EOL}{1}{B},{T}: Each opponent loses 1 life.")
+                .FlavorText(
+                    "Every shaft is graven with a name from a kin tree, calling upon the spirits of the ancestors to make it fly true."
+                )
+                .Power(0)
+                .Toughness(5)
+                .SimpleAbilities(Static.Defender)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{1}{B},{T}: Each opponent loses 1 life.";
 
-          p.Cost = new AggregateCost(
-            new PayMana("{1}{B}".Parse()),
-            new Tap());
+                    p.Cost = new AggregateCost(new PayMana("{1}{B}".Parse()), new Tap());
 
-          p.Effect = () => new ChangeLife(-1, P(e => e.Controller.Opponent));
+                    p.Effect = () => new ChangeLife(-1, P(e => e.Controller.Opponent));
 
-          p.TimingRule(new Any(
-                  new OnEndOfOpponentsTurn(),
-                  new WhenOwningCardWillBeDestroyed()));
-        });
+                    p.TimingRule(
+                        new Any(new OnEndOfOpponentsTurn(), new WhenOwningCardWillBeDestroyed())
+                    );
+                });
+        }
     }
-  }
 }

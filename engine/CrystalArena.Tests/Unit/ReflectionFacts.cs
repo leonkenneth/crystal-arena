@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Unit
 {
-  using Xunit;
+    using Xunit;
 
-  public class ReflectionFacts
-  {
-    [Fact]
-    public void GetNestedInterface()
+    public class ReflectionFacts
     {
-      var factory = typeof (Dog).GetNestedType("IFactory");
-      Assert.Equal(typeof (Dog.IFactory), factory);
+        [Fact]
+        public void GetNestedInterface()
+        {
+            var factory = typeof(Dog).GetNestedType("IFactory");
+            Assert.Equal(typeof(Dog.IFactory), factory);
+        }
     }
-  }
 
-  public class Dog
-  {
-    public interface IFactory
+    public class Dog
     {
-      void Create(string name);
+        public interface IFactory
+        {
+            void Create(string name);
+        }
     }
-  }
 }

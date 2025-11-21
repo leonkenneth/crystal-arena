@@ -1,33 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class HoardingDragon
-  {
-    public class Ai : AiScenario
+    public class HoardingDragon
     {
-      [Fact (Skip = "Old card")]
-      public void PutEnginetoToHand()
-      {
-        // Turn 1: Cast Hoarding Dragon. Wurmcoil Engine is removedFromPlay
-        // Turn 2: Draw card
-        // Turn 3: Draw card. Attack with dragon. Opponent casts Flesh to Dust. Artifact is put into Hand
-        
-        var engine = C("Wurmcoil Engine");
-        
-        Hand(P1, "Hoarding Dragon");
-        MainDeck(P1, "Grizzly Bears", "Grizzly Bears", engine);
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutEnginetoToHand()
+            {
+                // Turn 1: Cast Hoarding Dragon. Wurmcoil Engine is removedFromPlay
+                // Turn 2: Draw card
+                // Turn 3: Draw card. Attack with dragon. Opponent casts Flesh to Dust. Artifact is put into Hand
 
-        P2.Life = 4;
-        Hand(P2, "Flesh to Dust");
-        Battlefield(P2, "Swamp", "Swamp", "Mountain", "Mountain", "Mountain");
+                var engine = C("Wurmcoil Engine");
 
-        RunGame(3);        
-        Equal(Zone.Hand, C(engine).Zone);                
-      }
+                Hand(P1, "Hoarding Dragon");
+                MainDeck(P1, "Grizzly Bears", "Grizzly Bears", engine);
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
+
+                P2.Life = 4;
+                Hand(P2, "Flesh to Dust");
+                Battlefield(P2, "Swamp", "Swamp", "Mountain", "Mountain", "Mountain");
+
+                RunGame(3);
+                Equal(Zone.Hand, C(engine).Zone);
+            }
+        }
     }
-  }
 }

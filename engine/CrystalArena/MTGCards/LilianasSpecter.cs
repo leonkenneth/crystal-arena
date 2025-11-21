@@ -1,32 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TimingRules;
-  using CrystalArena.Triggers;
+    using System.Collections.Generic;
+    using AI;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Effects;
+    using CrystalArena.Triggers;
 
-  public class LilianasSpecter : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class LilianasSpecter : CardTemplateSource
     {
-      yield return Card
-        .Named("Liliana's Specter")
-        .ManaCost("{1}{B}{B}")
-        .Type("Forward - Specter")
-        .Text("{Flying}{EOL}When Liliana's Specter enters the battlefield, each opponent discards a card.")
-        .FlavorText("'The finest minions know what I need without me ever saying a thing.'")
-        .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[3])
-        .Power(2)
-        .Toughness(1)
-        .Cast(p => p.TimingRule(new OnFirstMain()))
-        .SimpleAbilities(Static.Flying)
-        .TriggeredAbility(p =>
-          {
-            p.Text = "When Liliana's Specter enters the battlefield, each opponent discards a card.";
-            p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
-            p.Effect = () => new OpponentDiscardsCards(selectedCount: 1);
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Liliana's Specter")
+                .ManaCost("{1}{B}{B}")
+                .Type("Forward - Specter")
+                .Text(
+                    "{Flying}{EOL}When Liliana's Specter enters the battlefield, each opponent discards a card."
+                )
+                .FlavorText("'The finest minions know what I need without me ever saying a thing.'")
+                .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[3])
+                .Power(2)
+                .Toughness(1)
+                .Cast(p => p.TimingRule(new OnFirstMain()))
+                .SimpleAbilities(Static.Flying)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "When Liliana's Specter enters the battlefield, each opponent discards a card.";
+                    p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+                    p.Effect = () => new OpponentDiscardsCards(selectedCount: 1);
+                });
+        }
     }
-  }
 }

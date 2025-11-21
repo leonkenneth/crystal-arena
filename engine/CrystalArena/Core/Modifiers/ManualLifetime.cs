@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  public class ManualLifetime : Lifetime
-  {
-    public void EndLife()
+    public class ManualLifetime : Lifetime
     {
-      End();
+        public void EndLife()
+        {
+            End();
+        }
     }
-  }
 }

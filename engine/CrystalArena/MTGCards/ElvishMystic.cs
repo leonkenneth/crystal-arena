@@ -1,24 +1,25 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class ElvishMystic : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ElvishMystic : CardTemplateSource
     {
-      yield return Card
-        .Named("Elvish Mystic")
-        .ManaCost("{G}")
-        .Type("Forward - Elf Druid")
-        .Text("{T}: Add {G} to your mana pool. ")
-        .FlavorText("\"Life grows everywhere. My kin merely find those places where it grows strongest.\"{EOL}—Nissa Revane")
-        .Power(1)
-        .Toughness(1)
-        .ManaAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{T}: Add {G} to your mana pool.";
-          p.ManaAmount(Mana.Wind);
-        });
+            yield return Card.Named("Elvish Mystic")
+                .ManaCost("{G}")
+                .Type("Forward - Elf Druid")
+                .Text("{T}: Add {G} to your mana pool. ")
+                .FlavorText(
+                    "\"Life grows everywhere. My kin merely find those places where it grows strongest.\"{EOL}—Nissa Revane"
+                )
+                .Power(1)
+                .Toughness(1)
+                .ManaAbility(p =>
+                {
+                    p.Text = "{T}: Add {G} to your mana pool.";
+                    p.ManaAmount(Mana.Wind);
+                });
+        }
     }
-  }
 }

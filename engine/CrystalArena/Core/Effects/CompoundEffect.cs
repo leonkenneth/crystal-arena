@@ -1,85 +1,89 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class CompoundEffect : Effect
-  {
-    protected readonly List<Effect> ChildEffects = new List<Effect>();
-
-    private CompoundEffect() {}
-
-    public CompoundEffect(params Effect[] effects)
+    public class CompoundEffect : Effect
     {
-      ChildEffects.AddRange(effects);
-    }
+        protected readonly List<Effect> ChildEffects = new List<Effect>();
 
-    public override int CalculateForwardDamage(Card forward)
-    {
-      return ChildEffects.Sum(x => x.CalculateForwardDamage(forward));
-    }
+        private CompoundEffect() { }
 
-    public override int CalculatePlayerDamage(Player player)
-    {
-      return ChildEffects.Sum(x => x.CalculatePlayerDamage(player));
-    }
-
-    public override Effect Initialize(EffectParameters p, Game game, bool evaluateParameters = true)
-    {
-      base.Initialize(p, game);
-
-      var toughnessReduction = 0;
-
-      foreach (var effect in ChildEffects)
-      {
-        effect.Initialize(p, game, evaluateParameters);
-
-        foreach (var effectTag in effect.GetTags())
+        public CompoundEffect(params Effect[] effects)
         {
-          SetTags(effectTag);
+            ChildEffects.AddRange(effects);
         }
 
-        toughnessReduction = toughnessReduction + effect.ToughnessReduction.GetValue(X);
-      }
+        public override int CalculateForwardDamage(Card forward)
+        {
+            return ChildEffects.Sum(x => x.CalculateForwardDamage(forward));
+        }
 
-      ToughnessReduction = toughnessReduction;
+        public override int CalculatePlayerDamage(Player player)
+        {
+            return ChildEffects.Sum(x => x.CalculatePlayerDamage(player));
+        }
 
-      return this;
+        public override Effect Initialize(
+            EffectParameters p,
+            Game game,
+            bool evaluateParameters = true
+        )
+        {
+            base.Initialize(p, game);
+
+            var toughnessReduction = 0;
+
+            foreach (var effect in ChildEffects)
+            {
+                effect.Initialize(p, game, evaluateParameters);
+
+                foreach (var effectTag in effect.GetTags())
+                {
+                    SetTags(effectTag);
+                }
+
+                toughnessReduction = toughnessReduction + effect.ToughnessReduction.GetValue(X);
+            }
+
+            ToughnessReduction = toughnessReduction;
+
+            return this;
+        }
+
+        public override void SetTriggeredAbilityTargets(Targets targets)
+        {
+            base.SetTriggeredAbilityTargets(targets);
+
+            foreach (var childEffect in ChildEffects)
+            {
+                childEffect.SetTriggeredAbilityTargets(targets);
+            }
+        }
+
+        public override void FinishResolve()
+        {
+            // calls after resolve hooks of child
+            // effects.
+            foreach (var effect in ChildEffects)
+            {
+                effect.AfterResolve(new Context(this, Game));
+            }
+
+            EffectFinishResolve();
+        }
+
+        protected void EffectFinishResolve()
+        {
+            base.FinishResolve();
+        }
+
+        protected override void ResolveEffect()
+        {
+            foreach (var effect in ChildEffects)
+            {
+                effect.BeginResolve();
+            }
+        }
     }
-
-    public override void SetTriggeredAbilityTargets(Targets targets)
-    {
-      base.SetTriggeredAbilityTargets(targets);
-      
-      foreach (var childEffect in ChildEffects)
-      {
-        childEffect.SetTriggeredAbilityTargets(targets);
-      }
-    }
-
-    public override void FinishResolve()
-    {
-      // calls after resolve hooks of child
-      // effects.
-      foreach (var effect in ChildEffects)
-      {
-        effect.AfterResolve(new Context(this, Game));
-      }
-
-      EffectFinishResolve();
-    }
-
-    protected void EffectFinishResolve()
-    {
-      base.FinishResolve();
-    }
-
-    protected override void ResolveEffect()
-    {
-      foreach (var effect in ChildEffects)
-      {
-        effect.BeginResolve();
-      }
-    }
-  }
 }

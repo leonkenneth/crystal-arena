@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MonasterySwiftspear
-  {
-    public class Ai : AiScenario
+    public class MonasterySwiftspear
     {
-      [Fact (Skip = "Old card")]
-      public void CastSpellGet11()
-      {
-        Battlefield(P1, "Monastery Swiftspear", "Forest", "Forest", "Forest", "Forest");
-        Hand(P1, "Titanic Growth", "Titanic Growth");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastSpellGet11()
+            {
+                Battlefield(P1, "Monastery Swiftspear", "Forest", "Forest", "Forest", "Forest");
+                Hand(P1, "Titanic Growth", "Titanic Growth");
 
-        P2.Life = 11;
+                P2.Life = 11;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life); // 1 (base power) + 4 (titanic growth) + 4 (titanic growth) + 1 counter + 1 counter
-      }
+                Equal(0, P2.Life); // 1 (base power) + 4 (titanic growth) + 4 (titanic growth) + 1 counter + 1 counter
+            }
+        }
     }
-  }
 }

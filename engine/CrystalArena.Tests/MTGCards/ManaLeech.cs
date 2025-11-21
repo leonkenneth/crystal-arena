@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ManaLeech
-  {
-    public class Ai : AiScenario
+    public class ManaLeech
     {
-      [Fact (Skip = "Old card")]
-      public void TapRavine()
-      {
-        var ravine = C("Raging Ravine");
-        Battlefield(P1, "Mana Leech");
-        Battlefield(P2, ravine, "Forest", "Forest", "Forest", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void TapRavine()
+            {
+                var ravine = C("Raging Ravine");
+                Battlefield(P1, "Mana Leech");
+                Battlefield(P2, ravine, "Forest", "Forest", "Forest", "Mountain");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(20, P1.Life);
-        True(C(ravine).IsTapped);
-      }
+                Equal(20, P1.Life);
+                True(C(ravine).IsTapped);
+            }
+        }
     }
-  }
 }

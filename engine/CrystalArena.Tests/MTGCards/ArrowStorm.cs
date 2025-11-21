@@ -1,39 +1,57 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ArrowStorm
-  {
-    public class Ai : AiScenario
+    public class ArrowStorm
     {
-      [Fact (Skip = "Old card")]
-      public void ArrowStormDeals5DamageAfterAttack()
-      {
-        Battlefield(P1, "Grizzly Bears", "Mountain", "Forest", "Mountain", "Forest", "Mountain", "Forest");
-        Hand(P1, "Arrow Storm");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ArrowStormDeals5DamageAfterAttack()
+            {
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Mountain",
+                    "Forest",
+                    "Mountain",
+                    "Forest",
+                    "Mountain",
+                    "Forest"
+                );
+                Hand(P1, "Arrow Storm");
 
-        P2.Life = 7;
-      
-        RunGame(1);
+                P2.Life = 7;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void ArrowStormCannotBePrevented()
-      {
-        Battlefield(P1, "Grizzly Bears", "Mountain", "Forest", "Mountain", "Forest", "Mountain", "Forest");
-        Hand(P1, "Arrow Storm");
+                Equal(0, P2.Life);
+            }
 
-        P2.Life = 6;
-        Battlefield(P2, "Urza's Armor");
+            [Fact(Skip = "Old card")]
+            public void ArrowStormCannotBePrevented()
+            {
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Mountain",
+                    "Forest",
+                    "Mountain",
+                    "Forest",
+                    "Mountain",
+                    "Forest"
+                );
+                Hand(P1, "Arrow Storm");
 
-        // Bears deal 1 damage (1 prevented) and Storm deals 5 damage (not prevented)
-        RunGame(1);
-        
-        Equal(0, P2.Life);
-      }
+                P2.Life = 6;
+                Battlefield(P2, "Urza's Armor");
+
+                // Bears deal 1 damage (1 prevented) and Storm deals 5 damage (not prevented)
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

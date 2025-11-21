@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectGiveDeathtouch : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectGiveDeathtouch : TargetingRule
     {
-      var candidates = p.Candidates<Card>(ControlledBy.SpellOwner)        
-        .Where(c => !c.Has().Deathtouch)
-        .Where(c => c.Power > 0)
-        .Where(c => c.CanAttack || c.CanBlock())
-        .OrderBy(x => x.Power);
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>(ControlledBy.SpellOwner)
+                .Where(c => !c.Has().Deathtouch)
+                .Where(c => c.Power > 0)
+                .Where(c => c.CanAttack || c.CanBlock())
+                .OrderBy(x => x.Power);
 
-      return Group(candidates, p.TotalMinTargetCount());
+            return Group(candidates, p.TotalMinTargetCount());
+        }
     }
-  }
 }

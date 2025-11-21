@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ReclamationSage
-  {
-    public class Ai : AiScenario
+    public class ReclamationSage
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyStaff()
-      {
-        var staff = C("Staff of the Death Magus");
-        
-        Hand(P1, "Reclamation Sage");
-        Battlefield(P1, "Forest", "Forest", "Forest");        
-        Battlefield(P2, staff);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyStaff()
+            {
+                var staff = C("Staff of the Death Magus");
 
-        RunGame(1);
+                Hand(P1, "Reclamation Sage");
+                Battlefield(P1, "Forest", "Forest", "Forest");
+                Battlefield(P2, staff);
 
-        Equal(Zone.BreakZone, C(staff).Zone);        
-      }
+                RunGame(1);
+
+                Equal(Zone.BreakZone, C(staff).Zone);
+            }
+        }
     }
-  }
 }

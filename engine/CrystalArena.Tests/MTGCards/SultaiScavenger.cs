@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class SultaiScavenger
-  {
-    public class Ai : AiScenario
+    public class SultaiScavenger
     {
-      [Fact (Skip = "Old card")]
-      public void CastWithDelve()
-      {
-        var bird = C("Sultai Scavenger");
-        Hand(P1, bird);
-        Battlefield(P1, "Swamp", "Mountain", "Mountain", "Mountain");
-        BreakZone(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastWithDelve()
+            {
+                var bird = C("Sultai Scavenger");
+                Hand(P1, bird);
+                Battlefield(P1, "Swamp", "Mountain", "Mountain", "Mountain");
+                BreakZone(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(bird).Zone);
-        Equal(2, P1.RemovedFromPlay.Count());
-      }
-    } 
-  }
+                Equal(Zone.Battlefield, C(bird).Zone);
+                Equal(2, P1.RemovedFromPlay.Count());
+            }
+        }
+    }
 }

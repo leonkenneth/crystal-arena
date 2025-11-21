@@ -1,15 +1,15 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class FlipACoinReturnToHand : Effect
-  {
-    protected override void ResolveEffect()
-    {                  
-      var hasWon = FlipACoin(Controller);
+    public class FlipACoinReturnToHand : Effect
+    {
+        protected override void ResolveEffect()
+        {
+            var hasWon = FlipACoin(Controller);
 
-      if (hasWon)
-        return;
+            if (hasWon)
+                return;
 
-      Source.OwningCard.PutToHandFrom(Zone.Battlefield);
+            Source.OwningCard.PutToHandFrom(Zone.Battlefield);
+        }
     }
-  }
 }

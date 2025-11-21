@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SpireOwl
-  {
-    public class Ai : AiScenario
+    public class SpireOwl
     {
-      [Fact (Skip = "Old card")]
-      public void PutMountainOnTop()
-      {
-        Hand(P1, "Spire Owl", "Shivan Raptor");
-        Battlefield(P1, "Island", "Island");
-        MainDeck(P1, "Shivan Raptor", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutMountainOnTop()
+            {
+                Hand(P1, "Spire Owl", "Shivan Raptor");
+                Battlefield(P1, "Island", "Island");
+                MainDeck(P1, "Shivan Raptor", "Mountain");
 
-        RunGame(3);
-        Equal(16, P2.Life);
-      }
+                RunGame(3);
+                Equal(16, P2.Life);
+            }
+        }
     }
-  }
 }

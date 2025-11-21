@@ -1,20 +1,20 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Archivist
-  {
-    public class Ai : AiScenario
+    public class Archivist
     {
-      [Fact (Skip = "Old card")]
-      public void DrawACard()
-      {
-        Battlefield(P1, "Archivist");
-        RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DrawACard()
+            {
+                Battlefield(P1, "Archivist");
+                RunGame(1);
 
-        Equal(1, P1.Hand.Count);
-      }
+                Equal(1, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

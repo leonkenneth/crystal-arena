@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CracklingDoom
-  {
-    public class Ai : AiScenario
+    public class CracklingDoom
     {
-      [Fact (Skip = "Old card")]
-      public void OpponentSacsDragon()
-      {
-        Hand(P1, "Crackling Doom");
-        Battlefield(P1, "Shivan Dragon", "Mountain", "Plains", "Swamp");
-        Battlefield(P2, "Shivan Dragon", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void OpponentSacsDragon()
+            {
+                Hand(P1, "Crackling Doom");
+                Battlefield(P1, "Shivan Dragon", "Mountain", "Plains", "Swamp");
+                Battlefield(P2, "Shivan Dragon", "Grizzly Bears");
 
-        P2.Life = 7;
+                P2.Life = 7;
 
-        RunGame(1);
+                RunGame(1);
 
-        Assert.Equal(0, P2.Life);
-      }
+                Assert.Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

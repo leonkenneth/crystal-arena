@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Backupslide
-  {
-    public class Ai : AiScenario
+    public class Backupslide
     {
-      [Fact (Skip = "Old card")]
-      public void Deal5DamageToOpponent()
-      {
-        Hand(P1, "Backupslide");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
-        P2.Life = 0;
-        
-        RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal5DamageToOpponent()
+            {
+                Hand(P1, "Backupslide");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
+                P2.Life = 0;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

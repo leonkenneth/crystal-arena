@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class HuntersAmbush
-  {
-    public class Ai : AiScenario
+    public class HuntersAmbush
     {
-      [Fact (Skip = "Old card")]
-      public void PreventAllDamagesFromNonGreen()
-      {
-        Battlefield(P1, "Grizzly Bears", "Oreskos Swiftclaw", "Oreskos Swiftclaw");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PreventAllDamagesFromNonGreen()
+            {
+                Battlefield(P1, "Grizzly Bears", "Oreskos Swiftclaw", "Oreskos Swiftclaw");
 
-        P2.Life = 4;
-        Battlefield(P2, "Forest", "Forest", "Forest");
-        Hand(P2, "Hunter's Ambush");
+                P2.Life = 4;
+                Battlefield(P2, "Forest", "Forest", "Forest");
+                Hand(P2, "Hunter's Ambush");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P2.Life);
-      }
+                Equal(2, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,24 +1,21 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class ShivanRaptor : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ShivanRaptor : CardTemplateSource
     {
-      yield return Card
-        .Named("Shivan Raptor")
-        .ManaCost("{2}{R}")
-        .Type("Forward Lizard")
-        .Text(
-          "{First strike}, {haste}{EOL}Echo {2}{R} (At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)")
-        .Power(3)
-        .Toughness(1)
-        .Echo("{2}{R}")
-        .SimpleAbilities(
-          Static.Haste,
-          Static.FirstStrike
-        );
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Shivan Raptor")
+                .ManaCost("{2}{R}")
+                .Type("Forward Lizard")
+                .Text(
+                    "{First strike}, {haste}{EOL}Echo {2}{R} (At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)"
+                )
+                .Power(3)
+                .Toughness(1)
+                .Echo("{2}{R}")
+                .SimpleAbilities(Static.Haste, Static.FirstStrike);
+        }
     }
-  }
 }

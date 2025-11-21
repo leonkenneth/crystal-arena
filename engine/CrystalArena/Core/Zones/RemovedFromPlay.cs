@@ -1,14 +1,18 @@
 ﻿namespace CrystalArena
 {
-  public class RemovedFromPlay : UnorderedZone, IZoneQuery
-  {
-    public RemovedFromPlay(Player owner) : base(owner) {}
-
-    private RemovedFromPlay()
+    public class RemovedFromPlay : UnorderedZone, IZoneQuery
     {
-      /* for state copy */
-    }
+        public RemovedFromPlay(Player owner)
+            : base(owner) { }
 
-    public override Zone Name { get { return Zone.RemovedFromPlay; } }
-  }
+        private RemovedFromPlay()
+        {
+            /* for state copy */
+        }
+
+        public override Zone Name
+        {
+            get { return Zone.RemovedFromPlay; }
+        }
+    }
 }

@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class AttackerJoinedCombatEvent
-  {
-    public readonly Attacker Attacker;
-
-    public AttackerJoinedCombatEvent(Attacker attacker)
+    public class AttackerJoinedCombatEvent
     {
-      Attacker = attacker;
+        public readonly Attacker Attacker;
+
+        public AttackerJoinedCombatEvent(Attacker attacker)
+        {
+            Attacker = attacker;
+        }
     }
-  }
 }

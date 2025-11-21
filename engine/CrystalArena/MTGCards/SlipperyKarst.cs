@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
+    using System.Collections.Generic;
+    using CrystalArena.Effects;
 
-  public class SlipperyKarst : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SlipperyKarst : CardTemplateSource
     {
-      yield return Card
-        .Named("Slippery Karst")
-        .Type("Backup")
-        .Text(
-          "Slippery Karst enters the battlefield tapped.{EOL}{T}: Add {G} to your mana pool.{EOL}{Cycling} {2}({2}, Discard this card: Draw a card.)")
-        .Cast(p => p.Effect = () => new CastPermanent(tap: true))
-        .Cycling("{2}")
-        .ManaAbility(p =>
-          {
-            p.Text = "{T}: Add {G} to your mana pool.";
-            p.ManaAmount(Mana.Wind);
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Slippery Karst")
+                .Type("Backup")
+                .Text(
+                    "Slippery Karst enters the battlefield tapped.{EOL}{T}: Add {G} to your mana pool.{EOL}{Cycling} {2}({2}, Discard this card: Draw a card.)"
+                )
+                .Cast(p => p.Effect = () => new CastPermanent(tap: true))
+                .Cycling("{2}")
+                .ManaAbility(p =>
+                {
+                    p.Text = "{T}: Add {G} to your mana pool.";
+                    p.ManaAmount(Mana.Wind);
+                });
+        }
     }
-  }
 }

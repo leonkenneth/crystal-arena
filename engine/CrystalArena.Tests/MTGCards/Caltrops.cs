@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Caltrops
-  {
-    public class Ai : AiScenario
+    public class Caltrops
     {
-      [Fact (Skip = "Old card")]
-      public void DoNotAttackWithPegasus()
-      {
-        Battlefield(P1, "Caltrops", "Pegasus Charger");
-        P2.Life = 2;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DoNotAttackWithPegasus()
+            {
+                Battlefield(P1, "Caltrops", "Pegasus Charger");
+                P2.Life = 2;
 
-        RunGame(1);
-        Equal(2, P2.Life);
-      }
+                RunGame(1);
+                Equal(2, P2.Life);
+            }
+        }
     }
-  }
 }

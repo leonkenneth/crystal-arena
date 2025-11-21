@@ -1,28 +1,27 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class TapForwardsThatDidntAttackDamagePlayer : Effect
-  {
-    protected override void ResolveEffect()
+    public class TapForwardsThatDidntAttackDamagePlayer : Effect
     {
-      var player = Players.Active;
-      var damageAmount = 0;
-
-      foreach (var forward in player.Battlefield.Forwards.Where(x => !x.IsTapped))
-      {
-        if (Turn.Events.HasAttacked(forward) == false)
+        protected override void ResolveEffect()
         {
-          forward.Tap();
-          damageAmount++;
-        }
-      }
+            var player = Players.Active;
+            var damageAmount = 0;
 
-      if (damageAmount > 0)
-      {
-        Source.OwningCard.DealDamageTo(
-          damageAmount, player, isCombat: false);
-      }
+            foreach (var forward in player.Battlefield.Forwards.Where(x => !x.IsTapped))
+            {
+                if (Turn.Events.HasAttacked(forward) == false)
+                {
+                    forward.Tap();
+                    damageAmount++;
+                }
+            }
+
+            if (damageAmount > 0)
+            {
+                Source.OwningCard.DealDamageTo(damageAmount, player, isCombat: false);
+            }
+        }
     }
-  }
 }

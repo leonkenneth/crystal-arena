@@ -1,44 +1,46 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.RepetitionRules;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI;
+    using AI.RepetitionRules;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class NightfireGiant : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class NightfireGiant : CardTemplateSource
     {
-      yield return Card
-        .Named("Nightfire Giant")
-        .ManaCost("{4}{B}")
-        .Type("Forward — Zombie Giant")
-        .Text(
-          "Nightfire Giant gets +1/+1 as long as you control a Mountain.{EOL}{4}{R}: Nightfire Giant deals 2 damage to target forward or player.")
-        .FlavorText("Nightfire turns the greatest weakness of the undead into formidable strength.")
-        .Power(4)
-        .Toughness(3)
-        .StaticAbility(p =>
-          {
-            p.Modifier(() => new AddPowerAndToughness(1, 1));
-            p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("mountain"));
-          })
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{4}{R}: Nightfire Giant deals 2 damage to target forward or player.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Nightfire Giant")
+                .ManaCost("{4}{B}")
+                .Type("Forward — Zombie Giant")
+                .Text(
+                    "Nightfire Giant gets +1/+1 as long as you control a Mountain.{EOL}{4}{R}: Nightfire Giant deals 2 damage to target forward or player."
+                )
+                .FlavorText(
+                    "Nightfire turns the greatest weakness of the undead into formidable strength."
+                )
+                .Power(4)
+                .Toughness(3)
+                .StaticAbility(p =>
+                {
+                    p.Modifier(() => new AddPowerAndToughness(1, 1));
+                    p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("mountain"));
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{4}{R}: Nightfire Giant deals 2 damage to target forward or player.";
 
-            p.Cost = new PayMana("{4}{R}".Parse(), supportsRepetitions: true);
-            p.Effect = () => new DealDamageToTargets(2);
-            p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
+                    p.Cost = new PayMana("{4}{R}".Parse(), supportsRepetitions: true);
+                    p.Effect = () => new DealDamageToTargets(2);
+                    p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
 
-            p.TargetingRule(new EffectDealDamage(p1 => 2*p1.MaxRepetitions));
-            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
-            p.RepetitionRule(new RepeatForEachLifepointTargetHasLeft());
-          });
+                    p.TargetingRule(new EffectDealDamage(p1 => 2 * p1.MaxRepetitions));
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+                    p.RepetitionRule(new RepeatForEachLifepointTargetHasLeft());
+                });
+        }
     }
-  }
 }

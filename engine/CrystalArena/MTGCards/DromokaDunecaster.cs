@@ -1,39 +1,38 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class DromokaDunecaster : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class DromokaDunecaster : CardTemplateSource
     {
-      yield return Card
-        .Named("Dromoka Dunecaster")
-        .ManaCost("{W}")
-        .Type("Forward — Human Wizard")
-        .Text("{1}{W}, {T}: Tap target forward without flying.")
-        .FlavorText("\"The dragonlords rule the tempests of the skies. Here in the wastes, the storms are mine to command.\"")
-        .Power(0)
-        .Toughness(2)
-        .ActivatedAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{1}{W},{T}: Tap target forward without flying.";
-          p.Cost = new AggregateCost(
-            new PayMana("{1}{W}".Parse()),
-            new Tap());
-          
-          p.Effect = () => new TapTargets();
+            yield return Card.Named("Dromoka Dunecaster")
+                .ManaCost("{W}")
+                .Type("Forward — Human Wizard")
+                .Text("{1}{W}, {T}: Tap target forward without flying.")
+                .FlavorText(
+                    "\"The dragonlords rule the tempests of the skies. Here in the wastes, the storms are mine to command.\""
+                )
+                .Power(0)
+                .Toughness(2)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{1}{W},{T}: Tap target forward without flying.";
+                    p.Cost = new AggregateCost(new PayMana("{1}{W}".Parse()), new Tap());
 
-          p.TargetSelector.AddEffect(trg => trg
-            .Is.Card(c => c.Is().Forward && !c.Has().Flying)
-            .On.Battlefield());
-       
-          p.TimingRule(new OnStep(Step.BeginningOfCombat));
-          p.TargetingRule(new EffectTapForward());
-        });
+                    p.Effect = () => new TapTargets();
+
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Card(c => c.Is().Forward && !c.Has().Flying).On.Battlefield()
+                    );
+
+                    p.TimingRule(new OnStep(Step.BeginningOfCombat));
+                    p.TargetingRule(new EffectTapForward());
+                });
+        }
     }
-  }
 }

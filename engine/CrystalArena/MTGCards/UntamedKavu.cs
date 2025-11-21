@@ -1,49 +1,53 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using CrystalArena.Costs;
-  using CrystalArena.Effects;
-  using CrystalArena.AI;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.Modifiers;
-  using CrystalArena.Triggers;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using CrystalArena.AI;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.Costs;
+    using CrystalArena.Effects;
+    using CrystalArena.Modifiers;
+    using CrystalArena.Triggers;
 
-  public class UntamedKavu : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class UntamedKavu : CardTemplateSource
     {
-      yield return Card
-        .Named("Untamed Kavu")
-        .ManaCost("{1}{G}")
-        .Type("Forward Kavu")
-        .Text("{Kicker} {3}{EOL}{Brave}, {trample}{EOL}If Untamed Kavu was kicked, it enters the battlefield with three +1/+1 counters on it.")
-        .Power(2)
-        .Toughness(2)
-        .SimpleAbilities(Static.Trample, Static.Brave)
-        .Cast(p => p.Effect = () => new CastPermanent())
-        .Cast(p =>
-
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Cost = new PayMana("{4}{G}".Parse());
-          p.Text = p.KickerDescription;
-          
-          p.Effect = () => new CompoundEffect(
-            new CastPermanent(),
-            new ApplyModifiersToSelf(              
-              () =>
-              {
-                var tp = new TriggeredAbility.Parameters()
+            yield return Card.Named("Untamed Kavu")
+                .ManaCost("{1}{G}")
+                .Type("Forward Kavu")
+                .Text(
+                    "{Kicker} {3}{EOL}{Brave}, {trample}{EOL}If Untamed Kavu was kicked, it enters the battlefield with three +1/+1 counters on it."
+                )
+                .Power(2)
+                .Toughness(2)
+                .SimpleAbilities(Static.Trample, Static.Brave)
+                .Cast(p => p.Effect = () => new CastPermanent())
+                .Cast(p =>
                 {
-                  Text = "If Untamed Kavu was kicked, it enters the battlefield with three +1/+1 counters on it.",
-                  Effect = () => new ApplyModifiersToSelf(() => new AddCounters(() => new PowerToughness(1, 1), 3))
-                };
+                    p.Cost = new PayMana("{4}{G}".Parse());
+                    p.Text = p.KickerDescription;
 
-                tp.Trigger(new OnZoneChanged(to: Zone.Battlefield));
-                return new AddTriggeredAbility(new TriggeredAbility(tp));
-              }
-            ));
-        });
+                    p.Effect = () =>
+                        new CompoundEffect(
+                            new CastPermanent(),
+                            new ApplyModifiersToSelf(() =>
+                            {
+                                var tp = new TriggeredAbility.Parameters()
+                                {
+                                    Text =
+                                        "If Untamed Kavu was kicked, it enters the battlefield with three +1/+1 counters on it.",
+                                    Effect = () =>
+                                        new ApplyModifiersToSelf(() =>
+                                            new AddCounters(() => new PowerToughness(1, 1), 3)
+                                        ),
+                                };
+
+                                tp.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+                                return new AddTriggeredAbility(new TriggeredAbility(tp));
+                            })
+                        );
+                });
+        }
     }
-  }
 }

@@ -1,36 +1,36 @@
 ﻿namespace CrystalArena
 {
-  using CrystalArena.Infrastructure;
-  using CrystalArena.Modifiers;
+    using CrystalArena.Infrastructure;
+    using CrystalArena.Modifiers;
 
-  [Copyable]
-  public class SkipSteps : IAcceptsPlayerModifier
-  {
-    private readonly TrackableList<Step> _steps = new TrackableList<Step>();
-
-    public void Accept(IPlayerModifier modifier)
+    [Copyable]
+    public class SkipSteps : IAcceptsPlayerModifier
     {
-      modifier.Apply(this);
-    }
+        private readonly TrackableList<Step> _steps = new TrackableList<Step>();
 
-    public void Initialize(ChangeTracker changeTracker)
-    {
-      _steps.Initialize(changeTracker);
-    }
+        public void Accept(IPlayerModifier modifier)
+        {
+            modifier.Apply(this);
+        }
 
-    public bool Contains(Step step)
-    {
-      return _steps.Contains(step);
-    }
+        public void Initialize(ChangeTracker changeTracker)
+        {
+            _steps.Initialize(changeTracker);
+        }
 
-    public void Add(Step step)
-    {
-      _steps.Add(step);
-    }
+        public bool Contains(Step step)
+        {
+            return _steps.Contains(step);
+        }
 
-    public void Remove(Step step)
-    {
-      _steps.Remove(step);
+        public void Add(Step step)
+        {
+            _steps.Add(step);
+        }
+
+        public void Remove(Step step)
+        {
+            _steps.Remove(step);
+        }
     }
-  }
 }

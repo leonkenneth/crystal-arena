@@ -1,32 +1,32 @@
 ﻿namespace CrystalArena.Effects
 {
-  using CrystalArena.Modifiers;
-  using System.Linq;
+    using System.Linq;
+    using CrystalArena.Modifiers;
 
-  public class PutForwardsFromBreakZonesToYourBattlefield : Effect
-  {
-    protected override void ResolveEffect()
+    public class PutForwardsFromBreakZonesToYourBattlefield : Effect
     {
-      var forwards = Players.SelectMany(x => x.BreakZone).Where(x => x.Is().Forward).ToList(); 
-
-      foreach (var card in forwards)
-      {
-        if (card.Owner != Controller)
+        protected override void ResolveEffect()
         {
-          var modifier = new ChangeController(Controller);
+            var forwards = Players.SelectMany(x => x.BreakZone).Where(x => x.Is().Forward).ToList();
 
-          var p = new ModifierParameters
-          {
-            SourceEffect = this,
-            SourceCard = Source.OwningCard,
-            X = X
-          };
+            foreach (var card in forwards)
+            {
+                if (card.Owner != Controller)
+                {
+                    var modifier = new ChangeController(Controller);
 
-          card.AddModifier(modifier, p);
+                    var p = new ModifierParameters
+                    {
+                        SourceEffect = this,
+                        SourceCard = Source.OwningCard,
+                        X = X,
+                    };
+
+                    card.AddModifier(modifier, p);
+                }
+
+                Controller.PutCardToBattlefield(card);
+            }
         }
-
-        Controller.PutCardToBattlefield(card);
-      }
     }
-  }
 }

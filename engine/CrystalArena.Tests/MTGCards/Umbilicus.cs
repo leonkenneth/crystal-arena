@@ -1,27 +1,49 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Umbilicus
-  {
-    public class Ai : AiScenario
+    public class Umbilicus
     {
-      [Fact (Skip = "Old card")]
-      public void EachPlayerReturnABackupToHand()
-      {
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EachPlayerReturnABackupToHand()
+            {
+                Hand(P1, "Island");
+                Hand(P2, "Island");
 
-        Hand(P1, "Island");
-        Hand(P2, "Island");
+                Battlefield(
+                    P1,
+                    "Umbilicus",
+                    "Grizzly Bears",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island"
+                );
+                Battlefield(
+                    P2,
+                    "Grizzly Bears",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island"
+                );
 
-        Battlefield(P1, "Umbilicus", "Grizzly Bears", "Island", "Island", "Island", "Island", "Island", "Island", "Island", "Island");
-        Battlefield(P2, "Grizzly Bears", "Island", "Island", "Island", "Island", "Island", "Island", "Island", "Island");
+                RunGame(2);
 
-        RunGame(2);
-
-        Equal(1, P1.Hand.Count);
-        Equal(2, P2.Hand.Count);
-      }
+                Equal(1, P1.Hand.Count);
+                Equal(2, P2.Hand.Count);
+            }
+        }
     }
-  }
 }

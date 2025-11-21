@@ -1,34 +1,37 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class StubbornDenial : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class StubbornDenial : CardTemplateSource
     {
-      yield return Card
-        .Named("Stubborn Denial")
-        .ManaCost("{U}")
-        .Type("Summon")
-        .Text("Counter target nonforward spell unless its controller pays {1}.{EOL}{I}Ferocious{/I} — If you control a forward with power 4 or greater, counter that spell instead.")
-        .FlavorText("The Temur have no patience for subtlety.")
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new FerociousEffect(
-            L(new CounterTargetSpell(ep => ep.DoNotCounterCost = 1)),
-            L(new CounterTargetSpell()),
-            instead: true);
+            yield return Card.Named("Stubborn Denial")
+                .ManaCost("{U}")
+                .Type("Summon")
+                .Text(
+                    "Counter target nonforward spell unless its controller pays {1}.{EOL}{I}Ferocious{/I} — If you control a forward with power 4 or greater, counter that spell instead."
+                )
+                .FlavorText("The Temur have no patience for subtlety.")
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new FerociousEffect(
+                            L(new CounterTargetSpell(ep => ep.DoNotCounterCost = 1)),
+                            L(new CounterTargetSpell()),
+                            instead: true
+                        );
 
-          p.TargetSelector.AddEffect(trg => trg
-            .Is.CounterableSpell(e => !e.Source.OwningCard.Is().Forward)
-            .On.Stack());
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.CounterableSpell(e => !e.Source.OwningCard.Is().Forward).On.Stack()
+                    );
 
-          p.TimingRule(new WhenTopSpellIsCounterable());
-          p.TargetingRule(new EffectCounterspell());
-        });
+                    p.TimingRule(new WhenTopSpellIsCounterable());
+                    p.TargetingRule(new EffectCounterspell());
+                });
+        }
     }
-  }
 }

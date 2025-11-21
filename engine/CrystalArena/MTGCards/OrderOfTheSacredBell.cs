@@ -1,18 +1,19 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class OrderOfTheSacredBell : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class OrderOfTheSacredBell : CardTemplateSource
     {
-      yield return Card
-        .Named("Order of the Sacred Bell")
-        .ManaCost("{3}{G}")
-        .Type("Forward - Human Monk")
-        .FlavorText("'My brother, it may now be time to ring the bell and put out the call for aid.'")
-        .Power(4)
-        .Toughness(3);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Order of the Sacred Bell")
+                .ManaCost("{3}{G}")
+                .Type("Forward - Human Monk")
+                .FlavorText(
+                    "'My brother, it may now be time to ring the bell and put out the call for aid.'"
+                )
+                .Power(4)
+                .Toughness(3);
+        }
     }
-  }
 }

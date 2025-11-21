@@ -1,15 +1,15 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
+    using System;
 
-  [Serializable]
-  public class Ordering
-  {
-    public Ordering(params int[] indices)
+    [Serializable]
+    public class Ordering
     {
-      Indices = indices;
-    }
+        public Ordering(params int[] indices)
+        {
+            Indices = indices;
+        }
 
-    public int[] Indices { get; private set; }
-  }
+        public int[] Indices { get; private set; }
+    }
 }

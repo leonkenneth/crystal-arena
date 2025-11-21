@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectBounceAlongWithOwningCard : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectBounceAlongWithOwningCard : TargetingRule
     {
-      var targetCandidates = GetCandidatesThatCanBeDestroyed(p)
-        .OrderByDescending(x => x.Score)
-        .ToList();
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var targetCandidates = GetCandidatesThatCanBeDestroyed(p)
+                .OrderByDescending(x => x.Score)
+                .ToList();
 
-      if (targetCandidates.Count == 1 && targetCandidates[0] == p.Card)
-      {
-        // if owner is the only one that can be killed
-        // target the owner
-        return Group(targetCandidates, 1);
-      }
+            if (targetCandidates.Count == 1 && targetCandidates[0] == p.Card)
+            {
+                // if owner is the only one that can be killed
+                // target the owner
+                return Group(targetCandidates, 1);
+            }
 
-      // otherwise return all except the owner
-      return Group(targetCandidates.Where(x => x != p.Card), p.TotalMinTargetCount());
+            // otherwise return all except the owner
+            return Group(targetCandidates.Where(x => x != p.Card), p.TotalMinTargetCount());
+        }
     }
-  }
 }

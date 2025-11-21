@@ -1,38 +1,49 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
+    using Triggers;
 
-  public class ReclamationSage : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ReclamationSage : CardTemplateSource
     {
-      yield return Card
-        .Named("Reclamation Sage")
-        .ManaCost("{2}{G}")
-        .Type("Forward - Elf Shaman")
-        .Text("When Reclamation Sage enters the battlefield, you may destroy target artifact or monster.")
-        .FlavorText(
-          "\"What was once formed by masons, shaped by smiths, or given life by mages, I will return to the embrace of the earth.\"")
-        .Power(2)
-        .Toughness(1)
-        .TriggeredAbility(p =>
-          {
-            p.Text = "When Reclamation Sage enters the battlefield, you may destroy target artifact or monster.";
-            p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Reclamation Sage")
+                .ManaCost("{2}{G}")
+                .Type("Forward - Elf Shaman")
+                .Text(
+                    "When Reclamation Sage enters the battlefield, you may destroy target artifact or monster."
+                )
+                .FlavorText(
+                    "\"What was once formed by masons, shaped by smiths, or given life by mages, I will return to the embrace of the earth.\""
+                )
+                .Power(2)
+                .Toughness(1)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "When Reclamation Sage enters the battlefield, you may destroy target artifact or monster.";
+                    p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
 
-            p.Effect = () => new DestroyTargetPermanents();
+                    p.Effect = () => new DestroyTargetPermanents();
 
-            p.TargetSelector.AddEffect(
-              trg => trg.Is.Card(card => card.Is().Artifact || card.Is().Monster).On.Battlefield(),
-              trg => { trg.Message = "Select an artifact or monster."; });
+                    p.TargetSelector.AddEffect(
+                        trg =>
+                            trg.Is.Card(card => card.Is().Artifact || card.Is().Monster)
+                                .On.Battlefield(),
+                        trg =>
+                        {
+                            trg.Message = "Select an artifact or monster.";
+                        }
+                    );
 
-            p.TimingRule(new WhenOpponentControllsPermanents(c => c.Is().Artifact || c.Is().Monster));
-            p.TargetingRule(new EffectDestroy());
-          });
+                    p.TimingRule(
+                        new WhenOpponentControllsPermanents(c => c.Is().Artifact || c.Is().Monster)
+                    );
+                    p.TargetingRule(new EffectDestroy());
+                });
+        }
     }
-  }
 }

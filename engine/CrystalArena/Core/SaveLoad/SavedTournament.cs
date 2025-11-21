@@ -1,17 +1,20 @@
 ﻿namespace CrystalArena
 {
-  using System;
-  using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-  [Serializable]
-  public class SavedTournament
-  {
-    public List<TournamentMatch> CurrentRoundMatches;
-    public int RoundsToGo;
-    public SavedMatch SavedMatch;
-    public bool HasMatchInProgress { get { return SavedMatch != null; } }
-    public List<TournamentPlayer> Players { get; set; }
-    public List<CardInfo> HumanMainDeck { get; set; }
-    public TournamentType Type { get; set; }
-  }
+    [Serializable]
+    public class SavedTournament
+    {
+        public List<TournamentMatch> CurrentRoundMatches;
+        public int RoundsToGo;
+        public SavedMatch SavedMatch;
+        public bool HasMatchInProgress
+        {
+            get { return SavedMatch != null; }
+        }
+        public List<TournamentPlayer> Players { get; set; }
+        public List<CardInfo> HumanMainDeck { get; set; }
+        public TournamentType Type { get; set; }
+    }
 }

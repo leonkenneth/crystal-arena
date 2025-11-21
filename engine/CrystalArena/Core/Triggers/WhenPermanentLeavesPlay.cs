@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using Events;
-  using Infrastructure;
+    using Events;
+    using Infrastructure;
 
-  public class WhenPermanentLeavesPlay : Trigger, IReceive<ZoneChangedEvent>
-  {
-    private readonly Card _permanent;
-
-    private WhenPermanentLeavesPlay() {}
-
-    public WhenPermanentLeavesPlay(Card permanent)
+    public class WhenPermanentLeavesPlay : Trigger, IReceive<ZoneChangedEvent>
     {
-      _permanent = permanent;
-    }
+        private readonly Card _permanent;
 
-    public void Receive(ZoneChangedEvent e)
-    {
-      if (e.FromBattlefield && e.Card == _permanent)
-      {
-        Set(e);
-      }
+        private WhenPermanentLeavesPlay() { }
+
+        public WhenPermanentLeavesPlay(Card permanent)
+        {
+            _permanent = permanent;
+        }
+
+        public void Receive(ZoneChangedEvent e)
+        {
+            if (e.FromBattlefield && e.Card == _permanent)
+            {
+                Set(e);
+            }
+        }
     }
-  }
 }

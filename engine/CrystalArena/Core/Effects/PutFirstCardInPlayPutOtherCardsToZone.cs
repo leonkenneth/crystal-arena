@@ -1,53 +1,58 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-  public class PutFirstCardInPlayPutOtherCardsToZone : Effect
-  {
-    private readonly Func<Card, bool> _filter;
-    private readonly Zone _toZone;
-
-    private PutFirstCardInPlayPutOtherCardsToZone() {}
-
-    public PutFirstCardInPlayPutOtherCardsToZone(Zone toZone, Func<Card, bool> filter = null)
+    public class PutFirstCardInPlayPutOtherCardsToZone : Effect
     {
-      _toZone = toZone;
-      _filter = filter ?? delegate { return true; };
-    }
+        private readonly Func<Card, bool> _filter;
+        private readonly Zone _toZone;
 
-    protected override void ResolveEffect()
-    {
-      var toOtherZone = new List<Card>();
+        private PutFirstCardInPlayPutOtherCardsToZone() { }
 
-      foreach (var card in Controller.MainDeck)
-      {
-        if (_filter(card))
+        public PutFirstCardInPlayPutOtherCardsToZone(Zone toZone, Func<Card, bool> filter = null)
         {
-          card.PutToBattlefield();
-
-          break;
+            _toZone = toZone;
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
         }
 
-        toOtherZone.Add(card);
-      }
-
-      foreach (var card in toOtherZone)
-      {
-        switch (_toZone)
+        protected override void ResolveEffect()
         {
-          case Zone.BreakZone:
-            card.PutToBreakZone();
-            break;
+            var toOtherZone = new List<Card>();
 
-          case Zone.MainDeck:
-            card.Owner.PutOnBottomOfMainDeck(card);
-            break;
+            foreach (var card in Controller.MainDeck)
+            {
+                if (_filter(card))
+                {
+                    card.PutToBattlefield();
 
-          default:
-            throw new NotSupportedException("Zone is not supported: " + _toZone);
+                    break;
+                }
+
+                toOtherZone.Add(card);
+            }
+
+            foreach (var card in toOtherZone)
+            {
+                switch (_toZone)
+                {
+                    case Zone.BreakZone:
+                        card.PutToBreakZone();
+                        break;
+
+                    case Zone.MainDeck:
+                        card.Owner.PutOnBottomOfMainDeck(card);
+                        break;
+
+                    default:
+                        throw new NotSupportedException("Zone is not supported: " + _toZone);
+                }
+            }
         }
-      }
     }
-  }
 }

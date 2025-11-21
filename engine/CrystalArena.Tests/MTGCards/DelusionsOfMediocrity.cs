@@ -1,36 +1,36 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class DelusionsOfMediocrity
-  {
-    public class Ai : AiScenario
+    public class DelusionsOfMediocrity
     {
-      [Fact (Skip = "Old card")]
-      public void GainLife()
-      {
-        Hand(P1, "Delusions of Mediocrity");
-        Battlefield(P1, "Island", "Island", "Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GainLife()
+            {
+                Hand(P1, "Delusions of Mediocrity");
+                Battlefield(P1, "Island", "Island", "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(30, P1.Life);
-      }
+                Equal(30, P1.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void LooseLife()
-      {
-        Hand(P1, "Disenchant");
-        Battlefield(P1, "Plains", "Plains");
-        Battlefield(P2, "Delusions of Mediocrity");
+            [Fact(Skip = "Old card")]
+            public void LooseLife()
+            {
+                Hand(P1, "Disenchant");
+                Battlefield(P1, "Plains", "Plains");
+                Battlefield(P2, "Delusions of Mediocrity");
 
-        P2.Life = 10;
-        
-        RunGame(2);
+                P2.Life = 10;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(2);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  public interface IReceive<in T> : IReceive
-  {
-    void Receive(T e);
-  }
+    public interface IReceive<in T> : IReceive
+    {
+        void Receive(T e);
+    }
 
-  public interface IReceive {}
+    public interface IReceive { }
 }

@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class SetList<T> : PropertyModifier<List<T>>
-  {
-    private readonly List<T> _list;
-    private readonly int _priority;
-
-    private SetList() {}
-
-    public SetList(List<T> list, int priority = 1)
+    public class SetList<T> : PropertyModifier<List<T>>
     {
-      _list = list;
-      _priority = priority;
-    }
+        private readonly List<T> _list;
+        private readonly int _priority;
 
-    public override int Priority
-    {
-      get { return _priority; }
-    }
+        private SetList() { }
 
-    public override List<T> Apply(List<T> before)
-    {
-      return _list;
+        public SetList(List<T> list, int priority = 1)
+        {
+            _list = list;
+            _priority = priority;
+        }
+
+        public override int Priority
+        {
+            get { return _priority; }
+        }
+
+        public override List<T> Apply(List<T> before)
+        {
+            return _list;
+        }
     }
-  }
 }

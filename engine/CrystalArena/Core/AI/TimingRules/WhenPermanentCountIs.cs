@@ -1,24 +1,29 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System;
-  using System.Linq;
+    using System;
+    using System.Linq;
 
-  public class WhenPermanentCountIs : TimingRule
-  {
-    private readonly int _minCount;
-    private readonly Func<Card, bool> _selector;
-
-    private WhenPermanentCountIs() {}
-
-    public WhenPermanentCountIs(int minCount, Func<Card, bool> selector = null)
+    public class WhenPermanentCountIs : TimingRule
     {
-      _selector = selector ?? delegate { return true; };
-      _minCount = minCount;
-    }
+        private readonly int _minCount;
+        private readonly Func<Card, bool> _selector;
 
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
-    {
-      return Players.Permanents().Count(x => _selector(x)) >= _minCount;
+        private WhenPermanentCountIs() { }
+
+        public WhenPermanentCountIs(int minCount, Func<Card, bool> selector = null)
+        {
+            _selector =
+                selector
+                ?? delegate
+                {
+                    return true;
+                };
+            _minCount = minCount;
+        }
+
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+        {
+            return Players.Permanents().Count(x => _selector(x)) >= _minCount;
+        }
     }
-  }
 }

@@ -1,42 +1,51 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class Extruder : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Extruder : CardTemplateSource
     {
-      yield return Card
-        .Named("Extruder")
-        .ManaCost("{4}")
-        .Type("Artifact Forward")
-        .Text("{Echo} {4}{EOL}Sacrifice an artifact: Put a +1/+1 counter on target forward.")
-        .FlavorText("As the invasion drew closer, Urza's means began to resemble Phyrexia's end.")
-        .Power(4)
-        .Toughness(3)
-        .Echo("{4}")
-        .ActivatedAbility(p =>
-          {
-            p.Text = "Sacrifice an artifact: Put a +1/+1 counter on target forward.";
-            p.Cost = new Sacrifice();
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Extruder")
+                .ManaCost("{4}")
+                .Type("Artifact Forward")
+                .Text(
+                    "{Echo} {4}{EOL}Sacrifice an artifact: Put a +1/+1 counter on target forward."
+                )
+                .FlavorText(
+                    "As the invasion drew closer, Urza's means began to resemble Phyrexia's end."
+                )
+                .Power(4)
+                .Toughness(3)
+                .Echo("{4}")
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "Sacrifice an artifact: Put a +1/+1 counter on target forward.";
+                    p.Cost = new Sacrifice();
 
-            p.Effect = () => new ApplyModifiersToTargets(
-              () => new AddCounters(() => new PowerToughness(1, 1), 1));
+                    p.Effect = () =>
+                        new ApplyModifiersToTargets(() =>
+                            new AddCounters(() => new PowerToughness(1, 1), 1)
+                        );
 
-            p.TargetSelector
-              .AddCost(
-                trg => trg.Is.Card(c => c.Is().Artifact, ControlledBy.SpellOwner).On.Battlefield(),
-                trg => trg.Message = "Select an artifact to sacrifice.")
-              .AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TargetSelector.AddCost(
+                            trg =>
+                                trg.Is.Card(c => c.Is().Artifact, ControlledBy.SpellOwner)
+                                    .On.Battlefield(),
+                            trg => trg.Message = "Select an artifact to sacrifice."
+                        )
+                        .AddEffect(trg => trg.Is.Forward().On.Battlefield());
 
-            p.TimingRule(new Any(new AfterOpponentDeclaresBlockers(), new AfterYouDeclareBlockers()));
-            p.TargetingRule(new CostSacrificeEffectPump(1, 1));
-          });
+                    p.TimingRule(
+                        new Any(new AfterOpponentDeclaresBlockers(), new AfterYouDeclareBlockers())
+                    );
+                    p.TargetingRule(new CostSacrificeEffectPump(1, 1));
+                });
+        }
     }
-  }
 }

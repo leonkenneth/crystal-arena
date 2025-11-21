@@ -1,34 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TimingRules;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TimingRules;
+    using Effects;
+    using Modifiers;
 
-  public class Overrun : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Overrun : CardTemplateSource
     {
-      yield return Card
-        .Named("Overrun")
-        .ManaCost("{2}{G}{G}{G}")
-        .Type("Sorcery")
-        .Text(
-          "Forwards you control get + 3/+3 and gain trample until end of turn.")
-        .FlavorText("Nature doesn't walk.")
-        .SimpleAbilities(Static.Convoke)
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new ApplyModifiersToPermanents(
-            selector: (c, ctx) => c.Is().Forward && ctx.You == c.Controller,
-            modifiers: L(
-              () => new AddPowerAndToughness(3, 3) { UntilEot = true },
-              () => new AddSimpleAbility(Static.Trample) { UntilEot = true }))
-          .SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
+            yield return Card.Named("Overrun")
+                .ManaCost("{2}{G}{G}{G}")
+                .Type("Sorcery")
+                .Text("Forwards you control get + 3/+3 and gain trample until end of turn.")
+                .FlavorText("Nature doesn't walk.")
+                .SimpleAbilities(Static.Convoke)
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new ApplyModifiersToPermanents(
+                            selector: (c, ctx) => c.Is().Forward && ctx.You == c.Controller,
+                            modifiers: L(
+                                () => new AddPowerAndToughness(3, 3) { UntilEot = true },
+                                () => new AddSimpleAbility(Static.Trample) { UntilEot = true }
+                            )
+                        ).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
 
-          p.TimingRule(new OnFirstMain());
-        });
+                    p.TimingRule(new OnFirstMain());
+                });
+        }
     }
-  }
 }

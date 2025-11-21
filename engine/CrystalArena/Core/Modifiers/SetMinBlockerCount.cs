@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Modifiers
-{    
-  public class SetMinBlockerCount : Modifier, ICardModifier
-  {
-    private readonly IntegerSetter _integerSetter;
-    private MinimumBlockerCount _minimumBlockerCount;
-
-    private SetMinBlockerCount() {}
-
-    public SetMinBlockerCount(int amount)
+{
+    public class SetMinBlockerCount : Modifier, ICardModifier
     {
-      _integerSetter = new IntegerSetter(amount);
-    }
+        private readonly IntegerSetter _integerSetter;
+        private MinimumBlockerCount _minimumBlockerCount;
 
-    public override void Apply(MinimumBlockerCount count)
-    {
-      _minimumBlockerCount = count;
-      _integerSetter.Initialize(ChangeTracker);
-      _minimumBlockerCount.AddModifier(_integerSetter);
-    }
+        private SetMinBlockerCount() { }
 
-    protected override void Unapply()
-    {
-      _minimumBlockerCount.RemoveModifier(_integerSetter);
+        public SetMinBlockerCount(int amount)
+        {
+            _integerSetter = new IntegerSetter(amount);
+        }
+
+        public override void Apply(MinimumBlockerCount count)
+        {
+            _minimumBlockerCount = count;
+            _integerSetter.Initialize(ChangeTracker);
+            _minimumBlockerCount.AddModifier(_integerSetter);
+        }
+
+        protected override void Unapply()
+        {
+            _minimumBlockerCount.RemoveModifier(_integerSetter);
+        }
     }
-  }
 }

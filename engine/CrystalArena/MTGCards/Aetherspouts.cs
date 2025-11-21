@@ -1,26 +1,30 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Effects;
 
-  public class Aetherspouts : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Aetherspouts : CardTemplateSource
     {
-      yield return Card
-        .Named("AEtherspouts")
-        .ManaCost("{3}{U}{U}")
-        .Type("Summon")
-        .Text("For each attacking forward, its owner puts it on the top or bottom of his or her library.")
-        .FlavorText("\"Don't worry, there's plenty for everyone.\"{EOL}—Vickon, Eleventh Company battlemage ")
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "For each attacking forward, its owner puts it on the top or bottom of his or her library.";
+            yield return Card.Named("AEtherspouts")
+                .ManaCost("{3}{U}{U}")
+                .Type("Summon")
+                .Text(
+                    "For each attacking forward, its owner puts it on the top or bottom of his or her library."
+                )
+                .FlavorText(
+                    "\"Don't worry, there's plenty for everyone.\"{EOL}—Vickon, Eleventh Company battlemage "
+                )
+                .Cast(p =>
+                {
+                    p.Text =
+                        "For each attacking forward, its owner puts it on the top or bottom of his or her library.";
 
-          p.Effect = () => new PutSelectedAttackersOnTopRestOnBottom();
-          p.TimingRule(new AfterOpponentDeclaresAttackers());
-        });
+                    p.Effect = () => new PutSelectedAttackersOnTopRestOnBottom();
+                    p.TimingRule(new AfterOpponentDeclaresAttackers());
+                });
+        }
     }
-  }
 }

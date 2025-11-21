@@ -2,21 +2,21 @@
 
 namespace CrystalArena.Effects
 {
-  public class DullAndFreezeTargets : Effect
-  {
-    protected override void ResolveEffect()
+    public class DullAndFreezeTargets : Effect
     {
-      var p = new ModifierParameters()
-      {
-        SourceEffect = this,
-        SourceCard = Source.OwningCard,
-        X = X
-      };
-      foreach (var target in ValidEffectTargets)
-      {
-        target.Card().Tap();
-        target.Card().AddModifier(new Freeze(), p);
-      }
+        protected override void ResolveEffect()
+        {
+            var p = new ModifierParameters()
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+            foreach (var target in ValidEffectTargets)
+            {
+                target.Card().Tap();
+                target.Card().AddModifier(new Freeze(), p);
+            }
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PowderKeg
-  {
-    public class Ai : AiScenario
+    public class PowderKeg
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyElves()
-      {
-        Battlefield(P1, "Powder Keg", "Grizzly Bears");
-        Battlefield(P2, "Llanowar Elves", "Llanowar Elves", "Llanowar Elves");
-        P2.Life = 2;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyElves()
+            {
+                Battlefield(P1, "Powder Keg", "Grizzly Bears");
+                Battlefield(P2, "Llanowar Elves", "Llanowar Elves", "Llanowar Elves");
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

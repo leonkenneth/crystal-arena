@@ -1,73 +1,66 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Songstitcher
-  {
-    public class Predefined : PredefinedScenario
+    public class Songstitcher
     {
-      [Fact (Skip = "Old card")]
-      public void PreventDamage()
-      {
-        var dragon = C("Shivan Dragon");
-        var titcher = C("Songstitcher");
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PreventDamage()
+            {
+                var dragon = C("Shivan Dragon");
+                var titcher = C("Songstitcher");
 
-        Battlefield(P1, dragon);
-        Battlefield(P2, titcher, "Plains", "Plains");
+                Battlefield(P1, dragon);
+                Battlefield(P2, titcher, "Plains", "Plains");
 
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(dragon),
-          At(Step.DeclareBlocker)
-            .Activate(titcher, target: dragon),
-          At(Step.SecondMain)
-            .Verify(() => Equal(20, P2.Life))
-          );
-      }
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(dragon),
+                    At(Step.DeclareBlocker).Activate(titcher, target: dragon),
+                    At(Step.SecondMain).Verify(() => Equal(20, P2.Life))
+                );
+            }
+        }
+
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PreventDamage()
+            {
+                var dragon = C("Shivan Dragon");
+                var titcher = C("Songstitcher");
+
+                Battlefield(P1, dragon);
+                Battlefield(P2, titcher, "Plains", "Plains");
+
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(dragon),
+                    At(Step.SecondMain).Verify(() => Equal(20, P2.Life))
+                );
+            }
+
+            [Fact(Skip = "Old card")]
+            public void PreferActivatingSticher()
+            {
+                var dragon = C("Shivan Dragon");
+                var titcher = C("Songstitcher");
+                var bears = C("Grizzly Bears");
+
+                Battlefield(P1, dragon);
+                Battlefield(P2, titcher, "Plains", "Plains", bears, "Martyr's Cause");
+
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(dragon),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(20, P2.Life);
+                            Equal(Zone.Battlefield, C(bears).Zone);
+                        })
+                );
+            }
+        }
     }
-
-    
-    public class PredefinedAi : PredefinedAiScenario
-    {
-      [Fact (Skip = "Old card")]
-      public void PreventDamage()
-      {
-        var dragon = C("Shivan Dragon");
-        var titcher = C("Songstitcher");
-
-        Battlefield(P1, dragon);
-        Battlefield(P2, titcher, "Plains", "Plains");
-
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(dragon),
-          At(Step.SecondMain)
-            .Verify(() => Equal(20, P2.Life))
-          );
-      }
-
-      [Fact (Skip = "Old card")]
-      public void PreferActivatingSticher()
-      {
-        var dragon = C("Shivan Dragon");
-        var titcher = C("Songstitcher");
-        var bears = C("Grizzly Bears");
-
-        Battlefield(P1, dragon);        
-        Battlefield(P2, titcher, "Plains", "Plains", bears, "Martyr's Cause");
-
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(dragon),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(20, P2.Life);
-                Equal(Zone.Battlefield, C(bears).Zone);
-              })
-          );
-      }
-    }
-  }
 }

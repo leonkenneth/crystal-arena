@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
+    using System;
 
-  public class EachPlayerDiscardsHandAndDrawsGreatestDiscardedCount : Effect
-  {
-    protected override void ResolveEffect()
+    public class EachPlayerDiscardsHandAndDrawsGreatestDiscardedCount : Effect
     {
-      var maxCount = Math.Max(Players.Player1.Hand.Count, Players.Player2.Hand.Count);
+        protected override void ResolveEffect()
+        {
+            var maxCount = Math.Max(Players.Player1.Hand.Count, Players.Player2.Hand.Count);
 
-      Players.Active.DiscardHand();
-      Players.Active.DrawCards(maxCount);
+            Players.Active.DiscardHand();
+            Players.Active.DrawCards(maxCount);
 
-      Players.Passive.DiscardHand();
-      Players.Passive.DrawCards(maxCount);
+            Players.Passive.DiscardHand();
+            Players.Passive.DrawCards(maxCount);
+        }
     }
-  }
 }

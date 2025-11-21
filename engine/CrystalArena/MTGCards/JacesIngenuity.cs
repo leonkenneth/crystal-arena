@@ -1,24 +1,25 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Effects;
 
-  public class JacesIngenuity : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class JacesIngenuity : CardTemplateSource
     {
-      yield return Card
-        .Named("Jace's Ingenuity")
-        .ManaCost("{3}{U}{U}")
-        .Type("Summon")
-        .Text("Draw three cards.")
-        .FlavorText("\"Brute force can sometimes kick down a locked door, but knowledge is a skeleton key.\"")
-        .Cast(p =>
-          {
-            p.Effect = () => new DrawCards(3);
-            p.TimingRule(new OnEndOfOpponentsTurn());
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Jace's Ingenuity")
+                .ManaCost("{3}{U}{U}")
+                .Type("Summon")
+                .Text("Draw three cards.")
+                .FlavorText(
+                    "\"Brute force can sometimes kick down a locked door, but knowledge is a skeleton key.\""
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new DrawCards(3);
+                    p.TimingRule(new OnEndOfOpponentsTurn());
+                });
+        }
     }
-  }
 }

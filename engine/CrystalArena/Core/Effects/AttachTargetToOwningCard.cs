@@ -1,41 +1,41 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class AttachTargetToOwningCard : Effect
-  {
-    private readonly bool _gainControl;
-
-    private AttachTargetToOwningCard() {}
-
-    public AttachTargetToOwningCard(bool gainControl = true)
+    public class AttachTargetToOwningCard : Effect
     {
-      _gainControl = gainControl;
-    }
+        private readonly bool _gainControl;
 
-    protected override void ResolveEffect()
-    {
-      var monster = Target.Card();
-      monster.EnchantWithoutPayingCost(Source.OwningCard);
+        private AttachTargetToOwningCard() { }
 
-      if (_gainControl && monster.Controller != Controller)
-      {
-        GainControl(monster);
-      }
-    }
-
-    private void GainControl(Card monster)
-    {
-      var sourceModifier = new ChangeController(Controller);
-
-      var p = new ModifierParameters
+        public AttachTargetToOwningCard(bool gainControl = true)
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
+            _gainControl = gainControl;
+        }
 
-      monster.AddModifier(sourceModifier, p);
+        protected override void ResolveEffect()
+        {
+            var monster = Target.Card();
+            monster.EnchantWithoutPayingCost(Source.OwningCard);
+
+            if (_gainControl && monster.Controller != Controller)
+            {
+                GainControl(monster);
+            }
+        }
+
+        private void GainControl(Card monster)
+        {
+            var sourceModifier = new ChangeController(Controller);
+
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            monster.AddModifier(sourceModifier, p);
+        }
     }
-  }
 }

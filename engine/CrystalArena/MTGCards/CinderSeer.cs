@@ -1,39 +1,48 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class CinderSeer : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class CinderSeer : CardTemplateSource
     {
-      yield return Card
-        .Named("Cinder Seer")
-        .ManaCost("{3}{R}")
-        .Type("Forward Human Wizard")
-        .Text(
-          "{2}{R},{T}: Reveal any number of fire cards in your hand. Cinder Seer deals X damage to target forward or player, where X is the number of cards revealed this way.")
-        .Power(1)
-        .Toughness(1)
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{2}{R},{T}: Reveal any number of fire cards in your hand. Cinder Seer deals X damage to target forward or player, where X is the number of cards revealed this way.";
-            p.Cost = new AggregateCost(
-              new PayMana("{2}{R}".Parse()),
-              new Tap());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Cinder Seer")
+                .ManaCost("{3}{R}")
+                .Type("Forward Human Wizard")
+                .Text(
+                    "{2}{R},{T}: Reveal any number of fire cards in your hand. Cinder Seer deals X damage to target forward or player, where X is the number of cards revealed this way."
+                )
+                .Power(1)
+                .Toughness(1)
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{2}{R},{T}: Reveal any number of fire cards in your hand. Cinder Seer deals X damage to target forward or player, where X is the number of cards revealed this way.";
+                    p.Cost = new AggregateCost(new PayMana("{2}{R}".Parse()), new Tap());
 
-            p.Effect = () => new DealDamageToTargetForEachRevealedCard(c => c.HasColor(CardColor.Fire));
-            p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
-            
-            p.TimingRule(new WhenYourHandCountIs(minCount: 1, selector: c => c.HasColor(CardColor.Fire)));
-            p.TargetingRule(new EffectDealDamage(tp => tp.Controller.Hand.Count(c => c.HasColor(CardColor.Fire))));
-            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
-          });
+                    p.Effect = () =>
+                        new DealDamageToTargetForEachRevealedCard(c => c.HasColor(CardColor.Fire));
+                    p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
+
+                    p.TimingRule(
+                        new WhenYourHandCountIs(
+                            minCount: 1,
+                            selector: c => c.HasColor(CardColor.Fire)
+                        )
+                    );
+                    p.TargetingRule(
+                        new EffectDealDamage(tp =>
+                            tp.Controller.Hand.Count(c => c.HasColor(CardColor.Fire))
+                        )
+                    );
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+                });
+        }
     }
-  }
 }

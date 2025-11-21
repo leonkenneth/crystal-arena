@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class EachPlayerDiscardsHandAndDrawsThatManyCardsMinusOne : Effect
-  {
-    protected override void ResolveEffect()
+    public class EachPlayerDiscardsHandAndDrawsThatManyCardsMinusOne : Effect
     {
-      var count = Players.Active.Hand.Count;
+        protected override void ResolveEffect()
+        {
+            var count = Players.Active.Hand.Count;
 
-      Players.Active.DiscardHand();
-      Players.Active.DrawCards(count - 1);
+            Players.Active.DiscardHand();
+            Players.Active.DrawCards(count - 1);
 
-      count = Players.Passive.Hand.Count;
+            count = Players.Passive.Hand.Count;
 
-      Players.Passive.DiscardHand();
-      Players.Passive.DrawCards(count - 1);
+            Players.Passive.DiscardHand();
+            Players.Passive.DrawCards(count - 1);
+        }
     }
-  }
 }

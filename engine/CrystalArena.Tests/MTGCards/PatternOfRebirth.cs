@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PatternOfRebirth
-  {
-    public class Ai : AiScenario
+    public class PatternOfRebirth
     {
-      [Fact (Skip = "Old card")]
-      public void SearchForDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        
-        Battlefield(P1, C("Grizzly Bears").IsEnchantedWith("Pattern of Rebirth"));        
-        MainDeck(P1, dragon);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SearchForDragon()
+            {
+                var dragon = C("Shivan Dragon");
 
-        Hand(P2, "Shock");
-        Battlefield(P2, "Mountain");
-        P2.Life = 2;
+                Battlefield(P1, C("Grizzly Bears").IsEnchantedWith("Pattern of Rebirth"));
+                MainDeck(P1, dragon);
 
-        RunGame(1);
+                Hand(P2, "Shock");
+                Battlefield(P2, "Mountain");
+                P2.Life = 2;
 
-        Equal(Zone.Battlefield, C(dragon).Zone);
-      }
+                RunGame(1);
+
+                Equal(Zone.Battlefield, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

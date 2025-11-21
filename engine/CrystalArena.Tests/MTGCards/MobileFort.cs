@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MobileFort
-  {
-    public class Ai : AiScenario
+    public class MobileFort
     {
-      [Fact (Skip = "Old card")]
-      public void Attack()
-      {
-        var fort = C("Mobile Fort");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Attack()
+            {
+                var fort = C("Mobile Fort");
 
-        Battlefield(P1, fort, "Swamp", "Swamp", "Swamp");
-        RunGame(2);
+                Battlefield(P1, fort, "Swamp", "Swamp", "Swamp");
+                RunGame(2);
 
-        Equal(17, P2.Life);
-        True(C(fort).Has().Defender);
-      }
+                Equal(17, P2.Life);
+                True(C(fort).Has().Defender);
+            }
+        }
     }
-  }
 }

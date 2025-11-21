@@ -1,47 +1,53 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI;
-  using Decisions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI;
+    using Decisions;
 
-  public class ModalEffect : Effect
-  {
-    private readonly List<Action<AbilityParameters>> _effectAbilityParameterFactories;
-    private readonly int _minCount;
-    private readonly DynParam<int> _maxCount;
-
-    private ModalEffect() {}
-    
-    public ModalEffect(DynParam<int> maxCount, params Action<AbilityParameters>[] effectAbilityParameterFactories)
+    public class ModalEffect : Effect
     {
-      _effectAbilityParameterFactories = effectAbilityParameterFactories.ToList();
-      _minCount = 0;
-      _maxCount = maxCount;
-      
-      RegisterDynamicParameters(maxCount);
-    }
+        private readonly List<Action<AbilityParameters>> _effectAbilityParameterFactories;
+        private readonly int _minCount;
+        private readonly DynParam<int> _maxCount;
 
-    public List<Action<AbilityParameters>> ChildEffectFactories => _effectAbilityParameterFactories;
+        private ModalEffect() { }
 
-    public List<ModalEffectParameters> ChildEffects
-    {
-      get
-      {
-        return ChildEffectFactories.Select(factory =>
+        public ModalEffect(
+            DynParam<int> maxCount,
+            params Action<AbilityParameters>[] effectAbilityParameterFactories
+        )
         {
-          var parameters = new ModalEffectParameters();
-          factory(parameters);
-          return parameters;
-        }).ToList();
-      }
-    }
+            _effectAbilityParameterFactories = effectAbilityParameterFactories.ToList();
+            _minCount = 0;
+            _maxCount = maxCount;
 
-    protected override void ResolveEffect()
-    {
-      // A modal effect cannot be resolved directly, only one or more of its child effect can
-      throw new NotImplementedException();
+            RegisterDynamicParameters(maxCount);
+        }
+
+        public List<Action<AbilityParameters>> ChildEffectFactories =>
+            _effectAbilityParameterFactories;
+
+        public List<ModalEffectParameters> ChildEffects
+        {
+            get
+            {
+                return ChildEffectFactories
+                    .Select(factory =>
+                    {
+                        var parameters = new ModalEffectParameters();
+                        factory(parameters);
+                        return parameters;
+                    })
+                    .ToList();
+            }
+        }
+
+        protected override void ResolveEffect()
+        {
+            // A modal effect cannot be resolved directly, only one or more of its child effect can
+            throw new NotImplementedException();
+        }
     }
-  }
 }

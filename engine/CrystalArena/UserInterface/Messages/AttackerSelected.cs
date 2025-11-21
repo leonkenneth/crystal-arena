@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena.UserInterface.Messages
 {
-  public class AttackerSelected
-  {
-    public Card Attacker { get; set; }
-  }
+    public class AttackerSelected
+    {
+        public Card Attacker { get; set; }
+    }
 }

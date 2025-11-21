@@ -1,30 +1,32 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.Triggers;
+    using System.Collections.Generic;
+    using CrystalArena.Effects;
+    using CrystalArena.Triggers;
 
-  public class Umbilicus : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Umbilicus : CardTemplateSource
     {
-      yield return Card
-        .Named("Umbilicus")
-        .ManaCost("{4}")
-        .Type("Artifact")
-        .Text("At the beginning of each player's upkeep, that player returns a permanent he or she controls to its owner's hand unless he or she pays 2 life.")
-        .FlavorText("It was the explorers' only tether to reality.")
-        .TriggeredAbility(p =>
-          {
-            p.Text = "At the beginning of each player's upkeep, that player returns a permanent he or she controls to its owner's hand unless he or she pays 2 life.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Umbilicus")
+                .ManaCost("{4}")
+                .Type("Artifact")
+                .Text(
+                    "At the beginning of each player's upkeep, that player returns a permanent he or she controls to its owner's hand unless he or she pays 2 life."
+                )
+                .FlavorText("It was the explorers' only tether to reality.")
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "At the beginning of each player's upkeep, that player returns a permanent he or she controls to its owner's hand unless he or she pays 2 life.";
 
-            p.Trigger(new OnStepStart(Step.Upkeep, activeTurn: true, passiveTurn: true));
-            
-            p.Effect = () => new ActivePlayerPaysLifeOrReturnSelectedPermanentToHand(
-              life: 2);
+                    p.Trigger(new OnStepStart(Step.Upkeep, activeTurn: true, passiveTurn: true));
 
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.Effect = () =>
+                        new ActivePlayerPaysLifeOrReturnSelectedPermanentToHand(life: 2);
+
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

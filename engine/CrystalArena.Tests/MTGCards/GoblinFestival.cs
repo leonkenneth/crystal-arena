@@ -1,22 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GoblinFestival
-  {
-    public class Ai : AiScenario
+    public class GoblinFestival
     {
-      [Fact (Skip = "Old card")]
-      public void KillOpponent()
-      {
-        Battlefield(P1, "Goblin Festival", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
-        P2.Life = 3;
-        
-        RunGame(2);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillOpponent()
+            {
+                Battlefield(
+                    P1,
+                    "Goblin Festival",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
+                P2.Life = 3;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(2);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

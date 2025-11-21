@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BringLow
-  {
-    public class Ai : AiScenario
+    public class BringLow
     {
-      [Fact (Skip = "Old card")]
-      public void KillBear()
-      {
-        Hand(P1, "Bring Low");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
-        Battlefield(P2, C("Grizzly Bears").AddCounters(3, CounterType.PowerToughness));
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillBear()
+            {
+                Hand(P1, "Bring Low");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
+                Battlefield(P2, C("Grizzly Bears").AddCounters(3, CounterType.PowerToughness));
 
-        RunGame(2);
+                RunGame(2);
 
-        Assert.Single(P2.BreakZone);
-      }
+                Assert.Single(P2.BreakZone);
+            }
+        }
     }
-  }
 }

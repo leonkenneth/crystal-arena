@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class ChangeLifeOfEnchantedPermanentsController : Effect
-  {
-    private readonly DynParam<int> _amount;
-    private Player _player;
-
-    private ChangeLifeOfEnchantedPermanentsController() {}
-
-    public ChangeLifeOfEnchantedPermanentsController(DynParam<int> amount)
+    public class ChangeLifeOfEnchantedPermanentsController : Effect
     {
-      _amount = amount;
+        private readonly DynParam<int> _amount;
+        private Player _player;
 
-      RegisterDynamicParameters(amount);
-    }
+        private ChangeLifeOfEnchantedPermanentsController() { }
 
-    protected override void Initialize()
-    {
-      _player = Source.OwningCard.AttachedTo.Controller;
-    }
+        public ChangeLifeOfEnchantedPermanentsController(DynParam<int> amount)
+        {
+            _amount = amount;
 
-    protected override void ResolveEffect()
-    {
-      _player.Life += _amount.Value;
+            RegisterDynamicParameters(amount);
+        }
+
+        protected override void Initialize()
+        {
+            _player = Source.OwningCard.AttachedTo.Controller;
+        }
+
+        protected override void ResolveEffect()
+        {
+            _player.Life += _amount.Value;
+        }
     }
-  }
 }

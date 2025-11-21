@@ -1,14 +1,17 @@
 ﻿namespace CrystalArena.Events
 {
-  public class AttachmentAttachedEvent
-  {
-    public readonly Card Attachment;
-
-    public AttachmentAttachedEvent(Card attachment)
+    public class AttachmentAttachedEvent
     {
-      Attachment = attachment;
-    }
+        public readonly Card Attachment;
 
-    public Card AttachedTo { get { return Attachment.AttachedTo; } }
-  }
+        public AttachmentAttachedEvent(Card attachment)
+        {
+            Attachment = attachment;
+        }
+
+        public Card AttachedTo
+        {
+            get { return Attachment.AttachedTo; }
+        }
+    }
 }

@@ -1,37 +1,47 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SiegeDragon
-  {
-    public class Ai : AiScenario
+    public class SiegeDragon
     {
-      [Fact (Skip = "Old card")]
-      public void CastSiegeDragon()
-      {
-        var wallOfFire = C("Wall of Fire");
-        
-        Hand(P1, "Siege Dragon");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");        
-        Battlefield(P2, wallOfFire);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastSiegeDragon()
+            {
+                var wallOfFire = C("Wall of Fire");
 
-        RunGame(1);
+                Hand(P1, "Siege Dragon");
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
+                Battlefield(P2, wallOfFire);
 
-        Equal(Zone.BreakZone, C(wallOfFire).Zone);        
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void AttackWithSiegeDragon()
-      {
-        Battlefield(P1, "Siege Dragon");        
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+                Equal(Zone.BreakZone, C(wallOfFire).Zone);
+            }
 
-        RunGame(1);
+            [Fact(Skip = "Old card")]
+            public void AttackWithSiegeDragon()
+            {
+                Battlefield(P1, "Siege Dragon");
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        Equal(15, P2.Life);
-        Equal(2, P2.BreakZone.Count);
-      }
+                RunGame(1);
+
+                Equal(15, P2.Life);
+                Equal(2, P2.BreakZone.Count);
+            }
+        }
     }
-  }
 }

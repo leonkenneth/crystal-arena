@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CripplingBlight
-  {
-    public class Predefined : AiScenario
+    public class CripplingBlight
     {
-      [Fact (Skip = "Old card")]
-      public void CannotBlock()
-      {
-        Hand(P1, "Crippling Blight");
-        Battlefield(P1, "Grizzly Bears", "Swamp");
+        public class Predefined : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CannotBlock()
+            {
+                Hand(P1, "Crippling Blight");
+                Battlefield(P1, "Grizzly Bears", "Swamp");
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears");
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

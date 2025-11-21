@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using CrystalArena.Costs;
+    using CrystalArena.Costs;
 
-  public class AddCostModifier : Modifier, IGameModifier
-  {
-    private readonly CostModifier _costModifier;
-    private CostModifiers _costModifiers;
-
-    private AddCostModifier() {}
-
-    public AddCostModifier(CostModifier costModifier)
+    public class AddCostModifier : Modifier, IGameModifier
     {
-      _costModifier = costModifier;
-    }
+        private readonly CostModifier _costModifier;
+        private CostModifiers _costModifiers;
 
-    public override void Apply(CostModifiers costModifiers)
-    {
-      _costModifiers = costModifiers;
-      _costModifier.Initialize(SourceCard, Game);
-      _costModifiers.Add(_costModifier);
-    }
+        private AddCostModifier() { }
 
-    protected override void Unapply()
-    {
-      _costModifiers.Remove(_costModifier);
+        public AddCostModifier(CostModifier costModifier)
+        {
+            _costModifier = costModifier;
+        }
+
+        public override void Apply(CostModifiers costModifiers)
+        {
+            _costModifiers = costModifiers;
+            _costModifier.Initialize(SourceCard, Game);
+            _costModifiers.Add(_costModifier);
+        }
+
+        protected override void Unapply()
+        {
+            _costModifiers.Remove(_costModifier);
+        }
     }
-  }
 }

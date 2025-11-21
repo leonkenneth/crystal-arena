@@ -1,39 +1,40 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectPreventDamageFromSourceToController : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectPreventDamageFromSourceToController : TargetingRule
     {
-      var targetPicks = new List<ITarget>();
-
-      if (!Stack.IsEmpty && p.Candidates<ITarget>().Contains(Stack.TopSpell))
-      {
-        var damageToPlayer = Stack.GetDamageTopSpellWillDealToPlayer(p.Controller);
-
-        if (damageToPlayer > 0)
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
         {
-          targetPicks.Add(Stack.TopSpell);
+            var targetPicks = new List<ITarget>();
+
+            if (!Stack.IsEmpty && p.Candidates<ITarget>().Contains(Stack.TopSpell))
+            {
+                var damageToPlayer = Stack.GetDamageTopSpellWillDealToPlayer(p.Controller);
+
+                if (damageToPlayer > 0)
+                {
+                    targetPicks.Add(Stack.TopSpell);
+                }
+            }
+
+            if (Turn.Step == Step.DeclareBlocker && Stack.IsEmpty)
+            {
+                if (!p.Controller.IsActive)
+                {
+                    var attacker = Combat.FindAttackerWhichWillDealGreatestDamageToDefendingPlayer(
+                        card => p.Candidates<ITarget>().Contains(card)
+                    );
+
+                    if (attacker != null)
+                    {
+                        targetPicks.Add(attacker);
+                    }
+                }
+            }
+
+            return Group(targetPicks, 1);
         }
-      }
-
-      if (Turn.Step == Step.DeclareBlocker && Stack.IsEmpty)
-      {
-        if (!p.Controller.IsActive)
-        {
-          var attacker = Combat.FindAttackerWhichWillDealGreatestDamageToDefendingPlayer(
-            card => p.Candidates<ITarget>().Contains(card));
-
-          if (attacker != null)
-          {
-            targetPicks.Add(attacker);
-          }
-        }
-      }
-
-      return Group(targetPicks, 1);
     }
-  }
 }

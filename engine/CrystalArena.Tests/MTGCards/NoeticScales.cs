@@ -1,33 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class NoeticScales
-  {
-    public class Ai : AiScenario
+    public class NoeticScales
     {
-      [Fact (Skip = "Old card")]
-      public void ReturnForwards()
-      {
-        var force = C("Verdant Force");
-        var dragon = C("Shivan Dragon");
-        var bear1 = C("Grizzly Bears");
-        var bear2 = C("Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ReturnForwards()
+            {
+                var force = C("Verdant Force");
+                var dragon = C("Shivan Dragon");
+                var bear1 = C("Grizzly Bears");
+                var bear2 = C("Grizzly Bears");
 
-        Battlefield(P1, force, "Noetic Scales", bear1);
-        Battlefield(P2, dragon, bear2);
+                Battlefield(P1, force, "Noetic Scales", bear1);
+                Battlefield(P2, dragon, bear2);
 
-        Hand(P1, "Swamp", "Swamp", "Swamp");
-        Hand(P2, "Swamp", "Swamp", "Swamp");
+                Hand(P1, "Swamp", "Swamp", "Swamp");
+                Hand(P2, "Swamp", "Swamp", "Swamp");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(Zone.Hand, C(force).Zone);
-        Equal(Zone.Hand, C(dragon).Zone);
-        Equal(Zone.Battlefield, C(bear1).Zone);
-        Equal(Zone.Battlefield, C(bear2).Zone);
-      }
+                Equal(Zone.Hand, C(force).Zone);
+                Equal(Zone.Hand, C(dragon).Zone);
+                Equal(Zone.Battlefield, C(bear1).Zone);
+                Equal(Zone.Battlefield, C(bear2).Zone);
+            }
+        }
     }
-  }
 }

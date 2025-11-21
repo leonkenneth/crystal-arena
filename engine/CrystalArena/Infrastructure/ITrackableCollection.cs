@@ -1,11 +1,11 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public interface ITrackableCollection<T> : IEnumerable<T>
-  {
-    void AddWithoutTracking(T item);
-    bool RemoveWithoutTracking(T item);
-    void InsertWithoutTracking(T item, int index);
-  }
+    public interface ITrackableCollection<T> : IEnumerable<T>
+    {
+        void AddWithoutTracking(T item);
+        bool RemoveWithoutTracking(T item);
+        void InsertWithoutTracking(T item, int index);
+    }
 }

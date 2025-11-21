@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class StabWound
-  {
-    public class Ai : AiScenario
+    public class StabWound
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantedForwardControllerLooses2Life()
-      {
-        Hand(P1, "Stab Wound");
-        Battlefield(P1, "Swamp", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantedForwardControllerLooses2Life()
+            {
+                Hand(P1, "Stab Wound");
+                Battlefield(P1, "Swamp", "Mountain", "Mountain");
 
-        var wall = C("Wall of Fire");
-        Battlefield(P2, wall);
+                var wall = C("Wall of Fire");
+                Battlefield(P2, wall);
 
-        RunGame(2);
-        
-        Equal(18, P2.Life);
-        Equal(3, C(wall).Toughness);
-      }
+                RunGame(2);
+
+                Equal(18, P2.Life);
+                Equal(3, C(wall).Toughness);
+            }
+        }
     }
-  }
 }

@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena
 {
-  public static class Zones {}
+    public static class Zones { }
 }

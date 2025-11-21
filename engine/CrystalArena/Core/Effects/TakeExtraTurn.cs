@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class TakeExtraTurn : Effect
-  {
-    protected override void ResolveEffect()
+    public class TakeExtraTurn : Effect
     {
-      Players.ScheduleExtraTurns(Controller, 1);
+        protected override void ResolveEffect()
+        {
+            Players.ScheduleExtraTurns(Controller, 1);
+        }
     }
-  }
 }

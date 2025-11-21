@@ -12,28 +12,28 @@ public class Opus23_001C_Garland : CardTemplateSource
     /*
     Rarity	Common
     Set	Opus XXIII (Hidden Trials)
-    Element	
+    Element
     Fire
     Type	Backup
     Cost	2
-    Power	
+    Power
     Job	Knight
-    Categories	
+    Categories
     PICTLOGICA
     I
     EX Burst	no
     Multiplayable	no
     Limit Break	no
-    Abilities	
+    Abilities
     When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.
     */
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("23-001C")
+        yield return Card.Code("23-001C")
             .Named("Garland")
             .Text(
-                "When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.")
+                "When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn."
+            )
             .Cost(2, "R")
             .Backup()
             .Job("Knight")
@@ -45,9 +45,12 @@ public class Opus23_001C_Garland : CardTemplateSource
                     "When Garland enters the field, choose 1 Forward opponent controls. You gain control of it until the end of the turn.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
                 p.Effect = () =>
-                    new Attach(() => new ChangeController(m => m.SourceCard.Controller) { UntilEot = true })
-                        .SetTags(EffectTag.ChangeController);
-                p.TargetSelector.AddEffect(trg => trg.Is.Forward(ControlledBy.Opponent).On.Battlefield());
+                    new Attach(() =>
+                        new ChangeController(m => m.SourceCard.Controller) { UntilEot = true }
+                    ).SetTags(EffectTag.ChangeController);
+                p.TargetSelector.AddEffect(trg =>
+                    trg.Is.Forward(ControlledBy.Opponent).On.Battlefield()
+                );
                 p.TargetingRule(new EffectGainControl());
             });
     }

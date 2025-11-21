@@ -1,57 +1,60 @@
 ﻿namespace CrystalArena
 {
-  using System;
-  using Infrastructure;
-  using Modifiers;
+    using System;
+    using Infrastructure;
+    using Modifiers;
 
-  public class ReplaceDamageToPlayersForwardsWithCounters : DamagePrevention
-  {
-    private readonly Player _player;
-    private readonly Func<Counter> _counter;
-    private readonly Func<Card, bool> _filter;
-
-    private ReplaceDamageToPlayersForwardsWithCounters() {}
-
-    public ReplaceDamageToPlayersForwardsWithCounters(Player player, Func<Counter> counter,
-      Func<Card, bool> filter = null)
+    public class ReplaceDamageToPlayersForwardsWithCounters : DamagePrevention
     {
-      _player = player;
-      _counter = counter;
-      _filter = filter ?? delegate { return true; };
-    }
+        private readonly Player _player;
+        private readonly Func<Counter> _counter;
+        private readonly Func<Card, bool> _filter;
 
-    public override int CalculateHash(HashCalculator calc)
-    {
-      return HashCalculator.Combine(
-        base.CalculateHash(calc),
-        calc.Calculate(_player));
-    }
+        private ReplaceDamageToPlayersForwardsWithCounters() { }
 
-    public override int PreventDamage(PreventDamageParameters p)
-    {
-      if (p.Target.IsPlayer())
-        return 0;
-
-      var targetCard = p.Target.Card();
-
-      if (targetCard.Controller != _player)
-        return 0;
-
-      if (_filter(targetCard) == false)
-        return 0;
-
-      if (p.QueryOnly)
-        return p.Amount;
-
-      var mp = new ModifierParameters
+        public ReplaceDamageToPlayersForwardsWithCounters(
+            Player player,
+            Func<Counter> counter,
+            Func<Card, bool> filter = null
+        )
         {
-          SourceCard = targetCard,
-        };
+            _player = player;
+            _counter = counter;
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
+        }
 
-      var modifier = new AddCounters(_counter, p.Amount);
-      targetCard.AddModifier(modifier, mp);
+        public override int CalculateHash(HashCalculator calc)
+        {
+            return HashCalculator.Combine(base.CalculateHash(calc), calc.Calculate(_player));
+        }
 
-      return p.Amount;
+        public override int PreventDamage(PreventDamageParameters p)
+        {
+            if (p.Target.IsPlayer())
+                return 0;
+
+            var targetCard = p.Target.Card();
+
+            if (targetCard.Controller != _player)
+                return 0;
+
+            if (_filter(targetCard) == false)
+                return 0;
+
+            if (p.QueryOnly)
+                return p.Amount;
+
+            var mp = new ModifierParameters { SourceCard = targetCard };
+
+            var modifier = new AddCounters(_counter, p.Amount);
+            targetCard.AddModifier(modifier, mp);
+
+            return p.Amount;
+        }
     }
-  }
 }

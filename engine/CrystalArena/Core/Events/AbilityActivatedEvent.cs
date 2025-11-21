@@ -1,37 +1,43 @@
 ﻿namespace CrystalArena.Events
 {
-  using System;
-  using System.Text;
+    using System;
+    using System.Text;
 
-  public class AbilityActivatedEvent : ICardActivationEvent
-  {
-    public ActivatedAbility Ability { get; private set; }
-    public Targets Targets { get; private set; }
-
-    public AbilityActivatedEvent(ActivatedAbility ability, Targets targets)
+    public class AbilityActivatedEvent : ICardActivationEvent
     {
-      Ability = ability;
-      Targets = targets;
-    }
+        public ActivatedAbility Ability { get; private set; }
+        public Targets Targets { get; private set; }
 
-    public bool HasTargets { get { return Targets.Count > 0; } }
-    public Player Controller { get { return Ability.SourceCard.Controller; } }
+        public AbilityActivatedEvent(ActivatedAbility ability, Targets targets)
+        {
+            Ability = ability;
+            Targets = targets;
+        }
 
-    public string GetTitle()
-    {
-      return String.Format("{0} activates...", Controller);
-    }
+        public bool HasTargets
+        {
+            get { return Targets.Count > 0; }
+        }
+        public Player Controller
+        {
+            get { return Ability.SourceCard.Controller; }
+        }
 
-    public override string ToString()
-    {
-      var sb = new StringBuilder();
-      sb.AppendFormat("{0} activated {1}", Ability.OwningCard.Controller, Ability);
-      if (HasTargets)
-      {
-        sb.AppendFormat(" with targets: {0}", string.Join(",", Targets));
-      }
-      sb.Append(".");
-      return sb.ToString();
+        public string GetTitle()
+        {
+            return String.Format("{0} activates...", Controller);
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendFormat("{0} activated {1}", Ability.OwningCard.Controller, Ability);
+            if (HasTargets)
+            {
+                sb.AppendFormat(" with targets: {0}", string.Join(",", Targets));
+            }
+            sb.Append(".");
+            return sb.ToString();
+        }
     }
-  }
 }

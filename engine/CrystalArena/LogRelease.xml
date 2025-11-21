@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
+
 <log4net>
   <appender name="Error" type="log4net.Appender.RollingFileAppender">
     <file value="media\logs\error.txt" />
@@ -35,7 +36,7 @@
     </layout>
   </appender>
 
-  <root>    
+  <root>
     <appender-ref ref="Error" />
     <appender-ref ref="Info" />
   </root>

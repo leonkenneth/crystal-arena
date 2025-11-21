@@ -1,138 +1,193 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.SelectDeck.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface" Background="#000">
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.SelectDeck.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface"
+  Background="#000"
+>
+  <UserControl.Resources>
+    <Style Selector="Grid">
+      <Setter Property="Opacity" Value="0.0" />
+    </Style>
 
-	<UserControl.Resources>
-		<Style Selector="Grid">
-			<Setter Property="Opacity" Value="0.0" />
-		
-		</Style>
+    <Style Selector="{x:Type ScrollBar}" />
+  </UserControl.Resources>
 
-		<Style  Selector="{x:Type ScrollBar}" />
-	</UserControl.Resources>
+  <Grid Background="{StaticResource StartScreenBackground}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
 
-	<Grid Background="{StaticResource StartScreenBackground}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+    <Border Grid.Row="0" Background="#11ffffff" BorderBrush="#33ffffff" BorderThickness="0,0,0,1">
+      <StackPanel Margin="30" Orientation="Horizontal">
+        <Image
+          VerticalAlignment="Center"
+          Height="50"
+          Source="{CrystalArena:Media 'icon.png'}"
+        ></Image>
+        <TextBlock
+          VerticalAlignment="Center"
+          Text="{Binding Title}"
+          Foreground="#fff"
+          FontSize="40"
+          Margin="30,0,0,0"
+        />
+      </StackPanel>
+    </Border>
 
-		<Border Grid.Row="0" Background="#11ffffff" BorderBrush="#33ffffff" BorderThickness="0,0,0,1">
-			<StackPanel Margin="30" Orientation="Horizontal">
-				<Image VerticalAlignment="Center" Height="50" Source="{CrystalArena:Media 'icon.png'}"></Image>
-				<TextBlock VerticalAlignment="Center" Text="{Binding Title}" Foreground="#fff" FontSize="40" Margin="30,0,0,0" />
-			</StackPanel>
-		</Border>
+    <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,30,0,30">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
 
-		<Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,30,0,30">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
-			</Grid.ColumnDefinitions>
+      <Border
+        Grid.Column="0"
+        BorderBrush="#33ffffff"
+        Background="#11ffffff"
+        CornerRadius="2"
+        BorderThickness="1"
+        Width="400"
+      >
+        <Border.Resources>
+          <Style Selector="{x:Type ListBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                  <ScrollViewer Margin="0" Focusable="false" VerticalScrollBarVisibility="Auto">
+                    <StackPanel IsItemsHost="True" />
+                  </ScrollViewer>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
 
+          <Style Selector="{x:Type ListBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+          </Style>
+        </Border.Resources>
 
-			<Border Grid.Column="0" BorderBrush="#33ffffff" Background="#11ffffff" CornerRadius="2" BorderThickness="1" Width="400">
-				<Border.Resources>
-					<Style Selector="{x:Type ListBox}">
-						<Setter Property="SnapsToDevicePixels" Value="true" />
-						<Setter Property="OverridesDefaultStyle" Value="true" />
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type ListBox}">
-									<ScrollViewer Margin="0" Focusable="false" VerticalScrollBarVisibility="Auto">
-										<StackPanel IsItemsHost="True" />
-									</ScrollViewer>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
+        <ListBox ItemsSource="{Binding Path=Decks}" SelectedItem="{Binding Selected}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid Margin="15,5,10,5">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="*" />
+                  <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-					<Style Selector="{x:Type ListBoxItem}">
-						<Setter Property="SnapsToDevicePixels" Value="true" />
-						<Setter Property="OverridesDefaultStyle" Value="true" />
-						
-					</Style>
+                <TextBlock Text="{Binding Name}" Foreground="#fff" FontSize="15" />
 
+                <ItemsControl
+                  Grid.Column="1"
+                  ItemsSource="{Binding Colors,  Converter={x:Static CrystalArena:Converters.ManaCostToManaSymbolImages}}"
+                >
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Image Source="{Binding Path=.}" Margin="5,0,0,0" Height="15" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-				</Border.Resources>
+                <TextBlock
+                  Grid.Row="1"
+                  Text="{Binding CardCount, StringFormat={}{0} cards}"
+                  Foreground="#aaa"
+                  FontSize="15"
+                />
 
+                <ItemsControl
+                  Grid.Column="1"
+                  Grid.Row="1"
+                  ItemsSource="{Binding Path=Rating, Converter={x:Static CrystalArena:Converters.Rating}}"
+                >
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Image Margin="5,0,0,0" Source="{Binding Path=.}" Height="15" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Border>
 
-				<ListBox ItemsSource="{Binding Path=Decks}" SelectedItem="{Binding Selected}">
-					<ListBox.ItemTemplate>
-						<DataTemplate>
-							<Grid Margin="15,5,10,5">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="*" />
-									<RowDefinition Height="*" />
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*" />
-									<ColumnDefinition Width="Auto" />
-								</Grid.ColumnDefinitions>
+      <Border
+        Grid.Column="1"
+        Margin="20,0,20,0"
+        BorderBrush="#22ffffff"
+        CornerRadius="2"
+        BorderThickness="1"
+        Width="400"
+      >
+        <ContentControl x:Name="Selected" />
+      </Border>
 
-								<TextBlock Text="{Binding Name}" Foreground="#fff" FontSize="15" />
+      <StackPanel Grid.Column="2" Width="350">
+        <Border
+          BorderBrush="#444"
+          Background="#000"
+          BorderThickness="1"
+          CornerRadius="8"
+          VerticalAlignment="Top"
+          IsVisible="{Binding SelectedCard, Converter={x:Static CrystalArena:Converters.NullToCollapsed}}"
+        >
+          <ContentControl Margin="12" Content="{Binding SelectedCard}" />
+        </Border>
+      </StackPanel>
+    </Grid>
 
-								<ItemsControl Grid.Column="1" ItemsSource="{Binding Colors,  Converter={x:Static CrystalArena:Converters.ManaCostToManaSymbolImages}}">
-									<ItemsControl.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
-										</ItemsPanelTemplate>
-									</ItemsControl.ItemsPanel>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Image Source="{Binding Path=.}" Margin="5,0,0,0" Height="15" />
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
-
-
-								<TextBlock Grid.Row="1" Text="{Binding CardCount, StringFormat={}{0} cards}" Foreground="#aaa" FontSize="15" />
-
-								<ItemsControl Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Rating, Converter={x:Static CrystalArena:Converters.Rating}}">
-									<ItemsControl.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
-										</ItemsPanelTemplate>
-									</ItemsControl.ItemsPanel>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Image Margin="5,0,0,0" Source="{Binding Path=.}" Height="15" />
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
-							</Grid>
-
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-
-				</ListBox>
-			</Border>
-
-
-			<Border Grid.Column="1" Margin="20,0,20,0" BorderBrush="#22ffffff" CornerRadius="2" BorderThickness="1" Width="400">
-				<ContentControl x:Name="Selected" />
-			</Border>
-
-			<StackPanel Grid.Column="2" Width="350">
-				<Border BorderBrush="#444" Background="#000" BorderThickness="1" CornerRadius="8" VerticalAlignment="Top" IsVisible="{Binding SelectedCard, Converter={x:Static CrystalArena:Converters.NullToCollapsed}}">
-					<ContentControl Margin="12" Content="{Binding SelectedCard}"  />
-				</Border>				
-			</StackPanel>
-
-		</Grid>
-
-
-		<Border Margin="0,0,0,0" Grid.Row="2" Background="#1affffff" BorderBrush="#33ffffff" BorderThickness="0,1,0,0">
-			<Grid Margin="25">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-				<Button x:Name="Back" Foreground="#fff" Grid.Column="0" FontSize="20">Back</Button>
-				<Button x:Name="Forward" Foreground="#fff" Grid.Column="2" FontSize="20" IsVisible="{Binding CanStart, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" Content="{Binding NextCaption}" />
-				<TextBlock Text="Game is starting, please wait..." FontSize="20" Grid.Column="2" Foreground="#fff" IsVisible="{Binding IsStarting, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}" />
-			</Grid>
-		</Border>
-	</Grid>
+    <Border
+      Margin="0,0,0,0"
+      Grid.Row="2"
+      Background="#1affffff"
+      BorderBrush="#33ffffff"
+      BorderThickness="0,1,0,0"
+    >
+      <Grid Margin="25">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Button x:Name="Back" Foreground="#fff" Grid.Column="0" FontSize="20">Back</Button>
+        <Button
+          x:Name="Forward"
+          Foreground="#fff"
+          Grid.Column="2"
+          FontSize="20"
+          IsVisible="{Binding CanStart, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}"
+          Content="{Binding NextCaption}"
+        />
+        <TextBlock
+          Text="Game is starting, please wait..."
+          FontSize="20"
+          Grid.Column="2"
+          Foreground="#fff"
+          IsVisible="{Binding IsStarting, Converter={x:Static CrystalArena:Converters.BooleanToVisibility}}"
+        />
+      </Grid>
+    </Border>
+  </Grid>
 </UserControl>

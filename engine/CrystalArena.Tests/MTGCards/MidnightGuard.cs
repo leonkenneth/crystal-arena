@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MidnightGuard
-  {
-    public class Ai : AiScenario
+    public class MidnightGuard
     {
-      [Fact (Skip = "Old card")]
-      public void AttackWithGuardThenUntap()
-      {
-        var guard = C("Midnight Guard");
-        
-        Hand(P1, "Llanowar Elves");
-        Battlefield(P1, guard, "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackWithGuardThenUntap()
+            {
+                var guard = C("Midnight Guard");
 
-        RunGame(1);
+                Hand(P1, "Llanowar Elves");
+                Battlefield(P1, guard, "Forest");
 
-        Equal(18, P2.Life);
-        False(C(guard).IsTapped);
-      }
+                RunGame(1);
+
+                Equal(18, P2.Life);
+                False(C(guard).IsTapped);
+            }
+        }
     }
-  }
 }

@@ -1,32 +1,33 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class SkitteringSkirge : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SkitteringSkirge : CardTemplateSource
     {
-      yield return Card
-        .Named("Skittering Skirge")
-        .ManaCost("{B}{B}")
-        .Type("Forward Imp")
-        .Text("{Flying}{EOL}When you cast a forward spell, sacrifice Skittering Skirge.")
-        .FlavorText(
-          "The imps' warbling cries echo through Phyrexia's towers like those of mourning doves in a cathedral.")
-        .Power(3)
-        .Toughness(2)
-        .SimpleAbilities(Static.Flying)
-        .TriggeredAbility(p =>
-          {
-            p.Text = "When you cast a forward spell, sacrifice Skittering Skirge.";
-            p.Trigger(new OnCastedSpell((c, ctx) =>
-              ctx.You == c.Controller && c.Is().Forward));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Skittering Skirge")
+                .ManaCost("{B}{B}")
+                .Type("Forward Imp")
+                .Text("{Flying}{EOL}When you cast a forward spell, sacrifice Skittering Skirge.")
+                .FlavorText(
+                    "The imps' warbling cries echo through Phyrexia's towers like those of mourning doves in a cathedral."
+                )
+                .Power(3)
+                .Toughness(2)
+                .SimpleAbilities(Static.Flying)
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "When you cast a forward spell, sacrifice Skittering Skirge.";
+                    p.Trigger(
+                        new OnCastedSpell((c, ctx) => ctx.You == c.Controller && c.Is().Forward)
+                    );
 
-            p.Effect = () => new SacrificeOwner();
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.Effect = () => new SacrificeOwner();
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

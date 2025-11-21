@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena
 {
-  public class IsValidZoneParameters
-  {
-    public readonly Zone Zone;
-    public readonly Player ZoneOwner;    
-    public readonly Player Controller;
-    
-    public IsValidZoneParameters(Zone zone, Player zoneOwner, Player controller)
+    public class IsValidZoneParameters
     {
-      Zone = zone;
-      ZoneOwner = zoneOwner;      
-      Controller = controller;
+        public readonly Zone Zone;
+        public readonly Player ZoneOwner;
+        public readonly Player Controller;
+
+        public IsValidZoneParameters(Zone zone, Player zoneOwner, Player controller)
+        {
+            Zone = zone;
+            ZoneOwner = zoneOwner;
+            Controller = controller;
+        }
     }
-  }
 }

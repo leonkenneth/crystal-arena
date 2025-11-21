@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Negate
-  {
-    public class Ai : AiScenario
+    public class Negate
     {
-      [Fact (Skip = "Old card")]
-      public void CounterMeteorite()
-      {
-        var meteorite = C("Meteorite");
-        
-        Hand(P1, meteorite);
-        Hand(P2, "Negate");
-        
-        Battlefield(P1, "Island", "Island", "Island", "Island", "Island", "Island");
-        Battlefield(P2, "Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CounterMeteorite()
+            {
+                var meteorite = C("Meteorite");
 
-        P1.Life = 2;
-        
-        RunGame(1);
-        Equal(2, P1.Life);
-        Equal(Zone.BreakZone, C(meteorite).Zone);
-      }
+                Hand(P1, meteorite);
+                Hand(P2, "Negate");
+
+                Battlefield(P1, "Island", "Island", "Island", "Island", "Island", "Island");
+                Battlefield(P2, "Island", "Island");
+
+                P1.Life = 2;
+
+                RunGame(1);
+                Equal(2, P1.Life);
+                Equal(Zone.BreakZone, C(meteorite).Zone);
+            }
+        }
     }
-  }
 }

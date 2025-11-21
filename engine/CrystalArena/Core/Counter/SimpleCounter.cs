@@ -1,18 +1,21 @@
 ﻿namespace CrystalArena
 {
-  public class SimpleCounter : Counter
-  {
-    private readonly CounterType _type;
-
-    private SimpleCounter() {}
-
-    public SimpleCounter(CounterType type)
+    public class SimpleCounter : Counter
     {
-      _type = type;
+        private readonly CounterType _type;
+
+        private SimpleCounter() { }
+
+        public SimpleCounter(CounterType type)
+        {
+            _type = type;
+        }
+
+        public override CounterType Type
+        {
+            get { return _type; }
+        }
+
+        public override void Remove() { }
     }
-
-    public override CounterType Type { get { return _type; } }
-
-    public override void Remove() {}
-  }
 }

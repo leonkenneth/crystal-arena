@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class FesteringWound
-  {
-    public class Ai : AiScenario
+    public class FesteringWound
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantWall()
-      {
-        var wall = C("Wall of Blossoms");
-        
-        Hand(P1, "Festering Wound");
-        Battlefield(P1, "Swamp", "Swamp");        
-        Battlefield(P2, wall, "Llanowar Elves");
-        P2.Life = 1;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantWall()
+            {
+                var wall = C("Wall of Blossoms");
 
-        RunGame(4);
+                Hand(P1, "Festering Wound");
+                Battlefield(P1, "Swamp", "Swamp");
+                Battlefield(P2, wall, "Llanowar Elves");
+                P2.Life = 1;
 
-        Equal(0, P2.Life);
-        True(C(wall).HasAttachments);
-      }
+                RunGame(4);
+
+                Equal(0, P2.Life);
+                True(C(wall).HasAttachments);
+            }
+        }
     }
-  }
 }

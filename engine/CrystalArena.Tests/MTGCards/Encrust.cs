@@ -1,29 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Encrust
-  {
-    public class Ai : AiScenario
+    public class Encrust
     {
-      [Fact (Skip = "Old card")]
-      public void TapAndDisableActivatedAbilities()
-      {
-        var dragon = C("Shivan Hellkite");
-        
-        Hand(P1, "Encrust");
-        Battlefield(P1, "Island", "Island", "Island");        
-        Battlefield(P2, dragon, "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void TapAndDisableActivatedAbilities()
+            {
+                var dragon = C("Shivan Hellkite");
 
-        P2.Life = 1;
-        
-        RunGame(2);
+                Hand(P1, "Encrust");
+                Battlefield(P1, "Island", "Island", "Island");
+                Battlefield(P2, dragon, "Mountain", "Mountain");
 
-        Equal(1, P2.Life);
-        True(C(dragon).IsTapped);
-        
-      }
+                P2.Life = 1;
+
+                RunGame(2);
+
+                Equal(1, P2.Life);
+                True(C(dragon).IsTapped);
+            }
+        }
     }
-  }
 }

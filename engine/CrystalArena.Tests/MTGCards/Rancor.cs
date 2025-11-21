@@ -1,30 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class Rancor
-  {
-    public class Predefined : PredefinedScenario
+    public class Rancor
     {
-      [Fact (Skip = "Old card")]
-      public void ReturnToOwnerHand()
-      {
-        var bear = C("Grizzly Bears");
-        var rancor = C("Rancor");
-        var shock = C("Shock");
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ReturnToOwnerHand()
+            {
+                var bear = C("Grizzly Bears");
+                var rancor = C("Rancor");
+                var shock = C("Shock");
 
-        Battlefield(P2, bear);
-        Hand(P1, rancor, shock);
+                Battlefield(P2, bear);
+                Hand(P1, rancor, shock);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(rancor, target: bear),
-          At(Step.SecondMain)
-            .Cast(shock, target: bear)
-            .Verify(() => True(P1.Hand.Any(x => x == C(rancor)))));
-      }
+                Exec(
+                    At(Step.FirstMain).Cast(rancor, target: bear),
+                    At(Step.SecondMain)
+                        .Cast(shock, target: bear)
+                        .Verify(() => True(P1.Hand.Any(x => x == C(rancor))))
+                );
+            }
+        }
     }
-  }
 }

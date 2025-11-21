@@ -1,35 +1,35 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Infrastructure;
 
-  public abstract class IntegerModifier : PropertyModifier<int?>
-  {
-    private readonly Trackable<int?> _value;
-
-    protected IntegerModifier()
+    public abstract class IntegerModifier : PropertyModifier<int?>
     {
-      _value = new Trackable<int?>();
-    }
+        private readonly Trackable<int?> _value;
 
-    protected IntegerModifier(int? value)
-    {
-      _value = new Trackable<int?>(value);
-    }
+        protected IntegerModifier()
+        {
+            _value = new Trackable<int?>();
+        }
 
-    public int? Value
-    {
-      get { return _value.Value; }
-      set
-      {
-        _value.Value = value;
-        NotifyModifierHasChanged();
-      }
-    }
+        protected IntegerModifier(int? value)
+        {
+            _value = new Trackable<int?>(value);
+        }
 
-    public override void Initialize(INotifyChangeTracker changeTracker)
-    {
-      base.Initialize(changeTracker);
-      _value.Initialize(changeTracker);
+        public int? Value
+        {
+            get { return _value.Value; }
+            set
+            {
+                _value.Value = value;
+                NotifyModifierHasChanged();
+            }
+        }
+
+        public override void Initialize(INotifyChangeTracker changeTracker)
+        {
+            base.Initialize(changeTracker);
+            _value.Initialize(changeTracker);
+        }
     }
-  }
 }

@@ -1,36 +1,39 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class ElvishPiper : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ElvishPiper : CardTemplateSource
     {
-      yield return Card
-        .Named("Elvish Piper")
-        .ManaCost("{3}{G}")
-        .Type("Forward Elf")
-        .Text("{G},{T}: You may put a forward card from your hand onto the battlefield.")
-        .FlavorText(
-          "From Gaea grew the world, and the world was silent. From Gaea grew the world's elves, and the world was silent no more.")
-        .Power(1)
-        .Toughness(1)
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{G},{T}: You may put a forward card from your hand onto the battlefield.";
-            p.Cost = new AggregateCost(
-              new PayMana(Mana.Wind),
-              new Tap());
-            p.Effect = () => new PutSelectedCardsToBattlefield(
-              text: "Select a forward in your hand.",
-              fromZone: Zone.Hand,
-              validator: card => card.Is().Forward);
-            p.TimingRule(new Any(new AfterOpponentDeclaresAttackers(), new OnFirstMain()));
-            p.TimingRule(new WhenYourHandCountIs(minCount: 1, selector: c => c.Is().Forward));
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Elvish Piper")
+                .ManaCost("{3}{G}")
+                .Type("Forward Elf")
+                .Text("{G},{T}: You may put a forward card from your hand onto the battlefield.")
+                .FlavorText(
+                    "From Gaea grew the world, and the world was silent. From Gaea grew the world's elves, and the world was silent no more."
+                )
+                .Power(1)
+                .Toughness(1)
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{G},{T}: You may put a forward card from your hand onto the battlefield.";
+                    p.Cost = new AggregateCost(new PayMana(Mana.Wind), new Tap());
+                    p.Effect = () =>
+                        new PutSelectedCardsToBattlefield(
+                            text: "Select a forward in your hand.",
+                            fromZone: Zone.Hand,
+                            validator: card => card.Is().Forward
+                        );
+                    p.TimingRule(new Any(new AfterOpponentDeclaresAttackers(), new OnFirstMain()));
+                    p.TimingRule(
+                        new WhenYourHandCountIs(minCount: 1, selector: c => c.Is().Forward)
+                    );
+                });
+        }
     }
-  }
 }

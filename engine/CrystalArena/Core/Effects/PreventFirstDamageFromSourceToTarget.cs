@@ -1,31 +1,38 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class PreventFirstDamageFromSourceToTarget : Effect
-  {
-    private ITarget DamageSource { get { return Targets.Effect[0]; } }
-    private ITarget DamageTarget { get { return Targets.Effect[1]; } }
-
-    protected override void ResolveEffect()
+    public class PreventFirstDamageFromSourceToTarget : Effect
     {
-      var source = DamageSource.IsEffect()
-        ? DamageSource.Effect().Source.OwningCard
-        : DamageSource.Card();
-
-      var mp = new ModifierParameters
+        private ITarget DamageSource
         {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this,
-          X = X
-        };
+            get { return Targets.Effect[0]; }
+        }
+        private ITarget DamageTarget
+        {
+            get { return Targets.Effect[1]; }
+        }
 
-      var prevention = new PreventFirstDamageFromSourceToForwardOrPlayer(
-        source: source,
-        forwardOrPlayer: DamageTarget);
+        protected override void ResolveEffect()
+        {
+            var source = DamageSource.IsEffect()
+                ? DamageSource.Effect().Source.OwningCard
+                : DamageSource.Card();
 
-      var modifier = new AddDamagePrevention(prevention) {UntilEot = true};
-      Game.AddModifier(modifier, mp);
+            var mp = new ModifierParameters
+            {
+                SourceCard = Source.OwningCard,
+                SourceEffect = this,
+                X = X,
+            };
+
+            var prevention = new PreventFirstDamageFromSourceToForwardOrPlayer(
+                source: source,
+                forwardOrPlayer: DamageTarget
+            );
+
+            var modifier = new AddDamagePrevention(prevention) { UntilEot = true };
+            Game.AddModifier(modifier, mp);
+        }
     }
-  }
 }

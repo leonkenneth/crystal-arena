@@ -1,21 +1,23 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class Anaconda : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Anaconda : CardTemplateSource
     {
-      yield return Card
-        .Named("Anaconda")
-        .ManaCost("{3}{G}")
-        .Type("Forward Snake")
-        .Text("{Swampwalk} (This forward is unblockable as long as defending player controls a Swamp.)")
-        .FlavorText(
-          "If you're smaller than the anaconda, it considers you food. If you're larger than the anaconda, it considers you a lot of food.")
-        .Power(3)
-        .Toughness(3)
-        .SimpleAbilities(Static.Swampwalk);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Anaconda")
+                .ManaCost("{3}{G}")
+                .Type("Forward Snake")
+                .Text(
+                    "{Swampwalk} (This forward is unblockable as long as defending player controls a Swamp.)"
+                )
+                .FlavorText(
+                    "If you're smaller than the anaconda, it considers you food. If you're larger than the anaconda, it considers you a lot of food."
+                )
+                .Power(3)
+                .Toughness(3)
+                .SimpleAbilities(Static.Swampwalk);
+        }
     }
-  }
 }

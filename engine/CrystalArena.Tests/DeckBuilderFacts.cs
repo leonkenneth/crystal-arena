@@ -1,43 +1,42 @@
 ﻿namespace CrystalArena.Tests
 {
-  using System;
-  using AI;
-  using Infrastructure;
-  using Media;
+    using System;
+    using AI;
+    using Infrastructure;
+    using Media;
 
-  public class DeckBuilderFacts : Scenario
-  {
-    //[Fact]
-
-    public DeckBuilderFacts()
+    public class DeckBuilderFacts : Scenario
     {
-      MediaMainDeck.LoadSets();
-    }
+        //[Fact]
 
-    public void BuildDecks()
-    {
-      for (var i = 0; i < 1; i++)
-      {
-        var set = MediaMainDeck.GetSet("Urza's Saga");
-        var pileOfCards = set.GenerateMixedPack(boosterCount: 3, tournamentCount: 1);
-
-        Console.WriteLine("Card list:");
-        Console.WriteLine("--------------------------------");
-        foreach (var card in pileOfCards)
+        public DeckBuilderFacts()
         {
-          Console.WriteLine(card);
+            MediaMainDeck.LoadSets();
         }
 
-        Console.WriteLine();
+        public void BuildDecks()
+        {
+            for (var i = 0; i < 1; i++)
+            {
+                var set = MediaMainDeck.GetSet("Urza's Saga");
+                var pileOfCards = set.GenerateMixedPack(boosterCount: 3, tournamentCount: 1);
 
-        var bestDeck = DeckBuilder.BuildDeck(pileOfCards, set.Ratings);
+                Console.WriteLine("Card list:");
+                Console.WriteLine("--------------------------------");
+                foreach (var card in pileOfCards)
+                {
+                    Console.WriteLine(card);
+                }
 
-        Console.WriteLine("Best deck:");
-        Console.WriteLine("--------------------------------");
+                Console.WriteLine();
 
+                var bestDeck = DeckBuilder.BuildDeck(pileOfCards, set.Ratings);
 
-        Console.WriteLine(bestDeck);
-      }
+                Console.WriteLine("Best deck:");
+                Console.WriteLine("--------------------------------");
+
+                Console.WriteLine(bestDeck);
+            }
+        }
     }
-  }
 }

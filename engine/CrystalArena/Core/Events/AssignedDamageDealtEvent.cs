@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class AssignedDamageDealtEvent
-  {
-    public readonly Step Step;
-
-    public AssignedDamageDealtEvent(Step step)
+    public class AssignedDamageDealtEvent
     {
-      Step = step;
+        public readonly Step Step;
+
+        public AssignedDamageDealtEvent(Step step)
+        {
+            Step = step;
+        }
     }
-  }
 }

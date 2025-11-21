@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Parch
-  {
-    public class Ai : AiScenario
+    public class Parch
     {
-      [Fact (Skip = "Old card")]
-      public void Deal4DamageToBlueForward()
-      {
-        var serpent = C("Sandbar Serpent");
-        
-        Hand(P1, "Parch");
-        Battlefield(P1, "Mountain", "Mountain");
-        
-        Battlefield(P2, "Grizzly Bears", serpent);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal4DamageToBlueForward()
+            {
+                var serpent = C("Sandbar Serpent");
 
-        RunGame(1);
+                Hand(P1, "Parch");
+                Battlefield(P1, "Mountain", "Mountain");
 
-        Equal(Zone.BreakZone, C(serpent).Zone);
-      }
+                Battlefield(P2, "Grizzly Bears", serpent);
+
+                RunGame(1);
+
+                Equal(Zone.BreakZone, C(serpent).Zone);
+            }
+        }
     }
-  }
 }

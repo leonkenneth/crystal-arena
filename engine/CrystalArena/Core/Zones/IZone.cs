@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena
 {
-  public interface IZone
-  {
-    Zone Name { get; }
+    public interface IZone
+    {
+        Zone Name { get; }
 
-    void Remove(Card card);    
-  }
+        void Remove(Card card);
+    }
 }

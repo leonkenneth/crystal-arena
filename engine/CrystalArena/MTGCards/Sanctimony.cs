@@ -1,29 +1,32 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class Sanctimony : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Sanctimony : CardTemplateSource
     {
-      yield return Card
-        .Named("Sanctimony")
-        .ManaCost("{1}{W}")
-        .Type("Monster")
-        .Text("Whenever an opponent taps a Mountain for mana, you may gain 1 life.")
-        .FlavorText("To forgive our enemies is to forgive ourselves.")
-        .TriggeredAbility(p =>
-          {
-            p.Text = "Whenever an opponent taps a Mountain for mana, you may gain 1 life.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Sanctimony")
+                .ManaCost("{1}{W}")
+                .Type("Monster")
+                .Text("Whenever an opponent taps a Mountain for mana, you may gain 1 life.")
+                .FlavorText("To forgive our enemies is to forgive ourselves.")
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "Whenever an opponent taps a Mountain for mana, you may gain 1 life.";
 
-            p.Trigger(new OnPermanentGetsTapped((a, c) =>
-              c.Is("mountain") && c.Controller == a.OwningCard.Controller.Opponent));
+                    p.Trigger(
+                        new OnPermanentGetsTapped(
+                            (a, c) =>
+                                c.Is("mountain") && c.Controller == a.OwningCard.Controller.Opponent
+                        )
+                    );
 
-            p.Effect = () => new ChangeLife(amount: 1, whos: P(e => e.Controller));
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.Effect = () => new ChangeLife(amount: 1, whos: P(e => e.Controller));
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

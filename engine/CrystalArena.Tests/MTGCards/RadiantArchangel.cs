@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class RadiantArchangel
-  {
-    public class Ai : AiScenario
+    public class RadiantArchangel
     {
-      [Fact (Skip = "Old card")]
-      public void RadiantIs66()
-      {
-        var radiant = C("Radiant, Archangel");
-        
-        Hand(P1, "Spire Owl");        
-        Battlefield(P1, radiant, "Island", "Plains", "Spire Owl");
-        Battlefield(P2, "Wall of Denial");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void RadiantIs66()
+            {
+                var radiant = C("Radiant, Archangel");
 
-        RunGame(1);
+                Hand(P1, "Spire Owl");
+                Battlefield(P1, radiant, "Island", "Plains", "Spire Owl");
+                Battlefield(P2, "Wall of Denial");
 
-        Equal(6, C(radiant).Power);
-      }
+                RunGame(1);
+
+                Equal(6, C(radiant).Power);
+            }
+        }
     }
-  }
 }

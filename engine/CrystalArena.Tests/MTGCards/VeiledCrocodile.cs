@@ -1,37 +1,36 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class VeiledCrocodile
-  {
-    public class Ai : AiScenario
+    public class VeiledCrocodile
     {
-      [Fact (Skip = "Old card")]
-      public void PlayBearAttackWithCrocodile()
-      {
-        Hand(P1, "Grizzly Bears");
-        Battlefield(P1, "Veiled Crocodile", "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PlayBearAttackWithCrocodile()
+            {
+                Hand(P1, "Grizzly Bears");
+                Battlefield(P1, "Veiled Crocodile", "Forest", "Forest");
 
-        P2.Life = 4;
+                P2.Life = 4;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void CrocodileLastCardInHand()
-      {
-        var crocodile = C("Veiled Crocodile");
-        Hand(P1, crocodile);
-        Battlefield(P1, "Island", "Island", "Island");
+            [Fact(Skip = "Old card")]
+            public void CrocodileLastCardInHand()
+            {
+                var crocodile = C("Veiled Crocodile");
+                Hand(P1, crocodile);
+                Battlefield(P1, "Island", "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(4, C(crocodile).Power);
-      }
+                Equal(4, C(crocodile).Power);
+            }
+        }
     }
-        
-  }
 }

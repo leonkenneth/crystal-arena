@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class HeirOfTheWilds
-  {
-    public class Ai : AiScenario
+    public class HeirOfTheWilds
     {
-      [Fact (Skip = "Old card")]
-      public void HeirGains11OnAttack()
-      {
-        Battlefield(P1, "Heir of the Wilds", "Juggernaut");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void HeirGains11OnAttack()
+            {
+                Battlefield(P1, "Heir of the Wilds", "Juggernaut");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(12, P2.Life);
-      }
+                Equal(12, P2.Life);
+            }
+        }
     }
-  }
 }

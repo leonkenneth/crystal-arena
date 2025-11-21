@@ -1,46 +1,50 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.RepetitionRules;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI;
+    using AI.RepetitionRules;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class KirdChieftain : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class KirdChieftain : CardTemplateSource
     {
-      yield return Card
-        .Named("Kird Chieftain")
-        .ManaCost("{3}{R}")
-        .Type("Forward — Ape")
-        .Text("Kird Chieftain gets +1/+1 as long as you control a Forest.{EOL}{4}{G}: Target forward gets +2/+2 and gains trample until end of turn. {I}(If it would assign enough damage to its blockers to destroy them, you may have it assign the rest of its damage to defending player or planeswalker.){/I}")
-        .Power(3)
-        .Toughness(3)
-        .StaticAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Modifier(() => new AddPowerAndToughness(1, 1));
-          p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("forest"));
-        })
-        .ActivatedAbility(p =>
-        {
-          p.Text = "{4}{G}: Target forward gets +2/+2 and gains trample until end of turn.";
+            yield return Card.Named("Kird Chieftain")
+                .ManaCost("{3}{R}")
+                .Type("Forward — Ape")
+                .Text(
+                    "Kird Chieftain gets +1/+1 as long as you control a Forest.{EOL}{4}{G}: Target forward gets +2/+2 and gains trample until end of turn. {I}(If it would assign enough damage to its blockers to destroy them, you may have it assign the rest of its damage to defending player or planeswalker.){/I}"
+                )
+                .Power(3)
+                .Toughness(3)
+                .StaticAbility(p =>
+                {
+                    p.Modifier(() => new AddPowerAndToughness(1, 1));
+                    p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("forest"));
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{4}{G}: Target forward gets +2/+2 and gains trample until end of turn.";
 
-          p.Cost = new PayMana("{4}{G}".Parse(), supportsRepetitions: true);
+                    p.Cost = new PayMana("{4}{G}".Parse(), supportsRepetitions: true);
 
-          p.Effect = () => new ApplyModifiersToTargets(
-            () => new AddPowerAndToughness(2, 2){UntilEot = true},
-            () => new AddSimpleAbility(Static.Trample){UntilEot = true}).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
+                    p.Effect = () =>
+                        new ApplyModifiersToTargets(
+                            () => new AddPowerAndToughness(2, 2) { UntilEot = true },
+                            () => new AddSimpleAbility(Static.Trample) { UntilEot = true }
+                        ).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
 
-          p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
 
-          p.TimingRule(new PumpTargetCardTimingRule());
-          p.TargetingRule(new EffectPumpSummon(4, 4));
-          p.RepetitionRule(new RepeatMaxTimes());
-        });
+                    p.TimingRule(new PumpTargetCardTimingRule());
+                    p.TargetingRule(new EffectPumpSummon(4, 4));
+                    p.RepetitionRule(new RepeatMaxTimes());
+                });
+        }
     }
-  }
 }

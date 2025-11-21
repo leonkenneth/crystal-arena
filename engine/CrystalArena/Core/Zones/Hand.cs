@@ -1,17 +1,24 @@
 ﻿namespace CrystalArena
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class Hand : UnorderedZone, IHandQuery
-  {
-    public Hand(Player owner) : base(owner) {}
-
-    private Hand()
+    public class Hand : UnorderedZone, IHandQuery
     {
-      /* for state copy */
-    }
+        public Hand(Player owner)
+            : base(owner) { }
 
-    public int Score { get { return this.Sum(x => x.Score); } }
-    public override Zone Name { get { return Zone.Hand; } }    
-  }
+        private Hand()
+        {
+            /* for state copy */
+        }
+
+        public int Score
+        {
+            get { return this.Sum(x => x.Score); }
+        }
+        public override Zone Name
+        {
+            get { return Zone.Hand; }
+        }
+    }
 }

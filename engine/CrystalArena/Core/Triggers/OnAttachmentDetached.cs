@@ -1,14 +1,14 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class OnAttachmentDetached : Trigger, IReceive<AttachmentDetachedEvent>
-  {
-    public void Receive(AttachmentDetachedEvent message)
+    public class OnAttachmentDetached : Trigger, IReceive<AttachmentDetachedEvent>
     {
-      if (message.AttachedTo == Ability.SourceCard)
-        Set(message);
+        public void Receive(AttachmentDetachedEvent message)
+        {
+            if (message.AttachedTo == Ability.SourceCard)
+                Set(message);
+        }
     }
-  }
 }

@@ -1,31 +1,34 @@
 ﻿namespace CrystalArena.Effects
 {
-  using CrystalArena.AI;
-  using Modifiers;
+    using CrystalArena.AI;
+    using Modifiers;
 
-  public class Add11ForEachCounter : Effect
-  {
-    private int _countersCount;
-
-    protected override void Initialize()
+    public class Add11ForEachCounter : Effect
     {
-      _countersCount = Source.OwningCard.Counters;
-      SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
-    }
+        private int _countersCount;
 
-    protected override void ResolveEffect()
-    {
-      var p = new ModifierParameters
+        protected override void Initialize()
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
+            _countersCount = Source.OwningCard.Counters;
+            SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
+        }
 
-      var modifier = new AddPowerAndToughness(_countersCount, _countersCount) {UntilEot = true};
+        protected override void ResolveEffect()
+        {
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
 
-      var targetForward = (Card) Target;
-      targetForward.AddModifier(modifier, p);
+            var modifier = new AddPowerAndToughness(_countersCount, _countersCount)
+            {
+                UntilEot = true,
+            };
+
+            var targetForward = (Card)Target;
+            targetForward.AddModifier(modifier, p);
+        }
     }
-  }
 }

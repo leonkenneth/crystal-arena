@@ -1,28 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class VerdantForce
-  {
-    public class Predefined : PredefinedScenario
+    public class VerdantForce
     {
-      [Fact (Skip = "Old card")]
-      public void CreateASaprolingTokenEveryUpkeep()
-      {
-        var force = C("Verdant Force");
-        Battlefield(P1, force);
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CreateASaprolingTokenEveryUpkeep()
+            {
+                var force = C("Verdant Force");
+                Battlefield(P1, force);
 
-        Exec(
-          At(Step.FirstMain)
-            .Verify(() =>
-              Equal(1, P1.Battlefield.Count(x => x.Is().Token))),
-          At(Step.FirstMain, turn: 2)
-            .Verify(() =>
-              Equal(2, P1.Battlefield.Count(x => x.Is().Token)))
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Verify(() => Equal(1, P1.Battlefield.Count(x => x.Is().Token))),
+                    At(Step.FirstMain, turn: 2)
+                        .Verify(() => Equal(2, P1.Battlefield.Count(x => x.Is().Token)))
+                );
+            }
+        }
     }
-  }
 }

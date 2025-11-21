@@ -1,78 +1,76 @@
-﻿using Caliburn.Micro;
-using CrystalArena.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using CrystalArena.Infrastructure;
 
 namespace CrystalArena.UserInterface.RemoveFromPlay
 {
-  public class ViewModel : ViewModelBase, IDisposable
-  {
-    private readonly BindableCollection<SelectableCard.ViewModel> _cards =
-      new BindableCollection<SelectableCard.ViewModel>();
-
-    private readonly Player _owner;
-    
-    public override object ToJson()
+    public class ViewModel : ViewModelBase, IDisposable
     {
-      return new
-      {
-        Type = "RemoveFromPlay",
-        Cards = _cards.Select(x => x.ToJson())
-      };
+        private readonly BindableCollection<SelectableCard.ViewModel> _cards =
+            new BindableCollection<SelectableCard.ViewModel>();
+
+        private readonly Player _owner;
+
+        public override object ToJson()
+        {
+            return new { Type = "RemoveFromPlay", Cards = _cards.Select(x => x.ToJson()) };
+        }
+
+        public ViewModel(Player owner)
+        {
+            _owner = owner;
+        }
+
+        public IEnumerable<SelectableCard.ViewModel> Cards
+        {
+            get { return _cards; }
+        }
+
+        public override void Initialize()
+        {
+            foreach (var card in _owner.RemovedFromPlay)
+            {
+                AddCard(card);
+            }
+
+            _owner.RemovedFromPlay.CardAdded += OnCardAdded;
+            _owner.RemovedFromPlay.CardRemoved += OnCardRemoved;
+        }
+
+        private void OnCardRemoved(object sender, ZoneChangedEventArgs e)
+        {
+            var viewModel = _cards.Single(x => x.Card == e.Card);
+
+            _cards.Remove(viewModel);
+            viewModel.Close();
+            ViewModels.SelectableCard.Destroy(viewModel);
+        }
+
+        private void OnCardAdded(object sender, ZoneChangedEventArgs e)
+        {
+            AddCard(e.Card);
+        }
+
+        private void AddCard(Card card)
+        {
+            _cards.Add(ViewModels.SelectableCard.Create(card));
+        }
+
+        public interface IFactory
+        {
+            ViewModel Create(Player owner);
+        }
+
+        public void Dispose()
+        {
+            foreach (var viewModel in _cards)
+            {
+                viewModel.Dispose();
+            }
+        }
     }
-
-    public ViewModel(Player owner)
-    {
-      _owner = owner;
-    }
-
-    public IEnumerable<SelectableCard.ViewModel> Cards { get { return _cards; } }
-
-    public override void Initialize()
-    {
-      foreach (var card in _owner.RemovedFromPlay)
-      {
-        AddCard(card);
-      }
-
-      _owner.RemovedFromPlay.CardAdded += OnCardAdded;
-      _owner.RemovedFromPlay.CardRemoved += OnCardRemoved;
-    }
-
-    private void OnCardRemoved(object sender, ZoneChangedEventArgs e)
-    {
-      var viewModel = _cards.Single(x => x.Card == e.Card);
-
-      _cards.Remove(viewModel);
-      viewModel.Close();
-      ViewModels.SelectableCard.Destroy(viewModel);
-    }
-
-    private void OnCardAdded(object sender, ZoneChangedEventArgs e)
-    {
-      AddCard(e.Card);
-    }
-
-    private void AddCard(Card card)
-    {
-      _cards.Add(ViewModels.SelectableCard.Create(card));
-    }
-
-    public interface IFactory
-    {
-      ViewModel Create(Player owner);
-    }
-
-
-    public void Dispose()
-    {
-      foreach (var viewModel in _cards)
-      {
-        viewModel.Dispose();
-      }
-    }
-  }
 }

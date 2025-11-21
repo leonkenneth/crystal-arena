@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ScrapyardMongrel
-  {
-    public class Ai : AiScenario
+    public class ScrapyardMongrel
     {
-      [Fact (Skip = "Old card")]
-      public void MongrelGets20AndTrample()
-      {
-        var mongrel = C("Scrapyard Mongrel");
-        Battlefield(P1, mongrel, "Profane Memento");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void MongrelGets20AndTrample()
+            {
+                var mongrel = C("Scrapyard Mongrel");
+                Battlefield(P1, mongrel, "Profane Memento");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(5, C(mongrel).Power);
-        True(C(mongrel).Has().Trample);
-      }
+                Equal(5, C(mongrel).Power);
+                True(C(mongrel).Has().Trample);
+            }
+        }
     }
-  }
 }

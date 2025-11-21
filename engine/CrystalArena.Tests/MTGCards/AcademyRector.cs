@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class AcademyRector
-  {
-    public class Ai : AiScenario
+    public class AcademyRector
     {
-      [Fact (Skip = "Old card")]
-      public void SearchForRancorAttachToAnaconda()
-      {
-        var anaconda = C("Anaconda");
-        var rancor = C("Rancor");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SearchForRancorAttachToAnaconda()
+            {
+                var anaconda = C("Anaconda");
+                var rancor = C("Rancor");
 
-        Battlefield(P1, "Academy Rector", anaconda);  
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
-        MainDeck(P1, rancor);                
+                Battlefield(P1, "Academy Rector", anaconda);
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+                MainDeck(P1, rancor);
 
-        P2.Life = 1;
+                P2.Life = 1;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-        Equal(C(anaconda), C(rancor).AttachedTo);
-      }
+                Equal(1, P2.Life);
+                Equal(C(anaconda), C(rancor).AttachedTo);
+            }
+        }
     }
-  }
 }

@@ -1,33 +1,33 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  public class IncreaseManaOutput : Modifier, ICardModifier
-  {
-    private readonly ManaAmount _amount;
-    private ActivatedAbilities _abilities;
-
-    private IncreaseManaOutput() {}
-
-    public IncreaseManaOutput(ManaAmount amount)
+    public class IncreaseManaOutput : Modifier, ICardModifier
     {
-      _amount = amount;
-    }
+        private readonly ManaAmount _amount;
+        private ActivatedAbilities _abilities;
 
-    public override void Apply(ActivatedAbilities abilities)
-    {
-      _abilities = abilities;
+        private IncreaseManaOutput() { }
 
-      foreach (var manaAbility in _abilities.GetManaAbilities())
-      {
-        manaAbility.AddAditionalAmountAbilityWillProduce(_amount);
-      }
-    }
+        public IncreaseManaOutput(ManaAmount amount)
+        {
+            _amount = amount;
+        }
 
-    protected override void Unapply()
-    {
-      foreach (var manaAbility in _abilities.GetManaAbilities())
-      {
-        manaAbility.RemoveAdditionalAmountAbilityWillProduce(_amount);
-      }
+        public override void Apply(ActivatedAbilities abilities)
+        {
+            _abilities = abilities;
+
+            foreach (var manaAbility in _abilities.GetManaAbilities())
+            {
+                manaAbility.AddAditionalAmountAbilityWillProduce(_amount);
+            }
+        }
+
+        protected override void Unapply()
+        {
+            foreach (var manaAbility in _abilities.GetManaAbilities())
+            {
+                manaAbility.RemoveAdditionalAmountAbilityWillProduce(_amount);
+            }
+        }
     }
-  }
 }

@@ -1,32 +1,45 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Collections.Generic;
-  using Infrastructure;
-  using Xunit;
+    using System.Collections.Generic;
+    using Infrastructure;
+    using Xunit;
 
-  public class SanctifiedCharge
-  {
-    public class Ai : AiScenario
+    public class SanctifiedCharge
     {
-      [Fact (Skip = "Old card")]
-      public void CastChargeToKill()
-      {
-        var lions = C("Savannah Lions");
-        
-        Hand(P1, "Sanctified Charge");        
-        Battlefield(P1, "Grizzly Bears", lions, "Plains", "Mountain", "Mountain", 
-          "Mountain", "Mountain", "Forest", "Mountain", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastChargeToKill()
+            {
+                var lions = C("Savannah Lions");
 
-        Battlefield(P2, "Skittering Skirge");
+                Hand(P1, "Sanctified Charge");
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    lions,
+                    "Plains",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Forest",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
 
-        P1.Life = 3;
-        P2.Life = 8;
-        
-        RunGame(2);
+                Battlefield(P2, "Skittering Skirge");
 
-        Equal(0, P2.Life);
-        True(C(lions).Has().FirstStrike);
-      }
+                P1.Life = 3;
+                P2.Life = 8;
+
+                RunGame(2);
+
+                Equal(0, P2.Life);
+                True(C(lions).Has().FirstStrike);
+            }
+        }
     }
-  }
 }

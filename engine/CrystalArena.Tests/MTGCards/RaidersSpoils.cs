@@ -1,25 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class RaidersSpoils
-  {
-    public class Ai : AiScenario
+    public class RaidersSpoils
     {
-      [Fact (Skip = "Old card")]
-      public void DrawCardForCombatDamage()
-      {
-        Hand(P1, "Raiders' Spoils");
-        Battlefield(P1, "Swamp","Swamp","Swamp","Swamp", "Grizzly Bears", "Aven Skirmisher");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DrawCardForCombatDamage()
+            {
+                Hand(P1, "Raiders' Spoils");
+                Battlefield(
+                    P1,
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Grizzly Bears",
+                    "Aven Skirmisher"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(15, P2.Life);
-        Equal(19, P1.Life);
-        Equal(1, P1.Hand.Count);
-      }
+                Equal(15, P2.Life);
+                Equal(19, P1.Life);
+                Equal(1, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

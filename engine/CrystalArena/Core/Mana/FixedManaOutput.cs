@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena
 {
-  public class FixedManaOutput : ManaOutput
-  {
-    private readonly ManaAmount _amount;
-
-    private FixedManaOutput() {}
-
-    public FixedManaOutput(ManaAmount amount)
+    public class FixedManaOutput : ManaOutput
     {
-      _amount = amount;
-    }
+        private readonly ManaAmount _amount;
 
-    protected override ManaAmount GetAmountInternal()
-    {
-      return _amount;
+        private FixedManaOutput() { }
+
+        public FixedManaOutput(ManaAmount amount)
+        {
+            _amount = amount;
+        }
+
+        protected override ManaAmount GetAmountInternal()
+        {
+            return _amount;
+        }
     }
-  }
 }

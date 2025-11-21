@@ -1,29 +1,42 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class WallOfLimbs
-  {
-    public class Ai : AiScenario
+    public class WallOfLimbs
     {
-      [Fact (Skip = "Old card")]
-      public void AddCountersToWallSacToKillPlayer()
-      {
-        var wallOfLimbs = C("Wall of Limbs");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AddCountersToWallSacToKillPlayer()
+            {
+                var wallOfLimbs = C("Wall of Limbs");
 
-        Hand(P1, "Radiant's Dragoons");        
-        Battlefield(P1, wallOfLimbs, "Plains", "Plains", "Plains", "Swamp", 
-          "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Plains", "Plains");
-        
-        P2.Life = 1;
-        
-        RunGame(2);
-                        
-        Equal(0, P2.Life);        
-        Equal(Zone.BreakZone, C(wallOfLimbs).Zone);
-      }
+                Hand(P1, "Radiant's Dragoons");
+                Battlefield(
+                    P1,
+                    wallOfLimbs,
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Plains",
+                    "Plains"
+                );
+
+                P2.Life = 1;
+
+                RunGame(2);
+
+                Equal(0, P2.Life);
+                Equal(Zone.BreakZone, C(wallOfLimbs).Zone);
+            }
+        }
     }
-  }
 }

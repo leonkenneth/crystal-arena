@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BaneslayerAngel
-  {
-    public class Ai : AiScenario
+    public class BaneslayerAngel
     {
-      [Fact (Skip = "Old card")]
-      public void DragonCannotBlockAngel()
-      {
-        Battlefield(P1, "Baneslayer Angel");
-        Battlefield(P2, "Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DragonCannotBlockAngel()
+            {
+                Battlefield(P1, "Baneslayer Angel");
+                Battlefield(P2, "Shivan Dragon");
 
-        P2.Life = 5;
+                P2.Life = 5;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
-  using System.Linq;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class SpreadingAlgae
-  {
-    public class Ai : AiScenario
+    public class SpreadingAlgae
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantSwamp()
-      {
-        Hand(P1, "Spreading Algae");
-        Hand(P2, "Nantuko Shade");
-        
-        Battlefield(P1, "Forest");
-        Battlefield(P2, "Swamp", "Swamp");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantSwamp()
+            {
+                Hand(P1, "Spreading Algae");
+                Hand(P2, "Nantuko Shade");
 
-        P1.Life = 3;
-        
-        RunGame(4);
-        
-        Equal(2, P2.BreakZone.Count(x => x.Is("swamp")));
-      }
+                Battlefield(P1, "Forest");
+                Battlefield(P2, "Swamp", "Swamp");
+
+                P1.Life = 3;
+
+                RunGame(4);
+
+                Equal(2, P2.BreakZone.Count(x => x.Is("swamp")));
+            }
+        }
     }
-  }
 }

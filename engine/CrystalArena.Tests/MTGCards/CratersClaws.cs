@@ -1,37 +1,37 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CratersClaws
-  {
-    public class Ai : AiScenario
+    public class CratersClaws
     {
-      [Fact (Skip = "Old card")]
-      public void Ferocious()
-      {
-        Hand(P1, "Crater's Claws");
-        Battlefield(P1, "Mountain", "Mountain", "Leatherback Baloth");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Ferocious()
+            {
+                Hand(P1, "Crater's Claws");
+                Battlefield(P1, "Mountain", "Mountain", "Leatherback Baloth");
 
-        P2.Life = 7;
+                P2.Life = 7;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void NotFerocious()
-      {
-        Hand(P1, "Crater's Claws");
-        Battlefield(P1, "Mountain", "Mountain");
+            [Fact(Skip = "Old card")]
+            public void NotFerocious()
+            {
+                Hand(P1, "Crater's Claws");
+                Battlefield(P1, "Mountain", "Mountain");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-      }
+                Equal(1, P2.Life);
+            }
+        }
     }
-  }
 }

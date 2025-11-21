@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CapashenKnight
-  {
-    public class Ai : AiScenario
+    public class CapashenKnight
     {
-      [Fact (Skip = "Old card")]
-      public void PumpToKillBear()
-      {
-        Battlefield(P1, "Capashen Knight", "Plains", "Plains");
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpToKillBear()
+            {
+                Battlefield(P1, "Capashen Knight", "Plains", "Plains");
+                Battlefield(P2, "Grizzly Bears");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P1.BreakZone.Count);
-        Equal(1, P2.BreakZone.Count);        
-      }
+                Equal(0, P1.BreakZone.Count);
+                Equal(1, P2.BreakZone.Count);
+            }
+        }
     }
-  }
 }

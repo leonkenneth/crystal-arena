@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class OnEndOfOpponentsTurn : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class OnEndOfOpponentsTurn : TimingRule
     {
-      return IsEndOfOpponentsTurn(p.Controller);
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return IsEndOfOpponentsTurn(p.Controller);
+        }
     }
-  }
 }

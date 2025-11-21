@@ -1,20 +1,20 @@
 ﻿namespace CrystalArena.Effects
 {
-  using AI;
+    using AI;
 
-  public class RemoveFromPlayTargets : Effect
-  {
-    public RemoveFromPlayTargets()
+    public class RemoveFromPlayTargets : Effect
     {
-      SetTags(EffectTag.RemoveFromPlay);
-    }
+        public RemoveFromPlayTargets()
+        {
+            SetTags(EffectTag.RemoveFromPlay);
+        }
 
-    protected override void ResolveEffect()
-    {
-      foreach (var target in ValidEffectTargets)
-      {
-        target.Card().RemoveFromPlay(this);
-      }
+        protected override void ResolveEffect()
+        {
+            foreach (var target in ValidEffectTargets)
+            {
+                target.Card().RemoveFromPlay(this);
+            }
+        }
     }
-  }
 }

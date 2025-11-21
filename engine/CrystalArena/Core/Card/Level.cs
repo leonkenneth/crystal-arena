@@ -1,48 +1,48 @@
 ﻿namespace CrystalArena
 {
-  using Events;
-  using Infrastructure;
-  using Modifiers;
-  
-  public class Level : Characteristic<int?>, IAcceptsCardModifier
-  {
-    private readonly CardBase _cardBase;
-    private Card _card;
+    using Events;
+    using Infrastructure;
+    using Modifiers;
 
-    private Level() {}
-
-
-    public Level(CardBase cardBase) : base(cardBase.Value.Level)
+    public class Level : Characteristic<int?>, IAcceptsCardModifier
     {
-      _cardBase = cardBase;
-    }
+        private readonly CardBase _cardBase;
+        private Card _card;
 
-    public void Accept(ICardModifier modifier)
-    {
-      modifier.Apply(this);
-    }
+        private Level() { }
 
-    protected override void AfterMemberCopy()
-    {
-      _cardBase.Changed += OnCardBaseChanged;
-    }
+        public Level(CardBase cardBase)
+            : base(cardBase.Value.Level)
+        {
+            _cardBase = cardBase;
+        }
 
-    public override void Initialize(Game game, IHashDependancy hashDependancy)
-    {
-      base.Initialize(game, hashDependancy);
+        public void Accept(ICardModifier modifier)
+        {
+            modifier.Apply(this);
+        }
 
-      _card = (Card) hashDependancy;
-      _cardBase.Changed += OnCardBaseChanged;
-    }
+        protected override void AfterMemberCopy()
+        {
+            _cardBase.Changed += OnCardBaseChanged;
+        }
 
-    private void OnCardBaseChanged()
-    {
-      ChangeBaseValue(_cardBase.Value.Level);
-    }
+        public override void Initialize(Game game, IHashDependancy hashDependancy)
+        {
+            base.Initialize(game, hashDependancy);
 
-    protected override void OnCharacteristicChanged(int? oldValue, int? newValue)
-    {
-      Publish(new LevelChangedEvent(_card));
+            _card = (Card)hashDependancy;
+            _cardBase.Changed += OnCardBaseChanged;
+        }
+
+        private void OnCardBaseChanged()
+        {
+            ChangeBaseValue(_cardBase.Value.Level);
+        }
+
+        protected override void OnCharacteristicChanged(int? oldValue, int? newValue)
+        {
+            Publish(new LevelChangedEvent(_card));
+        }
     }
-  }
 }

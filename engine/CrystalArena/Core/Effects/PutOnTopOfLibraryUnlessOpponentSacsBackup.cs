@@ -1,46 +1,50 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using CrystalArena.Decisions;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CrystalArena.Decisions;
 
-  public class PutOnTopOfMainDeckUnlessOpponentSacsBackup : Effect,
-    IProcessDecisionResults<ChosenCards>, IChooseDecisionResults<List<Card>, ChosenCards>
-  {
-    public ChosenCards ChooseResult(List<Card> candidates)
+    public class PutOnTopOfMainDeckUnlessOpponentSacsBackup
+        : Effect,
+            IProcessDecisionResults<ChosenCards>,
+            IChooseDecisionResults<List<Card>, ChosenCards>
     {
-      if (Controller.Opponent.Battlefield.Backups.Count() < 4)
-        return new ChosenCards();
-
-      return candidates
-        .OrderBy(x => x.Score)
-        .Take(1)
-        .ToList();
-    }
-
-    public void ProcessResults(ChosenCards results)
-    {
-      if (results.Count == 0)
-        return;
-
-      results[0].Sacrifice();
-
-      Source.OwningCard.PutOnTopOfMainDeckFrom(Zone.Battlefield);
-    }
-
-    protected override void ResolveEffect()
-    {
-      Enqueue(new SelectCards(Controller.Opponent, p =>
+        public ChosenCards ChooseResult(List<Card> candidates)
         {
-          p.SetValidator(c => c.Is().Backup);
-          p.Zone = Zone.Battlefield;
-          p.Text = "Select a backup to sacrifice or press enter.";
-          p.ChooseDecisionResults = this;
-          p.ProcessDecisionResults = this;
-          p.MinCount = 0;
-          p.MaxCount = 1;
-          p.OwningCard = Source.OwningCard;
-        }));
+            if (Controller.Opponent.Battlefield.Backups.Count() < 4)
+                return new ChosenCards();
+
+            return candidates.OrderBy(x => x.Score).Take(1).ToList();
+        }
+
+        public void ProcessResults(ChosenCards results)
+        {
+            if (results.Count == 0)
+                return;
+
+            results[0].Sacrifice();
+
+            Source.OwningCard.PutOnTopOfMainDeckFrom(Zone.Battlefield);
+        }
+
+        protected override void ResolveEffect()
+        {
+            Enqueue(
+                new SelectCards(
+                    Controller.Opponent,
+                    p =>
+                    {
+                        p.SetValidator(c => c.Is().Backup);
+                        p.Zone = Zone.Battlefield;
+                        p.Text = "Select a backup to sacrifice or press enter.";
+                        p.ChooseDecisionResults = this;
+                        p.ProcessDecisionResults = this;
+                        p.MinCount = 0;
+                        p.MaxCount = 1;
+                        p.OwningCard = Source.OwningCard;
+                    }
+                )
+            );
+        }
     }
-  }
 }

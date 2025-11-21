@@ -1,38 +1,42 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.RepetitionRules;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI;
+    using AI.RepetitionRules;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class GoblinFestival : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class GoblinFestival : CardTemplateSource
     {
-      yield return Card
-        .Named("Goblin Festival")
-        .ManaCost("{1}{R}")
-        .Type("Monster")
-        .Text("{2}: Goblin Festival deals 1 damage to target forward or player. Flip a coin. If you lose the flip, choose one of your opponents. That player gains control of Goblin Festival.")
-        .FlavorText("What are we celebratin' again?")
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{2}: Goblin Festival deals 1 damage to target forward or player. Flip a coin. If you lose the flip, choose one of your opponents. That player gains control of Goblin Festival.";
-            p.Cost = new PayMana(2.Colorless(), supportsRepetitions: true);
-            
-            p.Effect = () => new CompoundEffect(
-              new DealDamageToTargets(1), 
-              new FlipACoinOpponentGainsOwningCard());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Goblin Festival")
+                .ManaCost("{1}{R}")
+                .Type("Monster")
+                .Text(
+                    "{2}: Goblin Festival deals 1 damage to target forward or player. Flip a coin. If you lose the flip, choose one of your opponents. That player gains control of Goblin Festival."
+                )
+                .FlavorText("What are we celebratin' again?")
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{2}: Goblin Festival deals 1 damage to target forward or player. Flip a coin. If you lose the flip, choose one of your opponents. That player gains control of Goblin Festival.";
+                    p.Cost = new PayMana(2.Colorless(), supportsRepetitions: true);
 
-            p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
+                    p.Effect = () =>
+                        new CompoundEffect(
+                            new DealDamageToTargets(1),
+                            new FlipACoinOpponentGainsOwningCard()
+                        );
 
-            p.TargetingRule(new EffectDealDamage(p1 => p1.MaxRepetitions));
-            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
-            p.RepetitionRule(new RepeatForEachLifepointTargetHasLeft());
-          });
+                    p.TargetSelector.AddEffect(trg => trg.Is.ForwardOrPlayer().On.Battlefield());
+
+                    p.TargetingRule(new EffectDealDamage(p1 => p1.MaxRepetitions));
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+                    p.RepetitionRule(new RepeatForEachLifepointTargetHasLeft());
+                });
+        }
     }
-  }
 }

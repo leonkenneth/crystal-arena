@@ -1,35 +1,41 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using System;
-  using Events;
-  using Infrastructure;
+    using System;
+    using Events;
+    using Infrastructure;
 
-  public class WhenThisAttacks : Trigger, IReceive<AttackersDeclaredEvent>
-  {
-    private readonly Func<Parameters, bool> _predicate;
-
-    private WhenThisAttacks() {}
-
-    public WhenThisAttacks(Func<Parameters, bool> predicate = null)
+    public class WhenThisAttacks : Trigger, IReceive<AttackersDeclaredEvent>
     {
-      _predicate = predicate ?? delegate { return true; };
-    }
+        private readonly Func<Parameters, bool> _predicate;
 
-    public void Receive(AttackersDeclaredEvent e)
-    {
-      var attacker = Combat.FindAttacker(OwningCard);
+        private WhenThisAttacks() { }
 
-      if (attacker == null)
-        return;      
-      
-      if (_predicate(new Parameters { Attacker = attacker }))
-      {
-        Set();
-      }
-    }
+        public WhenThisAttacks(Func<Parameters, bool> predicate = null)
+        {
+            _predicate =
+                predicate
+                ?? delegate
+                {
+                    return true;
+                };
+        }
 
-    public class Parameters {
-      public Attacker Attacker;
+        public void Receive(AttackersDeclaredEvent e)
+        {
+            var attacker = Combat.FindAttacker(OwningCard);
+
+            if (attacker == null)
+                return;
+
+            if (_predicate(new Parameters { Attacker = attacker }))
+            {
+                Set();
+            }
+        }
+
+        public class Parameters
+        {
+            public Attacker Attacker;
+        }
     }
-  }
 }

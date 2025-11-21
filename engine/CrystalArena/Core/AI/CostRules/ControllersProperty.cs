@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.AI.CostRules
 {
-  using System;
+    using System;
 
-  public class ControllersProperty : CostRule
-  {
-    private readonly Func<Player, int> _selector;
-
-    private ControllersProperty() {}
-    
-    public ControllersProperty(Func<Player, int> selector)
+    public class ControllersProperty : CostRule
     {
-      _selector = selector;
-    }
+        private readonly Func<Player, int> _selector;
 
-    public override int CalculateX(CostRuleParameters p)
-    {
-      var value = _selector(p.Controller);
-      return value > p.MaxX ? p.MaxX : value;
+        private ControllersProperty() { }
+
+        public ControllersProperty(Func<Player, int> selector)
+        {
+            _selector = selector;
+        }
+
+        public override int CalculateX(CostRuleParameters p)
+        {
+            var value = _selector(p.Controller);
+            return value > p.MaxX ? p.MaxX : value;
+        }
     }
-  }
 }

@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class WhenStackIsEmpty : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class WhenStackIsEmpty : TimingRule
     {
-      return Stack.IsEmpty;
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return Stack.IsEmpty;
+        }
     }
-  }
 }

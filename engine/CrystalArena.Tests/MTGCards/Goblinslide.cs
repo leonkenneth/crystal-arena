@@ -1,37 +1,37 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Goblinslide
-  {
-    public class Ai : AiScenario
+    public class Goblinslide
     {
-      [Fact (Skip = "Old card")]
-      public void PutGoblinIntoPlay()
-      {
-        Hand(P1, "Volcanic Hammer");
-        Battlefield(P1, "Goblinslide", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutGoblinIntoPlay()
+            {
+                Hand(P1, "Volcanic Hammer");
+                Battlefield(P1, "Goblinslide", "Mountain", "Mountain", "Mountain");
 
-        P2.Life = 4;
+                P2.Life = 4;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void DontPutGoblinIntoPlay()
-      {
-        Hand(P1, "Volcanic Hammer");
-        Battlefield(P1, "Goblinslide", "Mountain", "Mountain");
+            [Fact(Skip = "Old card")]
+            public void DontPutGoblinIntoPlay()
+            {
+                Hand(P1, "Volcanic Hammer");
+                Battlefield(P1, "Goblinslide", "Mountain", "Mountain");
 
-        P2.Life = 4;
+                P2.Life = 4;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-      }
+                Equal(1, P2.Life);
+            }
+        }
     }
-  }
 }

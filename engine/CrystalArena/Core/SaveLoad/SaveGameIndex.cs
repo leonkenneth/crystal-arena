@@ -1,11 +1,12 @@
 ﻿namespace CrystalArena
 {
-  using System;
-  using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-  [Serializable]
-  public class SaveGameIndex
-  {
-    public readonly Dictionary<string, SaveFileInfo> Entries = new Dictionary<string, SaveFileInfo>();
-  }
+    [Serializable]
+    public class SaveGameIndex
+    {
+        public readonly Dictionary<string, SaveFileInfo> Entries =
+            new Dictionary<string, SaveFileInfo>();
+    }
 }

@@ -1,40 +1,38 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BlooshotCyclops
-  {
-    public class Ai : AiScenario
+    public class BlooshotCyclops
     {
-      [Fact (Skip = "Old card")]
-      public void AttackAndSacrificeToKill()
-      {
-        Battlefield(P1, "Bloodshot Cyclops", "Ravenous Skirge"); 
-        Battlefield(P2, "Wall of Junk");
-        P2.Life = 6;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackAndSacrificeToKill()
+            {
+                Battlefield(P1, "Bloodshot Cyclops", "Ravenous Skirge");
+                Battlefield(P2, "Wall of Junk");
+                P2.Life = 6;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void KillSkirge()
-      {
-        var skirge = C("Ravenous Skirge");
+            [Fact(Skip = "Old card")]
+            public void KillSkirge()
+            {
+                var skirge = C("Ravenous Skirge");
 
-        Battlefield(P1, "Bloodshot Cyclops", "Llanowar Elves");        
-        Battlefield(P2, "Wall of Junk", "Wall of Junk", skirge);
+                Battlefield(P1, "Bloodshot Cyclops", "Llanowar Elves");
+                Battlefield(P2, "Wall of Junk", "Wall of Junk", skirge);
 
-        P1.Life = 3;
-        
-        RunGame(2);
+                P1.Life = 3;
 
-        Equal(Zone.BreakZone, C(skirge).Zone);
+                RunGame(2);
 
-
-      }
+                Equal(Zone.BreakZone, C(skirge).Zone);
+            }
+        }
     }
-  }
 }

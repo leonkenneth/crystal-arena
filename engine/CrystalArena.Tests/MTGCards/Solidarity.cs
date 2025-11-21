@@ -1,26 +1,35 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class Solidarity
-  {
-    public class Ai : AiScenario
+    public class Solidarity
     {
-      [Fact (Skip = "Old card")]
-      public void Block()
-      {
-        Battlefield(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
-        Battlefield(P2, "Giant Cockroach", "Giant Cockroach", "Giant Cockroach", "Plains", "Swamp", "Swamp" ,"Swamp");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Block()
+            {
+                Battlefield(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+                Battlefield(
+                    P2,
+                    "Giant Cockroach",
+                    "Giant Cockroach",
+                    "Giant Cockroach",
+                    "Plains",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp"
+                );
 
-        Hand(P2, "Solidarity");
+                Hand(P2, "Solidarity");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(3, P1.BreakZone.Forwards.Count());
-        Equal(0, P2.BreakZone.Forwards.Count());
-      }
+                Equal(3, P1.BreakZone.Forwards.Count());
+                Equal(0, P2.BreakZone.Forwards.Count());
+            }
+        }
     }
-  }
 }

@@ -1,11 +1,11 @@
 ﻿namespace CrystalArena.Utils
 {
-  using System;
+    using System;
 
-  public class RatedCard
-  {
-    public string Name { get; set; }
-    public Decimal? Rating { get; set; }
-    public string Rarity { get; set; }
-  }
+    public class RatedCard
+    {
+        public string Name { get; set; }
+        public Decimal? Rating { get; set; }
+        public string Rarity { get; set; }
+    }
 }

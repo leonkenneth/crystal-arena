@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.Media
 {
-  using System;
+    using System;
 
-  public class Resource
-  {
-    public readonly byte[] Content;
-    public readonly DateTime ModifiedAt;
-    public readonly string Name;
-
-    public Resource(string name, byte[] content, DateTime modifiedAt)
+    public class Resource
     {
-      Content = content;
-      Name = name;
-      ModifiedAt = modifiedAt;
+        public readonly byte[] Content;
+        public readonly DateTime ModifiedAt;
+        public readonly string Name;
+
+        public Resource(string name, byte[] content, DateTime modifiedAt)
+        {
+            Content = content;
+            Name = name;
+            ModifiedAt = modifiedAt;
+        }
     }
-  }
 }

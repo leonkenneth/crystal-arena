@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class AfterOpponentDeclaresBlockers : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class AfterOpponentDeclaresBlockers : TimingRule
     {
-      return IsAfterOpponentDeclaresBlocker(p.Controller);
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return IsAfterOpponentDeclaresBlocker(p.Controller);
+        }
     }
-  }
 }

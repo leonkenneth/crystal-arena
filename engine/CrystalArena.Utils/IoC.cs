@@ -1,19 +1,21 @@
 ﻿namespace CrystalArena.Utils
 {
-  using Castle.MicroKernel.Registration;
+    using Castle.MicroKernel.Registration;
 
-  public class IoC : CrystalArena.IoC
-  {
-    public IoC() : base(Configuration.Test)
-    {      
-    }
-
-    protected override void Install(Castle.Windsor.IWindsorContainer container)
+    public class IoC : CrystalArena.IoC
     {
-      container.Register(Classes.FromThisAssembly()
-        .BasedOn(typeof (Task))
-        .WithService.Self()
-        .LifestyleTransient());
+        public IoC()
+            : base(Configuration.Test) { }
+
+        protected override void Install(Castle.Windsor.IWindsorContainer container)
+        {
+            container.Register(
+                Classes
+                    .FromThisAssembly()
+                    .BasedOn(typeof(Task))
+                    .WithService.Self()
+                    .LifestyleTransient()
+            );
+        }
     }
-  }
 }

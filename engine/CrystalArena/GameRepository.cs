@@ -1,21 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CrystalArena.UserInterface;
-using System;
+
 namespace CrystalArena;
 
 public static class GameRepository
 {
     public class GameNotFoundException : Exception
     {
-        public GameNotFoundException(string id) : base($"Game with id {id} not found")
-        {
-        }
+        public GameNotFoundException(string id)
+            : base($"Game with id {id} not found") { }
     }
-    
+
     private static Dictionary<string, IoC> _containers = new Dictionary<string, IoC>();
-    
+
     private static IoC GetContainer(string gameId)
     {
         if (!_containers.TryGetValue(gameId, out var container))

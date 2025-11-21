@@ -1,23 +1,24 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
-  using System.Runtime.Serialization;
+    using System;
+    using System.Runtime.Serialization;
 
-  [Serializable]
-  public class PlayableAbility : Playable
-  {
-    public PlayableAbility() {}
-
-    protected PlayableAbility(SerializationInfo info, StreamingContext context) : base(info, context) {}
-
-    public override void Play()
+    [Serializable]
+    public class PlayableAbility : Playable
     {
-      Card.ActivateAbility(Index, ActivationParameters);
-    }
+        public PlayableAbility() { }
 
-    public override string ToString()
-    {
-      return string.Format("ability {0} of {1}", Index, Card);
+        protected PlayableAbility(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
+
+        public override void Play()
+        {
+            Card.ActivateAbility(Index, ActivationParameters);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("ability {0} of {1}", Index, Card);
+        }
     }
-  }
 }

@@ -1,114 +1,123 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.Stack.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
-             xmlns:Ui="clr-namespace:CrystalArena.UserInterface"
-             xmlns:CrystalArena="clr-namespace:CrystalArena">
-	<UserControl.Resources>
-		<Style Selector="Border" x:Key="StackChrome">
-		</Style>
-	</UserControl.Resources>
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.Stack.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+  xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+  xmlns:Ui="clr-namespace:CrystalArena.UserInterface"
+  xmlns:CrystalArena="clr-namespace:CrystalArena"
+>
+  <UserControl.Resources>
+    <Style Selector="Border" x:Key="StackChrome"></Style>
+  </UserControl.Resources>
 
-	<Border  BorderBrush="#000" BorderThickness="2" CornerRadius="4">
-		<Border.Resources>
+  <Border BorderBrush="#000" BorderThickness="2" CornerRadius="4">
+    <Border.Resources>
+      <DataTemplate DataType="{x:Type CrystalArena:CastRule}">
+        <ContentControl Content="{Binding SourceCard}" />
+      </DataTemplate>
 
-			<DataTemplate DataType="{x:Type CrystalArena:CastRule}">
-                <ContentControl Content="{Binding SourceCard}"  />
-			</DataTemplate>
+      <DataTemplate DataType="{x:Type CrystalArena:Card}">
+        <ContentControl Content="{Binding }" />
+      </DataTemplate>
 
-			<DataTemplate DataType="{x:Type CrystalArena:Card}">
-                <ContentControl Content="{Binding }"  />
-			</DataTemplate>
+      <DataTemplate DataType="{x:Type CrystalArena:ActivatedAbility}">
+        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource Ability}" />
+      </DataTemplate>
 
-			<DataTemplate DataType="{x:Type CrystalArena:ActivatedAbility}">
-				<ContentControl Content="{Binding}" ContentTemplate="{StaticResource Ability}" />
-			</DataTemplate>
+      <DataTemplate DataType="{x:Type CrystalArena:TriggeredAbility}">
+        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource Ability}" />
+      </DataTemplate>
 
-			<DataTemplate DataType="{x:Type CrystalArena:TriggeredAbility}">
-				<ContentControl Content="{Binding}" ContentTemplate="{StaticResource Ability}" />
-			</DataTemplate>
+      <DataTemplate DataType="{x:Type CrystalArena:Effect}">
+        <Grid>
+          <ContentControl Content="{Binding Source}">
+            <i:Interaction.Triggers></i:Interaction.Triggers>
+          </ContentControl>
 
-			<DataTemplate DataType="{x:Type CrystalArena:Effect}">
-				<Grid>
+          <Border
+            Width="140"
+            Height="120"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Margin="0,30,20,0"
+          >
+            <Viewbox VerticalAlignment="Center" HorizontalAlignment="Right">
+              <ItemsControl ItemsSource="{Binding Targets.Effect}">
+                <ItemsControl.Resources>
+                  <DataTemplate DataType="{x:Type CrystalArena:Player}">
+                    <Viewbox>
+                      <Border Width="290">
+                        <Image Source="{Binding AvatarId, Converter={x:Static Ui:Converters.AvatarIdToAvatarImage}}" />
+                      </Border>
+                    </Viewbox>
+                  </DataTemplate>
+                  <DataTemplate DataType="{x:Type CrystalArena:Effect}">
+                    <ContentControl Content="{Binding Source}" />
+                  </DataTemplate>
+                </ItemsControl.Resources>
 
-					<ContentControl Content="{Binding Source}">
-						<i:Interaction.Triggers>
-						</i:Interaction.Triggers>
-					</ContentControl>
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-					<Border Width="140" Height="120" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,30,20,0">
-						<Viewbox VerticalAlignment="Center" HorizontalAlignment="Right">
-							<ItemsControl ItemsSource="{Binding Targets.Effect}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border
+                      VerticalAlignment="Center"
+                      Margin="10,0,0,0"
+                      BorderBrush="#fff"
+                      BorderThickness="10"
+                      CornerRadius="4"
+                      Background="#cc000000"
+                    >
+                      <ContentControl>
+                        <ContentControl Content="{Binding}">
+                          <i:Interaction.Triggers></i:Interaction.Triggers>
+                        </ContentControl>
+                      </ContentControl>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Viewbox>
+          </Border>
+        </Grid>
+      </DataTemplate>
+    </Border.Resources>
+    <Grid Width="240">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="36" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Border Grid.Row="0" Background="{StaticResource BarBackground}">
+        <Border.Resources>
+          <Style Selector="TextBlock" />
+        </Border.Resources>
+        <StackPanel Margin="10,0,10,0" Orientation="Horizontal">
+          <Image Margin="0,0,10,0" Source="{StaticResource DialogIcon}" />
+          <TextBlock Text="Stack" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Row="1" Background="#88000000">
+        <ItemsControl ItemsSource="{Binding Effects}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Margin="15,290,15,20" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
 
-								<ItemsControl.Resources>
-									<DataTemplate DataType="{x:Type CrystalArena:Player}">
-										<Viewbox>
-                                            <Border Width="290" >                                                
-                                                <Image Source="{Binding AvatarId, Converter={x:Static Ui:Converters.AvatarIdToAvatarImage}}"/>                                                
-                                            </Border>
-										</Viewbox>
-									</DataTemplate>
-									<DataTemplate DataType="{x:Type CrystalArena:Effect}">
-										<ContentControl Content="{Binding Source}" />
-									</DataTemplate>
-								</ItemsControl.Resources>
-
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<StackPanel Orientation="Horizontal" />
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
-
-								<ItemsControl.ItemTemplate>
-									<DataTemplate>
-										<Border VerticalAlignment="Center" Margin="10,0,0,0" BorderBrush="#fff" BorderThickness="10" CornerRadius="4" Background="#cc000000">
-											<ContentControl>
-												<ContentControl Content="{Binding}">
-													<i:Interaction.Triggers>
-													</i:Interaction.Triggers>
-												</ContentControl>
-											</ContentControl>
-										</Border>
-									</DataTemplate>
-								</ItemsControl.ItemTemplate>
-							</ItemsControl>
-						</Viewbox>
-					</Border>
-				</Grid>
-			</DataTemplate>
-		</Border.Resources>
-		<Grid Width="240">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="36" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Border Grid.Row="0" Background="{StaticResource BarBackground}">
-				<Border.Resources>
-					<Style  Selector="TextBlock" />
-				</Border.Resources>
-				<StackPanel Margin="10,0,10,0" Orientation="Horizontal">
-					<Image Margin="0,0,10,0" Source="{StaticResource DialogIcon}" />
-					<TextBlock Text="Stack" />
-				</StackPanel>
-			</Border>
-			<Border Grid.Row="1" Background="#88000000">
-				<ItemsControl ItemsSource="{Binding Effects}">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Margin="15,290,15,20" />
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-
-							<ContentControl  Margin="0,-275,0,0">
-								<ContentControl Content="{Binding}" />
-							</ContentControl>
-
-						</DataTemplate>
-
-					</ItemsControl.ItemTemplate>
-
-				</ItemsControl>
-			</Border>
-		</Grid>
-	</Border>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <ContentControl Margin="0,-275,0,0">
+                <ContentControl Content="{Binding}" />
+              </ContentControl>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </Grid>
+  </Border>
 </UserControl>

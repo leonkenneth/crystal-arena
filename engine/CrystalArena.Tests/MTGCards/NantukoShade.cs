@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class NantukoShade
-  {
-    public class PredefinedAi : PredefinedAiScenario
+    public class NantukoShade
     {
-      [Fact (Skip = "Old card")]
-      public void PumpShade()
-      {
-        var shock = C("Shock");
-        var shade = C("Nantuko Shade");
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpShade()
+            {
+                var shock = C("Shock");
+                var shade = C("Nantuko Shade");
 
-        Battlefield(P2, shade, "Swamp", "Swamp");
-        Hand(P1, shock);
+                Battlefield(P2, shade, "Swamp", "Swamp");
+                Hand(P1, shock);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(shock, shade)
-            .Verify(() =>
-              {
-                Equal(3, C(shade).Toughness);
-                Equal(2, C(shade).Damage);
-              })
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(shock, shade)
+                        .Verify(() =>
+                        {
+                            Equal(3, C(shade).Toughness);
+                            Equal(2, C(shade).Damage);
+                        })
+                );
+            }
+        }
     }
-  }
 }

@@ -1,33 +1,37 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectSwitchPowerAndToughness : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectSwitchPowerAndToughness : TargetingRule
     {
-      var candidates = new List<Card>();
-      
-      if (p.Controller.IsActive && Turn.Step == Step.DeclareBlocker)
-      {
-        candidates.AddRange(
-          p.Candidates<Card>(ControlledBy.SpellOwner)
-            .Where(x => x.IsAttacker && !x.HasBlocker)
-            .Where(x => x.Toughness > x.Power)
-            .OrderByDescending(x => x.Toughness));                              
-      }
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = new List<Card>();
 
-      if ((!p.Controller.IsActive && Turn.Step == Step.EndOfTurn) || (p.Controller.IsActive && Turn.Step == Step.BeginningOfCombat))
-      {
-        candidates.AddRange(
-          p.Candidates<Card>(ControlledBy.Opponent)
-            .Where(x => x.Damage >= x.Power)
-            .OrderByDescending(x => x.Score)        
-          );
-      }
+            if (p.Controller.IsActive && Turn.Step == Step.DeclareBlocker)
+            {
+                candidates.AddRange(
+                    p.Candidates<Card>(ControlledBy.SpellOwner)
+                        .Where(x => x.IsAttacker && !x.HasBlocker)
+                        .Where(x => x.Toughness > x.Power)
+                        .OrderByDescending(x => x.Toughness)
+                );
+            }
 
-      return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
+            if (
+                (!p.Controller.IsActive && Turn.Step == Step.EndOfTurn)
+                || (p.Controller.IsActive && Turn.Step == Step.BeginningOfCombat)
+            )
+            {
+                candidates.AddRange(
+                    p.Candidates<Card>(ControlledBy.Opponent)
+                        .Where(x => x.Damage >= x.Power)
+                        .OrderByDescending(x => x.Score)
+                );
+            }
+
+            return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
+        }
     }
-  }
 }

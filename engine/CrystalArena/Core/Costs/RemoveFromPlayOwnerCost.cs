@@ -1,20 +1,19 @@
 ﻿namespace CrystalArena.Costs
 {
-  using System.Linq;
-  public class RemoveFromPlayOwnerCost : Cost
-  {        
-    public RemoveFromPlayOwnerCost()
-    {      
-    }
+    using System.Linq;
 
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class RemoveFromPlayOwnerCost : Cost
     {
-      return true;      
-    }
+        public RemoveFromPlayOwnerCost() { }
 
-    public override void PayPartial(PayCostParameters p)
-    {      
-      Card.RemoveFromPlay(null);
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            return true;
+        }
+
+        public override void PayPartial(PayCostParameters p)
+        {
+            Card.RemoveFromPlay(null);
+        }
     }
-  }
 }

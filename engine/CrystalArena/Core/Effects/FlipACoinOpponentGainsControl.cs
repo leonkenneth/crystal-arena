@@ -1,40 +1,40 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class FlipACoinOpponentGainsOwningCard : Effect
-  {
-    private Player _opponent;
-
-    protected override void Initialize()
+    public class FlipACoinOpponentGainsOwningCard : Effect
     {
-      // opponent is evaluated when this goes on stack
-      _opponent = Controller.Opponent;
-    }
+        private Player _opponent;
 
-    protected override void ResolveEffect()
-    {
-      var hasWon = FlipACoin(Controller);
-
-      if (hasWon)
-        return;
-
-      if (Source.OwningCard.Zone != Zone.Battlefield)
-        return;
-
-      if (Source.OwningCard.Controller == _opponent)
-        return;
-
-      var sourceModifier = new ChangeController(_opponent);
-
-      var p = new ModifierParameters
+        protected override void Initialize()
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
+            // opponent is evaluated when this goes on stack
+            _opponent = Controller.Opponent;
+        }
 
-      Source.OwningCard.AddModifier(sourceModifier, p);
+        protected override void ResolveEffect()
+        {
+            var hasWon = FlipACoin(Controller);
+
+            if (hasWon)
+                return;
+
+            if (Source.OwningCard.Zone != Zone.Battlefield)
+                return;
+
+            if (Source.OwningCard.Controller == _opponent)
+                return;
+
+            var sourceModifier = new ChangeController(_opponent);
+
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            Source.OwningCard.AddModifier(sourceModifier, p);
+        }
     }
-  }
 }

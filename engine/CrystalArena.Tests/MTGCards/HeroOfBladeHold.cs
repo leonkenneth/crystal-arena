@@ -1,31 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class HeroOfBladeHold
-  {
-    public class Prefefined : PredefinedScenario
+    public class HeroOfBladeHold
     {
-      [Fact (Skip = "Old card")]
-      public void Attack()
-      {
-        var hero = C("Hero of Bladehold");
+        public class Prefefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Attack()
+            {
+                var hero = C("Hero of Bladehold");
 
-        Battlefield(P1, hero);
+                Battlefield(P1, hero);
 
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(hero),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(3, P1.Battlefield.Forwards.Count());
-                Equal(13, P2.Life);
-              })
-          );
-      }
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(hero),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(3, P1.Battlefield.Forwards.Count());
+                            Equal(13, P2.Life);
+                        })
+                );
+            }
+        }
     }
-  }
 }

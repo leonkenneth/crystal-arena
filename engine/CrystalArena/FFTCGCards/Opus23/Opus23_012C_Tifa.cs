@@ -16,8 +16,7 @@ public class Opus23_012C_Tifa : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("23-012C")
+        yield return Card.Code("23-012C")
             .Named("Tifa")
             .Cost(3, "R")
             .Categories("DFF", "VII")
@@ -25,15 +24,15 @@ public class Opus23_012C_Tifa : CardTemplateSource
             .Forward()
             .Power(7000)
             .Text(
-                "When a Forward damaged by Tifa is put from the field into the Break Zone on the same turn, gain {Z}.\nWhen Tifa attacks, choose 1 Forward. Deal it 2000 damage.\n{Z}: Until the end of the turn, Tifa gains +2000 power and Haste.")
+                "When a Forward damaged by Tifa is put from the field into the Break Zone on the same turn, gain {Z}.\nWhen Tifa attacks, choose 1 Forward. Deal it 2000 damage.\n{Z}: Until the end of the turn, Tifa gains +2000 power and Haste."
+            )
             .TriggeredAbility(p =>
             {
                 p.ExBurst();
                 p.Text =
                     "When a Forward damaged by Tifa is put from the field into the Break Zone on the same turn, gain {Z}.";
                 p.Trigger(new OnForwardDamagedBySelfDiesInSameTurn());
-                p.Effect =
-                    () => new AddManaToPool("{Z}".Parse());
+                p.Effect = () => new AddManaToPool("{Z}".Parse());
             })
             .TriggeredAbility(p =>
             {
@@ -42,15 +41,21 @@ public class Opus23_012C_Tifa : CardTemplateSource
                 p.Effect = () => new DealDamageToTargets(2000);
                 p.TargetSelector.AddEffect(
                     trg => trg.Is.Forward().On.Battlefield(),
-                    trg => { trg.Message = "Select Forward to deal damage to."; });
+                    trg =>
+                    {
+                        trg.Message = "Select Forward to deal damage to.";
+                    }
+                );
             })
             .ActivatedAbility(p =>
             {
                 p.Text = "{Z}: Until the end of the turn, Tifa gains +2000 power and Haste.";
                 p.Cost = new PayMana("{Z}".Parse());
-                p.Effect = () => new ApplyModifiersToSelf(
-                    () => new AddPowerAndToughness(+2000, +2000) { UntilEot = true },
-                    () => new AddSimpleAbility(Static.Haste) { UntilEot = true });
+                p.Effect = () =>
+                    new ApplyModifiersToSelf(
+                        () => new AddPowerAndToughness(+2000, +2000) { UntilEot = true },
+                        () => new AddSimpleAbility(Static.Haste) { UntilEot = true }
+                    );
                 p.TimingRule(new PumpOwningCardTimingRule(2000, 2000));
             });
     }

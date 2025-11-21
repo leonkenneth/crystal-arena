@@ -1,46 +1,58 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI.TargetingRules;
-  using Effects;
-  using Modifiers;
-  using Triggers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI.TargetingRules;
+    using Effects;
+    using Modifiers;
+    using Triggers;
 
-  public class MightMakesRight : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class MightMakesRight : CardTemplateSource
     {
-      yield return Card
-        .Named("Might Makes Right")
-        .ManaCost("{5}{R}")
-        .Type("Monster")
-        .Text("At the beginning of combat on your turn, if you control each forward on the battlefield with the greatest power, gain control of target forward an opponent controls until end of turn. Untap that forward. It gains haste until end of turn. {I}(It can attack and {T} this turn.){/I}")
-        .FlavorText("An oath of fealty sworn with a handshake.")
-        .TriggeredAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Trigger(new OnStepStart(Step.BeginningOfCombat)
-          {
-            Condition = ctx =>
-              {
-                var yours = ctx.You.Battlefield.Forwards.Max(x => x.Power);
-                var opponents = ctx.Opponent.Battlefield.Forwards.Max(x => x.Power);
+            yield return Card.Named("Might Makes Right")
+                .ManaCost("{5}{R}")
+                .Type("Monster")
+                .Text(
+                    "At the beginning of combat on your turn, if you control each forward on the battlefield with the greatest power, gain control of target forward an opponent controls until end of turn. Untap that forward. It gains haste until end of turn. {I}(It can attack and {T} this turn.){/I}"
+                )
+                .FlavorText("An oath of fealty sworn with a handshake.")
+                .TriggeredAbility(p =>
+                {
+                    p.Trigger(
+                        new OnStepStart(Step.BeginningOfCombat)
+                        {
+                            Condition = ctx =>
+                            {
+                                var yours = ctx.You.Battlefield.Forwards.Max(x => x.Power);
+                                var opponents = ctx.Opponent.Battlefield.Forwards.Max(x => x.Power);
 
-                return yours > opponents;
-              }
-          });
+                                return yours > opponents;
+                            },
+                        }
+                    );
 
-          p.Effect = () => new CompoundEffect(
-            new ApplyModifiersToTargets(
-              () => new ChangeController(m => m.SourceCard.Controller) {UntilEot = true},
-              () => new AddSimpleAbility(Static.Haste) {UntilEot = true}),
-            new UntapTargetPermanents());
+                    p.Effect = () =>
+                        new CompoundEffect(
+                            new ApplyModifiersToTargets(
+                                () =>
+                                    new ChangeController(m => m.SourceCard.Controller)
+                                    {
+                                        UntilEot = true,
+                                    },
+                                () => new AddSimpleAbility(Static.Haste) { UntilEot = true }
+                            ),
+                            new UntapTargetPermanents()
+                        );
 
-          p.TargetSelector.AddEffect(trg => trg.Is.Forward(ControlledBy.Opponent).On.Battlefield());
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Forward(ControlledBy.Opponent).On.Battlefield()
+                    );
 
-          p.TargetingRule(new EffectGainControl());
-          p.TriggerOnlyIfOwningCardIsInPlay = true;
-        });
+                    p.TargetingRule(new EffectGainControl());
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

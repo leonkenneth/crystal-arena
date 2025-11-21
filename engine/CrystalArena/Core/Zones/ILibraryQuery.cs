@@ -1,11 +1,11 @@
 ﻿namespace CrystalArena
 {
-  using System;
+    using System;
 
-  public interface IMainDeckQuery : IZoneQuery
-  {
-    event EventHandler Shuffled;
-    Card Top { get; }
-    Card Bottom { get; }
-  }
+    public interface IMainDeckQuery : IZoneQuery
+    {
+        event EventHandler Shuffled;
+        Card Top { get; }
+        Card Bottom { get; }
+    }
 }

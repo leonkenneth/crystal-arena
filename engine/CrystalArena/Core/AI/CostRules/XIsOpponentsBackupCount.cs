@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.AI.CostRules
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class XIsOpponentsBackupCount : CostRule
-  {
-    public override int CalculateX(CostRuleParameters p)
+    public class XIsOpponentsBackupCount : CostRule
     {
-      return p.Controller.Opponent.Battlefield.Backups.Count();
+        public override int CalculateX(CostRuleParameters p)
+        {
+            return p.Controller.Opponent.Battlefield.Backups.Count();
+        }
     }
-  }
 }

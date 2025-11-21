@@ -1,30 +1,30 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using AI;
+    using System;
+    using AI;
 
-  public class DestroyTargetPermanents : Effect
-  {
-    private readonly bool _canRegenerate;
-
-    private DestroyTargetPermanents() {}
-
-    public DestroyTargetPermanents(bool canRegenerate = true)
+    public class DestroyTargetPermanents : Effect
     {
-      _canRegenerate = canRegenerate;
+        private readonly bool _canRegenerate;
 
-      SetTags(EffectTag.Destroy);
+        private DestroyTargetPermanents() { }
 
-      if (!canRegenerate)
-        SetTags(EffectTag.CannotRegenerate);
+        public DestroyTargetPermanents(bool canRegenerate = true)
+        {
+            _canRegenerate = canRegenerate;
+
+            SetTags(EffectTag.Destroy);
+
+            if (!canRegenerate)
+                SetTags(EffectTag.CannotRegenerate);
+        }
+
+        protected override void ResolveEffect()
+        {
+            foreach (var target in ValidEffectTargets)
+            {
+                target.Card().Destroy(_canRegenerate);
+            }
+        }
     }
-
-    protected override void ResolveEffect()
-    {
-      foreach (var target in ValidEffectTargets)
-      {
-        target.Card().Destroy(_canRegenerate);
-      }
-    }
-  }
 }

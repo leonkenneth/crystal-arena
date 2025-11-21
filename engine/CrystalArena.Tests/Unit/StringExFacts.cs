@@ -1,17 +1,17 @@
 ﻿namespace CrystalArena.Tests.Unit
 {
-  using CrystalArena.Infrastructure;
-  using Xunit;
+    using CrystalArena.Infrastructure;
+    using Xunit;
 
-  public class StringExFacts
-  {
-    [Fact]
-    public void ToPascalCase()
+    public class StringExFacts
     {
-      const string sentence = "Tap to add";
-      const string pascalCase = "TapToAdd";
+        [Fact]
+        public void ToPascalCase()
+        {
+            const string sentence = "Tap to add";
+            const string pascalCase = "TapToAdd";
 
-      Assert.Equal(pascalCase, sentence.ToPascalCase());
+            Assert.Equal(pascalCase, sentence.ToPascalCase());
+        }
     }
-  }
 }

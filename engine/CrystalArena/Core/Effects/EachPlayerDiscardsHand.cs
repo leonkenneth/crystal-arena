@@ -1,11 +1,11 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class EachPlayerDiscardsHand : Effect
-  {
-    protected override void ResolveEffect()
+    public class EachPlayerDiscardsHand : Effect
     {
-      Players.Active.DiscardHand();
-      Players.Passive.DiscardHand();
+        protected override void ResolveEffect()
+        {
+            Players.Active.DiscardHand();
+            Players.Passive.DiscardHand();
+        }
     }
-  }
 }

@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  using System;
-  using System.Diagnostics;
+    using System;
+    using System.Diagnostics;
 
-  public static class Profiler
-  {
-    public static double Benchmark(Action action)
+    public static class Profiler
     {
-      var stopWatch = new Stopwatch();
+        public static double Benchmark(Action action)
+        {
+            var stopWatch = new Stopwatch();
 
-      stopWatch.Start();
-      action();
-      stopWatch.Stop();
+            stopWatch.Start();
+            action();
+            stopWatch.Stop();
 
-      return stopWatch.Elapsed.TotalMilliseconds;
+            return stopWatch.Elapsed.TotalMilliseconds;
+        }
     }
-  }
 }

@@ -1,14 +1,14 @@
 ﻿namespace CrystalArena
 {
-  using System;
+    using System;
 
-  public class StackChangedEventArgs : EventArgs
-  {
-    public StackChangedEventArgs(Effect effect)
+    public class StackChangedEventArgs : EventArgs
     {
-      Effect = effect;
-    }
+        public StackChangedEventArgs(Effect effect)
+        {
+            Effect = effect;
+        }
 
-    public Effect Effect { get; private set; }
-  }
+        public Effect Effect { get; private set; }
+    }
 }

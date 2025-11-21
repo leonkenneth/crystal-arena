@@ -1,15 +1,15 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class DraftResults
-  {
-    public DraftResults(IEnumerable<DraftPlayer> players)
+    public class DraftResults
     {
-      MainDecks = players.Select(x => x.MainDeck).ToList();
-    }
+        public DraftResults(IEnumerable<DraftPlayer> players)
+        {
+            MainDecks = players.Select(x => x.MainDeck).ToList();
+        }
 
-    public List<List<CardInfo>> MainDecks { get; private set; }    
-  }
+        public List<List<CardInfo>> MainDecks { get; private set; }
+    }
 }

@@ -1,32 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class FleshToDust : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class FleshToDust : CardTemplateSource
     {
-      yield return Card
-        .Named("Flesh to Dust")
-        .ManaCost("{3}{B}{B}")
-        .Type("Summon")
-        .Text("Destroy target forward. It can't be regenerated.")
-        .FlavorText("\"Pain is temporary. So is life.\"{EOL}—Liliana Vess")
-        .Cast(p =>
-          {
-            p.Effect = () => new DestroyTargetPermanents(canRegenerate: false);
-            
-            p.TargetSelector.AddEffect(trg => trg
-              .Is.Forward()
-              .On.Battlefield());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Flesh to Dust")
+                .ManaCost("{3}{B}{B}")
+                .Type("Summon")
+                .Text("Destroy target forward. It can't be regenerated.")
+                .FlavorText("\"Pain is temporary. So is life.\"{EOL}—Liliana Vess")
+                .Cast(p =>
+                {
+                    p.Effect = () => new DestroyTargetPermanents(canRegenerate: false);
 
-            p.TargetingRule(new EffectDestroy());
-            p.TimingRule(new TargetRemovalTimingRule().RemovalTags(EffectTag.Destroy, EffectTag.ForwardsOnly));
-          });
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+
+                    p.TargetingRule(new EffectDestroy());
+                    p.TimingRule(
+                        new TargetRemovalTimingRule().RemovalTags(
+                            EffectTag.Destroy,
+                            EffectTag.ForwardsOnly
+                        )
+                    );
+                });
+        }
     }
-  }
 }

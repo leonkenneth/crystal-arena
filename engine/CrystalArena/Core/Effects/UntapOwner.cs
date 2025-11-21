@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class UntapOwner : Effect
-  {
-    protected override void ResolveEffect()
+    public class UntapOwner : Effect
     {
-      Source.OwningCard.Untap();
+        protected override void ResolveEffect()
+        {
+            Source.OwningCard.Untap();
+        }
     }
-  }
 }

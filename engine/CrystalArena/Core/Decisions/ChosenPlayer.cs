@@ -1,30 +1,30 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
-  using System.Runtime.Serialization;
-  using CrystalArena.Infrastructure;
+    using System;
+    using System.Runtime.Serialization;
+    using CrystalArena.Infrastructure;
 
-  [Copyable, Serializable]
-  public class ChosenPlayer : ISerializable
-  {
-    private ChosenPlayer() {}
-
-    public ChosenPlayer(Player player)
+    [Copyable, Serializable]
+    public class ChosenPlayer : ISerializable
     {
-      Player = player;
-    }
+        private ChosenPlayer() { }
 
-    protected ChosenPlayer(SerializationInfo info, StreamingContext context)
-    {
-      var ctx = (SerializationContext) context.Context;
-      Player = (Player) ctx.Recorder.GetObject(info.GetInt32("player"));
-    }
+        public ChosenPlayer(Player player)
+        {
+            Player = player;
+        }
 
-    public Player Player { get; private set; }
+        protected ChosenPlayer(SerializationInfo info, StreamingContext context)
+        {
+            var ctx = (SerializationContext)context.Context;
+            Player = (Player)ctx.Recorder.GetObject(info.GetInt32("player"));
+        }
 
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-      info.AddValue("player", Player.Id);
+        public Player Player { get; private set; }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("player", Player.Id);
+        }
     }
-  }
 }

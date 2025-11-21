@@ -1,35 +1,36 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using AI;
+    using Effects;
+    using Triggers;
 
-  public class GreatWhale : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class GreatWhale : CardTemplateSource
     {
-      yield return Card
-        .Named("Great Whale")
-        .ManaCost("{5}{U}{U}")
-        .Type("Forward Whale")
-        .Text("When Great Whale enters the battlefield, untap up to seven backups.")
-        .FlavorText("As a great whale dies, it flips onto its back. And so an island is born.")
-        .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[5])
-        .Power(5)
-        .Toughness(5)
-        .TriggeredAbility(p =>
-          {
-            p.Text = "When Great Whale enters the battlefield, untap up to seven backups.";
-            p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
-            p.Effect = () => new UntapSelectedPermanents(
-              minCount: 0,
-              maxCount: 7,
-              validator: c => c.Is().Backup,
-              text: "Select backups to untap."
-              );
-          }
-        );
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Great Whale")
+                .ManaCost("{5}{U}{U}")
+                .Type("Forward Whale")
+                .Text("When Great Whale enters the battlefield, untap up to seven backups.")
+                .FlavorText(
+                    "As a great whale dies, it flips onto its back. And so an island is born."
+                )
+                .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[5])
+                .Power(5)
+                .Toughness(5)
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "When Great Whale enters the battlefield, untap up to seven backups.";
+                    p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+                    p.Effect = () =>
+                        new UntapSelectedPermanents(
+                            minCount: 0,
+                            maxCount: 7,
+                            validator: c => c.Is().Backup,
+                            text: "Select backups to untap."
+                        );
+                });
+        }
     }
-  }
 }

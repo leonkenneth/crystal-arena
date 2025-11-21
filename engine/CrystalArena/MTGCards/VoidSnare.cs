@@ -1,29 +1,32 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class VoidSnare : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class VoidSnare : CardTemplateSource
     {
-      yield return Card
-        .Named("Void Snare")
-        .ManaCost("{U}")
-        .Type("Sorcery")
-        .Text("Return target nonland permanent to its owner's hand.")
-        .FlavorText("\"I've tried so many variations on how to get rid of annoying things that it's hard to decide which one I like best.\"{EOL}—Ashurel, voidmage")
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new ReturnToHand();
-          p.TargetSelector.AddEffect(trg => trg.Is.Card(c => !c.Is().Backup).On.Battlefield());
+            yield return Card.Named("Void Snare")
+                .ManaCost("{U}")
+                .Type("Sorcery")
+                .Text("Return target nonland permanent to its owner's hand.")
+                .FlavorText(
+                    "\"I've tried so many variations on how to get rid of annoying things that it's hard to decide which one I like best.\"{EOL}—Ashurel, voidmage"
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new ReturnToHand();
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Card(c => !c.Is().Backup).On.Battlefield()
+                    );
 
-          p.TargetingRule(new EffectBounce());
-          p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.Bounce));
-        });
+                    p.TargetingRule(new EffectBounce());
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.Bounce));
+                });
+        }
     }
-  }
 }

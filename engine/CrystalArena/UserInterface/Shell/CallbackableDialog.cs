@@ -9,24 +9,25 @@ public class CallbackableDialog : RemoteCallbackable
 {
     public object ViewModel { get; set; }
 
-    
     public void WaitCallback()
     {
         var threadBlocker = new ThreadBlocker();
         var viewModel = ViewModel as ViewModelBase;
-        ((IClosable) ViewModel).Closed += delegate { threadBlocker.Completed(); };
-        RegisterCallback((message) =>
+        ((IClosable)ViewModel).Closed += delegate
         {
-            viewModel.ReceiveJSONMessage(message);
-        });
+            threadBlocker.Completed();
+        };
+        RegisterCallback(
+            (message) =>
+            {
+                viewModel.ReceiveJSONMessage(message);
+            }
+        );
         threadBlocker.BlockUntilCompleted();
     }
 
     public override object ToJson()
     {
-        return new
-        {
-            CallbackId
-        };
+        return new { CallbackId };
     }
 }

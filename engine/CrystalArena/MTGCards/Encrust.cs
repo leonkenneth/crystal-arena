@@ -1,35 +1,42 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
+    using Modifiers;
 
-  public class Encrust : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Encrust : CardTemplateSource
     {
-      yield return Card
-        .Named("Encrust")
-        .ManaCost("{1}{U}{U}")
-        .Type("Monster — Aura")
-        .Text(
-          "Enchant artifact or forward{EOL}Enchanted permanent doesn't untap during its controller's untap step and its activated abilities can't be activated.")
-        .FlavorText("\"The sea blesses the tiny with the power to fell the mighty.\"{EOL}—Talrand, sky summoner")
-        .Cast(p =>
-          {
-            p.Effect = () => new Attach(new ModifierFactory[]
-              {
-                () => new AddSimpleAbility(Static.DoesNotUntap),
-                () => new DisableAllAbilities(activated: true),
-              });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Encrust")
+                .ManaCost("{1}{U}{U}")
+                .Type("Monster — Aura")
+                .Text(
+                    "Enchant artifact or forward{EOL}Enchanted permanent doesn't untap during its controller's untap step and its activated abilities can't be activated."
+                )
+                .FlavorText(
+                    "\"The sea blesses the tiny with the power to fell the mighty.\"{EOL}—Talrand, sky summoner"
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new Attach(
+                            new ModifierFactory[]
+                            {
+                                () => new AddSimpleAbility(Static.DoesNotUntap),
+                                () => new DisableAllAbilities(activated: true),
+                            }
+                        );
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Card(c => c.Is().Forward || c.Is().Artifact).On.Battlefield());
-            
-            p.TimingRule(new OnFirstMain());
-            p.TargetingRule(new EffectCannotBlockAttack());            
-          });
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Card(c => c.Is().Forward || c.Is().Artifact).On.Battlefield()
+                    );
+
+                    p.TimingRule(new OnFirstMain());
+                    p.TargetingRule(new EffectCannotBlockAttack());
+                });
+        }
     }
-  }
 }

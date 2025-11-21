@@ -1,24 +1,32 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PhyrexianTower
-  {
-    public class Ai : AiScenario
+    public class PhyrexianTower
     {
-      [Fact (Skip = "Old card")]
-      public void CastDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        Hand(P1, dragon);
-        Battlefield(P1, "Mountain", "Mountain", "Swamp", "Phyrexian Tower", "Mountain", "Grizzly Bears");
-        Battlefield(P2, "Trained Armodon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastDragon()
+            {
+                var dragon = C("Shivan Dragon");
+                Hand(P1, dragon);
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Mountain",
+                    "Swamp",
+                    "Phyrexian Tower",
+                    "Mountain",
+                    "Grizzly Bears"
+                );
+                Battlefield(P2, "Trained Armodon");
 
-        RunGame(3);
+                RunGame(3);
 
-        Equal(Zone.Battlefield, C(dragon).Zone);
-      }
+                Equal(Zone.Battlefield, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

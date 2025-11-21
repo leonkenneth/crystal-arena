@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PhyrexianArena
-  {
-    public class Ai : AiScenario
+    public class PhyrexianArena
     {
-      [Fact (Skip = "Old card")]
-      public void Draw()
-      {
-        Battlefield(P1, "Phyrexian Arena");
-        RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Draw()
+            {
+                Battlefield(P1, "Phyrexian Arena");
+                RunGame(1);
 
-        Equal(19, P1.Life);
-        Equal(1, P1.Hand.Count); // starting player skips draw 1st turn
-      }
+                Equal(19, P1.Life);
+                Equal(1, P1.Hand.Count); // starting player skips draw 1st turn
+            }
+        }
     }
-  }
 }

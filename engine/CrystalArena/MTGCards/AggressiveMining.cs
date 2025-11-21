@@ -1,35 +1,39 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class AggressiveMining : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class AggressiveMining : CardTemplateSource
     {
-      yield return Card
-        .Named("Aggressive Mining")
-        .ManaCost("{3}{R}")
-        .Type("Monster")
-        .Text("You can't play backups.{EOL}Sacrifice a backup: Draw two cards. Activate this ability only once each turn.")
-        .StaticAbility(p => p.Modifier(() => new PreventPlayingBackups()))
-        .ActivatedAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "Sacrifice a backup: Draw two cards. Activate this ability only once each turn.";
+            yield return Card.Named("Aggressive Mining")
+                .ManaCost("{3}{R}")
+                .Type("Monster")
+                .Text(
+                    "You can't play backups.{EOL}Sacrifice a backup: Draw two cards. Activate this ability only once each turn."
+                )
+                .StaticAbility(p => p.Modifier(() => new PreventPlayingBackups()))
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "Sacrifice a backup: Draw two cards. Activate this ability only once each turn.";
 
-          p.Cost = new Sacrifice();
+                    p.Cost = new Sacrifice();
 
-          p.TargetSelector.AddCost(trg => trg.Is.Card(c => c.Is().Backup).On.Battlefield());
+                    p.TargetSelector.AddCost(trg =>
+                        trg.Is.Card(c => c.Is().Backup).On.Battlefield()
+                    );
 
-          p.Effect = () => new DrawCards(2);
+                    p.Effect = () => new DrawCards(2);
 
-          p.TargetingRule(new CostSacrificeToDrawCards());
+                    p.TargetingRule(new CostSacrificeToDrawCards());
 
-          p.ActivateOnlyOnceEachTurn = true;
-        });
+                    p.ActivateOnlyOnceEachTurn = true;
+                });
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class TrumpetBlast
-  {
-    public class Ai : AiScenario
+    public class TrumpetBlast
     {
-      [Fact (Skip = "Old card")]
-      public void AttackForKill()
-      {
-        Battlefield(P1, "Mountain", "Forest", "Forest", "Grizzly Bears", "Grizzly Bears");
-        Hand(P1, "Trumpet Blast");
-        P2.Life = 8;
-        
-        RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackForKill()
+            {
+                Battlefield(P1, "Mountain", "Forest", "Forest", "Grizzly Bears", "Grizzly Bears");
+                Hand(P1, "Trumpet Blast");
+                P2.Life = 8;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using Infrastructure;
+    using Infrastructure;
 
-  [Copyable]
-  public abstract class PropertyModifier<TValue>
-  {
-    public TrackableEvent Changed;    
-
-    protected PropertyModifier()
+    [Copyable]
+    public abstract class PropertyModifier<TValue>
     {
-      Changed = new TrackableEvent();
-    }
+        public TrackableEvent Changed;
 
-    public abstract int Priority { get; }
-    public abstract TValue Apply(TValue before);
+        protected PropertyModifier()
+        {
+            Changed = new TrackableEvent();
+        }
 
-    public virtual void Initialize(INotifyChangeTracker changeTracker)
-    {
-      Changed.Initialize(changeTracker);
-    }
+        public abstract int Priority { get; }
+        public abstract TValue Apply(TValue before);
 
-    protected void NotifyModifierHasChanged()
-    {      
-      Changed.Raise();
+        public virtual void Initialize(INotifyChangeTracker changeTracker)
+        {
+            Changed.Initialize(changeTracker);
+        }
+
+        protected void NotifyModifierHasChanged()
+        {
+            Changed.Raise();
+        }
     }
-  }
 }

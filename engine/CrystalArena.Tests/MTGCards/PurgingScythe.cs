@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PurgingScythe
-  {
-    public class Ai : AiScenario
+    public class PurgingScythe
     {
-      [Fact (Skip = "Old card")]
-      public void KillSomnophore()
-      {
-        var somnophore = C("Somnophore");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillSomnophore()
+            {
+                var somnophore = C("Somnophore");
 
-        Battlefield(P1, "Grizzly Bears", "Purging Scythe");
-        Battlefield(P2, somnophore, "Grizzly Bears");
+                Battlefield(P1, "Grizzly Bears", "Purging Scythe");
+                Battlefield(P2, somnophore, "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.BreakZone, C(somnophore).Zone);
-      }
+                Equal(Zone.BreakZone, C(somnophore).Zone);
+            }
+        }
     }
-  }
 }

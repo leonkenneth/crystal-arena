@@ -1,23 +1,26 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
+    using System.Collections.Generic;
+    using Effects;
 
-  public class CarrionCrow : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class CarrionCrow : CardTemplateSource
     {
-      yield return Card
-        .Named("Carrion Crow")
-        .ManaCost("{2}{B}")
-        .Type("Forward - Zombie Bird")
-        .Text(
-          "{Flying}{I}(This forward can't be blocked except by forwards with flying or reach.){/I}{EOL}Carrion Crow enters the battlefield tapped.")
-        .FlavorText("When carrion feeds on carrion, dark days approach.")
-        .Power(2)
-        .Toughness(2)
-        .SimpleAbilities(Static.Flying)
-        .Cast(p => { p.Effect = () => new CastPermanent(tap: true); });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Carrion Crow")
+                .ManaCost("{2}{B}")
+                .Type("Forward - Zombie Bird")
+                .Text(
+                    "{Flying}{I}(This forward can't be blocked except by forwards with flying or reach.){/I}{EOL}Carrion Crow enters the battlefield tapped."
+                )
+                .FlavorText("When carrion feeds on carrion, dark days approach.")
+                .Power(2)
+                .Toughness(2)
+                .SimpleAbilities(Static.Flying)
+                .Cast(p =>
+                {
+                    p.Effect = () => new CastPermanent(tap: true);
+                });
+        }
     }
-  }
 }

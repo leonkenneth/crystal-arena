@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class EffectPutOnStackEvent
-  {
-    public readonly Effect Effect;
-
-    public EffectPutOnStackEvent(Effect effect)
+    public class EffectPutOnStackEvent
     {
-      Effect = effect;
+        public readonly Effect Effect;
+
+        public EffectPutOnStackEvent(Effect effect)
+        {
+            Effect = effect;
+        }
     }
-  }
 }

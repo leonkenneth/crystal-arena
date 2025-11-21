@@ -1,112 +1,145 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using Infrastructure;
-  
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Infrastructure;
 
-  public class TargetingRuleParameters : GameObject
-  {
-    private readonly TargetsCandidates _candidates;
-    private readonly AI.ActivationContext _context;
-
-    private TargetingRuleParameters() {}
-
-    public TargetingRuleParameters(TargetsCandidates candidates, AI.ActivationContext context, Game game)
+    public class TargetingRuleParameters : GameObject
     {
-      _candidates = candidates;
-      _context = context;
+        private readonly TargetsCandidates _candidates;
+        private readonly AI.ActivationContext _context;
 
-      Game = game;
+        private TargetingRuleParameters() { }
+
+        public TargetingRuleParameters(
+            TargetsCandidates candidates,
+            AI.ActivationContext context,
+            Game game
+        )
+        {
+            _candidates = candidates;
+            _context = context;
+
+            Game = game;
+        }
+
+        public Player Controller
+        {
+            get { return _context.Controller; }
+        }
+        public int? X
+        {
+            get { return _context.X; }
+        }
+        public int MaxX
+        {
+            get { return _context.MaxX.GetValueOrDefault(); }
+        }
+        public int EffectTargetTypeCount
+        {
+            get { return _context.Selector.Effect.Count; }
+        }
+        public Card Card
+        {
+            get { return _context.Card; }
+        }
+        public int DistributeAmount
+        {
+            get { return _context.DistributeAmount; }
+        }
+        public int MaxRepetitions
+        {
+            get { return _context.MaxRepetitions; }
+        }
+
+        public bool HasCostCandidates
+        {
+            get { return _candidates.HasCost; }
+        }
+        public bool HasEffectCandidates
+        {
+            get { return _candidates.HasEffect; }
+        }
+
+        public IEnumerable<T> Candidates<T>(
+            ControlledBy controlledBy = ControlledBy.Any,
+            int selectorIndex = 0,
+            Func<TargetsCandidates, IList<TargetCandidates>> selector = null
+        )
+            where T : ITarget
+        {
+            Asrt.True(
+                _candidates.HasCost || _candidates.HasEffect,
+                "No target selectors found, use AddEffect or AddCost to add them!"
+            );
+
+            TargetCandidates candidates = null;
+
+            if (selector == null)
+            {
+                candidates = _candidates.HasCost
+                    ? _candidates.Cost[selectorIndex]
+                    : _candidates.Effect[selectorIndex];
+            }
+            else
+            {
+                candidates = selector(_candidates)[selectorIndex];
+            }
+
+            switch (controlledBy)
+            {
+                case (ControlledBy.Opponent):
+                {
+                    return candidates
+                        .Where(x => x.Controller() == Controller.Opponent && x is T)
+                        .Select(x => (T)x);
+                }
+                case (ControlledBy.SpellOwner):
+                {
+                    return candidates
+                        .Where(x => x.Controller() == Controller && x is T)
+                        .Select(x => (T)x);
+                }
+            }
+
+            return candidates.OfType<T>();
+        }
+
+        public int MinTargetCount(int selectorIndex)
+        {
+            var selector = _context.Selector;
+
+            return selector.Effect.Count > 0
+                ? selector.Effect[selectorIndex].MinCount.GetValue(X)
+                : selector.Cost[selectorIndex].MinCount.GetValue(X);
+        }
+
+        public int MaxTargetCount(int selectorIndex)
+        {
+            var selector = _context.Selector;
+
+            return selector.Effect.Count > 0
+                ? selector.Effect[selectorIndex].MaxCount.GetValue(X)
+                : selector.Cost[selectorIndex].MaxCount.GetValue(X);
+        }
+
+        public int TotalMinTargetCount()
+        {
+            var selector = _context.Selector;
+
+            return selector.Effect.Count > 0
+                ? selector.Effect.Sum(y => y.MinCount.GetValue(X))
+                : selector.Cost.Sum(y => y.MinCount.GetValue(X));
+        }
+
+        public int TotalMaxTargetCount()
+        {
+            var selector = _context.Selector;
+
+            return selector.Effect.Count > 0
+                ? selector.Effect.Sum(y => y.MaxCount.GetValue(X))
+                : selector.Cost.Sum(y => y.MaxCount.GetValue(X));
+        }
     }
-
-    public Player Controller { get { return _context.Controller; } }
-    public int? X { get { return _context.X; } }
-    public int MaxX { get { return _context.MaxX.GetValueOrDefault(); } }
-    public int EffectTargetTypeCount { get { return _context.Selector.Effect.Count; } }
-    public Card Card { get { return _context.Card; } }
-    public int DistributeAmount { get { return _context.DistributeAmount; } }
-    public int MaxRepetitions { get { return _context.MaxRepetitions; } }
-
-    public bool HasCostCandidates { get { return _candidates.HasCost; } }
-    public bool HasEffectCandidates { get { return _candidates.HasEffect; } }
-
-    public IEnumerable<T> Candidates<T>(
-      ControlledBy controlledBy = ControlledBy.Any,
-      int selectorIndex = 0,
-      Func<TargetsCandidates, IList<TargetCandidates>> selector = null)
-      where T : ITarget
-    {
-      Asrt.True(_candidates.HasCost || _candidates.HasEffect,
-        "No target selectors found, use AddEffect or AddCost to add them!");
-
-      TargetCandidates candidates = null;
-
-      if (selector == null)
-      {
-        candidates = _candidates.HasCost
-          ? _candidates.Cost[selectorIndex]
-          : _candidates.Effect[selectorIndex];
-      }
-      else
-      {
-        candidates = selector(_candidates)[selectorIndex];
-      }
-
-      switch (controlledBy)
-      {
-        case (ControlledBy.Opponent):
-          {
-            return candidates
-              .Where(x => x.Controller() == Controller.Opponent && x is T)
-              .Select(x => (T) x);
-          }
-        case (ControlledBy.SpellOwner):
-          {
-            return candidates
-              .Where(x => x.Controller() == Controller && x is T)
-              .Select(x => (T) x);
-          }
-      }
-
-      return candidates.OfType<T>();
-    }
-
-    public int MinTargetCount(int selectorIndex)
-    {
-      var selector = _context.Selector;
-
-      return selector.Effect.Count > 0
-        ? selector.Effect[selectorIndex].MinCount.GetValue(X)
-        : selector.Cost[selectorIndex].MinCount.GetValue(X);
-    }
-
-    public int MaxTargetCount(int selectorIndex)
-    {
-      var selector = _context.Selector;
-
-      return selector.Effect.Count > 0
-        ? selector.Effect[selectorIndex].MaxCount.GetValue(X)
-        : selector.Cost[selectorIndex].MaxCount.GetValue(X);
-    }
-
-    public int TotalMinTargetCount()
-    {
-      var selector = _context.Selector;
-      
-      return selector.Effect.Count > 0
-        ? selector.Effect.Sum(y => y.MinCount.GetValue(X))
-        : selector.Cost.Sum(y => y.MinCount.GetValue(X));                  
-    }
-
-    public int TotalMaxTargetCount()
-    {
-      var selector = _context.Selector;
-
-      return selector.Effect.Count > 0
-        ? selector.Effect.Sum(y => y.MaxCount.GetValue(X))
-        : selector.Cost.Sum(y => y.MaxCount.GetValue(X));                    
-    }
-  }
 }

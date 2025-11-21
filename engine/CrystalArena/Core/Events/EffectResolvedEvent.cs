@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class EffectResolvedEvent
-  {
-    public readonly Effect Effect;
-
-    public EffectResolvedEvent(Effect effect)
+    public class EffectResolvedEvent
     {
-      Effect = effect;
+        public readonly Effect Effect;
+
+        public EffectResolvedEvent(Effect effect)
+        {
+            Effect = effect;
+        }
     }
-  }
 }

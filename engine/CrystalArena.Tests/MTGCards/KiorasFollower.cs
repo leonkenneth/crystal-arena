@@ -1,27 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
-  using System.Linq;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class KiorasFollower
-  {
-    public class Ai : AiScenario
+    public class KiorasFollower
     {
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void UntapAndBlock()
+            {
+                Battlefield(P1, "Trained Armodon");
+                Battlefield(P2, "Kiora's Follower", C("Llanowar Elves").Tap());
 
-      [Fact (Skip = "Old card")]
-      public void UntapAndBlock()
-      {
-        Battlefield(P1, "Trained Armodon");
-        Battlefield(P2, "Kiora's Follower", C("Llanowar Elves").Tap());
+                P2.Life = 3;
 
-        P2.Life = 3;
+                RunGame(1);
 
-        RunGame(1);
-
-        Equal(1, P2.BreakZone.Count(x => x.Name == "Llanowar Elves"));
-        Equal(3, P2.Life);
-      }
+                Equal(1, P2.BreakZone.Count(x => x.Name == "Llanowar Elves"));
+                Equal(3, P2.Life);
+            }
+        }
     }
-  }
 }

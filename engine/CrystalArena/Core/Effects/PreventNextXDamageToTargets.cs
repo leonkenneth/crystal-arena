@@ -1,34 +1,30 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class PreventNextXDamageToTargets : Effect
-  {
-    private readonly DynParam<int> _amount;    
-    
-    private PreventNextXDamageToTargets() {}
-
-    public PreventNextXDamageToTargets(DynParam<int> amount)
+    public class PreventNextXDamageToTargets : Effect
     {
-      _amount = amount;
+        private readonly DynParam<int> _amount;
 
-      RegisterDynamicParameters(amount);
-    }
+        private PreventNextXDamageToTargets() { }
 
-    protected override void ResolveEffect()
-    {
-      var mp = new ModifierParameters
+        public PreventNextXDamageToTargets(DynParam<int> amount)
         {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this,
-        };      
+            _amount = amount;
 
-      foreach (var target in ValidEffectTargets)
-      {
-        var prevention = new PreventNextXDamageToTarget(_amount.Value, target);
-        var modifier = new AddDamagePrevention(prevention) {UntilEot = true};
-        Game.AddModifier(modifier, mp);
-      }
+            RegisterDynamicParameters(amount);
+        }
+
+        protected override void ResolveEffect()
+        {
+            var mp = new ModifierParameters { SourceCard = Source.OwningCard, SourceEffect = this };
+
+            foreach (var target in ValidEffectTargets)
+            {
+                var prevention = new PreventNextXDamageToTarget(_amount.Value, target);
+                var modifier = new AddDamagePrevention(prevention) { UntilEot = true };
+                Game.AddModifier(modifier, mp);
+            }
+        }
     }
-  }
 }

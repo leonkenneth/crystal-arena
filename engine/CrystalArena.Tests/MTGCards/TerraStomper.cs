@@ -1,27 +1,37 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class TerraStomper
-  {
-    public class Ai : AiScenario
+    public class TerraStomper
     {
-      [Fact (Skip = "Old card")]
-      public void CannotBeCountered()
-      {
-        Hand(P1, "Terra Stomper");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CannotBeCountered()
+            {
+                Hand(P1, "Terra Stomper");
 
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest");
+                Battlefield(
+                    P1,
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest"
+                );
 
-        Hand(P2, "Counterspell");
-        Battlefield(P2, "Island", "Island");
+                Hand(P2, "Counterspell");
+                Battlefield(P2, "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P1.Battlefield.Forwards.Count());
-      }
+                Equal(1, P1.Battlefield.Forwards.Count());
+            }
+        }
     }
-  }
 }

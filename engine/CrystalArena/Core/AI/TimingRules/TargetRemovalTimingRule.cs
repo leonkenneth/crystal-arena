@@ -1,146 +1,155 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class TargetRemovalTimingRule : TimingRule
-  {
-    private readonly bool _combatOnly;
-    private readonly List<EffectTag> _removalTags = new List<EffectTag>();
-
-    private TargetRemovalTimingRule() {}
-
-    public TargetRemovalTimingRule(EffectTag? removalTag = null, bool combatOnly = false)
+    public class TargetRemovalTimingRule : TimingRule
     {
-      if (removalTag.HasValue)
-      {
-        _removalTags.Add(removalTag.Value);
-      }
+        private readonly bool _combatOnly;
+        private readonly List<EffectTag> _removalTags = new List<EffectTag>();
 
-      _combatOnly = combatOnly;
-    }
+        private TargetRemovalTimingRule() { }
 
-    public TargetRemovalTimingRule RemovalTags(params EffectTag[] removalTags)
-    {
-      _removalTags.AddRange(removalTags);
-      return this;
-    }
-
-    private bool RemovalDependsOnToughness()
-    {
-      return _removalTags.Contains(EffectTag.DealDamage) || _removalTags.Contains(EffectTag.ReduceToughness);
-    }
-
-    private bool StackHasInterestingSpells()
-    {
-      if (Stack.TopSpellHas(EffectTag.Shroud))
-        return true;
-
-      if (Stack.TopSpellHas(EffectTag.IncreaseToughness) && RemovalDependsOnToughness())
-        return true;
-
-      return false;
-    }
-
-    private bool TargetForwardRemoval(Card target, TimingRuleParameters p)
-    {
-      if (!target.Is().Forward)
-        return false;
-
-      if (IsBeforeYouDeclareAttackers(p.Controller))
-      {
-        return target.CanBlock();
-      }
-
-      if (IsBeforeYouDeclareBlockers(p.Controller))
-      {
-        return target.IsAttacker;
-      }
-
-      if (_combatOnly)
-        return false;
-
-      if (StackHasInterestingSpells())
-      {
-        if (Stack.TopSpell.HasEffectTargets())
+        public TargetRemovalTimingRule(EffectTag? removalTag = null, bool combatOnly = false)
         {
-          return Stack.TopSpell.HasEffectTarget(target);
+            if (removalTag.HasValue)
+            {
+                _removalTags.Add(removalTag.Value);
+            }
+
+            _combatOnly = combatOnly;
         }
 
-        // e.g Nantuko Shade gives self a +1/+1 boost
-        if (Stack.TopSpell.AffectsEffectSource)
+        public TargetRemovalTimingRule RemovalTags(params EffectTag[] removalTags)
         {
-          return target == Stack.TopSpell.Source.OwningCard;
-        }
-      }
-
-      return false;
-    }
-
-    private bool TargetAuraRemoval(Card target, TimingRuleParameters p)
-    {
-      if ((!target.Is().Aura && !target.Is().Equipment) || target.AttachedTo == null)
-        return false;
-
-      if (IsAfterOpponentDeclaresBlocker(p.Controller) && target.AttachedTo.IsBlocker)
-      {
-        return true;
-      }
-
-      if (IsAfterOpponentDeclaresAttackers(p.Controller) && target.AttachedTo.IsAttacker)
-      {
-        return true;
-      }
-
-      return false;
-    }
-
-    private bool EotRemoval(TimingRuleParameters p)
-    {
-      if (_combatOnly)
-        return false;
-
-      return IsEndOfOpponentsTurn(p.Controller);
-    }
-
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
-    {
-      // quick check before target generation      
-      if (Stack.IsEmpty)
-      {
-        if (_removalTags.Contains(EffectTag.DealDamage) || _removalTags.Contains(EffectTag.ForwardsOnly) ||
-          _removalTags.Contains(EffectTag.ReduceToughness) || _removalTags.Contains(EffectTag.Humble) || _removalTags.Contains(EffectTag.CombatDisabler))
-        {
-          return IsBeforeYouDeclareAttackers(p.Controller) || IsBeforeYouDeclareBlockers(p.Controller) ||
-            IsEndOfOpponentsTurn(p.Controller);
+            _removalTags.AddRange(removalTags);
+            return this;
         }
 
-        return IsBeforeYouDeclareAttackers(p.Controller) || IsBeforeYouDeclareBlockers(p.Controller) ||
-          IsAfterOpponentDeclaresAttackers(p.Controller) || IsAfterOpponentDeclaresAttackers(p.Controller) ||
-            IsEndOfOpponentsTurn(p.Controller);
-      }
-
-      return StackHasInterestingSpells();
-    }
-
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
-    {
-      foreach (var target in p.Targets<Card>())
-      {
-        if (target.Controller == p.Controller)
-          continue;
-        
-        if (TargetForwardRemoval(target, p))
+        private bool RemovalDependsOnToughness()
         {
-          return true;
+            return _removalTags.Contains(EffectTag.DealDamage)
+                || _removalTags.Contains(EffectTag.ReduceToughness);
         }
 
-        if (TargetAuraRemoval(target, p))
+        private bool StackHasInterestingSpells()
         {
-          return true;
-        }
-      }
+            if (Stack.TopSpellHas(EffectTag.Shroud))
+                return true;
 
-      return EotRemoval(p);
+            if (Stack.TopSpellHas(EffectTag.IncreaseToughness) && RemovalDependsOnToughness())
+                return true;
+
+            return false;
+        }
+
+        private bool TargetForwardRemoval(Card target, TimingRuleParameters p)
+        {
+            if (!target.Is().Forward)
+                return false;
+
+            if (IsBeforeYouDeclareAttackers(p.Controller))
+            {
+                return target.CanBlock();
+            }
+
+            if (IsBeforeYouDeclareBlockers(p.Controller))
+            {
+                return target.IsAttacker;
+            }
+
+            if (_combatOnly)
+                return false;
+
+            if (StackHasInterestingSpells())
+            {
+                if (Stack.TopSpell.HasEffectTargets())
+                {
+                    return Stack.TopSpell.HasEffectTarget(target);
+                }
+
+                // e.g Nantuko Shade gives self a +1/+1 boost
+                if (Stack.TopSpell.AffectsEffectSource)
+                {
+                    return target == Stack.TopSpell.Source.OwningCard;
+                }
+            }
+
+            return false;
+        }
+
+        private bool TargetAuraRemoval(Card target, TimingRuleParameters p)
+        {
+            if ((!target.Is().Aura && !target.Is().Equipment) || target.AttachedTo == null)
+                return false;
+
+            if (IsAfterOpponentDeclaresBlocker(p.Controller) && target.AttachedTo.IsBlocker)
+            {
+                return true;
+            }
+
+            if (IsAfterOpponentDeclaresAttackers(p.Controller) && target.AttachedTo.IsAttacker)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool EotRemoval(TimingRuleParameters p)
+        {
+            if (_combatOnly)
+                return false;
+
+            return IsEndOfOpponentsTurn(p.Controller);
+        }
+
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            // quick check before target generation
+            if (Stack.IsEmpty)
+            {
+                if (
+                    _removalTags.Contains(EffectTag.DealDamage)
+                    || _removalTags.Contains(EffectTag.ForwardsOnly)
+                    || _removalTags.Contains(EffectTag.ReduceToughness)
+                    || _removalTags.Contains(EffectTag.Humble)
+                    || _removalTags.Contains(EffectTag.CombatDisabler)
+                )
+                {
+                    return IsBeforeYouDeclareAttackers(p.Controller)
+                        || IsBeforeYouDeclareBlockers(p.Controller)
+                        || IsEndOfOpponentsTurn(p.Controller);
+                }
+
+                return IsBeforeYouDeclareAttackers(p.Controller)
+                    || IsBeforeYouDeclareBlockers(p.Controller)
+                    || IsAfterOpponentDeclaresAttackers(p.Controller)
+                    || IsAfterOpponentDeclaresAttackers(p.Controller)
+                    || IsEndOfOpponentsTurn(p.Controller);
+            }
+
+            return StackHasInterestingSpells();
+        }
+
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+        {
+            foreach (var target in p.Targets<Card>())
+            {
+                if (target.Controller == p.Controller)
+                    continue;
+
+                if (TargetForwardRemoval(target, p))
+                {
+                    return true;
+                }
+
+                if (TargetAuraRemoval(target, p))
+                {
+                    return true;
+                }
+            }
+
+            return EotRemoval(p);
+        }
     }
-  }
 }

@@ -1,17 +1,17 @@
 ﻿namespace CrystalArena.Events
 {
-  public class CardWasRevealedEvent
-  {
-    public readonly Card Card;
-
-    public CardWasRevealedEvent(Card card)
+    public class CardWasRevealedEvent
     {
-      Card = card;
-    }
+        public readonly Card Card;
 
-    public override string ToString()
-    {
-      return string.Format("{0} revealed {1}.", Card.Controller, Card);
+        public CardWasRevealedEvent(Card card)
+        {
+            Card = card;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} revealed {1}.", Card.Controller, Card);
+        }
     }
-  }
 }

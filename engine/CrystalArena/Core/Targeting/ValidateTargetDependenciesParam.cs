@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class ValidateTargetDependenciesParam
-  {
-    public List<ITarget> Cost;
-    public List<ITarget> Effect;
-  }
+    public class ValidateTargetDependenciesParam
+    {
+        public List<ITarget> Cost;
+        public List<ITarget> Effect;
+    }
 }

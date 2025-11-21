@@ -1,31 +1,32 @@
 ﻿namespace CrystalArena.Costs
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class Tap : Cost
-  {
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class Tap : Cost
     {
-      if (Validator != null)
-      {
-        return Controller.Battlefield.Any(
-          x => x.CanBeTapped && Validator.IsTargetValid(x, Card));
-      }
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            if (Validator != null)
+            {
+                return Controller.Battlefield.Any(x =>
+                    x.CanBeTapped && Validator.IsTargetValid(x, Card)
+                );
+            }
 
-      return Card.CanTap;
+            return Card.CanTap;
+        }
+
+        public override void PayPartial(PayCostParameters p)
+        {
+            var target = p.Targets.Cost.FirstOrDefault();
+
+            if (target != null)
+            {
+                target.Card().Tap();
+                return;
+            }
+
+            Card.Tap();
+        }
     }
-
-    public override void PayPartial(PayCostParameters p)
-    {
-      var target = p.Targets.Cost.FirstOrDefault();
-
-      if (target != null)
-      {
-        target.Card().Tap();
-        return;
-      }
-
-      Card.Tap();
-    }
-  }
 }

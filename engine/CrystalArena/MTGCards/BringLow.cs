@@ -1,33 +1,44 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class BringLow : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class BringLow : CardTemplateSource
     {
-    yield return Card
-      .Named("Bring Low")
-      .ManaCost("{3}{R}")
-      .Type("Summon")
-      .Text("Bring Low deals 3 damage to target forward. If that forward has a +1/+1 counter on it, Bring Low deals 5 damage to it instead.")
-      .FlavorText("\"People are often humbled by the elements. But the elements, too, can be humbled.\"{EOL}—Surrak, khan of the Temur")
-      .Cast(p =>
-      {
-        p.Text = "{{3}}{{R}}: Bring Low deals 3 damage to target forward. If that forward has a +1/+1 counter on it, Bring Low deals 5 damage to it instead.";
-        p.Effect = () => new DealDamageToTargets(
-            P((e, _) => e.Target.Card().CountersCount(CounterType.PowerToughness) > 0 ? 5 : 3));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Bring Low")
+                .ManaCost("{3}{R}")
+                .Type("Summon")
+                .Text(
+                    "Bring Low deals 3 damage to target forward. If that forward has a +1/+1 counter on it, Bring Low deals 5 damage to it instead."
+                )
+                .FlavorText(
+                    "\"People are often humbled by the elements. But the elements, too, can be humbled.\"{EOL}—Surrak, khan of the Temur"
+                )
+                .Cast(p =>
+                {
+                    p.Text =
+                        "{{3}}{{R}}: Bring Low deals 3 damage to target forward. If that forward has a +1/+1 counter on it, Bring Low deals 5 damage to it instead.";
+                    p.Effect = () =>
+                        new DealDamageToTargets(
+                            P(
+                                (e, _) =>
+                                    e.Target.Card().CountersCount(CounterType.PowerToughness) > 0
+                                        ? 5
+                                        : 3
+                            )
+                        );
 
-        p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
-        p.TargetingRule(new EffectDealDamage(5));
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TargetingRule(new EffectDealDamage(5));
 
-        p.TimingRule(new TargetRemovalTimingRule(EffectTag.DealDamage));
-      });
+                    p.TimingRule(new TargetRemovalTimingRule(EffectTag.DealDamage));
+                });
+        }
     }
-  }
 }

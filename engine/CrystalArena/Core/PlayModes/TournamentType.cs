@@ -1,8 +1,8 @@
 ﻿namespace CrystalArena
 {
-  public enum TournamentType
-  {
-    Sealed,
-    Draft
-  }
+    public enum TournamentType
+    {
+        Sealed,
+        Draft,
+    }
 }

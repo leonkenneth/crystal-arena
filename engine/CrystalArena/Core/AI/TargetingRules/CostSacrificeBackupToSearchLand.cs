@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class CostSacrificeBackupToSearchBackup : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class CostSacrificeBackupToSearchBackup : TargetingRule
     {
-      var costTargets = p.Candidates<Card>(selectorIndex: 0, selector: c => c.Cost)
-        .OrderBy(x => x.IsTapped ? 0 : 1)
-        .ThenBy(x => x.Score)
-        .Take(1);
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var costTargets = p.Candidates<Card>(selectorIndex: 0, selector: c => c.Cost)
+                .OrderBy(x => x.IsTapped ? 0 : 1)
+                .ThenBy(x => x.Score)
+                .Take(1);
 
-      return Group(costTargets, p.TotalMinTargetCount(), add: (t, trgs) => trgs.AddCost(t));
+            return Group(costTargets, p.TotalMinTargetCount(), add: (t, trgs) => trgs.AddCost(t));
+        }
     }
-  }
 }

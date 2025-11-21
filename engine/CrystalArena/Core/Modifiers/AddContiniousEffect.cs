@@ -1,33 +1,33 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  public class AddContiniousEffect : Modifier, IPlayerModifier
-  {
-    private readonly ContinuousEffect _continiousEffect;
-    private ContiniousEffects _continiousEffects;
-
-    private AddContiniousEffect() {}
-
-    public AddContiniousEffect(ContinuousEffect continiousEffect)
+    public class AddContiniousEffect : Modifier, IPlayerModifier
     {
-      _continiousEffect = continiousEffect;      
-    }
+        private readonly ContinuousEffect _continiousEffect;
+        private ContiniousEffects _continiousEffects;
 
-    protected override void Initialize()
-    {
-      _continiousEffect.Initialize(SourceCard, Game, (Player) Owner, SourceEffect);      
-    }
+        private AddContiniousEffect() { }
 
-    public override void Apply(ContiniousEffects continiousEffects)
-    {
-      _continiousEffects = continiousEffects;
-      _continiousEffects.Add(_continiousEffect);
+        public AddContiniousEffect(ContinuousEffect continiousEffect)
+        {
+            _continiousEffect = continiousEffect;
+        }
 
-      _continiousEffect.Activate();
-    }
+        protected override void Initialize()
+        {
+            _continiousEffect.Initialize(SourceCard, Game, (Player)Owner, SourceEffect);
+        }
 
-    protected override void Unapply()
-    {
-      _continiousEffects.Remove(_continiousEffect);      
+        public override void Apply(ContiniousEffects continiousEffects)
+        {
+            _continiousEffects = continiousEffects;
+            _continiousEffects.Add(_continiousEffect);
+
+            _continiousEffect.Activate();
+        }
+
+        protected override void Unapply()
+        {
+            _continiousEffects.Remove(_continiousEffect);
+        }
     }
-  }
 }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class LeechingSliver
-  {
-    public class Ai : AiScenario
+    public class LeechingSliver
     {
-      [Fact (Skip = "Old card")]
-      public void AttackWithSliversOpponentLosesLife()
-      {
-        Battlefield(P1, "Leeching Sliver", "Leeching Sliver");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackWithSliversOpponentLosesLife()
+            {
+                Battlefield(P1, "Leeching Sliver", "Leeching Sliver");
 
-        Battlefield(P2, C("Leeching Sliver").IsEnchantedWith("Pacifism"));
+                Battlefield(P2, C("Leeching Sliver").IsEnchantedWith("Pacifism"));
 
-        P2.Life = 6;
+                P2.Life = 6;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

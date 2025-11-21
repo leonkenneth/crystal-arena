@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.AI.CostRules
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class XIsTargetsLifepointsLeft : CostRule
-  {
-    public override int CalculateX(CostRuleParameters p)
+    public class XIsTargetsLifepointsLeft : CostRule
     {
-      if (p.Targets.Effect[0].IsPlayer())
-      {
-        return p.MaxX;
-      }
+        public override int CalculateX(CostRuleParameters p)
+        {
+            if (p.Targets.Effect[0].IsPlayer())
+            {
+                return p.MaxX;
+            }
 
-      var lifepoints = p.Targets.Max(x => x.Life());
-      return lifepoints;
+            var lifepoints = p.Targets.Max(x => x.Life());
+            return lifepoints;
+        }
     }
-  }
 }

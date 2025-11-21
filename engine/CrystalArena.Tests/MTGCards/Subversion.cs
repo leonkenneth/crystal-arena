@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Subversion
-  {
-    public class Ai : AiScenario
+    public class Subversion
     {
-      [Fact (Skip = "Old card")]
-      public void YouGain1OpponentLooses1()
-      {
-        Battlefield(P1, "Subversion");                
-        RunGame(2);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void YouGain1OpponentLooses1()
+            {
+                Battlefield(P1, "Subversion");
+                RunGame(2);
 
-        Equal(21, P1.Life);
-        Equal(19, P2.Life);
-      }
+                Equal(21, P1.Life);
+                Equal(19, P2.Life);
+            }
+        }
     }
-  }
 }

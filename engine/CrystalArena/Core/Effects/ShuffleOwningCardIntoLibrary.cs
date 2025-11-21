@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class ShuffleOwningCardIntoMainDeck : Effect
-  {
-    protected override void ResolveEffect()
+    public class ShuffleOwningCardIntoMainDeck : Effect
     {
-      Source.OwningCard.ShuffleIntoMainDeck();
+        protected override void ResolveEffect()
+        {
+            Source.OwningCard.ShuffleIntoMainDeck();
+        }
     }
-  }
 }

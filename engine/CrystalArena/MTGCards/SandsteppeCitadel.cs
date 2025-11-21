@@ -1,23 +1,24 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
+    using System.Collections.Generic;
+    using Effects;
 
-  public class SandsteppeCitadel : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SandsteppeCitadel : CardTemplateSource
     {
-      yield return Card
-        .Named("Sandsteppe Citadel")
-        .Type("Backup")
-        .Text("Sandsteppe Citadel enters the battlefield tapped.{EOL}{T}: Add {W}, {B} or {G} to your mana pool.")
-        .FlavorText("That which endures, survives.")
-        .Cast(p => p.Effect = () => new CastPermanent(tap: true))
-        .ManaAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{T}: Add {W}, {B} or {G} to your mana pool.";
-          p.ManaAmount(Mana.Colored(isBlack:true, isGreen: true, isWhite: true));
-        });
+            yield return Card.Named("Sandsteppe Citadel")
+                .Type("Backup")
+                .Text(
+                    "Sandsteppe Citadel enters the battlefield tapped.{EOL}{T}: Add {W}, {B} or {G} to your mana pool."
+                )
+                .FlavorText("That which endures, survives.")
+                .Cast(p => p.Effect = () => new CastPermanent(tap: true))
+                .ManaAbility(p =>
+                {
+                    p.Text = "{T}: Add {W}, {B} or {G} to your mana pool.";
+                    p.ManaAmount(Mana.Colored(isBlack: true, isGreen: true, isWhite: true));
+                });
+        }
     }
-  }
 }

@@ -1,58 +1,70 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class EnsoulArtifact
-  {
-    public class Ai : AiScenario
+    public class EnsoulArtifact
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantWithEnsoulArtifact()
-      {
-        Hand(P1, "Ensoul Artifact");
-        Battlefield(P1, "Profane Memento", "Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantWithEnsoulArtifact()
+            {
+                Hand(P1, "Ensoul Artifact");
+                Battlefield(P1, "Profane Memento", "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(15, P2.Life());
-      }
+                Equal(15, P2.Life());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void EnchantEquipmentWithEnsoulArtifact()
-      {
-        var wall = C("Wall of Frost").IsEnchantedWith("Rogue's Gloves");
-        Hand(P1, "Ensoul Artifact");
-        Battlefield(P1, wall, "Island", "Island");
+            [Fact(Skip = "Old card")]
+            public void EnchantEquipmentWithEnsoulArtifact()
+            {
+                var wall = C("Wall of Frost").IsEnchantedWith("Rogue's Gloves");
+                Hand(P1, "Ensoul Artifact");
+                Battlefield(P1, wall, "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(15, P2.Life());
-      }
+                Equal(15, P2.Life());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void EnchantWithEnsoulArtifact2()
-      {
-        Hand(P1, "Ensoul Artifact");
-        Battlefield(P1, "Forest", "Island", "Island", "Rogue's Gloves", "Welkin Tern", "Forest");
+            [Fact(Skip = "Old card")]
+            public void EnchantWithEnsoulArtifact2()
+            {
+                Hand(P1, "Ensoul Artifact");
+                Battlefield(
+                    P1,
+                    "Forest",
+                    "Island",
+                    "Island",
+                    "Rogue's Gloves",
+                    "Welkin Tern",
+                    "Forest"
+                );
 
-        // If an Equipment becomes an artifact forward, it can’t be attached to another forward.
-        // AI tries to equip "Rogue's Gloves" itself after casting "Ensoul Artifact", and throws StackOverflow. 
-        // If test is ok, then "Ensoul Artifact" works correctly and equipment loses its ability to equp if it becomes forward
+                // If an Equipment becomes an artifact forward, it can’t be attached to another forward.
+                // AI tries to equip "Rogue's Gloves" itself after casting "Ensoul Artifact", and throws StackOverflow.
+                // If test is ok, then "Ensoul Artifact" works correctly and equipment loses its ability to equp if it becomes forward
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(13, P2.Life());
-      }
+                Equal(13, P2.Life());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void TryingEquipEnchantedEquipmentShouldNotGetStackOverflow()
-      {
-        Battlefield(P1, "Island", C("Shield of the Avatar").IsEnchantedWith("Ensoul Artifact"), "Island");
+            [Fact(Skip = "Old card")]
+            public void TryingEquipEnchantedEquipmentShouldNotGetStackOverflow()
+            {
+                Battlefield(
+                    P1,
+                    "Island",
+                    C("Shield of the Avatar").IsEnchantedWith("Ensoul Artifact"),
+                    "Island"
+                );
 
-        RunGame(1);
-
-      }
+                RunGame(1);
+            }
+        }
     }
-  }
 }

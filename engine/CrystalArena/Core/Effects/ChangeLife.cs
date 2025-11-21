@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class ChangeLife : Effect
-  {    
-    private readonly DynParam<int> _amount;
-    private readonly DynParam<Player> _whos;
-
-    private ChangeLife() {}    
-    
-    public ChangeLife(DynParam<int> amount, DynParam<Player> whos)
+    public class ChangeLife : Effect
     {
-      _amount = amount;
-      _whos = whos;
+        private readonly DynParam<int> _amount;
+        private readonly DynParam<Player> _whos;
 
-      RegisterDynamicParameters(amount, whos);
+        private ChangeLife() { }
+
+        public ChangeLife(DynParam<int> amount, DynParam<Player> whos)
+        {
+            _amount = amount;
+            _whos = whos;
+
+            RegisterDynamicParameters(amount, whos);
+        }
+
+        public override int CalculatePlayerDamage(Player player)
+        {
+            if (_amount.Value >= 0)
+                return 0;
+
+            return _whos.Value == player ? -_amount.Value : 0;
+        }
+
+        protected override void ResolveEffect()
+        {
+            _whos.Value.Life += _amount.Value;
+        }
     }
-
-    public override int CalculatePlayerDamage(Player player)
-    {
-      if (_amount.Value >= 0)
-        return 0;
-
-      return _whos.Value == player ? -_amount.Value : 0;
-    }
-
-    protected override void ResolveEffect()
-    {
-      _whos.Value.Life += _amount.Value;
-    }
-  }
 }

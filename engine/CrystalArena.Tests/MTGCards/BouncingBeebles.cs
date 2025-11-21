@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BouncingBeebles
-  {
-    public class Ai : AiScenario
+    public class BouncingBeebles
     {
-      [Fact (Skip = "Old card")]
-      public void Unblockable()
-      {
-        Battlefield(P1, "Bouncing Beebles");
-        Battlefield(P2, "Dragon Blood", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Unblockable()
+            {
+                Battlefield(P1, "Bouncing Beebles");
+                Battlefield(P2, "Dragon Blood", "Grizzly Bears");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

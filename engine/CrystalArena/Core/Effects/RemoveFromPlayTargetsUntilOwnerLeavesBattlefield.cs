@@ -1,45 +1,46 @@
 ﻿namespace CrystalArena.Effects
 {
-  using AI;
-  using Modifiers;
-  using Triggers;
+    using AI;
+    using Modifiers;
+    using Triggers;
 
-  public class RemoveFromPlayTargetsUntilOwnerLeavesBattlefield : Effect
-  {
-    public RemoveFromPlayTargetsUntilOwnerLeavesBattlefield()
+    public class RemoveFromPlayTargetsUntilOwnerLeavesBattlefield : Effect
     {
-      SetTags(EffectTag.RemoveFromPlay);
-    }
-
-    protected override void ResolveEffect()
-    {
-      foreach (Card target in ValidEffectTargets)
-      {
-        
-        // exile first, otherwise modifier 
-        // will be removed when moving to exile
-        target.RemoveFromPlay(this);
-        
-        if (!target.Is().Token)
+        public RemoveFromPlayTargetsUntilOwnerLeavesBattlefield()
         {
-          var tp = new TriggeredAbility.Parameters
+            SetTags(EffectTag.RemoveFromPlay);
+        }
+
+        protected override void ResolveEffect()
+        {
+            foreach (Card target in ValidEffectTargets)
             {
-              Text = string.Format("When {0} leaves play, return removedFromPlay forward to battlefield.",
-                Source.OwningCard.Name),
-              Effect = () => new PutOwnerToBattlefield(Zone.RemovedFromPlay),
-            };
+                // exile first, otherwise modifier
+                // will be removed when moving to exile
+                target.RemoveFromPlay(this);
 
-          tp.Trigger(new WhenPermanentLeavesPlay(Source.OwningCard));
+                if (!target.Is().Token)
+                {
+                    var tp = new TriggeredAbility.Parameters
+                    {
+                        Text = string.Format(
+                            "When {0} leaves play, return removedFromPlay forward to battlefield.",
+                            Source.OwningCard.Name
+                        ),
+                        Effect = () => new PutOwnerToBattlefield(Zone.RemovedFromPlay),
+                    };
 
-          var mp = new ModifierParameters
-            {
-              SourceCard = Source.OwningCard,
-              SourceEffect = this
-            };
+                    tp.Trigger(new WhenPermanentLeavesPlay(Source.OwningCard));
 
-          target.AddModifier(new AddTriggeredAbility(new TriggeredAbility(tp)), mp);
-        }        
-      }
+                    var mp = new ModifierParameters
+                    {
+                        SourceCard = Source.OwningCard,
+                        SourceEffect = this,
+                    };
+
+                    target.AddModifier(new AddTriggeredAbility(new TriggeredAbility(tp)), mp);
+                }
+            }
+        }
     }
-  }
 }

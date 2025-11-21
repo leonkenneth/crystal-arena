@@ -1,36 +1,43 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class IncrementalGrowth : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class IncrementalGrowth : CardTemplateSource
     {
-      yield return Card
-        .Named("Incremental Growth")
-        .ManaCost("{3}{G}{G}")
-        .Type("Sorcery")
-        .Text("Put a +1/+1 counter on target forward, two +1/+1 counters on another target forward, and three +1/+1 counters on a third target forward.")
-        .FlavorText("The bonds of family cross the boundaries of race.")
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          var amounts = new[] { 1, 2, 3 };
-          p.Effect = () => new PutDifferentAmountOf11ContersOnTargets(amounts);
+            yield return Card.Named("Incremental Growth")
+                .ManaCost("{3}{G}{G}")
+                .Type("Sorcery")
+                .Text(
+                    "Put a +1/+1 counter on target forward, two +1/+1 counters on another target forward, and three +1/+1 counters on a third target forward."
+                )
+                .FlavorText("The bonds of family cross the boundaries of race.")
+                .Cast(p =>
+                {
+                    var amounts = new[] { 1, 2, 3 };
+                    p.Effect = () => new PutDifferentAmountOf11ContersOnTargets(amounts);
 
-          p.TargetSelector.AddEffect(
-            trg => trg.Is.Forward().On.Battlefield(),
-            trg => {
-              trg.MinCount = 3;
-              trg.MaxCount = 3;            
-            });
+                    p.TargetSelector.AddEffect(
+                        trg => trg.Is.Forward().On.Battlefield(),
+                        trg =>
+                        {
+                            trg.MinCount = 3;
+                            trg.MaxCount = 3;
+                        }
+                    );
 
-          p.TargetingRule(new EffectOrCostRankBy(c => -c.Power.GetValueOrDefault(), 
-            ControlledBy.SpellOwner));
-          p.TimingRule(new OnFirstMain());
-        });
+                    p.TargetingRule(
+                        new EffectOrCostRankBy(
+                            c => -c.Power.GetValueOrDefault(),
+                            ControlledBy.SpellOwner
+                        )
+                    );
+                    p.TimingRule(new OnFirstMain());
+                });
+        }
     }
-  }
 }

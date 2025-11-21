@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System;
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using System;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class PermanentLeavesBattlefieldLifetime : Lifetime, IReceive<ZoneChangedEvent>
-  {
-    private readonly Func<Lifetime, Card> _selector;
-
-    private PermanentLeavesBattlefieldLifetime() {}
-
-    public PermanentLeavesBattlefieldLifetime(Func<Lifetime, Card> selector)
+    public class PermanentLeavesBattlefieldLifetime : Lifetime, IReceive<ZoneChangedEvent>
     {
-      _selector = selector;
-    }
+        private readonly Func<Lifetime, Card> _selector;
 
-    public void Receive(ZoneChangedEvent message)
-    {
-      if (message.Card == _selector(this) && message.FromBattlefield)
-      {
-        End();
-      }
+        private PermanentLeavesBattlefieldLifetime() { }
+
+        public PermanentLeavesBattlefieldLifetime(Func<Lifetime, Card> selector)
+        {
+            _selector = selector;
+        }
+
+        public void Receive(ZoneChangedEvent message)
+        {
+            if (message.Card == _selector(this) && message.FromBattlefield)
+            {
+                End();
+            }
+        }
     }
-  }
 }

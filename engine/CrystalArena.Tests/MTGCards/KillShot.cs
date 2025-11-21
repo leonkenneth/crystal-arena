@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class KillShot
-  {
-    public class Ai : AiScenario
+    public class KillShot
     {
-      [Fact (Skip = "Old card")]
-      public void DestrpyAttackingDragon()
-      {
-        Battlefield(P1, "Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestrpyAttackingDragon()
+            {
+                Battlefield(P1, "Shivan Dragon");
 
-        Hand(P2, "Kill Shot");
-        Battlefield(P2, "Plains", "Plains", "Plains");
+                Hand(P2, "Kill Shot");
+                Battlefield(P2, "Plains", "Plains", "Plains");
 
-        P2.Life = 5;
+                P2.Life = 5;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(5, P2.Life);
-        Equal(1, P1.BreakZone.Count);
-      }
+                Equal(5, P2.Life);
+                Equal(1, P1.BreakZone.Count);
+            }
+        }
     }
-  }
 }

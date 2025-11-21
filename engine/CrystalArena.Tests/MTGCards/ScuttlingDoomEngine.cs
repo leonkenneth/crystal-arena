@@ -1,39 +1,39 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class ScuttlingDoomEngine
-  {
-    public class Ai : AiScenario
+    public class ScuttlingDoomEngine
     {
-      [Fact (Skip = "Old card")]
-      public void UnblockableForBear()
-      {
-        Battlefield(P1, "Scuttling Doom Engine");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void UnblockableForBear()
+            {
+                Battlefield(P1, "Scuttling Doom Engine");
 
-        P2.Life = 6;
-        Battlefield(P2, "Grizzly Bears");
+                P2.Life = 6;
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);        
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void CanBeBlockedByDragon()
-      {
-        Battlefield(P1, "Scuttling Doom Engine");
+            [Fact(Skip = "Old card")]
+            public void CanBeBlockedByDragon()
+            {
+                Battlefield(P1, "Scuttling Doom Engine");
 
-        P2.Life = 6;
-        Battlefield(P2, "Shivan Dragon");
+                P2.Life = 6;
+                Battlefield(P2, "Shivan Dragon");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(6, P2.Life);
-        Equal(0, P2.Battlefield.Count);
-      }
+                Equal(6, P2.Life);
+                Equal(0, P2.Battlefield.Count);
+            }
+        }
     }
-  }
 }

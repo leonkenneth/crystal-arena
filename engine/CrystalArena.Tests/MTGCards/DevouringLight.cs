@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class DevouringLight
-  {
-    public class Ai : AiScenario
+    public class DevouringLight
     {
-      [Fact (Skip = "Old card")]
-      public void RemoveFromPlayOneBlockOther()
-      {
-        Battlefield(P1, "Grizzly Bears", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void RemoveFromPlayOneBlockOther()
+            {
+                Battlefield(P1, "Grizzly Bears", "Grizzly Bears");
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears", "Plains", "Plains");
-        Hand(P2, "Devouring Light");
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears", "Plains", "Plains");
+                Hand(P2, "Devouring Light");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P2.Life);        
-        Equal(1, P1.BreakZone.Forwards.Count());        
-        Equal(1, P1.RemovedFromPlay.Count());        
-      }     
+                Equal(2, P2.Life);
+                Equal(1, P1.BreakZone.Forwards.Count());
+                Equal(1, P1.RemovedFromPlay.Count());
+            }
+        }
     }
-  }
 }

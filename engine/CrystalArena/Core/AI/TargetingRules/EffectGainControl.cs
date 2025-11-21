@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  public class EffectGainControl : EffectDestroy {}
+    public class EffectGainControl : EffectDestroy { }
 }

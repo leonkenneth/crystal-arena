@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ViashinoCutthroat
-  {
-    public class Ai : AiScenario
+    public class ViashinoCutthroat
     {
-      [Fact (Skip = "Old card")]
-      public void AttackAndReturnToHand()
-      {
-        var cutthroat = C("Viashino Cutthroat");
-        
-        Hand(P1, cutthroat);
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackAndReturnToHand()
+            {
+                var cutthroat = C("Viashino Cutthroat");
 
-        RunGame(1);
+                Hand(P1, cutthroat);
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
 
-        Equal(15, P2.Life);
-        Equal(Zone.Hand, C(cutthroat).Zone);
-      }
+                RunGame(1);
+
+                Equal(15, P2.Life);
+                Equal(Zone.Hand, C(cutthroat).Zone);
+            }
+        }
     }
-  }
 }

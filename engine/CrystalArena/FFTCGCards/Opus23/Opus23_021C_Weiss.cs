@@ -16,8 +16,7 @@ public class Opus23_021C_Weiss : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("23-021C")
+        yield return Card.Code("23-021C")
             .Named("Weiss")
             .Cost(3, "I")
             .Category("DFF · VII")
@@ -25,10 +24,12 @@ public class Opus23_021C_Weiss : CardTemplateSource
             .Forward()
             .Power(7000)
             .Text(
-                "If you control 2 or more Job Tsviets, Weiss gains +2000 power and Brave.\nWhen Weiss enters the field, you may pay {Z}. When you do so, search for 1 Job Tsviets and add it to your hand.")
+                "If you control 2 or more Job Tsviets, Weiss gains +2000 power and Brave.\nWhen Weiss enters the field, you may pay {Z}. When you do so, search for 1 Job Tsviets and add it to your hand."
+            )
             .StaticAbility(p =>
             {
-                p.Condition = cp => cp.OwnerControlsPermanents(cards => cards.Count(x => x.HasJob("Tsviets")) >= 2);
+                p.Condition = cp =>
+                    cp.OwnerControlsPermanents(cards => cards.Count(x => x.HasJob("Tsviets")) >= 2);
                 p.Modifiers.Add(() => new AddPowerAndToughness(+2000, +2000));
                 p.Modifiers.Add(() => new AddSimpleAbility(Static.Brave));
             })
@@ -37,10 +38,14 @@ public class Opus23_021C_Weiss : CardTemplateSource
                 p.Text =
                     "When Weiss enters the field, you may pay {Z}. When you do so, search for 1 Job Tsviets and add it to your hand.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
-                p.Effect = () => new PayManaThen("{Z}".Parse(), new SearchMainDeckPutToZone(
-                    zone: Zone.Hand,
-                    validator: (card, ctx) => card.HasJob("Tsviets")
-                ));
+                p.Effect = () =>
+                    new PayManaThen(
+                        "{Z}".Parse(),
+                        new SearchMainDeckPutToZone(
+                            zone: Zone.Hand,
+                            validator: (card, ctx) => card.HasJob("Tsviets")
+                        )
+                    );
             });
     }
 }

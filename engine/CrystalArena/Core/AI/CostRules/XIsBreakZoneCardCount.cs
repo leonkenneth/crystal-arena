@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.CostRules
 {
-  public class XIsBreakZoneCardCount : CostRule
-  {
-    public override int CalculateX(CostRuleParameters p)
+    public class XIsBreakZoneCardCount : CostRule
     {
-      return p.Controller.BreakZone.Count;
+        public override int CalculateX(CostRuleParameters p)
+        {
+            return p.Controller.BreakZone.Count;
+        }
     }
-  }
 }

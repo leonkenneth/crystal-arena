@@ -1,34 +1,42 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class SeismicStrike : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SeismicStrike : CardTemplateSource
     {
-      yield return Card
-        .Named("Seismic Strike")
-        .ManaCost("{2}{R}")
-        .Type("Summon")
-        .Text("Seismic Strike deals damage to target forward equal to the number of Mountains you control. ")
-        .FlavorText("\"Life up here is simple. Adapt to the ways of the mountains and they will reward you. Fight them and they will end you.\"{EOL}—Kezim, prodigal pyromancer")
-        .Cast(cp =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          cp.Effect = () => new DealDamageToTargets(
-            amount: P(e => e.Controller.Battlefield.Count(x => x.Is("Mountain"))));
+            yield return Card.Named("Seismic Strike")
+                .ManaCost("{2}{R}")
+                .Type("Summon")
+                .Text(
+                    "Seismic Strike deals damage to target forward equal to the number of Mountains you control. "
+                )
+                .FlavorText(
+                    "\"Life up here is simple. Adapt to the ways of the mountains and they will reward you. Fight them and they will end you.\"{EOL}—Kezim, prodigal pyromancer"
+                )
+                .Cast(cp =>
+                {
+                    cp.Effect = () =>
+                        new DealDamageToTargets(
+                            amount: P(e => e.Controller.Battlefield.Count(x => x.Is("Mountain")))
+                        );
 
-          cp.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    cp.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
 
-          cp.TargetingRule(new EffectDealDamage(p =>
-            p.Controller.Battlefield.Count(x => x.Is("Mountain"))));
+                    cp.TargetingRule(
+                        new EffectDealDamage(p =>
+                            p.Controller.Battlefield.Count(x => x.Is("Mountain"))
+                        )
+                    );
 
-          cp.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
-        });
+                    cp.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+                });
+        }
     }
-  }
 }

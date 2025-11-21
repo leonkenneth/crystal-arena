@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class DarkDeal
-  {
-    public class Ai : AiScenario
+    public class DarkDeal
     {
-      [Fact (Skip = "Old card")]
-      public void EachPlayerDiscardsHandAndDrawsThatManyCardsMinusOne()
-      {
-        Hand(P1, "Dark Deal", "Island", "Island", "Island", "Island", "Island", "Island");
-        Battlefield(P1, "Swamp", "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EachPlayerDiscardsHandAndDrawsThatManyCardsMinusOne()
+            {
+                Hand(P1, "Dark Deal", "Island", "Island", "Island", "Island", "Island", "Island");
+                Battlefield(P1, "Swamp", "Forest", "Forest");
 
-        Hand(P2, "Swamp");
+                Hand(P2, "Swamp");
 
-        RunGame(1);
-        
-        Equal(0, P2.Hand.Count);
-        Equal(4, P1.Hand.Count);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Hand.Count);
+                Equal(4, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

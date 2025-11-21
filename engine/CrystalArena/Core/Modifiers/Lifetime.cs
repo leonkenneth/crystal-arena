@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using Infrastructure;
+    using Infrastructure;
 
-  public abstract class Lifetime : GameObject
-  {
-    public TrackableEvent Ended = new TrackableEvent();
-    public Modifier Modifier { get; private set; }
-
-    protected Card OwningCard
+    public abstract class Lifetime : GameObject
     {
-      get { return Modifier.OwningCard; }
-    }
+        public TrackableEvent Ended = new TrackableEvent();
+        public Modifier Modifier { get; private set; }
 
-    protected void End()
-    {
-      Ended.Raise();
-    }
+        protected Card OwningCard
+        {
+            get { return Modifier.OwningCard; }
+        }
 
-    public virtual void Initialize(Game game, Modifier modifier = null)
-    {
-      Game = game;
-      Modifier = modifier;
-      Ended.Initialize(game.ChangeTracker);
+        protected void End()
+        {
+            Ended.Raise();
+        }
+
+        public virtual void Initialize(Game game, Modifier modifier = null)
+        {
+            Game = game;
+            Modifier = modifier;
+            Ended.Initialize(game.ChangeTracker);
+        }
     }
-  }
 }

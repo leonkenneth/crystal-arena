@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectGiveDoesNotUntap : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectGiveDoesNotUntap : TargetingRule
     {
-      var candidates = p.Candidates<Card>(ControlledBy.Opponent)
-        .Select(x => new
-          {
-            Card = x,
-            Score =  x.Has().DoesNotUntap ? 0 : CalculateAttackingPotential(x)
-          })        
-        .OrderByDescending(x => x.Score)
-        .Select(x => x.Card)
-        .ToList();
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>(ControlledBy.Opponent)
+                .Select(x => new
+                {
+                    Card = x,
+                    Score = x.Has().DoesNotUntap ? 0 : CalculateAttackingPotential(x),
+                })
+                .OrderByDescending(x => x.Score)
+                .Select(x => x.Card)
+                .ToList();
 
-      return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
-    }
+            return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
+        }
 
-    protected override IEnumerable<Targets> ForceSelectTargets(TargetingRuleParameters p)
-    {
-      var candidates = p.Candidates<Card>().OrderBy(x => x.Power);
-      return Group(candidates, p.TotalMinTargetCount());
+        protected override IEnumerable<Targets> ForceSelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>().OrderBy(x => x.Power);
+            return Group(candidates, p.TotalMinTargetCount());
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Flicker
-  {
-    public class Ai : AiScenario
+    public class Flicker
     {
-      [Fact (Skip = "Old card")]
-      public void KeldonAndFlicker()
-      {
-        Hand(P1, "Keldon Champion", "Flicker");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Plains", "Plains", "Plains");
-        P2.Life = 9;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KeldonAndFlicker()
+            {
+                Hand(P1, "Keldon Champion", "Flicker");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Plains", "Plains", "Plains");
+                P2.Life = 9;
 
-        RunGame(1);
-        
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

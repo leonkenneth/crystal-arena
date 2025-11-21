@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena
 {
-  public enum PlayerType
-  {
-    Machine,
-    Human,
-    Scenario,    
-  }
+    public enum PlayerType
+    {
+        Machine,
+        Human,
+        Scenario,
+    }
 }

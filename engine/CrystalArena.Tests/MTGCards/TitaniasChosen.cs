@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class TitaniasChosen
-  {
-    public class Ai : AiScenario
+    public class TitaniasChosen
     {
-      [Fact (Skip = "Old card")]
-      public void PutCounterOnChosen()
-      {
-        var chosen = C("Titania's Chosen");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutCounterOnChosen()
+            {
+                var chosen = C("Titania's Chosen");
 
-        Hand(P1, "Grizzly Bears");
-        Battlefield(P1, chosen, "Forest", "Forest");
+                Hand(P1, "Grizzly Bears");
+                Battlefield(P1, chosen, "Forest", "Forest");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, C(chosen).Power);
-        Equal(2, C(chosen).Toughness);
-      }
+                Equal(2, C(chosen).Power);
+                Equal(2, C(chosen).Toughness);
+            }
+        }
     }
-  }
 }

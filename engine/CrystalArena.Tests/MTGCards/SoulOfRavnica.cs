@@ -1,23 +1,35 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SoulOfRavnica
-  {
-    public class Ai : AiScenario
+    public class SoulOfRavnica
     {
-      [Fact (Skip = "Old card")]
-      public void Draw2Cards()
-      {
-        MainDeck(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
-        Battlefield(P1, "Soul of Ravnica", "Grizzly Bears", "Grizzly Bears", "Juggernaut", "Island", 
-          "Island", "Island", "Island", "Plains", "Plains", "Plains");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Draw2Cards()
+            {
+                MainDeck(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+                Battlefield(
+                    P1,
+                    "Soul of Ravnica",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Juggernaut",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Plains",
+                    "Plains",
+                    "Plains"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P1.Hand.Count);
-      }
+                Equal(2, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

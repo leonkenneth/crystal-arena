@@ -1,63 +1,68 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.LibraryFilter.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface">
-	<Border Background="#11ffffff" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="2">
-		<Border.Resources>
-			<Style Selector="TextBlock">
-				<Setter Property="Foreground" Value="#fff" />
-				<Setter Property="FontSize" Value="15" />
-			</Style>
-			<Style Selector="CheckBox" >
-				<Setter Property="Foreground" Value="#fff" />
-				<Setter Property="FontSize" Value="13" />
-				<Setter Property="Margin" Value="10,0,0,0" />
-			</Style>
-		</Border.Resources>
-		<Expander FontSize="15" Margin="4" Foreground="#fff">
-			<Expander.Header>
-				<StackPanel Orientation="Horizontal">
-					<Image Width="20" Source="{CrystalArena:Media 'search.png'}" />
-					<TextBlock Foreground="#FFD700" FontSize="20" Margin="10,0,0,0">Library</TextBlock>
-				</StackPanel>
-			</Expander.Header>
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.LibraryFilter.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:CrystalArena="clr-namespace:CrystalArena.UserInterface"
+>
+  <Border Background="#11ffffff" BorderBrush="#33ffffff" BorderThickness="1" CornerRadius="2">
+    <Border.Resources>
+      <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="#fff" />
+        <Setter Property="FontSize" Value="15" />
+      </Style>
+      <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="#fff" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+      </Style>
+    </Border.Resources>
+    <Expander FontSize="15" Margin="4" Foreground="#fff">
+      <Expander.Header>
+        <StackPanel Orientation="Horizontal">
+          <Image Width="20" Source="{CrystalArena:Media 'search.png'}" />
+          <TextBlock Foreground="#FFD700" FontSize="20" Margin="10,0,0,0">Library</TextBlock>
+        </StackPanel>
+      </Expander.Header>
 
+      <Border Background="#22ffffff" Margin="8" BorderBrush="#55ffffff" BorderThickness="1">
+        <StackPanel Margin="15">
+          <TextBlock>Search:</TextBlock>
+          <TextBlock FontSize="13" Margin="0,5,0,0" Foreground="#ccc" TextWrapping="Wrap"
+            >Searches card names by default. Use 'text:', 'type:', 'flavor:', 'cost:', 'power:' or 'toughness:' to search other fields. Search terms can be combined with AND or OR.</TextBlock
+          >
+          <TextBox Margin="0,5,0,10" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+          <TextBlock>Colors:</TextBlock>
+          <Grid Margin="0,10,0,10">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-			<Border Background="#22ffffff" Margin="8" BorderBrush="#55ffffff" BorderThickness="1">
-				<StackPanel Margin="15">
-					<TextBlock>Search:</TextBlock>
-                    <TextBlock FontSize="13" Margin="0,5,0,0" Foreground="#ccc" TextWrapping="Wrap">Searches card names by default. Use 'text:', 'type:', 'flavor:', 'cost:', 'power:' or 'toughness:' to search other fields. Search terms can be combined with AND or OR.</TextBlock>
-                    <TextBox Margin="0,5,0,10" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />                    
-					<TextBlock>Colors:</TextBlock>
-					<Grid Margin="0,10,0,10">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding White}">
+              <Image Width="20" Source="{CrystalArena:Media 'w.png'}" />
+            </CheckBox>
 
-						<CheckBox Grid.Column="0" IsChecked="{Binding White}">
-							<Image Width="20" Source="{CrystalArena:Media 'w.png'}" />
-						</CheckBox>
+            <CheckBox Grid.Column="1" IsChecked="{Binding Blue}">
+              <Image Width="20" Source="{CrystalArena:Media 'u.png'}" />
+            </CheckBox>
 
-						<CheckBox Grid.Column="1" IsChecked="{Binding Blue}">
-							<Image Width="20" Source="{CrystalArena:Media 'u.png'}" />
-						</CheckBox>
+            <CheckBox Grid.Column="2" IsChecked="{Binding Black}">
+              <Image Width="20" Source="{CrystalArena:Media 'b.png'}" />
+            </CheckBox>
 
-						<CheckBox Grid.Column="2" IsChecked="{Binding Black}">
-							<Image Width="20" Source="{CrystalArena:Media 'b.png'}" />
-						</CheckBox>
+            <CheckBox Grid.Column="3" IsChecked="{Binding Red}">
+              <Image Width="20" Source="{CrystalArena:Media 'r.png'}" />
+            </CheckBox>
 
-						<CheckBox Grid.Column="3" IsChecked="{Binding Red}">
-							<Image Width="20" Source="{CrystalArena:Media 'r.png'}" />
-						</CheckBox>
-
-						<CheckBox Grid.Column="4" IsChecked="{Binding Green}">
-							<Image Width="20" Source="{CrystalArena:Media 'g.png'}" />
-						</CheckBox>
-
-					</Grid>					
-				</StackPanel>
-			</Border>
-		</Expander>
-	</Border>
+            <CheckBox Grid.Column="4" IsChecked="{Binding Green}">
+              <Image Width="20" Source="{CrystalArena:Media 'g.png'}" />
+            </CheckBox>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </Expander>
+  </Border>
 </UserControl>

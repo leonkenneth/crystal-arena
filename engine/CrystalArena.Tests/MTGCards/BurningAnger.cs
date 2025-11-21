@@ -1,25 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BurningAnger
-  {
-    public class Ai : AiScenario
+    public class BurningAnger
     {
-      [Fact (Skip = "Old card")]
-      public void DealDamageEqualPower()
-      {
-        Battlefield(P1, "Grizzly Bears", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
-        Hand(P1, "Burning Anger");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DealDamageEqualPower()
+            {
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
+                Hand(P1, "Burning Anger");
 
-        Battlefield(P2, "Wall of Fire");
-        P2.Life = 2;
+                Battlefield(P2, "Wall of Fire");
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

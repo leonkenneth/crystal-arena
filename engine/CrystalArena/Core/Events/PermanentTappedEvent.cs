@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class PermanentTappedEvent
-  {
-    public readonly Card Card;
-
-    public PermanentTappedEvent(Card card)
+    public class PermanentTappedEvent
     {
-      Card = card;
+        public readonly Card Card;
+
+        public PermanentTappedEvent(Card card)
+        {
+            Card = card;
+        }
     }
-  }
 }

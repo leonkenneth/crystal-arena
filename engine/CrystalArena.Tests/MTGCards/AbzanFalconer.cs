@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class AbzanFalconer
-  {
-    public class Ai : AiScenario
+    public class AbzanFalconer
     {
-      [Fact (Skip = "Old card")]
-      public void GiveFlyingToForwardsWithCounters()
-      {
-        var anthroplasm = C("Anthroplasm");
-        Hand(P1, anthroplasm);
-        Battlefield(P1, "Abzan Falconer", "Island", "Island", "Island", "Island");
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");        
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GiveFlyingToForwardsWithCounters()
+            {
+                var anthroplasm = C("Anthroplasm");
+                Hand(P1, anthroplasm);
+                Battlefield(P1, "Abzan Falconer", "Island", "Island", "Island", "Island");
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Assert.True(anthroplasm.Card.Has().Flying);        
-      }
+                Assert.True(anthroplasm.Card.Has().Flying);
+            }
+        }
     }
-  }
 }

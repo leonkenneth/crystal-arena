@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  public class EffectRemoveFromPlayBattlefield : EffectDestroy {}
+    public class EffectRemoveFromPlayBattlefield : EffectDestroy { }
 }

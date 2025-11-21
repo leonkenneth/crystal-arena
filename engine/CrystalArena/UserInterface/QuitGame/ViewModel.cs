@@ -1,49 +1,49 @@
 ﻿namespace CrystalArena.UserInterface.QuitGame
 {
-  using System.Windows;
-  using Infrastructure;
+    using System.Windows;
+    using Infrastructure;
 
-  public class ViewModel : ViewModelBase
-  {
-    public bool CanRematch { get { return !Match.IsTournament; } }
-    
-    public override object ToJson()
+    public class ViewModel : ViewModelBase
     {
-      return new
-      {
-        Type = "QuitGame",
-      };
-    }
+        public bool CanRematch
+        {
+            get { return !Match.IsTournament; }
+        }
 
-    public void QuitToMainMenu()
-    {
-      Match.Stop();
-    }
+        public override object ToJson()
+        {
+            return new { Type = "QuitGame" };
+        }
 
-    public void QuitToOperatingSystem()
-    {
-      Match.Stop();
-    }
+        public void QuitToMainMenu()
+        {
+            Match.Stop();
+        }
 
-    public void Cancel()
-    {
-      this.Close();
-    }
+        public void QuitToOperatingSystem()
+        {
+            Match.Stop();
+        }
 
-    public void Rematch()
-    {
-      Ui.Match.Rematch();
-    }
+        public void Cancel()
+        {
+            this.Close();
+        }
 
-    public void Save()
-    {
-      SaveGame();
-      this.Close();
-    }
+        public void Rematch()
+        {
+            Ui.Match.Rematch();
+        }
 
-    public interface IFactory
-    {
-      ViewModel Create();
+        public void Save()
+        {
+            SaveGame();
+            this.Close();
+        }
+
+        public interface IFactory
+        {
+            ViewModel Create();
+        }
     }
-  }
 }

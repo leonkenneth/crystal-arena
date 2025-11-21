@@ -1,48 +1,55 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ParagonOfOpenGraves
-  {
-    public class Ai : AiScenario
+    public class ParagonOfOpenGraves
     {
-      [Fact (Skip = "Old card")]
-      public void GiveDebaserDeathtouchToKillDragon()
-      {
-        var dragon = C("Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GiveDebaserDeathtouchToKillDragon()
+            {
+                var dragon = C("Shivan Dragon");
 
-        Battlefield(P1, "Paragon of Open Graves", "Phyrexian Debaser", "Swamp", "Swamp", "Swamp");        
-        Battlefield(P2, dragon);
-        
-        P2.Life = 3;
+                Battlefield(
+                    P1,
+                    "Paragon of Open Graves",
+                    "Phyrexian Debaser",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp"
+                );
+                Battlefield(P2, dragon);
 
-        RunGame(3);
+                P2.Life = 3;
 
-        Equal(Zone.BreakZone, C(dragon).Zone);        
-      }
+                RunGame(3);
 
-      [Fact (Skip = "Old card")]
-      public void CannotActivateStaticAbilityOfParagonTwice()
-      {
-        var paragon = C("Paragon of Open Graves");
-        var rat = C("Typhoid Rats");
-        var bolt = C("Lightning Bolt");
+                Equal(Zone.BreakZone, C(dragon).Zone);
+            }
 
-        Hand(P1, "Endless Obedience");
-        Battlefield(P1, paragon, rat, "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp");
+            [Fact(Skip = "Old card")]
+            public void CannotActivateStaticAbilityOfParagonTwice()
+            {
+                var paragon = C("Paragon of Open Graves");
+                var rat = C("Typhoid Rats");
+                var bolt = C("Lightning Bolt");
 
-        P2.Life = 2;
-        Hand(P2, bolt);
-        Battlefield(P2, "Mountain");
+                Hand(P1, "Endless Obedience");
+                Battlefield(P1, paragon, rat, "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp");
 
-        RunGame(1);
+                P2.Life = 2;
+                Hand(P2, bolt);
+                Battlefield(P2, "Mountain");
 
-        Equal(1, P2.Life);
-        Equal(Zone.Battlefield, C(paragon).Zone);
-        Equal(Zone.BreakZone, C(bolt).Zone);
-        Equal(2, C(rat).Power);
-      }
+                RunGame(1);
+
+                Equal(1, P2.Life);
+                Equal(Zone.Battlefield, C(paragon).Zone);
+                Equal(Zone.BreakZone, C(bolt).Zone);
+                Equal(2, C(rat).Power);
+            }
+        }
     }
-  }
 }

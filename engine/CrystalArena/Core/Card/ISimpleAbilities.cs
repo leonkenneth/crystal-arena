@@ -2,49 +2,49 @@
 
 namespace CrystalArena
 {
-  public interface ISimpleAbilities : IEnumerable<Static>
-  {
-    bool Convoke { get; }
-    bool Dash { get; }
-    bool Deathtouch { get; }
-    bool Defender { get; }
-    bool Delve { get; }
-    bool Fear { get; }
-    bool Flying { get; }
-    bool Haste { get; }
-    bool Hexproof { get; }
-    bool Indestructible { get; }
-    bool Intimidate { get; }
-    bool Lifelink { get; }
-    bool Monstrosity { get; }
-    bool Shroud { get; }
-    bool Trample { get; }
-    bool Unblockable { get; }
-    bool FirstStrike { get; }
-    bool DoubleStrike { get; }
-    bool Reach { get; }
-    bool Brave { get; }
-    bool Swampwalk { get; }
-    bool CannotAttack { get; }
-    bool CannotBlock { get; }
-    bool Islandwalk { get; }
-    bool Mountainwalk { get; }
-    bool DoesNotUntap { get; }
-    bool AssignsDamageAsThoughItWasntBlocked { get; }
-    bool AnyEvadingAbility { get; }
-    bool CanOnlyBeBlockedByForwardsWithFlying { get; }
-    bool CanOnlyBeBlockedByWalls { get; }
-    bool CanBlockOnlyForwardsWithFlying { get; }
-    bool CannotBeBlockedByWalls { get; }
-    bool CanAttackOnlyIfDefenderHasIslands { get; }
-    bool UnblockableIfDedenderHasArtifacts { get; }
-    bool UnblockableIfDedenderHasMonsters { get; }
-    bool Flash { get; }
-    bool AttacksEachTurnIfAble { get; }
-    bool Forestwalk { get; }
-    bool Lure { get; }
-    bool Echo { get; }
-    bool CannotBeBlockedByMoreThanOne { get; }
-    bool Has(Static ability);    
-  }
+    public interface ISimpleAbilities : IEnumerable<Static>
+    {
+        bool Convoke { get; }
+        bool Dash { get; }
+        bool Deathtouch { get; }
+        bool Defender { get; }
+        bool Delve { get; }
+        bool Fear { get; }
+        bool Flying { get; }
+        bool Haste { get; }
+        bool Hexproof { get; }
+        bool Indestructible { get; }
+        bool Intimidate { get; }
+        bool Lifelink { get; }
+        bool Monstrosity { get; }
+        bool Shroud { get; }
+        bool Trample { get; }
+        bool Unblockable { get; }
+        bool FirstStrike { get; }
+        bool DoubleStrike { get; }
+        bool Reach { get; }
+        bool Brave { get; }
+        bool Swampwalk { get; }
+        bool CannotAttack { get; }
+        bool CannotBlock { get; }
+        bool Islandwalk { get; }
+        bool Mountainwalk { get; }
+        bool DoesNotUntap { get; }
+        bool AssignsDamageAsThoughItWasntBlocked { get; }
+        bool AnyEvadingAbility { get; }
+        bool CanOnlyBeBlockedByForwardsWithFlying { get; }
+        bool CanOnlyBeBlockedByWalls { get; }
+        bool CanBlockOnlyForwardsWithFlying { get; }
+        bool CannotBeBlockedByWalls { get; }
+        bool CanAttackOnlyIfDefenderHasIslands { get; }
+        bool UnblockableIfDedenderHasArtifacts { get; }
+        bool UnblockableIfDedenderHasMonsters { get; }
+        bool Flash { get; }
+        bool AttacksEachTurnIfAble { get; }
+        bool Forestwalk { get; }
+        bool Lure { get; }
+        bool Echo { get; }
+        bool CannotBeBlockedByMoreThanOne { get; }
+        bool Has(Static ability);
+    }
 }

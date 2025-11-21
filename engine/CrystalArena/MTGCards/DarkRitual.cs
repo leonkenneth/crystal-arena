@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TimingRules;
+    using System.Collections.Generic;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Effects;
 
-  public class DarkRitual : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class DarkRitual : CardTemplateSource
     {
-      yield return Card
-        .Named("Dark Ritual")
-        .ManaCost("{B}")
-        .Type("Summon")
-        .Text("Add {B}{B}{B} to your mana pool.")
-        .FlavorText(
-          "From void evolved Phyrexia. Great Yawgmoth, Father of Machines, saw its perfection. Thus The Grand Evolution began.")
-        .OverrideScore(p => p.Hand = 80)
-        /* ritual score must be lowered a bit so ai casts it more eagerly */
-        .Cast(p =>
-          {
-            p.TimingRule(new WhenYouNeedAdditionalMana(2));
-            p.Effect = () => new AddManaToPool("{B}{B}{B}".Parse());
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Dark Ritual")
+                .ManaCost("{B}")
+                .Type("Summon")
+                .Text("Add {B}{B}{B} to your mana pool.")
+                .FlavorText(
+                    "From void evolved Phyrexia. Great Yawgmoth, Father of Machines, saw its perfection. Thus The Grand Evolution began."
+                )
+                .OverrideScore(p => p.Hand = 80)
+                /* ritual score must be lowered a bit so ai casts it more eagerly */
+                .Cast(p =>
+                {
+                    p.TimingRule(new WhenYouNeedAdditionalMana(2));
+                    p.Effect = () => new AddManaToPool("{B}{B}{B}".Parse());
+                });
+        }
     }
-  }
 }

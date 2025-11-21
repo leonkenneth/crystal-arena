@@ -1,20 +1,20 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class RoguesGloves
-  {
-    public class Ai : AiScenario
+    public class RoguesGloves
     {
-      [Fact (Skip = "Old card")]
-      public void AttachAndDrawACard()
-      {
-        Battlefield(P1, "Rogue's Gloves", "Grizzly Bears", "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttachAndDrawACard()
+            {
+                Battlefield(P1, "Rogue's Gloves", "Grizzly Bears", "Forest", "Forest");
 
-        RunGame(1);
-        Equal(1, P1.Hand.Count);
-      }
+                RunGame(1);
+                Equal(1, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

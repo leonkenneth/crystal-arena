@@ -1,119 +1,140 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class OppressiveRays
-  {
-    public class Ai : AiScenario
+    public class OppressiveRays
     {
-      [Fact (Skip = "Old card")]
-      public void NotEnoughManaToAttack()
-      {
-        Hand(P1, "Oppressive Rays");
-        Battlefield(P1, "Plains");        
-        P1.Life = 2;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void NotEnoughManaToAttack()
+            {
+                Hand(P1, "Oppressive Rays");
+                Battlefield(P1, "Plains");
+                P1.Life = 2;
 
-        Battlefield(P2, "Grizzly Bears", "Plains", "Plains");        
+                Battlefield(P2, "Grizzly Bears", "Plains", "Plains");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(2, P1.Life);
-      }
+                Equal(2, P1.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void NotEnoughManaToBlock()
-      {
-        Hand(P1, "Oppressive Rays");
-        Battlefield(P1, "Grizzly Bears", "Plains");
+            [Fact(Skip = "Old card")]
+            public void NotEnoughManaToBlock()
+            {
+                Hand(P1, "Oppressive Rays");
+                Battlefield(P1, "Grizzly Bears", "Plains");
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears", "Plains", "Plains");
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears", "Plains", "Plains");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void PayManaToAttack()
-      {                
-        Battlefield(P1, C("Grizzly Bears").IsEnchantedWith("Oppressive Rays"),
-          "Plains", "Plains", "Plains");
+            [Fact(Skip = "Old card")]
+            public void PayManaToAttack()
+            {
+                Battlefield(
+                    P1,
+                    C("Grizzly Bears").IsEnchantedWith("Oppressive Rays"),
+                    "Plains",
+                    "Plains",
+                    "Plains"
+                );
 
-        P2.Life = 2;
-        RunGame(1);
+                P2.Life = 2;
+                RunGame(1);
 
-        Equal(0, P2.Life);
-        True(P1.Battlefield.Backups.All(x => x.IsTapped));
-      }
+                Equal(0, P2.Life);
+                True(P1.Battlefield.Backups.All(x => x.IsTapped));
+            }
 
-      [Fact (Skip = "Old card")]
-      public void PayManaToBlock()
-      {        
-        Battlefield(P1, "Juggernaut");
+            [Fact(Skip = "Old card")]
+            public void PayManaToBlock()
+            {
+                Battlefield(P1, "Juggernaut");
 
-        P2.Life = 2;
-        Battlefield(P2, C("Grizzly Bears").IsEnchantedWith("Oppressive Rays"), 
-          "Plains", "Plains", "Plains");
+                P2.Life = 2;
+                Battlefield(
+                    P2,
+                    C("Grizzly Bears").IsEnchantedWith("Oppressive Rays"),
+                    "Plains",
+                    "Plains",
+                    "Plains"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P2.Life);
-        True(P2.Battlefield.Backups.All(x => x.IsTapped));
-      }
+                Equal(2, P2.Life);
+                True(P2.Battlefield.Backups.All(x => x.IsTapped));
+            }
 
-      [Fact (Skip = "Old card")]
-      public void EnchantedForwardCannotActivateAbility()
-      {
-        Battlefield(P1, "Juggernaut");
+            [Fact(Skip = "Old card")]
+            public void EnchantedForwardCannotActivateAbility()
+            {
+                Battlefield(P1, "Juggernaut");
 
-        P2.Life = 5;
-        Battlefield(P2, C("Torch Fiend").IsEnchantedWith("Pacifism", "Oppressive Rays"), "Mountain");
+                P2.Life = 5;
+                Battlefield(
+                    P2,
+                    C("Torch Fiend").IsEnchantedWith("Pacifism", "Oppressive Rays"),
+                    "Mountain"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-        Equal(1, P2.Battlefield.Forwards.Count());
-      }
+                Equal(0, P2.Life);
+                Equal(1, P2.Battlefield.Forwards.Count());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void EnchantedForwardCanActivateAbilityForPayingMana()
-      {
-        Battlefield(P1, "Juggernaut");
+            [Fact(Skip = "Old card")]
+            public void EnchantedForwardCanActivateAbilityForPayingMana()
+            {
+                Battlefield(P1, "Juggernaut");
 
-        P2.Life = 5;
-        Battlefield(P2, C("Torch Fiend").IsEnchantedWith("Pacifism", "Oppressive Rays"), "Mountain", "Mountain", "Mountain", "Mountain");
+                P2.Life = 5;
+                Battlefield(
+                    P2,
+                    C("Torch Fiend").IsEnchantedWith("Pacifism", "Oppressive Rays"),
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(5, P2.Life);
-        Equal(0, P2.Battlefield.Forwards.Count());
-      }
+                Equal(5, P2.Life);
+                Equal(0, P2.Battlefield.Forwards.Count());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void DoNotTryToActivateManaAbilityEndless()
-      {
-        Battlefield(P1, C("Elvish Mystic").IsEnchantedWith("Oppressive Rays"));
+            [Fact(Skip = "Old card")]
+            public void DoNotTryToActivateManaAbilityEndless()
+            {
+                Battlefield(P1, C("Elvish Mystic").IsEnchantedWith("Oppressive Rays"));
 
-        RunGame(1);
-      }
+                RunGame(1);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void EnchantedJuggernautCanSkipAttack()
-      {
-        var juggernaut = C("Juggernaut").IsEnchantedWith("Oppressive Rays");
+            [Fact(Skip = "Old card")]
+            public void EnchantedJuggernautCanSkipAttack()
+            {
+                var juggernaut = C("Juggernaut").IsEnchantedWith("Oppressive Rays");
 
-        P1.Life = 5;
-        Battlefield(P1, "Plains", "Plains", "Plains", juggernaut);
+                P1.Life = 5;
+                Battlefield(P1, "Plains", "Plains", "Plains", juggernaut);
 
-        Battlefield(P2, "Juggernaut");
+                Battlefield(P2, "Juggernaut");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(5, P1.Life);
-      }
+                Equal(5, P1.Life);
+            }
+        }
     }
-  }
 }

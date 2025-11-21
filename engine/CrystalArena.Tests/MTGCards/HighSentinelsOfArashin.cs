@@ -1,22 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class HighSentinelsOfArashin
-  {
-    public class Ai : AiScenario
+    public class HighSentinelsOfArashin
     {
-      [Fact (Skip = "Old card")]
-      public void PumpThenAttack()
-      {
-        Battlefield(P1, "High Sentinels of Arashin", "Plains", "Plains", "Plains", "Plains", "Grizzly Bears");
-        P2.Life = 7;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpThenAttack()
+            {
+                Battlefield(
+                    P1,
+                    "High Sentinels of Arashin",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Grizzly Bears"
+                );
+                P2.Life = 7;
 
-        RunGame(1);
+                RunGame(1);
 
-        Assert.Equal(0, P2.Life);
-      }
+                Assert.Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

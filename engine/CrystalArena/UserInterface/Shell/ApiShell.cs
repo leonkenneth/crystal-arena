@@ -20,8 +20,7 @@ namespace CrystalArena.UserInterface.Shell
     public class ApiShell : IShell
     {
         public Ui Ui { get; set; }
-        
-        
+
         class UiObjectDatabase
         {
             private Dictionary<string, object> _objects = new Dictionary<string, object>();
@@ -59,19 +58,29 @@ namespace CrystalArena.UserInterface.Shell
                 return Convert.ToBase64String(plainTextBytes);
             }
         }
+
         public object Screen { get; set; }
         public object Dialog { get; set; }
         public CallbackableMessageBox? MessageBox { get; set; }
-        public RemoteCallbackable? CurrentDialog { get { return _remoteCallbackables.FirstOrDefault(); }}
+        public RemoteCallbackable? CurrentDialog
+        {
+            get { return _remoteCallbackables.FirstOrDefault(); }
+        }
 
-        public object? CurrentSelectTargetDialog { get => GetCurrentSelectTargetDialog(); }
+        public object? CurrentSelectTargetDialog
+        {
+            get => GetCurrentSelectTargetDialog();
+        }
 
         private InteractionState? _interactionState;
         private List<RemoteCallbackable> _remoteCallbackables = new List<RemoteCallbackable>();
         private UiObjectDatabase _uiObjectDatabase = new UiObjectDatabase();
-        
-        
-        public void ChangeScreen(object screen, bool blockUntilClosed = false, bool shouldClosePrevious = false)
+
+        public void ChangeScreen(
+            object screen,
+            bool blockUntilClosed = false,
+            bool shouldClosePrevious = false
+        )
         {
             Screen = screen;
         }
@@ -79,7 +88,9 @@ namespace CrystalArena.UserInterface.Shell
         private object? GetCurrentSelectTargetDialog()
         {
             var dialogHost = Screen as IIsDialogHost;
-            var currentDialog = dialogHost?.GetAllDialogs().FirstOrDefault(x => x is SelectTarget.ViewModel);
+            var currentDialog = dialogHost
+                ?.GetAllDialogs()
+                .FirstOrDefault(x => x is SelectTarget.ViewModel);
 
             if (currentDialog != null)
             {
@@ -94,7 +105,12 @@ namespace CrystalArena.UserInterface.Shell
             return null;
         }
 
-        public void ShowDialog(object dialog, DialogType type = DialogType.Large, InteractionState? interactionState = null, bool wait = false)
+        public void ShowDialog(
+            object dialog,
+            DialogType type = DialogType.Large,
+            InteractionState? interactionState = null,
+            bool wait = false
+        )
         {
             var dialogHost = Screen as IIsDialogHost;
 
@@ -106,15 +122,11 @@ namespace CrystalArena.UserInterface.Shell
             {
                 dialogHost.AddDialog(dialog, type);
             }
-            
-            
+
             var revert = ChangeMode(interactionState);
-            var currentDialog = new CallbackableDialog()
-            {
-                ViewModel = dialog
-            };
+            var currentDialog = new CallbackableDialog() { ViewModel = dialog };
             _remoteCallbackables.Add(currentDialog);
-            ((IClosable) dialog).Closed += delegate
+            ((IClosable)dialog).Closed += delegate
             {
                 if (dialogHost == null)
                 {
@@ -135,13 +147,18 @@ namespace CrystalArena.UserInterface.Shell
             }
         }
 
-        public ButtonResult ShowMessageBox(string message, ButtonEnum buttons, DialogType type = DialogType.Large, string title = "")
+        public ButtonResult ShowMessageBox(
+            string message,
+            ButtonEnum buttons,
+            DialogType type = DialogType.Large,
+            string title = ""
+        )
         {
             MessageBox = new CallbackableMessageBox()
             {
                 Message = message,
                 Buttons = buttons.ToString(),
-                Title = title
+                Title = title,
             };
             _remoteCallbackables.Add(MessageBox);
             var result = MessageBox.WaitCallback();
@@ -151,7 +168,11 @@ namespace CrystalArena.UserInterface.Shell
             return result;
         }
 
-        public void ShowModalDialog(object dialog, DialogType type = DialogType.Large, InteractionState? interactionState = null)
+        public void ShowModalDialog(
+            object dialog,
+            DialogType type = DialogType.Large,
+            InteractionState? interactionState = null
+        )
         {
             ShowDialog(dialog, type, interactionState, true);
         }
@@ -171,36 +192,32 @@ namespace CrystalArena.UserInterface.Shell
             var screen = Screen as ViewModelBase;
             if (screen == null)
             {
-                return new
-                {
-                    Loaded = false,
-                };
+                return new { Loaded = false };
             }
 
             return new
-                {
-                    Loaded = true,
-                    Id = Ui.GameId,
-                    Screen = screen.ToJson(),
-                    MessageBox,
-                    CurrentDialog = CurrentDialog?.ToJson()
-                };
+            {
+                Loaded = true,
+                Id = Ui.GameId,
+                Screen = screen.ToJson(),
+                MessageBox,
+                CurrentDialog = CurrentDialog?.ToJson(),
+            };
         }
-        
+
         public object AlternativeToJson()
         {
             var screen = Screen as ViewModelBase;
             if (screen == null)
             {
-                return "No screen set or " +
-                       "screen is not a viewmodel.";
+                return "No screen set or " + "screen is not a viewmodel.";
             }
 
             return new
             {
                 Screen = screen.AlternativeToJson(),
                 MessageBox,
-                CurrentDialog = CurrentDialog?.ToJson()
+                CurrentDialog = CurrentDialog?.ToJson(),
             };
         }
 
@@ -236,10 +253,7 @@ namespace CrystalArena.UserInterface.Shell
                 var revert = _interactionState;
                 _interactionState = interactionState.Value;
 
-                Ui.Publisher.Publish(new UiInteractionChanged
-                {
-                    State = interactionState.Value
-                });
+                Ui.Publisher.Publish(new UiInteractionChanged { State = interactionState.Value });
 
                 return revert;
             }

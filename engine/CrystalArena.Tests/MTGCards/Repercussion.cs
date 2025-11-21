@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Repercussion
-  {
-    public class Ai : AiScenario
+    public class Repercussion
     {
-      [Fact (Skip = "Old card")]
-      public void Deal6Damage()
-      {        
-        Hand(P1, "Lightning Bolt");
-        Battlefield(P1, "Repercussion", "Trained Armodon", "Mountain");
-        Battlefield(P2, "Trained Armodon");
-        P2.Life = 6;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal6Damage()
+            {
+                Hand(P1, "Lightning Bolt");
+                Battlefield(P1, "Repercussion", "Trained Armodon", "Mountain");
+                Battlefield(P2, "Trained Armodon");
+                P2.Life = 6;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

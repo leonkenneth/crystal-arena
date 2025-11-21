@@ -1,33 +1,49 @@
-﻿<UserControl x:Class="CrystalArena.UserInterface.Permanent.View" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro" xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface">
-	<UserControl.Resources>
+﻿<UserControl
+  x:Class="CrystalArena.UserInterface.Permanent.View"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+  xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+  xmlns:UserInterface="clr-namespace:CrystalArena.UserInterface"
+>
+  <UserControl.Resources>
+    <Style Selector="Button" x:Key="TapUntap"></Style>
+  </UserControl.Resources>
 
-		<Style Selector="Button" x:Key="TapUntap" >
-            
-		</Style>
+  <Button x:Name="CardControl" Width="110" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Button.Resources></Button.Resources>
 
-	</UserControl.Resources>
+    <i:Interaction.Triggers></i:Interaction.Triggers>
 
-	<Button x:Name="CardControl" Width="110" VerticalAlignment="Center" HorizontalAlignment="Center">
-        
-        <Button.Resources>
-        </Button.Resources>
-                        
-        <i:Interaction.Triggers>
+    <i:Interaction.Behaviors></i:Interaction.Behaviors>
 
-		</i:Interaction.Triggers>
+    <Grid>
+      <ContentControl Content="{Binding }" />
 
-        <i:Interaction.Behaviors>
-        </i:Interaction.Behaviors>
-
-        <Grid>
-			<ContentControl Content="{Binding }"  />
-
-			<Border Background="{StaticResource TargetOfSpell}" IsVisible="{Binding IsTargetOfSpell, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}" />
-			<Border BorderBrush="{StaticResource Playable}" IsVisible="{Binding IsPlayable, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}" BorderThickness="0,1,0,0" />
-            <Border BorderBrush="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}" BorderThickness="3" CornerRadius="2" />
-            <Border Background="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}" BorderBrush="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}" BorderThickness="3" CornerRadius="2"/>
-			<Border Background="{StaticResource Selected}" IsVisible="{Binding IsSelected, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}" />
-		</Grid>
-	</Button>
-
+      <Border
+        Background="{StaticResource TargetOfSpell}"
+        IsVisible="{Binding IsTargetOfSpell, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}"
+      />
+      <Border
+        BorderBrush="{StaticResource Playable}"
+        IsVisible="{Binding IsPlayable, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}"
+        BorderThickness="0,1,0,0"
+      />
+      <Border
+        BorderBrush="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}"
+        BorderThickness="3"
+        CornerRadius="2"
+      />
+      <Border
+        Background="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}"
+        BorderBrush="{Binding Marker, Converter={x:Static UserInterface:Converters.MarkerBrush}}"
+        BorderThickness="3"
+        CornerRadius="2"
+      />
+      <Border
+        Background="{StaticResource Selected}"
+        IsVisible="{Binding IsSelected, Converter={x:Static UserInterface:Converters.BooleanToVisibility}}"
+      />
+    </Grid>
+  </Button>
 </UserControl>

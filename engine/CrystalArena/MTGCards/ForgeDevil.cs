@@ -1,40 +1,45 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using Effects;
+    using Triggers;
 
-  public class ForgeDevil : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ForgeDevil : CardTemplateSource
     {
-      yield return Card
-        .Named("Forge Devil")
-        .ManaCost("{R}")
-        .Type("Forward — Devil")
-        .Text("When Forge Devil enters the battlefield, it deals 1 damage to target forward and 1 damage to you.")
-        .FlavorText("A bit of pain never hurts.")
-        .Power(1)
-        .Toughness(1)
-        .TriggeredAbility(p =>
-          {
-            p.Text =
-              "When Forge Devil enters the battlefield, it deals 1 damage to target forward and 1 damage to you.";
-            p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Forge Devil")
+                .ManaCost("{R}")
+                .Type("Forward — Devil")
+                .Text(
+                    "When Forge Devil enters the battlefield, it deals 1 damage to target forward and 1 damage to you."
+                )
+                .FlavorText("A bit of pain never hurts.")
+                .Power(1)
+                .Toughness(1)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "When Forge Devil enters the battlefield, it deals 1 damage to target forward and 1 damage to you.";
+                    p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
 
-            p.Effect = () => new CompoundEffect(
-              new DealDamageToTargets(1),
-              new DealDamageToPlayer(1, P(e => e.Controller)));
-            p.TargetSelector.AddEffect(
-              trg => trg.Is.Forward().On.Battlefield(),
-              trg => {
-                trg.Message = "Select a forward.";
-                trg.MinCount = 1;
-                trg.MaxCount = 1;                
-              });
-            p.TargetingRule(new EffectDealDamage(1));
-          });
+                    p.Effect = () =>
+                        new CompoundEffect(
+                            new DealDamageToTargets(1),
+                            new DealDamageToPlayer(1, P(e => e.Controller))
+                        );
+                    p.TargetSelector.AddEffect(
+                        trg => trg.Is.Forward().On.Battlefield(),
+                        trg =>
+                        {
+                            trg.Message = "Select a forward.";
+                            trg.MinCount = 1;
+                            trg.MaxCount = 1;
+                        }
+                    );
+                    p.TargetingRule(new EffectDealDamage(1));
+                });
+        }
     }
-  }
 }

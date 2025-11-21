@@ -1,27 +1,25 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class DiscardCards : Effect
-  {
-    private readonly int _count;
-    private readonly DynParam<Player> _player;
-
-    private DiscardCards() {}
-
-    public DiscardCards(int count, DynParam<Player> player = null)
+    public class DiscardCards : Effect
     {
-      _count = count;
-      _player = player;
+        private readonly int _count;
+        private readonly DynParam<Player> _player;
 
-      RegisterDynamicParameters(player);
+        private DiscardCards() { }
+
+        public DiscardCards(int count, DynParam<Player> player = null)
+        {
+            _count = count;
+            _player = player;
+
+            RegisterDynamicParameters(player);
+        }
+
+        protected override void ResolveEffect()
+        {
+            var player = _player ?? Target.Player();
+
+            Enqueue(new Decisions.DiscardCards(player.Value, p => p.Count = _count));
+        }
     }
-
-    protected override void ResolveEffect()
-    {
-      var player = _player ?? Target.Player();
-
-      Enqueue(new Decisions.DiscardCards(
-        player.Value,
-        p => p.Count = _count));
-    }
-  }
 }

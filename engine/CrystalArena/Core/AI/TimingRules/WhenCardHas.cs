@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System;
+    using System;
 
-  public class WhenCardHas : TimingRule
-  {
-    private readonly Func<Card, bool> _predicate;
-
-    private WhenCardHas() {}
-
-    public WhenCardHas(Func<Card, bool> predicate)
+    public class WhenCardHas : TimingRule
     {
-      _predicate = predicate;
-    }
+        private readonly Func<Card, bool> _predicate;
 
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
-    {
-      return _predicate(p.Card);
+        private WhenCardHas() { }
+
+        public WhenCardHas(Func<Card, bool> predicate)
+        {
+            _predicate = predicate;
+        }
+
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return _predicate(p.Card);
+        }
     }
-  }
 }

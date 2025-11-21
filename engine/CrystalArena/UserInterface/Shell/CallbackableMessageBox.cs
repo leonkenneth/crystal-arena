@@ -11,19 +11,20 @@ public class CallbackableMessageBox : RemoteCallbackable
     public string Buttons { get; set; }
     public string Title { get; set; }
 
-    
     public ButtonResult WaitCallback()
     {
         var threadBlocker = new ThreadBlocker();
         ButtonResult buttonResultEnum = ButtonResult.None;
-        RegisterCallback((string buttonResult) =>
-        {
-            if (!ButtonResult.TryParse(buttonResult, true, out buttonResultEnum))
+        RegisterCallback(
+            (string buttonResult) =>
             {
-                throw new Exception("Nope nope");
+                if (!ButtonResult.TryParse(buttonResult, true, out buttonResultEnum))
+                {
+                    throw new Exception("Nope nope");
+                }
+                threadBlocker.Completed();
             }
-            threadBlocker.Completed();
-        });
+        );
         threadBlocker.BlockUntilCompleted();
         return buttonResultEnum;
     }
@@ -35,7 +36,7 @@ public class CallbackableMessageBox : RemoteCallbackable
             Message,
             Buttons,
             Title,
-            CallbackId
+            CallbackId,
         };
     }
 }

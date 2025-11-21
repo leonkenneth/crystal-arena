@@ -1,8 +1,8 @@
 ﻿namespace CrystalArena.Costs
 {
-  public enum CostType
-  {
-    Spell,
-    Ability
-  }
+    public enum CostType
+    {
+        Spell,
+        Ability,
+    }
 }

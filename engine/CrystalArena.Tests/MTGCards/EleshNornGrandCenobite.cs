@@ -1,34 +1,34 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class EleshNornGrandCenobite
-  {
-    public class Predefined : PredefinedScenario
+    public class EleshNornGrandCenobite
     {
-      [Fact (Skip = "Old card")]
-      public void PumpYourForwardsDestroyOpponents()
-      {
-        var elesh = C("Elesh Norn, Grand Cenobite");
-        var bear = C("Grizzly Bears");
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpYourForwardsDestroyOpponents()
+            {
+                var elesh = C("Elesh Norn, Grand Cenobite");
+                var bear = C("Grizzly Bears");
 
-        Hand(P1, elesh);
-        Battlefield(P1, bear, "Grizzly Bears", "Grizzly Bears");
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+                Hand(P1, elesh);
+                Battlefield(P1, bear, "Grizzly Bears", "Grizzly Bears");
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(elesh)
-            .Verify(() =>
-              {
-                Equal(4, P1.Battlefield.Forwards.Count());
-                Equal(4, C(bear).Power);
-                Equal(0, P2.Battlefield.Forwards.Count());
-              })
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(elesh)
+                        .Verify(() =>
+                        {
+                            Equal(4, P1.Battlefield.Forwards.Count());
+                            Equal(4, C(bear).Power);
+                            Equal(0, P2.Battlefield.Forwards.Count());
+                        })
+                );
+            }
+        }
     }
-  }
 }

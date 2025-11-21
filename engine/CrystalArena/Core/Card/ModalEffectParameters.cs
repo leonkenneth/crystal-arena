@@ -1,6 +1,4 @@
 ﻿namespace CrystalArena
 {
-  public class ModalEffectParameters : AbilityParameters
-  {
-  }
+    public class ModalEffectParameters : AbilityParameters { }
 }

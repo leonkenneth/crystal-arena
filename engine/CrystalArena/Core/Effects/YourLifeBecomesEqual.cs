@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class YourLifeBecomesEqual : Effect
-  {
-    private readonly DynParam<int> _amount;
-    private Player _you;
-
-    private YourLifeBecomesEqual() {}
-
-    public YourLifeBecomesEqual(DynParam<int> amount)
+    public class YourLifeBecomesEqual : Effect
     {
-      _amount = amount;
+        private readonly DynParam<int> _amount;
+        private Player _you;
 
-      RegisterDynamicParameters(amount);
-    }
+        private YourLifeBecomesEqual() { }
 
-    protected override void Initialize()
-    {
-      _you = Source.OwningCard.Controller;
-    }
+        public YourLifeBecomesEqual(DynParam<int> amount)
+        {
+            _amount = amount;
 
-    protected override void ResolveEffect()
-    {
-      _you.Life = _amount.Value;
+            RegisterDynamicParameters(amount);
+        }
+
+        protected override void Initialize()
+        {
+            _you = Source.OwningCard.Controller;
+        }
+
+        protected override void ResolveEffect()
+        {
+            _you.Life = _amount.Value;
+        }
     }
-  }
 }

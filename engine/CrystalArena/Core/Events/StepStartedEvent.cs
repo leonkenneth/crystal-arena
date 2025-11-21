@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class StepStartedEvent
-  {
-    public readonly Step Step;
-
-    public StepStartedEvent(Step step)
+    public class StepStartedEvent
     {
-      Step = step;
+        public readonly Step Step;
+
+        public StepStartedEvent(Step step)
+        {
+            Step = step;
+        }
     }
-  }
 }

@@ -1,34 +1,38 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class MidnightGuard : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class MidnightGuard : CardTemplateSource
     {
-      yield return Card
-        .Named("Midnight Guard")
-        .ManaCost("{2}{W}")
-        .Type("Forward — Human Soldier")
-        .Text("Whenever another forward enters the battlefield, untap Midnight Guard.")
-        .FlavorText(
-          "\"When you're on watch, no noise is harmless and no shadow can be ignored.\"{EOL}—Olgard of the Skiltfolk")
-        .Power(2)
-        .Toughness(3)
-        .TriggeredAbility(p =>
-          {
-            p.Text = "Whenever another forward enters the battlefield, untap Midnight Guard.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Midnight Guard")
+                .ManaCost("{2}{W}")
+                .Type("Forward — Human Soldier")
+                .Text("Whenever another forward enters the battlefield, untap Midnight Guard.")
+                .FlavorText(
+                    "\"When you're on watch, no noise is harmless and no shadow can be ignored.\"{EOL}—Olgard of the Skiltfolk"
+                )
+                .Power(2)
+                .Toughness(3)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "Whenever another forward enters the battlefield, untap Midnight Guard.";
 
-            p.Trigger(new OnZoneChanged(
-              to: Zone.Battlefield,
-              selector: (c, ctx) => c.Is().Forward && c != ctx.OwningCard));
+                    p.Trigger(
+                        new OnZoneChanged(
+                            to: Zone.Battlefield,
+                            selector: (c, ctx) => c.Is().Forward && c != ctx.OwningCard
+                        )
+                    );
 
-            p.Effect = () => new UntapOwner();
+                    p.Effect = () => new UntapOwner();
 
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

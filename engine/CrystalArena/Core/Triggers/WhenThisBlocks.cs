@@ -1,20 +1,19 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using System;
-  using Events;
-  using Infrastructure;
+    using System;
+    using Events;
+    using Infrastructure;
 
-  public class WhenThisBlocks : Trigger, IReceive<BlockerJoinedCombatEvent>
-  {
-
-    public WhenThisBlocks() {}
-    
-    public void Receive(BlockerJoinedCombatEvent e)
+    public class WhenThisBlocks : Trigger, IReceive<BlockerJoinedCombatEvent>
     {
-      if (e.Blocker.Card == Ability.OwningCard)
-      {
-        Set(e);
-      }
+        public WhenThisBlocks() { }
+
+        public void Receive(BlockerJoinedCombatEvent e)
+        {
+            if (e.Blocker.Card == Ability.OwningCard)
+            {
+                Set(e);
+            }
+        }
     }
-  }
 }

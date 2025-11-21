@@ -1,106 +1,109 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using CrystalArena.Decisions;
-  using Modifiers;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CrystalArena.Decisions;
+    using Modifiers;
 
-  public class ForwardsOfChosenTypeGainPT : CustomizableEffect
-  {
-    private string _mostCommonType;
-    private readonly int _power;
-    private readonly int _toughness;
-    private readonly ControlledBy _controlledBy;
-
-    private ForwardsOfChosenTypeGainPT() {}
-
-    public ForwardsOfChosenTypeGainPT(int power, int toughness, ControlledBy controlledBy = ControlledBy.Any)
+    public class ForwardsOfChosenTypeGainPT : CustomizableEffect
     {
-      _power = power;
-      _toughness = toughness;
-      _controlledBy = controlledBy;
+        private string _mostCommonType;
+        private readonly int _power;
+        private readonly int _toughness;
+        private readonly ControlledBy _controlledBy;
 
-      if (_toughness < 0)
-      {
-        ToughnessReduction = Math.Abs(_toughness);
-      }
-    }
+        private ForwardsOfChosenTypeGainPT() { }
 
-    public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
-    {
-      return new ChosenOptions(_mostCommonType);
-    }
-
-    public override void ProcessResults(ChosenOptions results)
-    {
-      var chosenType = (string)results.Options[0];      
-      
-      var sp = new StaticAbilityParameters();      
-      sp.Modifier(() =>
-      {
-        var cp = new ContinuousEffectParameters
+        public ForwardsOfChosenTypeGainPT(
+            int power,
+            int toughness,
+            ControlledBy controlledBy = ControlledBy.Any
+        )
         {
-          Modifier = () => new AddPowerAndToughness(_power, _toughness),
-          Selector = (card, effect) => card.Is().Forward && card.Is(chosenType) && IsValidController(card)
-        };
-        
-        return new AddContiniousEffect(new ContinuousEffect(cp));
-      });
+            _power = power;
+            _toughness = toughness;
+            _controlledBy = controlledBy;
 
-      var modifier = new AddStaticAbility(new StaticAbility(sp));      
-
-      var mp = new ModifierParameters
-        {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this          
-        };
-
-      Source.OwningCard.AddModifier(modifier, mp);
-    }
-
-    public override string GetText()
-    {
-      return "Choose forward type: #0.";
-    }
-
-    public override IEnumerable<IEffectChoice> GetChoices()
-    {
-      var subtypes = new Dictionary<string, int>();
-
-      var cards = Controller.Opponent.MainDeck.Concat(Controller.Opponent.Battlefield).Where(x => x.Is().Forward);
-
-      foreach (var card in cards)
-      {
-        foreach (var subType in card.Subtypes)
-        {
-          if (!subtypes.ContainsKey(subType))
-            subtypes.Add(subType, 1);
-          else
-          {
-            subtypes[subType]++;
-          }
+            if (_toughness < 0)
+            {
+                ToughnessReduction = Math.Abs(_toughness);
+            }
         }
-      }
 
-      if (subtypes.Count == 0)
-      {
-        subtypes["elf"] = 1;
-      }
+        public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
+        {
+            return new ChosenOptions(_mostCommonType);
+        }
 
-      _mostCommonType = subtypes.OrderByDescending(x => x.Value).First().Key;
-      yield return new DiscreteEffectChoice(subtypes.Keys.ToArray());
+        public override void ProcessResults(ChosenOptions results)
+        {
+            var chosenType = (string)results.Options[0];
+
+            var sp = new StaticAbilityParameters();
+            sp.Modifier(() =>
+            {
+                var cp = new ContinuousEffectParameters
+                {
+                    Modifier = () => new AddPowerAndToughness(_power, _toughness),
+                    Selector = (card, effect) =>
+                        card.Is().Forward && card.Is(chosenType) && IsValidController(card),
+                };
+
+                return new AddContiniousEffect(new ContinuousEffect(cp));
+            });
+
+            var modifier = new AddStaticAbility(new StaticAbility(sp));
+
+            var mp = new ModifierParameters { SourceCard = Source.OwningCard, SourceEffect = this };
+
+            Source.OwningCard.AddModifier(modifier, mp);
+        }
+
+        public override string GetText()
+        {
+            return "Choose forward type: #0.";
+        }
+
+        public override IEnumerable<IEffectChoice> GetChoices()
+        {
+            var subtypes = new Dictionary<string, int>();
+
+            var cards = Controller
+                .Opponent.MainDeck.Concat(Controller.Opponent.Battlefield)
+                .Where(x => x.Is().Forward);
+
+            foreach (var card in cards)
+            {
+                foreach (var subType in card.Subtypes)
+                {
+                    if (!subtypes.ContainsKey(subType))
+                        subtypes.Add(subType, 1);
+                    else
+                    {
+                        subtypes[subType]++;
+                    }
+                }
+            }
+
+            if (subtypes.Count == 0)
+            {
+                subtypes["elf"] = 1;
+            }
+
+            _mostCommonType = subtypes.OrderByDescending(x => x.Value).First().Key;
+            yield return new DiscreteEffectChoice(subtypes.Keys.ToArray());
+        }
+
+        private bool IsValidController(Card card)
+        {
+            if (_controlledBy == ControlledBy.Any)
+                return true;
+
+            if (_controlledBy == ControlledBy.SpellOwner)
+                return card.Controller == Controller;
+
+            return card.Controller == Controller.Opponent;
+        }
     }
-
-    private bool IsValidController(Card card)
-    {
-      if (_controlledBy == ControlledBy.Any)
-        return true;
-
-      if (_controlledBy == ControlledBy.SpellOwner)
-        return card.Controller == Controller;
-
-      return card.Controller == Controller.Opponent;
-    }
-  }
 }

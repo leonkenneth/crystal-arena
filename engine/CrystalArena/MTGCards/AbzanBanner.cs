@@ -1,42 +1,44 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Costs;
-  using Effects;
-  using AI.TimingRules;
-  using AI;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class AbzanBanner : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class AbzanBanner : CardTemplateSource
     {
-      yield return Card
-        .Named("Abzan Banner")
-        .ManaCost("{3}")
-        .Type("Artifact")
-        .Text("{T}: Add {W}, {B}, or {G} to your mana pool.{EOL}{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card.")
-        .FlavorText("Stone to endure, roots to remember.")
-        .ManaAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{T}: Add {W}, {B} or {G} to your mana pool.";
-          p.ManaAmount(Mana.Colored(isBlack: true, isGreen: true, isWhite: true));
-        })
-        .ActivatedAbility(p =>
-        {
-          p.Text = "{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card.";
-          p.Cost = new AggregateCost(
-            new PayMana("{W}{B}{G}".Parse()),
-            new Tap(),
-            new Sacrifice());
+            yield return Card.Named("Abzan Banner")
+                .ManaCost("{3}")
+                .Type("Artifact")
+                .Text(
+                    "{T}: Add {W}, {B}, or {G} to your mana pool.{EOL}{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card."
+                )
+                .FlavorText("Stone to endure, roots to remember.")
+                .ManaAbility(p =>
+                {
+                    p.Text = "{T}: Add {W}, {B} or {G} to your mana pool.";
+                    p.ManaAmount(Mana.Colored(isBlack: true, isGreen: true, isWhite: true));
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{W}{B}{G}, {T}, Sacrifice Abzan Banner: Draw a card.";
+                    p.Cost = new AggregateCost(
+                        new PayMana("{W}{B}{G}".Parse()),
+                        new Tap(),
+                        new Sacrifice()
+                    );
 
-          p.Effect = () => new DrawCards(1);
+                    p.Effect = () => new DrawCards(1);
 
-          p.TimingRule(new Any(
-              new WhenOwningCardWillBeDestroyed(),
-              new OnEndOfOpponentsTurn()));
-        })
-        // TODO scoring should depend on number of backups on battlefield
-        .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[2]);
+                    p.TimingRule(
+                        new Any(new WhenOwningCardWillBeDestroyed(), new OnEndOfOpponentsTurn())
+                    );
+                })
+                // TODO scoring should depend on number of backups on battlefield
+                .OverrideScore(p => p.Battlefield = Scores.ManaCostToScore[2]);
+        }
     }
-  }
 }

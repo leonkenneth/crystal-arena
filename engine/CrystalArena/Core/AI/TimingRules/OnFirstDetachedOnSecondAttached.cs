@@ -1,15 +1,15 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class OnFirstDetachedOnSecondAttached : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class OnFirstDetachedOnSecondAttached : TimingRule
     {
-      if (p.Card.IsAttached)
-      {        
-        return Turn.Step == Step.SecondMain;
-      }
-     
-      return Turn.Step == Step.FirstMain;
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            if (p.Card.IsAttached)
+            {
+                return Turn.Step == Step.SecondMain;
+            }
+
+            return Turn.Step == Step.FirstMain;
+        }
     }
-  }
 }

@@ -1,33 +1,43 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class RapidDecay : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class RapidDecay : CardTemplateSource
     {
-      yield return Card
-        .Named("Rapid Decay")
-        .ManaCost("{1}{B}")
-        .Type("Summon")
-        .Text("RemoveFromPlay up to three target cards from a single breakZone.{EOL}Cycling {2} ({2}, Discard this card: Draw a card.)")
-        .FlavorText("The grave robbers arrived the day after the burial. They were a day too late.")
-        .Cycling("{2}")
-        .Cast(p =>
-          {          
-            p.Effect = () => new RemoveFromPlayTargets();
-            p.TargetSelector.AddEffect(
-              trg => trg.Is.Card().In.BreakZone(),
-              trg => {                
-                trg.MinCount = 0;
-                trg.MaxCount = 3;
-              });
-            p.TimingRule(new Any(new WhenTopSpellTargetsCardInBreakZone(), new OnEndOfOpponentsTurn()));
-            p.TargetingRule(new EffectOrCostRankBy(c => -c.Score, ControlledBy.Opponent));
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Rapid Decay")
+                .ManaCost("{1}{B}")
+                .Type("Summon")
+                .Text(
+                    "RemoveFromPlay up to three target cards from a single breakZone.{EOL}Cycling {2} ({2}, Discard this card: Draw a card.)"
+                )
+                .FlavorText(
+                    "The grave robbers arrived the day after the burial. They were a day too late."
+                )
+                .Cycling("{2}")
+                .Cast(p =>
+                {
+                    p.Effect = () => new RemoveFromPlayTargets();
+                    p.TargetSelector.AddEffect(
+                        trg => trg.Is.Card().In.BreakZone(),
+                        trg =>
+                        {
+                            trg.MinCount = 0;
+                            trg.MaxCount = 3;
+                        }
+                    );
+                    p.TimingRule(
+                        new Any(
+                            new WhenTopSpellTargetsCardInBreakZone(),
+                            new OnEndOfOpponentsTurn()
+                        )
+                    );
+                    p.TargetingRule(new EffectOrCostRankBy(c => -c.Score, ControlledBy.Opponent));
+                });
+        }
     }
-  }
 }

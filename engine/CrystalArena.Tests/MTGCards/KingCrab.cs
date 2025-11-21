@@ -1,25 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class KingCrab
-  {
-    public class Ai : AiScenario
+    public class KingCrab
     {
-      [Fact (Skip = "Old card")]
-      public void PutForceOnTopOfMainDeck()
-      {
-        var force = C("Verdant Force");
-        
-        Battlefield(P1, "King Crab", "Island", "Island");        
-        Battlefield(P2, force);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutForceOnTopOfMainDeck()
+            {
+                var force = C("Verdant Force");
 
-        RunGame(1);
+                Battlefield(P1, "King Crab", "Island", "Island");
+                Battlefield(P2, force);
 
-        Equal(Zone.MainDeck, C(force).Zone);
+                RunGame(1);
 
-      }
+                Equal(Zone.MainDeck, C(force).Zone);
+            }
+        }
     }
-  }
 }

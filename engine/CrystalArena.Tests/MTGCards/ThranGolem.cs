@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ThranGolem
-  {
-    public class Ai : AiScenario
+    public class ThranGolem
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantGolem()
-      {
-          Hand(P1, "Rancor", "Rancor");
-          Battlefield(P1, "Thran Golem", "Forest", "Forest");
-          Battlefield(P2, "Wall of Blossoms");
-          RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantGolem()
+            {
+                Hand(P1, "Rancor", "Rancor");
+                Battlefield(P1, "Thran Golem", "Forest", "Forest");
+                Battlefield(P2, "Wall of Blossoms");
+                RunGame(1);
 
-          Equal(11, P2.Life);
-      }
+                Equal(11, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class PlowUnder
-  {
-    public class Ai : AiScenario
+    public class PlowUnder
     {
-      [Fact (Skip = "Old card")]
-      public void PutOnTop()
-      {
-        Hand(P1, "Plow Under");
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest");
-        Battlefield(P2, "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutOnTop()
+            {
+                Hand(P1, "Plow Under");
+                Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest");
+                Battlefield(P2, "Mountain", "Mountain");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Battlefield.Count(c => c.Is().Backup));
-      }
+                Equal(0, P2.Battlefield.Count(c => c.Is().Backup));
+            }
+        }
     }
-  }
 }

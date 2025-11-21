@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Costs
 {
-  public class NoCost : Cost
-  {
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class NoCost : Cost
     {
-      return true;
-    }
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            return true;
+        }
 
-    public override void PayPartial(PayCostParameters p) {}
-  }
+        public override void PayPartial(PayCostParameters p) { }
+    }
 }

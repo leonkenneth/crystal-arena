@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
-  using System.Linq;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class MarduHordechief
-  {
-    public class Ai: AiScenario
+    public class MarduHordechief
     {
-      [Fact (Skip = "Old card")]
-      public void Create11Token()
-      {
-        Hand(P1, "Mardu Hordechief");
-        Battlefield(P1, "Plains", "Forest", "Plains", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Create11Token()
+            {
+                Hand(P1, "Mardu Hordechief");
+                Battlefield(P1, "Plains", "Forest", "Plains", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Assert.Equal(3, P1.Battlefield.Forwards.Count());
-      }
+                Assert.Equal(3, P1.Battlefield.Forwards.Count());
+            }
+        }
     }
-  }
 }

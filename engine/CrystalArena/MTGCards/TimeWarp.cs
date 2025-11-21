@@ -1,27 +1,26 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.AI.TimingRules;
+    using System.Collections.Generic;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Effects;
 
-  public class TimeWarp : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class TimeWarp : CardTemplateSource
     {
-      yield return Card
-        .Named("Time Warp")
-        .ManaCost("{3}{U}{U}")
-        .Type("Sorcery")
-        .Text("Target player takes an extra turn after this one.")
-        .FlavorText("Just when you thought you'd survived the first wave.")
-        .Cast(p =>
-          {
-            p.Effect = () => new TargetPlayerTakesExtraTurn();
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
-            p.TimingRule(new OnSecondMain());
-            p.TargetingRule(new EffectYou());
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Time Warp")
+                .ManaCost("{3}{U}{U}")
+                .Type("Sorcery")
+                .Text("Target player takes an extra turn after this one.")
+                .FlavorText("Just when you thought you'd survived the first wave.")
+                .Cast(p =>
+                {
+                    p.Effect = () => new TargetPlayerTakesExtraTurn();
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
+                    p.TimingRule(new OnSecondMain());
+                    p.TargetingRule(new EffectYou());
+                });
+        }
     }
-  }
 }

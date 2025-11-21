@@ -5,36 +5,35 @@ using CrystalArena.Modifiers;
 
 namespace CrystalArena.Effects
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class DullAndFreezePermanents : Effect
-  {
-    private Func<Context, IEnumerable<Card>> _filter;
-    private DullAndFreezePermanents()
+    public class DullAndFreezePermanents : Effect
     {
-    }
-    
-    public DullAndFreezePermanents(Func<Context, IEnumerable<Card>> filter)
-    {
-      _filter = filter;
-    }
+        private Func<Context, IEnumerable<Card>> _filter;
 
-    protected override void ResolveEffect()
-    {
-      var p = new ModifierParameters
-      {
-        SourceEffect = this,
-        SourceCard = Source.OwningCard,
-        X = X
-      };
-      
-      var context = new Context(this, Game);
+        private DullAndFreezePermanents() { }
 
-      foreach (var card in _filter(context))
-      {
-        card.Tap();
-        card.AddModifier(new Freeze(), p);
-      }
+        public DullAndFreezePermanents(Func<Context, IEnumerable<Card>> filter)
+        {
+            _filter = filter;
+        }
+
+        protected override void ResolveEffect()
+        {
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
+
+            var context = new Context(this, Game);
+
+            foreach (var card in _filter(context))
+            {
+                card.Tap();
+                card.AddModifier(new Freeze(), p);
+            }
+        }
     }
-  }
 }

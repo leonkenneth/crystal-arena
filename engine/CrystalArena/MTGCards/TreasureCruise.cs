@@ -1,25 +1,26 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Effects;
 
-  public class TreasureCruise : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class TreasureCruise : CardTemplateSource
     {
-      yield return Card
-        .Named("Treasure Cruise")
-        .ManaCost("{7}{U}")
-        .Type("Sorcery")
-        .Text("{Delve}{I}(Each card you exile from your breakZone while casting this spell pays for {1}.){/I}{EOL}Draw three cards.")
-        .FlavorText("Countless delights drift on the surface while dark schemes run below.")
-        .SimpleAbilities(Static.Delve)
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new DrawCards(3);
-          p.TimingRule(new OnFirstMain());
-        });
+            yield return Card.Named("Treasure Cruise")
+                .ManaCost("{7}{U}")
+                .Type("Sorcery")
+                .Text(
+                    "{Delve}{I}(Each card you exile from your breakZone while casting this spell pays for {1}.){/I}{EOL}Draw three cards."
+                )
+                .FlavorText("Countless delights drift on the surface while dark schemes run below.")
+                .SimpleAbilities(Static.Delve)
+                .Cast(p =>
+                {
+                    p.Effect = () => new DrawCards(3);
+                    p.TimingRule(new OnFirstMain());
+                });
+        }
     }
-  }
 }

@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class WhenYourLifeCanBecomeZero : TimingRule
-  {
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+    public class WhenYourLifeCanBecomeZero : TimingRule
     {
-      return Stack.CanTopSpellReducePlayersLifeToZero(p.Controller);
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+        {
+            return Stack.CanTopSpellReducePlayersLifeToZero(p.Controller);
+        }
     }
-  }
 }

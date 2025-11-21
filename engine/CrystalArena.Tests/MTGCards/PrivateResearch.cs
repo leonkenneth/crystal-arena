@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PrivateResearch
-  {
-    public class Ai : AiScenario
+    public class PrivateResearch
     {
-      [Fact (Skip = "Old card")]
-      public void Draw1Card()
-      {
-        Battlefield(P1, C("Grizzly Bears").IsEnchantedWith("Private Research"));
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Draw1Card()
+            {
+                Battlefield(P1, C("Grizzly Bears").IsEnchantedWith("Private Research"));
+                Battlefield(P2, "Grizzly Bears");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P1.Hand.Count);
-      }
+                Equal(1, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

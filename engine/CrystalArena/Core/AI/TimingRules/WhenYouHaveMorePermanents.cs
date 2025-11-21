@@ -1,25 +1,30 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  using System;
-  using System.Linq;
+    using System;
+    using System.Linq;
 
-  public class WhenYouHaveMorePermanents : TimingRule
-  {
-    private readonly Func<Card, bool> _selector;
-
-    private WhenYouHaveMorePermanents() {}
-
-    public WhenYouHaveMorePermanents(Func<Card, bool> selector = null)
+    public class WhenYouHaveMorePermanents : TimingRule
     {
-      _selector = selector ?? delegate { return true; };
-    }
+        private readonly Func<Card, bool> _selector;
 
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
-    {
-      var controllerCount = p.Controller.Battlefield.Count(_selector);
-      var opponentCount = p.Controller.Opponent.Battlefield.Count(_selector);
+        private WhenYouHaveMorePermanents() { }
 
-      return controllerCount > opponentCount;
+        public WhenYouHaveMorePermanents(Func<Card, bool> selector = null)
+        {
+            _selector =
+                selector
+                ?? delegate
+                {
+                    return true;
+                };
+        }
+
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+        {
+            var controllerCount = p.Controller.Battlefield.Count(_selector);
+            var opponentCount = p.Controller.Opponent.Battlefield.Count(_selector);
+
+            return controllerCount > opponentCount;
+        }
     }
-  }
 }

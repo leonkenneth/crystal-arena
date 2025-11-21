@@ -1,53 +1,52 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using AI;
+    using System.Collections.Generic;
+    using AI;
 
-  public class DealDifferentDamageToTargets : Effect
-  {
-    private readonly List<int> _amounts = new List<int>();
-
-    private DealDifferentDamageToTargets() {}
-
-    public DealDifferentDamageToTargets(IEnumerable<int> amounts)
+    public class DealDifferentDamageToTargets : Effect
     {
-      _amounts.AddRange(amounts);
-      SetTags(EffectTag.DealDamage);
-    }
+        private readonly List<int> _amounts = new List<int>();
 
-    public override int CalculatePlayerDamage(Player player)
-    {
-      return CalculateTargetDamage(player);
-    }
+        private DealDifferentDamageToTargets() { }
 
-    public override int CalculateForwardDamage(Card forward)
-    {
-      return CalculateTargetDamage(forward);
-    }
-
-    private int CalculateTargetDamage(ITarget player)
-    {
-      var index = Targets.Effect.IndexOf(player);
-
-      return index == -1
-        ? 0
-        : _amounts[index];
-    }
-
-    protected override void ResolveEffect()
-    {
-      for (var i = 0; i < _amounts.Count; i++)
-      {
-        var target = Targets.Effect[i];
-
-        if (IsValid(target))
+        public DealDifferentDamageToTargets(IEnumerable<int> amounts)
         {
-          Source.OwningCard.DealDamageTo(
-            _amounts[i],
-            (IDamageable) target,
-            isCombat: false);
+            _amounts.AddRange(amounts);
+            SetTags(EffectTag.DealDamage);
         }
-      }
+
+        public override int CalculatePlayerDamage(Player player)
+        {
+            return CalculateTargetDamage(player);
+        }
+
+        public override int CalculateForwardDamage(Card forward)
+        {
+            return CalculateTargetDamage(forward);
+        }
+
+        private int CalculateTargetDamage(ITarget player)
+        {
+            var index = Targets.Effect.IndexOf(player);
+
+            return index == -1 ? 0 : _amounts[index];
+        }
+
+        protected override void ResolveEffect()
+        {
+            for (var i = 0; i < _amounts.Count; i++)
+            {
+                var target = Targets.Effect[i];
+
+                if (IsValid(target))
+                {
+                    Source.OwningCard.DealDamageTo(
+                        _amounts[i],
+                        (IDamageable)target,
+                        isCombat: false
+                    );
+                }
+            }
+        }
     }
-  }
 }

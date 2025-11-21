@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class AegisAngel
-  {
-    public class Ai : AiScenario
+    public class AegisAngel
     {
-      [Fact (Skip = "Old card")]
-      public void GiveAnthemIndestructible()
-      {
-        var anthem = C("Glorious Anthem");
-        
-        Hand(P1, "Aegis Angel");        
-        Battlefield(P1, anthem, "Plains", "Plains", "Plains", "Plains", "Plains", "Plains");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GiveAnthemIndestructible()
+            {
+                var anthem = C("Glorious Anthem");
 
-        RunGame(1);
+                Hand(P1, "Aegis Angel");
+                Battlefield(P1, anthem, "Plains", "Plains", "Plains", "Plains", "Plains", "Plains");
 
-        True(C(anthem).Has().Indestructible);
-      }
+                RunGame(1);
+
+                True(C(anthem).Has().Indestructible);
+            }
+        }
     }
-  }
 }

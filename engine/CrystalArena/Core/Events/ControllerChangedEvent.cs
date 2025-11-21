@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class ControllerChangedEvent
-  {
-    public readonly Card Card;
-
-    public ControllerChangedEvent(Card card)
+    public class ControllerChangedEvent
     {
-      Card = card;
+        public readonly Card Card;
+
+        public ControllerChangedEvent(Card card)
+        {
+            Card = card;
+        }
     }
-  }
 }

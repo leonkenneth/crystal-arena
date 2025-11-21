@@ -1,33 +1,44 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class GarruksPackleader : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class GarruksPackleader : CardTemplateSource
     {
-      yield return Card
-        .Named("Garruk's Packleader")
-        .ManaCost("{4}{G}")
-        .Type("Forward - Beast")
-        .Text("Whenever another forward with power 3 or greater enters the battlefield under your control, you may draw a card.")
-        .FlavorText("\"He has learned much in his long years. And unlike selfish humans, he's willing to share.\"{EOL}—Garruk Wildspeaker")
-        .Power(4)
-        .Toughness(4)
-        .TriggeredAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "Whenever another forward with power 3 or greater enters the battlefield under your control, you may draw a card.";
+            yield return Card.Named("Garruk's Packleader")
+                .ManaCost("{4}{G}")
+                .Type("Forward - Beast")
+                .Text(
+                    "Whenever another forward with power 3 or greater enters the battlefield under your control, you may draw a card."
+                )
+                .FlavorText(
+                    "\"He has learned much in his long years. And unlike selfish humans, he's willing to share.\"{EOL}—Garruk Wildspeaker"
+                )
+                .Power(4)
+                .Toughness(4)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "Whenever another forward with power 3 or greater enters the battlefield under your control, you may draw a card.";
 
-          p.Trigger(new OnZoneChanged(
-            to: Zone.Battlefield,
-            selector: (c, ctx) => c.Is().Forward && c.Power >= 3 && ctx.You == c.Controller && c != ctx.OwningCard));
-          
-          p.TriggerOnlyIfOwningCardIsInPlay = true;
-          
-          p.Effect = () => new DrawCards(1);
-        });
+                    p.Trigger(
+                        new OnZoneChanged(
+                            to: Zone.Battlefield,
+                            selector: (c, ctx) =>
+                                c.Is().Forward
+                                && c.Power >= 3
+                                && ctx.You == c.Controller
+                                && c != ctx.OwningCard
+                        )
+                    );
+
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+
+                    p.Effect = () => new DrawCards(1);
+                });
+        }
     }
-  }
 }

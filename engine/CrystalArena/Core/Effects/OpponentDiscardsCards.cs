@@ -1,63 +1,78 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
+    using System;
 
-  public class OpponentDiscardsCards : Effect
-  {
-    private readonly Func<Card, bool> _filter;
-    private readonly DynParam<int> _randomCount;
-    private readonly DynParam<int> _selectedCount;
-    private readonly DynParam<bool> _youChooseDiscardedCards;
-
-    private OpponentDiscardsCards() {}
-
-    public OpponentDiscardsCards(DynParam<int> randomCount = null, DynParam<int> selectedCount = null,
-      DynParam<bool> youChooseDiscardedCards = null, Func<Card, bool> filter = null)
+    public class OpponentDiscardsCards : Effect
     {
-      _randomCount = randomCount ?? 0;
-      _selectedCount = selectedCount ?? 0;
+        private readonly Func<Card, bool> _filter;
+        private readonly DynParam<int> _randomCount;
+        private readonly DynParam<int> _selectedCount;
+        private readonly DynParam<bool> _youChooseDiscardedCards;
 
-      _filter = filter ?? delegate { return true; };
-      _youChooseDiscardedCards = youChooseDiscardedCards ?? false;
+        private OpponentDiscardsCards() { }
 
-      RegisterDynamicParameters(randomCount, selectedCount, youChooseDiscardedCards);
-    }
+        public OpponentDiscardsCards(
+            DynParam<int> randomCount = null,
+            DynParam<int> selectedCount = null,
+            DynParam<bool> youChooseDiscardedCards = null,
+            Func<Card, bool> filter = null
+        )
+        {
+            _randomCount = randomCount ?? 0;
+            _selectedCount = selectedCount ?? 0;
 
-    protected override void ResolveEffect()
-    {
-      var opponent = Players.GetOpponent(Controller);
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
+            _youChooseDiscardedCards = youChooseDiscardedCards ?? false;
 
-      if (_youChooseDiscardedCards.Value)
-      {
-        opponent.RevealHand();
+            RegisterDynamicParameters(randomCount, selectedCount, youChooseDiscardedCards);
+        }
 
-        Enqueue(new Decisions.DiscardCards(
-          Controller,
-          p =>
+        protected override void ResolveEffect()
+        {
+            var opponent = Players.GetOpponent(Controller);
+
+            if (_youChooseDiscardedCards.Value)
             {
-              p.Count = _selectedCount.Value;
-              p.Filter = _filter;
-              p.DiscardOpponentsCards = true;
-            }));
+                opponent.RevealHand();
 
-        return;
-      }
+                Enqueue(
+                    new Decisions.DiscardCards(
+                        Controller,
+                        p =>
+                        {
+                            p.Count = _selectedCount.Value;
+                            p.Filter = _filter;
+                            p.DiscardOpponentsCards = true;
+                        }
+                    )
+                );
 
-      for (var i = 0; i < _randomCount.Value; i++)
-      {
-        opponent.DiscardRandomCard();
-      }
+                return;
+            }
 
-      if (_selectedCount.Value == 0)
-        return;
+            for (var i = 0; i < _randomCount.Value; i++)
+            {
+                opponent.DiscardRandomCard();
+            }
 
-      Enqueue(new Decisions.DiscardCards(
-        opponent,
-        p =>
-          {
-            p.Count = _selectedCount.Value;
-            p.Filter = _filter;
-          }));
+            if (_selectedCount.Value == 0)
+                return;
+
+            Enqueue(
+                new Decisions.DiscardCards(
+                    opponent,
+                    p =>
+                    {
+                        p.Count = _selectedCount.Value;
+                        p.Filter = _filter;
+                    }
+                )
+            );
+        }
     }
-  }
 }

@@ -1,28 +1,31 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Effects;
+    using Modifiers;
 
-  public class TrumpetBlast : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class TrumpetBlast : CardTemplateSource
     {
-      yield return Card
-        .Named("Trumpet Blast")
-        .ManaCost("{2}{R}")
-        .Type("Summon")
-        .Text("Attacking forwards get +2/+0 until end of turn.")
-        .FlavorText("Keldon warriors don't need signals to tell them when to attack, but when to stop.")
-        .Cast(p =>
-          {
-            p.Effect = () => new ApplyModifiersToPermanents(
-              selector: (c, ctx) => c.IsAttacker,
-              modifier: () => new AddPowerAndToughness(2, 0) {UntilEot = true});
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Trumpet Blast")
+                .ManaCost("{2}{R}")
+                .Type("Summon")
+                .Text("Attacking forwards get +2/+0 until end of turn.")
+                .FlavorText(
+                    "Keldon warriors don't need signals to tell them when to attack, but when to stop."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new ApplyModifiersToPermanents(
+                            selector: (c, ctx) => c.IsAttacker,
+                            modifier: () => new AddPowerAndToughness(2, 0) { UntilEot = true }
+                        );
 
-            p.TimingRule(new OnYourTurn(Step.DeclareBlocker));
-          });
+                    p.TimingRule(new OnYourTurn(Step.DeclareBlocker));
+                });
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Anthroplasm
-  {
-    public class Ai : AiScenario
+    public class Anthroplasm
     {
-      [Fact (Skip = "Old card")]
-      public void PumpAnthroplasm()
-      {
-        var anthroplasm = C("Anthroplasm");
-        Battlefield(P1, "Island", "Island", "Island", "Island", anthroplasm);
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpAnthroplasm()
+            {
+                var anthroplasm = C("Anthroplasm");
+                Battlefield(P1, "Island", "Island", "Island", "Island", anthroplasm);
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(2);
+                RunGame(2);
 
-        Equal(4, C(anthroplasm).Power);
-      }
+                Equal(4, C(anthroplasm).Power);
+            }
+        }
     }
-  }
 }

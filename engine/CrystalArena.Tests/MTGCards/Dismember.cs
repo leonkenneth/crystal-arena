@@ -1,27 +1,27 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Dismember
-  {
-    public class Ai : AiScenario
+    public class Dismember
     {
-      [Fact (Skip = "Old card")]
-      public void CastSpellForPhyrexianCost()
-      {
-        var dragon = C("Shivan Dragon");
-        Battlefield(P1, dragon);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastSpellForPhyrexianCost()
+            {
+                var dragon = C("Shivan Dragon");
+                Battlefield(P1, dragon);
 
-        P2.Life = 5;
-        Hand(P2, "Dismember");
-        Battlefield(P2, "Swamp");
+                P2.Life = 5;
+                Hand(P2, "Dismember");
+                Battlefield(P2, "Swamp");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-        Equal(Zone.BreakZone, C(dragon).Zone);
-      }    
+                Equal(1, P2.Life);
+                Equal(Zone.BreakZone, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class DeathlessAngel
-  {
-    public class PredefinedAi : PredefinedAiScenario
+    public class DeathlessAngel
     {
-      [Fact (Skip = "Old card")]
-      public void IndestructibleShield()
-      {
-        var angel = C("Deathless Angel");
-        var blade = C("Doom blade");
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void IndestructibleShield()
+            {
+                var angel = C("Deathless Angel");
+                var blade = C("Doom blade");
 
-        Battlefield(P2, angel, "Plains", "Plains");
-        Hand(P1, blade);
+                Battlefield(P2, angel, "Plains", "Plains");
+                Hand(P1, blade);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(blade, target: angel)
-            .Verify(() =>
-              {
-                Equal(Zone.Battlefield, C(angel).Zone);
-                True(C(angel).Has().Indestructible);
-              }
-            ));
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(blade, target: angel)
+                        .Verify(() =>
+                        {
+                            Equal(Zone.Battlefield, C(angel).Zone);
+                            True(C(angel).Has().Indestructible);
+                        })
+                );
+            }
+        }
     }
-  }
 }

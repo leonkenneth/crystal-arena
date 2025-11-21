@@ -1,23 +1,22 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class RofellosLlanowarEmissary : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class RofellosLlanowarEmissary : CardTemplateSource
     {
-      yield return Card
-        .Named("Rofellos, Llanowar Emissary")
-        .ManaCost("{G}{G}")
-        .Type("Legendary Forward Elf Druid")
-        .Text("{T}: Add {G} to your mana pool for each Forest you control.")
-        .Power(2)
-        .Toughness(1)
-        .ManaAbility(p =>
-          {
-            p.Text = "{T}: Add {G} to your mana pool for each Forest you control.";
-            p.ManaAmount(ManaColor.Wind, c => c.Is("Forest"));
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Rofellos, Llanowar Emissary")
+                .ManaCost("{G}{G}")
+                .Type("Legendary Forward Elf Druid")
+                .Text("{T}: Add {G} to your mana pool for each Forest you control.")
+                .Power(2)
+                .Toughness(1)
+                .ManaAbility(p =>
+                {
+                    p.Text = "{T}: Add {G} to your mana pool for each Forest you control.";
+                    p.ManaAmount(ManaColor.Wind, c => c.Is("Forest"));
+                });
+        }
     }
-  }
 }

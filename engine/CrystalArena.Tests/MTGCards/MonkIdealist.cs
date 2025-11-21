@@ -1,39 +1,39 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MonkIdealist
-  {
-    public class Ai : AiScenario
+    public class MonkIdealist
     {
-      [Fact (Skip = "Old card")]
-      public void ReturnMonsterFromBreakZone()
-      {
-        var pariah = C("Pariah");
-        var idealist = C("Monk Idealist");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ReturnMonsterFromBreakZone()
+            {
+                var pariah = C("Pariah");
+                var idealist = C("Monk Idealist");
 
-        Hand(P1, idealist);
-        BreakZone(P1, pariah);
-        Battlefield(P1, "Plains", "Plains", "Plains");
+                Hand(P1, idealist);
+                BreakZone(P1, pariah);
+                Battlefield(P1, "Plains", "Plains", "Plains");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Hand, C(pariah).Zone);
-      }
+                Equal(Zone.Hand, C(pariah).Zone);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void DoNotCastIdealistWithNoMonstersInYourBreakZone()
-      {
-        var idealist = C("Monk Idealist");
+            [Fact(Skip = "Old card")]
+            public void DoNotCastIdealistWithNoMonstersInYourBreakZone()
+            {
+                var idealist = C("Monk Idealist");
 
-        Hand(P1, idealist);
-        Battlefield(P1, "Plains", "Plains", "Plains");
+                Hand(P1, idealist);
+                Battlefield(P1, "Plains", "Plains", "Plains");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Hand, C(idealist).Zone);
-      }
+                Equal(Zone.Hand, C(idealist).Zone);
+            }
+        }
     }
-  }
 }

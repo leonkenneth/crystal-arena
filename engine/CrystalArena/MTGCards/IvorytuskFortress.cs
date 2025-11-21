@@ -1,30 +1,37 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class IvorytuskFortress : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class IvorytuskFortress : CardTemplateSource
     {
-      yield return Card
-        .Named("Ivorytusk Fortress")
-        .ManaCost("{2}{W}{B}{G}")
-        .Type("Forward - Elephant")
-        .Text("Untap each forward you control with a +1/+1 counter on it during each other player's untap step.")
-        .FlavorText("Abzan soldiers march to war confident that their Houses march with them.")
-        .Power(5)
-        .Toughness(7)
-        .TriggeredAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "Untap each forward you control with a +1/+1 counter on it during each other player's untap step.";
-          p.Trigger(new OnStepStart(Step.Untap, activeTurn: false, passiveTurn: true));
-          p.Effect = () => new UntapEachPermanent(
-            filter: c => c.Is().Forward && c.CountersCount(CounterType.PowerToughness) > 0,
-            controlledBy: ControlledBy.SpellOwner);
-          p.TriggerOnlyIfOwningCardIsInPlay = true;
-        });
+            yield return Card.Named("Ivorytusk Fortress")
+                .ManaCost("{2}{W}{B}{G}")
+                .Type("Forward - Elephant")
+                .Text(
+                    "Untap each forward you control with a +1/+1 counter on it during each other player's untap step."
+                )
+                .FlavorText(
+                    "Abzan soldiers march to war confident that their Houses march with them."
+                )
+                .Power(5)
+                .Toughness(7)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "Untap each forward you control with a +1/+1 counter on it during each other player's untap step.";
+                    p.Trigger(new OnStepStart(Step.Untap, activeTurn: false, passiveTurn: true));
+                    p.Effect = () =>
+                        new UntapEachPermanent(
+                            filter: c =>
+                                c.Is().Forward && c.CountersCount(CounterType.PowerToughness) > 0,
+                            controlledBy: ControlledBy.SpellOwner
+                        );
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

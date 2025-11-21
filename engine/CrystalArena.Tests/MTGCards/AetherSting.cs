@@ -1,24 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class AetherSting
-  {
-    public class Ai : AiScenario
+    public class AetherSting
     {
-      [Fact (Skip = "Old card")]
-      public void Deal1DamageToOpponent()
-      {
-        Hand(P1, "Yavimaya Wurm");
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest", "Forest");
-        Battlefield(P2, "Aether Sting");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal1DamageToOpponent()
+            {
+                Hand(P1, "Yavimaya Wurm");
+                Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest", "Forest");
+                Battlefield(P2, "Aether Sting");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(P1.Life, 19);                
-      }
-      
+                Equal(P1.Life, 19);
+            }
+        }
     }
-  }
 }

@@ -6,8 +6,7 @@ public class Test_001_BasicBackup : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("0-001X")
+        yield return Card.Code("0-001X")
             .Named("Test Basic Backup")
             .ManaCost("{R}")
             .Backup(multiplayable: true);

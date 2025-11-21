@@ -1,14 +1,14 @@
 ﻿namespace CrystalArena.Events
 {
-  using AI;
+    using AI;
 
-  public class SearchStartedEvent
-  {
-    public readonly SearchParameters SearchParameters;
-
-    public SearchStartedEvent(SearchParameters searchParameters)
+    public class SearchStartedEvent
     {
-      SearchParameters = searchParameters;
+        public readonly SearchParameters SearchParameters;
+
+        public SearchStartedEvent(SearchParameters searchParameters)
+        {
+            SearchParameters = searchParameters;
+        }
     }
-  }
 }

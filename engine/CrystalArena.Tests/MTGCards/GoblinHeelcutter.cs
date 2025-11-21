@@ -1,45 +1,45 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GoblinHeelcutter
-  {
-    public class Ai : AiScenario
+    public class GoblinHeelcutter
     {
-      [Fact (Skip = "Old card")]
-      public void Dash()
-      {
-        var goblin = C("Goblin Heelcutter");
-        
-        Hand(P1, goblin);
-        Battlefield(P1, "Mountain", "Mountain", "Mountain");
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Dash()
+            {
+                var goblin = C("Goblin Heelcutter");
 
-        P2.Life = 4;
+                Hand(P1, goblin);
+                Battlefield(P1, "Mountain", "Mountain", "Mountain");
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(2);
+                P2.Life = 4;
 
-        Equal(Zone.Hand, C(goblin).Zone);
-        Equal(1, P2.Life);
-      }
+                RunGame(2);
 
-      [Fact (Skip = "Old card")]
-      public void NoDash()
-      {
-        var goblin = C("Goblin Heelcutter");
+                Equal(Zone.Hand, C(goblin).Zone);
+                Equal(1, P2.Life);
+            }
 
-        Hand(P1, goblin);
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+            [Fact(Skip = "Old card")]
+            public void NoDash()
+            {
+                var goblin = C("Goblin Heelcutter");
 
-        P2.Life = 20;
+                Hand(P1, goblin);
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain");
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(2);
+                P2.Life = 20;
 
-        Equal(Zone.Battlefield, C(goblin).Zone);
-        Equal(20, P2.Life);
-      }
+                RunGame(2);
+
+                Equal(Zone.Battlefield, C(goblin).Zone);
+                Equal(20, P2.Life);
+            }
+        }
     }
-  }
 }

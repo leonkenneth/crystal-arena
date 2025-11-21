@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class OptionsChosenEvent
-  {
-    public OptionsChosenEvent(string text)
+    public class OptionsChosenEvent
     {
-      Text = text;
-    }
+        public OptionsChosenEvent(string text)
+        {
+            Text = text;
+        }
 
-    public readonly string Text;
-  }
+        public readonly string Text;
+    }
 }

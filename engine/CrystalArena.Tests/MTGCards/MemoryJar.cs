@@ -1,29 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MemoryJar
-  {
-    public class Ai : AiScenario
+    public class MemoryJar
     {
-      [Fact (Skip = "Old card")]
-      public void ReplaceHandWithNewOneUntilEot()
-      {
-        var dragon = C("Shivan Dragon");
-        var hermit = C("Deranged Hermit");
-        
-        Hand(P1, dragon);                
-        MainDeck(P1, "Forest", "Forest", hermit, "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ReplaceHandWithNewOneUntilEot()
+            {
+                var dragon = C("Shivan Dragon");
+                var hermit = C("Deranged Hermit");
 
-        Battlefield(P1, "Memory Jar", "Forest", "Forest", "Forest", "Forest"); 
+                Hand(P1, dragon);
+                MainDeck(P1, "Forest", "Forest", hermit, "Forest", "Forest");
 
-        RunGame(1);
+                Battlefield(P1, "Memory Jar", "Forest", "Forest", "Forest", "Forest");
 
-        Equal(1, P1.Hand.Count);
-        Equal(Zone.Battlefield, C(hermit).Zone);
-        
-      }
+                RunGame(1);
+
+                Equal(1, P1.Hand.Count);
+                Equal(Zone.Battlefield, C(hermit).Zone);
+            }
+        }
     }
-  }
 }

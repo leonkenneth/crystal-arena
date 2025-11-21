@@ -1,13 +1,13 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class UntapAllBackups : Effect
-  {
-    protected override void ResolveEffect()
+    public class UntapAllBackups : Effect
     {
-      foreach (var backup in Controller.Battlefield.Backups)
-      {
-        backup.Untap();
-      }
+        protected override void ResolveEffect()
+        {
+            foreach (var backup in Controller.Battlefield.Backups)
+            {
+                backup.Untap();
+            }
+        }
     }
-  }
 }

@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System;
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using System;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class AttachmentLifetime : Lifetime, IReceive<AttachmentDetachedEvent>
-  {
-    private readonly Func<Lifetime, Card> _selector;
-
-    private AttachmentLifetime() {}
-
-    public AttachmentLifetime(Func<Lifetime, Card> selector = null)
+    public class AttachmentLifetime : Lifetime, IReceive<AttachmentDetachedEvent>
     {
-      _selector = selector ?? (self => self.Modifier.SourceCard);
-    }
+        private readonly Func<Lifetime, Card> _selector;
 
-    public void Receive(AttachmentDetachedEvent message)
-    {
-      var attachment = _selector(this);
+        private AttachmentLifetime() { }
 
-      if (message.Attachment == attachment)
-      {
-        End();
-      }
+        public AttachmentLifetime(Func<Lifetime, Card> selector = null)
+        {
+            _selector = selector ?? (self => self.Modifier.SourceCard);
+        }
+
+        public void Receive(AttachmentDetachedEvent message)
+        {
+            var attachment = _selector(this);
+
+            if (message.Attachment == attachment)
+            {
+                End();
+            }
+        }
     }
-  }
 }

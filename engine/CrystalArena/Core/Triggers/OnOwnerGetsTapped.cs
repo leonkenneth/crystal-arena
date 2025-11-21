@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.Triggers
 {
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class OnOwnerGetsTapped : Trigger, IReceive<PermanentTappedEvent>
-  {
-    public void Receive(PermanentTappedEvent message)
+    public class OnOwnerGetsTapped : Trigger, IReceive<PermanentTappedEvent>
     {
-      if (message.Card != OwningCard)
-        return;
+        public void Receive(PermanentTappedEvent message)
+        {
+            if (message.Card != OwningCard)
+                return;
 
-      Set(message);
+            Set(message);
+        }
     }
-  }
 }

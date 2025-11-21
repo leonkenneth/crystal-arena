@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena
 {
-  using Modifiers;
+    using Modifiers;
 
-  public class SkipStep : Modifier, IPlayerModifier
-  {
-    private readonly Step _step;
-    private SkipSteps _skipSteps;
-
-    private SkipStep() {}
-
-    public SkipStep(Step step)
+    public class SkipStep : Modifier, IPlayerModifier
     {
-      _step = step;
-    }
+        private readonly Step _step;
+        private SkipSteps _skipSteps;
 
-    public override void Apply(SkipSteps skipSteps)
-    {
-      _skipSteps = skipSteps;
-      skipSteps.Add(_step);
-    }
+        private SkipStep() { }
 
-    protected override void Unapply()
-    {
-      _skipSteps.Remove(_step);
+        public SkipStep(Step step)
+        {
+            _step = step;
+        }
+
+        public override void Apply(SkipSteps skipSteps)
+        {
+            _skipSteps = skipSteps;
+            skipSteps.Add(_step);
+        }
+
+        protected override void Unapply()
+        {
+            _skipSteps.Remove(_step);
+        }
     }
-  }
 }

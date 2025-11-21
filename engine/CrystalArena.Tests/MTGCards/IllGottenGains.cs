@@ -1,28 +1,28 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class IllGottenGains
-  {
-    public class Ai : AiScenario
+    public class IllGottenGains
     {
-      [Fact (Skip = "Old card")]
-      public void Draw3CardsFromBreakZone()
-      {
-        var gains = C("Ill-Gotten Gains");
-        Hand(P1, gains);
-        Hand(P2, "Grizzly Bears", "Shock", "Shock", "Shock", "Shock");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Draw3CardsFromBreakZone()
+            {
+                var gains = C("Ill-Gotten Gains");
+                Hand(P1, gains);
+                Hand(P2, "Grizzly Bears", "Shock", "Shock", "Shock", "Shock");
 
-        Battlefield(P1, "Swamp", "Swamp", "Swamp", "Swamp");
-        BreakZone(P1, "Shock", "Verdant Force", "Shock");
+                Battlefield(P1, "Swamp", "Swamp", "Swamp", "Swamp");
+                BreakZone(P1, "Shock", "Verdant Force", "Shock");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(3, P1.Hand.Count);
-        Equal(3, P2.Hand.Count);
-        Equal(Zone.RemovedFromPlay, C(gains).Zone);
-      }
+                Equal(3, P1.Hand.Count);
+                Equal(3, P2.Hand.Count);
+                Equal(Zone.RemovedFromPlay, C(gains).Zone);
+            }
+        }
     }
-  }
 }

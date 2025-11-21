@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class RemovedFromCombatEvent
-  {
-    public readonly Card Card;
-
-    public RemovedFromCombatEvent(Card card)
+    public class RemovedFromCombatEvent
     {
-      Card = card;
+        public readonly Card Card;
+
+        public RemovedFromCombatEvent(Card card)
+        {
+            Card = card;
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Opalescence
-  {
-    public class Ai :AiScenario
+    public class Opalescence
     {
-      [Fact (Skip = "Old card")]
-      public void WorshipBecomes44()
-      {
-        Hand(P1, "Opalescence");
-        Battlefield(P1, "Worship", "Plains", "Plains", "Plains", "Plains");
-        P2.Life = 4;
-        
-        RunGame(1);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void WorshipBecomes44()
+            {
+                Hand(P1, "Opalescence");
+                Battlefield(P1, "Worship", "Plains", "Plains", "Plains", "Plains");
+                P2.Life = 4;
 
-        Equal(0, P2.Life);
-      }
+                RunGame(1);
+
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

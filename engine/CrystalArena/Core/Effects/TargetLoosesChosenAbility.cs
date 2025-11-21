@@ -1,63 +1,56 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using CrystalArena.Decisions;
-  using Modifiers;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CrystalArena.Decisions;
+    using Modifiers;
 
-  public class TargetLoosesChosenAbility : CustomizableEffect
-  {
-    private readonly List<Static> _choices = new List<Static>();
-
-    private TargetLoosesChosenAbility() {}
-
-    public TargetLoosesChosenAbility(params Static[] choices)
+    public class TargetLoosesChosenAbility : CustomizableEffect
     {
-      _choices.AddRange(choices);
-    }
+        private readonly List<Static> _choices = new List<Static>();
 
-    public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
-    {
-      var target = Target.Card();
+        private TargetLoosesChosenAbility() { }
 
-      foreach (var choice in _choices)
-      {
-        if (target.Has().Has(choice))
+        public TargetLoosesChosenAbility(params Static[] choices)
         {
-          return new ChosenOptions(choice.ToString());
+            _choices.AddRange(choices);
         }
-      }
 
-      return new ChosenOptions(_choices[0].ToString());
-    }
-
-    public override void ProcessResults(ChosenOptions results)
-    {
-      var ability = (Static) Enum.Parse(
-        typeof (Static),
-        (string) results.Options[0]);
-
-      var modifier = new RemoveAbility(ability) {UntilEot = true};
-
-      var mp = new ModifierParameters
+        public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard
-        };
+            var target = Target.Card();
 
-      Target.Card().AddModifier(modifier, mp);
-    }
+            foreach (var choice in _choices)
+            {
+                if (target.Has().Has(choice))
+                {
+                    return new ChosenOptions(choice.ToString());
+                }
+            }
 
-    public override string GetText()
-    {
-      return "Target forward looses #0.";
-    }
+            return new ChosenOptions(_choices[0].ToString());
+        }
 
-    public override IEnumerable<IEffectChoice> GetChoices()
-    {
-      yield return new DiscreteEffectChoice(
-        _choices.Select(x => x.ToString()).ToArray());
+        public override void ProcessResults(ChosenOptions results)
+        {
+            var ability = (Static)Enum.Parse(typeof(Static), (string)results.Options[0]);
+
+            var modifier = new RemoveAbility(ability) { UntilEot = true };
+
+            var mp = new ModifierParameters { SourceEffect = this, SourceCard = Source.OwningCard };
+
+            Target.Card().AddModifier(modifier, mp);
+        }
+
+        public override string GetText()
+        {
+            return "Target forward looses #0.";
+        }
+
+        public override IEnumerable<IEffectChoice> GetChoices()
+        {
+            yield return new DiscreteEffectChoice(_choices.Select(x => x.ToString()).ToArray());
+        }
     }
-  }
 }

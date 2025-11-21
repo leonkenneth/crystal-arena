@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GarrukApexPredator
-  {
-    public class Ai : AiScenario
+    public class GarrukApexPredator
     {
-      [Fact (Skip = "Old card")]
-      public void ForwardAttackingGet55()
-      {
-        var garruk = C("Garruk, Apex Predator");
-        var bear1 = C("Grizzly Bears");
-        var bear2 = C("Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ForwardAttackingGet55()
+            {
+                var garruk = C("Garruk, Apex Predator");
+                var bear1 = C("Grizzly Bears");
+                var bear2 = C("Grizzly Bears");
 
-        Battlefield(P1, garruk.AddCounters(8, CounterType.Loyality), bear1, bear2);
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+                Battlefield(P1, garruk.AddCounters(8, CounterType.Loyality), bear1, bear2);
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        P2.Life = 10;
-        
-        RunGame(1);
-        
-        //Equal(1, C(garruk).Loyality);
-        Equal(7, C(bear1).Power);
-        Equal(7, C(bear2).Toughness);
-        Equal(0, P2.Life);
-      }
+                P2.Life = 10;
+
+                RunGame(1);
+
+                //Equal(1, C(garruk).Loyality);
+                Equal(7, C(bear1).Power);
+                Equal(7, C(bear2).Toughness);
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

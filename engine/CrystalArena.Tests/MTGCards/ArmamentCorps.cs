@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ArmamentCorps
-  {
-    public class Ai : AiScenario
+    public class ArmamentCorps
     {
-      [Fact (Skip = "Old card")]
-      public void Give2CountersToCorps()
-      {
-        var corps = C("Armament Corps");
-        Hand(P1, corps);
-        Battlefield(P1, "Plains", "Swamp", "Forest", "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Give2CountersToCorps()
+            {
+                var corps = C("Armament Corps");
+                Hand(P1, corps);
+                Battlefield(P1, "Plains", "Swamp", "Forest", "Forest", "Forest");
 
-        RunGame(1);
+                RunGame(1);
 
-        Assert.Equal(6, C(corps).Power);
-      }
+                Assert.Equal(6, C(corps).Power);
+            }
+        }
     }
-  }
 }

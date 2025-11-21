@@ -1,35 +1,34 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BrineSeer
-  {
-    public class PredefinedAi : PredefinedAiScenario
+    public class BrineSeer
     {
-      [Fact (Skip = "Old card")]
-      public void CounterBear()
-      {
-        var bears = C("Grizzly Bears");
-        var brineSeer = C("Brine Seer");
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CounterBear()
+            {
+                var bears = C("Grizzly Bears");
+                var brineSeer = C("Brine Seer");
 
-        Hand(P1, bears);
-        Hand(P2, "Brine Seer");
+                Hand(P1, bears);
+                Hand(P2, "Brine Seer");
 
-        Battlefield(P1, "Grizzly Bears");      
-        Battlefield(P2, brineSeer, "Island", "Island", "Island");          
+                Battlefield(P1, "Grizzly Bears");
+                Battlefield(P2, brineSeer, "Island", "Island", "Island");
 
-        Exec(
-          At(Step.FirstMain)
-          .Cast(bears)
-          .Verify(() =>
-            {              
-              False(C(brineSeer).HasSummoningSickness);
-              Equal(Zone.BreakZone, C(bears).Zone);
-            })
-          );
-        
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(bears)
+                        .Verify(() =>
+                        {
+                            False(C(brineSeer).HasSummoningSickness);
+                            Equal(Zone.BreakZone, C(bears).Zone);
+                        })
+                );
+            }
+        }
     }
-  }
 }

@@ -1,36 +1,45 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Modifiers;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Modifiers;
+    using Triggers;
 
-  public class RakshasaVizier : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class RakshasaVizier : CardTemplateSource
     {
-      yield return Card
-        .Named("Rakshasa Vizier")
-        .ManaCost("{2}{B}{G}{U}")
-        .Type("Forward - Cat Demon")
-        .Text("Whenever one or more cards are put into exile from your breakZone, put that many +1/+1 counters on Rakshasa Vizier.")
-        .FlavorText("Rakshasa offer deals that sound advantageous to those who forget who they are dealing with.")
-        .Power(4)
-        .Toughness(4)
-        .TriggeredAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "Whenever one or more cards are put into exile from your breakZone, put that many +1/+1 counters on Rakshasa Vizier.";
+            yield return Card.Named("Rakshasa Vizier")
+                .ManaCost("{2}{B}{G}{U}")
+                .Type("Forward - Cat Demon")
+                .Text(
+                    "Whenever one or more cards are put into exile from your breakZone, put that many +1/+1 counters on Rakshasa Vizier."
+                )
+                .FlavorText(
+                    "Rakshasa offer deals that sound advantageous to those who forget who they are dealing with."
+                )
+                .Power(4)
+                .Toughness(4)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "Whenever one or more cards are put into exile from your breakZone, put that many +1/+1 counters on Rakshasa Vizier.";
 
-          p.Trigger(new OnZoneChanged(
-            from: Zone.BreakZone,
-            to: Zone.RemovedFromPlay,
-            selector: (c, ctx) => c.Controller == ctx.You && c != ctx.OwningCard));
+                    p.Trigger(
+                        new OnZoneChanged(
+                            from: Zone.BreakZone,
+                            to: Zone.RemovedFromPlay,
+                            selector: (c, ctx) => c.Controller == ctx.You && c != ctx.OwningCard
+                        )
+                    );
 
-          p.Effect = () => new ApplyModifiersToSelf(
-            () => new AddCounters(() => new PowerToughness(1, 1), count: 1));
+                    p.Effect = () =>
+                        new ApplyModifiersToSelf(() =>
+                            new AddCounters(() => new PowerToughness(1, 1), count: 1)
+                        );
 
-          p.TriggerOnlyIfOwningCardIsInPlay = true;
-        });
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

@@ -16,15 +16,15 @@ public class Opus23_030C_Serah : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("23-030C")
+        yield return Card.Code("23-030C")
             .Named("Serah")
             .Cost(3, "I")
             .Category("PICTLOGICA · XIII")
             .Job("Ravager")
             .Backup()
             .Text(
-                "When Serah enters the field, select 1 of the 2 following actions. If you control a Job Commando, select up to 2 of the 2 following actions instead.\n\"Choose 1 Character. Dull it and Freeze it.\"\n\"Your opponent discards 1 card.\"")
+                "When Serah enters the field, select 1 of the 2 following actions. If you control a Job Commando, select up to 2 of the 2 following actions instead.\n\"Choose 1 Character. Dull it and Freeze it.\"\n\"Your opponent discards 1 card.\""
+            )
             .TriggeredAbility(p =>
             {
                 p.Text =
@@ -38,11 +38,13 @@ public class Opus23_030C_Serah : CardTemplateSource
                             ceap.Text = "Choose 1 Character. Dull it and Freeze it.";
                             ceap.Effect = () => new DullAndFreezeTargets();
                             ceap.TargetSelector.AddEffect(trg => trg.Is.Card().On.Battlefield());
-                        }, ceap =>
+                        },
+                        ceap =>
                         {
                             ceap.Text = "Your opponent discards 1 card.";
                             ceap.Effect = () => new OpponentDiscardsCards(selectedCount: 1);
-                        });
+                        }
+                    );
             });
     }
 }

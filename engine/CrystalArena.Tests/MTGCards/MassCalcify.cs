@@ -1,26 +1,35 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MassCalcify
-  {
-    public class Ai : AiScenario
+    public class MassCalcify
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyNonWhite()
-      {
-        Hand(P1, "Mass Calcify");
-        Battlefield(P1, "Kinsbaile Skirmisher", "Plains", "Plains", "Plains", 
-          "Plains", "Plains", "Plains", "Plains");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyNonWhite()
+            {
+                Hand(P1, "Mass Calcify");
+                Battlefield(
+                    P1,
+                    "Kinsbaile Skirmisher",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains"
+                );
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears"); 
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

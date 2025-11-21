@@ -1,34 +1,34 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class IllusoryAngel
-  {
-    public class Ai : AiScenario
+    public class IllusoryAngel
     {
-      [Fact (Skip = "Old card")]
-      public void CastAngelAfterElf()
-      {        
-        Hand(P1, "Illusory Angel", "Llanowar Elves");
-        Battlefield(P1, "Forest","Forest","Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastAngelAfterElf()
+            {
+                Hand(P1, "Illusory Angel", "Llanowar Elves");
+                Battlefield(P1, "Forest", "Forest", "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(2, P1.Battlefield.Forwards.Count());
-      }
+                Equal(2, P1.Battlefield.Forwards.Count());
+            }
 
-      [Fact (Skip = "Old card")]
-      public void CannotCastAngelIfHaveNoOtherSpell()
-      {
-        Hand(P1, "Illusory Angel");
-        Battlefield(P1, "Forest", "Forest", "Island", "Island");
+            [Fact(Skip = "Old card")]
+            public void CannotCastAngelIfHaveNoOtherSpell()
+            {
+                Hand(P1, "Illusory Angel");
+                Battlefield(P1, "Forest", "Forest", "Island", "Island");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P1.Battlefield.Forwards.Count());
-      }
+                Equal(0, P1.Battlefield.Forwards.Count());
+            }
+        }
     }
-  }
 }

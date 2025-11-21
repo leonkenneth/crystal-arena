@@ -1,29 +1,30 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using ReturnToHand = Effects.ReturnToHand;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using ReturnToHand = Effects.ReturnToHand;
 
-  public class Recoil : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Recoil : CardTemplateSource
     {
-      yield return Card
-        .Named("Recoil")
-        .ManaCost("{1}{U}{B}")
-        .Type("Summon")
-        .Text("Return target permanent to its owner's hand. Then that player discards a card.")
-        .FlavorText("Anything sent into a plagued world is bound to come back infected.")
-        .Cast(p =>
-          {
-            p.Effect = () => new ReturnToHand(discard: 1);
-            p.TargetSelector.AddEffect(trg => trg.Is.Card().On.Battlefield());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Recoil")
+                .ManaCost("{1}{U}{B}")
+                .Type("Summon")
+                .Text(
+                    "Return target permanent to its owner's hand. Then that player discards a card."
+                )
+                .FlavorText("Anything sent into a plagued world is bound to come back infected.")
+                .Cast(p =>
+                {
+                    p.Effect = () => new ReturnToHand(discard: 1);
+                    p.TargetSelector.AddEffect(trg => trg.Is.Card().On.Battlefield());
 
-            p.TargetingRule(new EffectBounce());
-            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.Bounce));
-          });
+                    p.TargetingRule(new EffectBounce());
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.Bounce));
+                });
+        }
     }
-  }
 }

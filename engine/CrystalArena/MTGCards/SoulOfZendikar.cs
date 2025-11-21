@@ -1,67 +1,78 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.RepetitionRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.RepetitionRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class SoulOfZendikar : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SoulOfZendikar : CardTemplateSource
     {
-      yield return Card
-        .Named("Soul of Zendikar")
-        .ManaCost("{4}{G}{G}")
-        .Type("Forward — Avatar")
-        .Text("{Reach}{EOL}{3}{G}{G}: Put a 3/3 wind Beast forward token onto the battlefield.{EOL}{3}{G}{G}, RemoveFromPlay Soul of Zendikar from your breakZone: Put a 3/3 wind Beast forward token onto the battlefield.")
-        .Power(6)
-        .Toughness(6)
-        .SimpleAbilities(Static.Reach)
-        .ActivatedAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{3}{G}{G}: Put a 3/3 wind Beast forward token onto the battlefield.";
-          p.Cost = new PayMana("{3}{G}{G}".Parse(), supportsRepetitions: true);
+            yield return Card.Named("Soul of Zendikar")
+                .ManaCost("{4}{G}{G}")
+                .Type("Forward — Avatar")
+                .Text(
+                    "{Reach}{EOL}{3}{G}{G}: Put a 3/3 wind Beast forward token onto the battlefield.{EOL}{3}{G}{G}, RemoveFromPlay Soul of Zendikar from your breakZone: Put a 3/3 wind Beast forward token onto the battlefield."
+                )
+                .Power(6)
+                .Toughness(6)
+                .SimpleAbilities(Static.Reach)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{3}{G}{G}: Put a 3/3 wind Beast forward token onto the battlefield.";
+                    p.Cost = new PayMana("{3}{G}{G}".Parse(), supportsRepetitions: true);
 
-          p.Effect = () => new CreateTokens(
-              count: 1,
-              token: Card
-                .Named("Beast")
-                .Power(3)
-                .Toughness(3)
-                .Type("Token Forward - Beast")
-                .Colors(CardColor.Wind));
+                    p.Effect = () =>
+                        new CreateTokens(
+                            count: 1,
+                            token: Card.Named("Beast")
+                                .Power(3)
+                                .Toughness(3)
+                                .Type("Token Forward - Beast")
+                                .Colors(CardColor.Wind)
+                        );
 
-          p.TimingRule(new Any(
-              new AfterOpponentDeclaresAttackers(),
-              new WhenOwningCardWillBeDestroyed(),
-              new OnEndOfOpponentsTurn()));
+                    p.TimingRule(
+                        new Any(
+                            new AfterOpponentDeclaresAttackers(),
+                            new WhenOwningCardWillBeDestroyed(),
+                            new OnEndOfOpponentsTurn()
+                        )
+                    );
 
-          p.RepetitionRule(new RepeatMaxTimes());
-        })
-        .ActivatedAbility(p =>
-        {
-          p.Text = "{3}{G}{G}, RemoveFromPlay Soul of Zendikar from your breakZone: Put a 3/3 wind Beast forward token onto the battlefield.";
-          p.Cost = new AggregateCost(
-            new PayMana("{3}{G}{G}".Parse()),
-            new RemoveFromPlayOwnerCost());
+                    p.RepetitionRule(new RepeatMaxTimes());
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{3}{G}{G}, RemoveFromPlay Soul of Zendikar from your breakZone: Put a 3/3 wind Beast forward token onto the battlefield.";
+                    p.Cost = new AggregateCost(
+                        new PayMana("{3}{G}{G}".Parse()),
+                        new RemoveFromPlayOwnerCost()
+                    );
 
-          p.ActivationZone = Zone.BreakZone;
+                    p.ActivationZone = Zone.BreakZone;
 
-          p.Effect = () => new CreateTokens(
-              count: 1,
-              token: Card
-                .Named("Beast")
-                .Power(3)
-                .Toughness(3)
-                .Type("Token Forward - Beast")
-                .Colors(CardColor.Wind));
+                    p.Effect = () =>
+                        new CreateTokens(
+                            count: 1,
+                            token: Card.Named("Beast")
+                                .Power(3)
+                                .Toughness(3)
+                                .Type("Token Forward - Beast")
+                                .Colors(CardColor.Wind)
+                        );
 
-          p.TimingRule(new Any(
-              new AfterOpponentDeclaresAttackers(),
-              new WhenOwningCardWillBeDestroyed(),
-              new OnEndOfOpponentsTurn()));
-        });
+                    p.TimingRule(
+                        new Any(
+                            new AfterOpponentDeclaresAttackers(),
+                            new WhenOwningCardWillBeDestroyed(),
+                            new OnEndOfOpponentsTurn()
+                        )
+                    );
+                });
+        }
     }
-  }
 }

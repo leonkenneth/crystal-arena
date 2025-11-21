@@ -1,106 +1,102 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class StudentOfWarfare
-  {
-    public class Ai : AiScenario
+    public class StudentOfWarfare
     {
-      [Fact (Skip = "Old card")]
-      public void CastAndLevelUpStudentInSameTurn()
-      {
-        var student = C("Student of Warfare");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastAndLevelUpStudentInSameTurn()
+            {
+                var student = C("Student of Warfare");
 
-        Hand(P1, student);
-        Battlefield(P1, "Plains", "Plains", "Plains");
+                Hand(P1, student);
+                Battlefield(P1, "Plains", "Plains", "Plains");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(student).Zone);
-        Equal(3, C(student).Power);
-      }
-
-
-      [Fact (Skip = "Old card")]
-      public void LevelUpAndAttack()
-      {
-        var student = C("Student of Warfare");
-        Battlefield(P1, student, "Plains", "Plains");
-
-        RunGame(maxTurnCount: 1);
-
-        Equal(2, C(student).Level);
-        Equal(17, P2.Life);
-      }
-    }
-
-    public class Predefined : PredefinedScenario
-    {
-      [Fact (Skip = "Old card")]
-      public void FirstStrike()
-      {
-        var student = C("Student of Warfare");
-        var armodon = C("Trained Armodon");
-
-        Battlefield(P1, student);
-        Battlefield(P2, armodon);
-
-        Exec(
-          At(Step.FirstMain)
-            .Activate(student)
-            .Activate(student),
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(student),
-          At(Step.DeclareBlocker)
-            .DeclareBlockers(student, armodon),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(Zone.BreakZone, C(armodon).Zone);
                 Equal(Zone.Battlefield, C(student).Zone);
-              })
-          );
-      }
-
-      [Fact (Skip = "Old card")]
-      public void LevelUp()
-      {
-        var student = C("Student of Warfare");
-
-        Battlefield(P1, student);
-
-        Exec(
-          At(Step.FirstMain)
-            .Activate(student)
-            .Verify(() =>
-              {
-                Equal(1, C(student).Level);
-                Equal(1, C(student).Power);
-                Equal(1, C(student).Toughness);
-              })
-            .Activate(student)
-            .Verify(() =>
-              {
-                Equal(2, C(student).Level);
                 Equal(3, C(student).Power);
-                Equal(3, C(student).Toughness);
-                True(C(student).Has().FirstStrike);
-              })
-            .Activate(student)
-            .Activate(student)
-            .Activate(student)
-            .Activate(student)
-            .Activate(student)
-            .Verify(() =>
-              {
-                Equal(7, C(student).Level);
-                Equal(4, C(student).Power);
-                Equal(4, C(student).Toughness);
-                False(C(student).Has().FirstStrike);
-                True(C(student).Has().DoubleStrike);
-              }));
-      }
+            }
+
+            [Fact(Skip = "Old card")]
+            public void LevelUpAndAttack()
+            {
+                var student = C("Student of Warfare");
+                Battlefield(P1, student, "Plains", "Plains");
+
+                RunGame(maxTurnCount: 1);
+
+                Equal(2, C(student).Level);
+                Equal(17, P2.Life);
+            }
+        }
+
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void FirstStrike()
+            {
+                var student = C("Student of Warfare");
+                var armodon = C("Trained Armodon");
+
+                Battlefield(P1, student);
+                Battlefield(P2, armodon);
+
+                Exec(
+                    At(Step.FirstMain).Activate(student).Activate(student),
+                    At(Step.DeclareAttackers).DeclareAttackers(student),
+                    At(Step.DeclareBlocker).DeclareBlockers(student, armodon),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(Zone.BreakZone, C(armodon).Zone);
+                            Equal(Zone.Battlefield, C(student).Zone);
+                        })
+                );
+            }
+
+            [Fact(Skip = "Old card")]
+            public void LevelUp()
+            {
+                var student = C("Student of Warfare");
+
+                Battlefield(P1, student);
+
+                Exec(
+                    At(Step.FirstMain)
+                        .Activate(student)
+                        .Verify(() =>
+                        {
+                            Equal(1, C(student).Level);
+                            Equal(1, C(student).Power);
+                            Equal(1, C(student).Toughness);
+                        })
+                        .Activate(student)
+                        .Verify(() =>
+                        {
+                            Equal(2, C(student).Level);
+                            Equal(3, C(student).Power);
+                            Equal(3, C(student).Toughness);
+                            True(C(student).Has().FirstStrike);
+                        })
+                        .Activate(student)
+                        .Activate(student)
+                        .Activate(student)
+                        .Activate(student)
+                        .Activate(student)
+                        .Verify(() =>
+                        {
+                            Equal(7, C(student).Level);
+                            Equal(4, C(student).Power);
+                            Equal(4, C(student).Toughness);
+                            False(C(student).Has().FirstStrike);
+                            True(C(student).Has().DoubleStrike);
+                        })
+                );
+            }
+        }
     }
-  }
 }

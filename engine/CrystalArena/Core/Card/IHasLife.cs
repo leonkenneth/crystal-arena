@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena
 {
-  public interface IHasLife
-  {
-    int Life { get; }
-  }
+    public interface IHasLife
+    {
+        int Life { get; }
+    }
 }

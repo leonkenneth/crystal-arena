@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class JasmineSeer
-  {
-    public class Ai : AiScenario
+    public class JasmineSeer
     {
-      [Fact (Skip = "Old card")]
-      public void Gain4Life()
-      {
-        Hand(P1, "Serra Avatar", "Serra Avatar");
-        Battlefield(P1, "Jasmine Seer", "Plains", "Plains", "Plains");
-        RunGame(2);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Gain4Life()
+            {
+                Hand(P1, "Serra Avatar", "Serra Avatar");
+                Battlefield(P1, "Jasmine Seer", "Plains", "Plains", "Plains");
+                RunGame(2);
 
-        Equal(24, P1.Life);
-      }
+                Equal(24, P1.Life);
+            }
+        }
     }
-  }  
 }

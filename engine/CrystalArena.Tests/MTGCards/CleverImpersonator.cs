@@ -1,26 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CleverImpersonator
-  {
-    public class Ai : AiScenario
+    public class CleverImpersonator
     {
-      [Fact (Skip = "Old card")]
-      public void CopyDragon()
-      {
-        var impersonator = C("Clever Impersonator");
-        
-        Hand(P1, impersonator);
-        Battlefield(P1, "Island", "Island", "Island", "Island");
-        Battlefield(P2, "Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CopyDragon()
+            {
+                var impersonator = C("Clever Impersonator");
 
-        RunGame(1);
+                Hand(P1, impersonator);
+                Battlefield(P1, "Island", "Island", "Island", "Island");
+                Battlefield(P2, "Shivan Dragon");
 
-        Equal("Shivan Dragon", C(impersonator).Name);
-      }
+                RunGame(1);
+
+                Equal("Shivan Dragon", C(impersonator).Name);
+            }
+        }
     }
-
-  }
 }

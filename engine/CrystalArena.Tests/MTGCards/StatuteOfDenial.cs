@@ -1,35 +1,34 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class StatuteOfDenial
-  {
-    public class Ai : AiScenario
+    public class StatuteOfDenial
     {
-      [Fact (Skip = "Old card")]
-      public void CounterBoltAndDrawDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        var bolt = C("Lightning Bolt");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CounterBoltAndDrawDragon()
+            {
+                var dragon = C("Shivan Dragon");
+                var bolt = C("Lightning Bolt");
 
-        Hand(P1, "Statute of Denial", "Grizzly Bears", "Grizzly Bears");
-        
-        MainDeck(P1, dragon);
-        Battlefield(P1, "Island", "Island", "Island", "Island", "Fugitive Wizard");
+                Hand(P1, "Statute of Denial", "Grizzly Bears", "Grizzly Bears");
 
-        
-        Hand(P2, bolt);
-        Battlefield(P2, "Mountain");
+                MainDeck(P1, dragon);
+                Battlefield(P1, "Island", "Island", "Island", "Island", "Fugitive Wizard");
 
-        P1.Life = 3;
+                Hand(P2, bolt);
+                Battlefield(P2, "Mountain");
 
-        RunGame(1);
+                P1.Life = 3;
 
-        Equal(3, P1.Life);
-        Equal(Zone.BreakZone, C(bolt).Zone);
-        Equal(Zone.Hand, C(dragon).Zone);
-      }
+                RunGame(1);
+
+                Equal(3, P1.Life);
+                Equal(Zone.BreakZone, C(bolt).Zone);
+                Equal(Zone.Hand, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class PillarOfLight
-  {
-    public class Ai : AiScenario
+    public class PillarOfLight
     {
-      [Fact (Skip = "Old card")]
-      public void RemoveFromPlayAngel()
-      {
-        var angel = C("Baneslayer Angel");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void RemoveFromPlayAngel()
+            {
+                var angel = C("Baneslayer Angel");
 
-        Hand(P1, "Pillar of Light");
-        Battlefield(P1, "Kinsbaile Skirmisher", "Plains", "Plains", "Plains");
+                Hand(P1, "Pillar of Light");
+                Battlefield(P1, "Kinsbaile Skirmisher", "Plains", "Plains", "Plains");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        Battlefield(P2, angel);
+                Battlefield(P2, angel);
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-        Equal(Zone.RemovedFromPlay, C(angel).Zone);
-      }
+                Equal(0, P2.Life);
+                Equal(Zone.RemovedFromPlay, C(angel).Zone);
+            }
+        }
     }
-  }
 }

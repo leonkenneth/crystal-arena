@@ -2,35 +2,41 @@
 
 namespace CrystalArena.Effects
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class DestroyAttachedAttachments : Effect
-  {
-    private readonly DynParam<IEnumerable<Card>> _permanent;
-    private readonly CardSelector _filter;
-
-    private DestroyAttachedAttachments() {}
-
-    public DestroyAttachedAttachments(DynParam<IEnumerable<Card>> permanent, CardSelector filter = null)
-    { 
-      _permanent = permanent;
-      _filter = filter ?? delegate { return true; };
-      RegisterDynamicParameters(permanent);
-    }
-
-    protected override void ResolveEffect()
+    public class DestroyAttachedAttachments : Effect
     {
-      foreach (var permanent in _permanent.Value)
-      {
-        var attachments = permanent.Attachments
-          .Where(x => _filter(x, Ctx))
-          .ToList();
+        private readonly DynParam<IEnumerable<Card>> _permanent;
+        private readonly CardSelector _filter;
 
-        foreach (var attachment in attachments)
+        private DestroyAttachedAttachments() { }
+
+        public DestroyAttachedAttachments(
+            DynParam<IEnumerable<Card>> permanent,
+            CardSelector filter = null
+        )
         {
-          attachment.Destroy();
+            _permanent = permanent;
+            _filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
+            RegisterDynamicParameters(permanent);
         }
-      }
+
+        protected override void ResolveEffect()
+        {
+            foreach (var permanent in _permanent.Value)
+            {
+                var attachments = permanent.Attachments.Where(x => _filter(x, Ctx)).ToList();
+
+                foreach (var attachment in attachments)
+                {
+                    attachment.Destroy();
+                }
+            }
+        }
     }
-  }
 }

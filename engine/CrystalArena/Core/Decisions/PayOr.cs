@@ -2,124 +2,137 @@
 
 namespace CrystalArena.Decisions
 {
-  using System;
-  using System.Windows;
-  using CrystalArena.UserInterface;
+    using System;
+    using System.Windows;
+    using CrystalArena.UserInterface;
 
-  public class PayOr : Decision
-  {
-    private readonly Params _p = new Params();
-
-    private PayOr() {}
-
-    public PayOr(Player controller, Action<Params> setParameters)
-      : base(controller, () => new UiHandler(), () => new MachineHandler(), () => new MachineHandler(), () => new PlaybackHandler())
+    public class PayOr : Decision
     {
-      setParameters(_p);
-    }
+        private readonly Params _p = new Params();
 
-    private abstract class Handler : DecisionHandler<PayOr, BooleanResult>
-    {
-      protected override bool ShouldExecuteQuery { get { return CanPay(); } }
+        private PayOr() { }
 
-      public override void ProcessResults()
-      {
-        if (Result.IsTrue)
+        public PayOr(Player controller, Action<Params> setParameters)
+            : base(
+                controller,
+                () => new UiHandler(),
+                () => new MachineHandler(),
+                () => new MachineHandler(),
+                () => new PlaybackHandler()
+            )
         {
-          Pay();
+            setParameters(_p);
         }
 
-        if (D._p.ProcessDecisionResults != null)
-          D._p.ProcessDecisionResults.ProcessResults(Result);
-      }
-
-      private bool CanPay()
-      {
-        if (D._p.ManaAmount != null)
+        private abstract class Handler : DecisionHandler<PayOr, BooleanResult>
         {
-          return D.Controller.HasMana(D._p.ManaAmount, D._p.ManaUsage);
+            protected override bool ShouldExecuteQuery
+            {
+                get { return CanPay(); }
+            }
+
+            public override void ProcessResults()
+            {
+                if (Result.IsTrue)
+                {
+                    Pay();
+                }
+
+                if (D._p.ProcessDecisionResults != null)
+                    D._p.ProcessDecisionResults.ProcessResults(Result);
+            }
+
+            private bool CanPay()
+            {
+                if (D._p.ManaAmount != null)
+                {
+                    return D.Controller.HasMana(D._p.ManaAmount, D._p.ManaUsage);
+                }
+
+                if (D._p.Life.HasValue)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            protected override void SetResultNoQuery()
+            {
+                Result = false;
+            }
+
+            private void Pay()
+            {
+                if (D._p.ManaAmount != null)
+                {
+                    D.Controller.Consume(D._p.ManaAmount, D._p.ManaUsage);
+                    return;
+                }
+
+                if (D._p.Life.HasValue)
+                {
+                    D.Controller.Life -= D._p.Life.Value;
+                }
+            }
         }
 
-        if (D._p.Life.HasValue)
+        private class MachineHandler : Handler
         {
-          return true;
+            public MachineHandler()
+            {
+                Result = false;
+            }
+
+            protected override void ExecuteQuery()
+            {
+                if (D._p.ChooseDecisionResults != null)
+                {
+                    Result = D._p.ChooseDecisionResults.ChooseResult();
+                    return;
+                }
+
+                Result = true;
+            }
         }
 
-        return false;
-      }
-
-      protected override void SetResultNoQuery()
-      {
-        Result = false;
-      }
-
-      private void Pay()
-      {
-        if (D._p.ManaAmount != null)
+        public class Params
         {
-          D.Controller.Consume(D._p.ManaAmount, D._p.ManaUsage);
-          return;
+            public IChooseDecisionResults<BooleanResult> ChooseDecisionResults;
+            public int? Life;
+            public ManaAmount ManaAmount;
+            public ManaUsage ManaUsage = ManaUsage.Any;
+            public IProcessDecisionResults<BooleanResult> ProcessDecisionResults;
+            public string Text;
         }
 
-        if (D._p.Life.HasValue)
+        private class PlaybackHandler : Handler
         {
-          D.Controller.Life -= D._p.Life.Value;
-        }
-      }
-    }
+            protected override bool ShouldExecuteQuery
+            {
+                get { return true; }
+            }
 
-    private class MachineHandler : Handler
-    {
-      public MachineHandler()
-      {
-        Result = false;
-      }
+            public override void SaveDecisionResults() { }
 
-      protected override void ExecuteQuery()
-      {
-        if (D._p.ChooseDecisionResults != null)
-        {
-          Result = D._p.ChooseDecisionResults.ChooseResult();
-          return;
+            protected override void ExecuteQuery()
+            {
+                Result = (BooleanResult)Game.Recorder.LoadDecisionResult();
+            }
         }
 
-        Result = true;
-      }
+        private class UiHandler : Handler
+        {
+            protected override void ExecuteQuery()
+            {
+                var result = Ui.Shell.ShowMessageBox(
+                    message: D._p.Text,
+                    buttons: ButtonEnum.YesNo,
+                    type: DialogType.Small
+                );
+
+                Result = result == ButtonResult.Yes;
+            }
+        }
     }
-
-    public class Params
-    {
-      public IChooseDecisionResults<BooleanResult> ChooseDecisionResults;
-      public int? Life;
-      public ManaAmount ManaAmount;
-      public ManaUsage ManaUsage = ManaUsage.Any;
-      public IProcessDecisionResults<BooleanResult> ProcessDecisionResults;
-      public string Text;
-    }
-
-    private class PlaybackHandler : Handler
-    {
-      protected override bool ShouldExecuteQuery { get { return true; } }
-
-      public override void SaveDecisionResults() {}
-
-      protected override void ExecuteQuery()
-      {
-        Result = (BooleanResult) Game.Recorder.LoadDecisionResult();
-      }
-    }
-
-    private class UiHandler : Handler
-    {
-      protected override void ExecuteQuery()
-      {
-        var result = Ui.Shell.ShowMessageBox(
-          message: D._p.Text,
-          buttons: ButtonEnum.YesNo,
-          type: DialogType.Small);
-
-        Result = result == ButtonResult.Yes;
-      }
-    }
-  }
 }

@@ -1,31 +1,36 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI.TimingRules;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI.TimingRules;
+    using Effects;
+    using Triggers;
 
-  public class MilitaryIntelligence : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class MilitaryIntelligence : CardTemplateSource
     {
-      yield return Card
-        .Named("Military Intelligence")
-        .ManaCost("{1}{U}")
-        .Type("Monster")
-        .Text("Whenever you attack with two or more forwards, draw a card.")
-        .FlavorText("To know the battlefield is to anticipate the enemy. To know the enemy is to anticipate victory.")
-        .Cast(p => p.TimingRule(new OnFirstMain()))
-        .TriggeredAbility(p =>
-          {
-            p.Text = "Whenever you attack with two or more forwards, draw a card.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Military Intelligence")
+                .ManaCost("{1}{U}")
+                .Type("Monster")
+                .Text("Whenever you attack with two or more forwards, draw a card.")
+                .FlavorText(
+                    "To know the battlefield is to anticipate the enemy. To know the enemy is to anticipate victory."
+                )
+                .Cast(p => p.TimingRule(new OnFirstMain()))
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "Whenever you attack with two or more forwards, draw a card.";
 
-            p.Trigger(new AfterAttackersAreDeclared(ctx => ctx.You.IsActive && ctx.Combat.Attackers.Count() >= 2));              
-            p.Effect = () => new DrawCards(1);
+                    p.Trigger(
+                        new AfterAttackersAreDeclared(ctx =>
+                            ctx.You.IsActive && ctx.Combat.Attackers.Count() >= 2
+                        )
+                    );
+                    p.Effect = () => new DrawCards(1);
 
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

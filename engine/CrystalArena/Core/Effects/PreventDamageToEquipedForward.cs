@@ -1,33 +1,30 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using Modifiers;
+    using System;
+    using Modifiers;
 
-  public class PreventDamageToEquipedForward : Effect
-  {
-    private readonly Func<Card, int> _amount;
-
-    private PreventDamageToEquipedForward() {}
-
-    public PreventDamageToEquipedForward(Func<Card, int> amount)
+    public class PreventDamageToEquipedForward : Effect
     {
-      _amount = amount;
-    }
+        private readonly Func<Card, int> _amount;
 
-    protected override void ResolveEffect()
-    {
-      var mp = new ModifierParameters
+        private PreventDamageToEquipedForward() { }
+
+        public PreventDamageToEquipedForward(Func<Card, int> amount)
         {
-          SourceCard = Source.OwningCard,
-          SourceEffect = this,
-        };
+            _amount = amount;
+        }
 
-      var prevention = new PreventDamageToTarget(
-        target: Source.OwningCard.AttachedTo,
-        amount: (forwardOrPlayer, ctx) => _amount((Card) (forwardOrPlayer)));
+        protected override void ResolveEffect()
+        {
+            var mp = new ModifierParameters { SourceCard = Source.OwningCard, SourceEffect = this };
 
-      var modifier = new AddDamagePrevention(prevention);
-      Game.AddModifier(modifier, mp);
+            var prevention = new PreventDamageToTarget(
+                target: Source.OwningCard.AttachedTo,
+                amount: (forwardOrPlayer, ctx) => _amount((Card)(forwardOrPlayer))
+            );
+
+            var modifier = new AddDamagePrevention(prevention);
+            Game.AddModifier(modifier, mp);
+        }
     }
-  }
 }

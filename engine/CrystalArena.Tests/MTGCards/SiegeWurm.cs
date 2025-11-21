@@ -1,24 +1,33 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SiegeWurm
-  {
-    public class Ai : AiScenario
+    public class SiegeWurm
     {
-      [Fact (Skip = "Old card")]
-      public void CastWithConvoke()
-      {
-        var wurm = C("Siege Wurm");
-        Hand(P1, wurm);
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
-        Battlefield(P2, "Ravenous Baloth");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastWithConvoke()
+            {
+                var wurm = C("Siege Wurm");
+                Hand(P1, wurm);
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Grizzly Bears"
+                );
+                Battlefield(P2, "Ravenous Baloth");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.Battlefield, C(wurm).Zone);
-      }  
-    }        
-  }
+                Equal(Zone.Battlefield, C(wurm).Zone);
+            }
+        }
+    }
 }

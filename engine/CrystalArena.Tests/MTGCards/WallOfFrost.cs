@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class WallOfFrost
-  {
-    public class Ai : AiScenario
+    public class WallOfFrost
     {
-      [Fact (Skip = "Old card")]
-      public void MachineDoesNotUntapDuringNextUntap()
-      {
-        var machine = C("Thran War Machine");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void MachineDoesNotUntapDuringNextUntap()
+            {
+                var machine = C("Thran War Machine");
 
-        Battlefield(P1, machine, "Forest", "Forest", "Forest", "Forest");
-        Battlefield(P2, C("Wall Of Frost"));
+                Battlefield(P1, machine, "Forest", "Forest", "Forest", "Forest");
+                Battlefield(P2, C("Wall Of Frost"));
 
-        RunGame(1);
+                RunGame(1);
 
-        True(C(machine).Has().DoesNotUntap);
-      }
+                True(C(machine).Has().DoesNotUntap);
+            }
+        }
     }
-  }
 }

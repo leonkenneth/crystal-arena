@@ -1,23 +1,36 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Reprocess
-  {
-    public class Ai : AiScenario
+    public class Reprocess
     {
-      [Fact (Skip = "Old card")]
-      public void DrawCards()
-      {
-        Hand(P1, "Reprocess");
-        Battlefield(P1, "Forest", "Forest", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp",
-          "Llanowar Elves", "Grizzly Bears", "Fecundity");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DrawCards()
+            {
+                Hand(P1, "Reprocess");
+                Battlefield(
+                    P1,
+                    "Forest",
+                    "Forest",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Swamp",
+                    "Llanowar Elves",
+                    "Grizzly Bears",
+                    "Fecundity"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(7, P1.Hand.Count);
-      }
+                Equal(7, P1.Hand.Count);
+            }
+        }
     }
-  }
 }

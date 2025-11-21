@@ -16,21 +16,23 @@ public class Opus23_015C_Notsugo : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("23-015C")
+        yield return Card.Code("23-015C")
             .Named("Notsugo")
             .Cost(1, "R")
             .Category("XIII")
             .Job("Spook")
             .Monster(multiplayable: true)
             .Text(
-                "{T}, put Notsugo and 1 Monster into the Break Zone: Choose 1 Forward opponent controls. Deal it 9000 damage.")
+                "{T}, put Notsugo and 1 Monster into the Break Zone: Choose 1 Forward opponent controls. Deal it 9000 damage."
+            )
             .ActivatedAbility(p =>
             {
                 p.Cost = new AggregateCost(new Tap(), new SacrificeThis(), new SacrificeTarget());
                 p.TargetSelector.AddCost(trg => trg.Is.Monster().In.Battlefield());
                 p.Effect = () => new DealDamageToTargets(9000);
-                p.TargetSelector.AddEffect(trg => trg.Is.Forward(ControlledBy.Opponent).In.Battlefield());
+                p.TargetSelector.AddEffect(trg =>
+                    trg.Is.Forward(ControlledBy.Opponent).In.Battlefield()
+                );
             });
     }
 }

@@ -1,32 +1,33 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Effects;
-  using CrystalArena.Triggers;
+    using System.Collections.Generic;
+    using CrystalArena.Effects;
+    using CrystalArena.Triggers;
 
-  public class ScoriaWurm : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ScoriaWurm : CardTemplateSource
     {
-      yield return Card
-        .Named("Scoria Wurm")
-        .ManaCost("{4}{R}")
-        .Type("Forward Wurm")
-        .Text(
-          "At the beginning of your upkeep, flip a coin. If you lose the flip, return Scoria Wurm to its owner's hand.")
-        .FlavorText(
-          "Late at night, ululations echo from deep under Shiv, as the wurms sing of times older than humanity.")
-        .Power(7)
-        .Toughness(7)
-        .TriggeredAbility(p =>
-          {
-            p.Text =
-              "At the beginning of your upkeep, flip a coin. If you lose the flip, return Scoria Wurm to its owner's hand.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Scoria Wurm")
+                .ManaCost("{4}{R}")
+                .Type("Forward Wurm")
+                .Text(
+                    "At the beginning of your upkeep, flip a coin. If you lose the flip, return Scoria Wurm to its owner's hand."
+                )
+                .FlavorText(
+                    "Late at night, ululations echo from deep under Shiv, as the wurms sing of times older than humanity."
+                )
+                .Power(7)
+                .Toughness(7)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "At the beginning of your upkeep, flip a coin. If you lose the flip, return Scoria Wurm to its owner's hand.";
 
-            p.Trigger(new OnStepStart(Step.Upkeep));
-            p.Effect = () => new FlipACoinReturnToHand();
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.Trigger(new OnStepStart(Step.Upkeep));
+                    p.Effect = () => new FlipACoinReturnToHand();
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class WallOfDenial
-  {
-    public class Ai : AiScenario
+    public class WallOfDenial
     {
-      [Fact (Skip = "Old card")]
-      public void CannotBeTarget()
-      {
-        var wall = C("Wall of Denial");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CannotBeTarget()
+            {
+                var wall = C("Wall of Denial");
 
-        Hand(P1, "Go for the Throat");
-        Battlefield(P2, wall);
-        Battlefield(P1, "Swamp", "Swamp");
+                Hand(P1, "Go for the Throat");
+                Battlefield(P2, wall);
+                Battlefield(P1, "Swamp", "Swamp");
 
-        RunGame(maxTurnCount: 1);
+                RunGame(maxTurnCount: 1);
 
-        Equal(Zone.Battlefield, C(wall).Zone);
-      }
+                Equal(Zone.Battlefield, C(wall).Zone);
+            }
+        }
     }
-  }
 }

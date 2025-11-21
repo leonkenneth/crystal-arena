@@ -1,29 +1,34 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Effects;
-  using Events;
-  using Triggers;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Effects;
+    using Events;
+    using Triggers;
 
-  public class Caltrops : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Caltrops : CardTemplateSource
     {
-      yield return Card
-        .Named("Caltrops")
-        .ManaCost("{3}")
-        .Type("Artifact")
-        .Text("Whenever a forward attacks, Caltrops deals 1 damage to it.")
-        .FlavorText("Toward the end, Gatha struggled to keep his experiments in and his patrons out.")
-        .Cast(p => p.TimingRule(new OnSecondMain()))
-        .TriggeredAbility(p =>
-          {
-            p.Text = "Whenever a forward attacks, Caltrops deals 1 damage to it.";
-            p.Trigger(new WhenAForwardAttacks());            
-            p.Effect = () => new DealDamageToForward(1, P(e => e.TriggerMessage<AttackerJoinedCombatEvent>().Attacker.Card));
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Caltrops")
+                .ManaCost("{3}")
+                .Type("Artifact")
+                .Text("Whenever a forward attacks, Caltrops deals 1 damage to it.")
+                .FlavorText(
+                    "Toward the end, Gatha struggled to keep his experiments in and his patrons out."
+                )
+                .Cast(p => p.TimingRule(new OnSecondMain()))
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "Whenever a forward attacks, Caltrops deals 1 damage to it.";
+                    p.Trigger(new WhenAForwardAttacks());
+                    p.Effect = () =>
+                        new DealDamageToForward(
+                            1,
+                            P(e => e.TriggerMessage<AttackerJoinedCombatEvent>().Attacker.Card)
+                        );
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

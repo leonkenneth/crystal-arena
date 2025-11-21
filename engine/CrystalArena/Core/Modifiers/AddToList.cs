@@ -1,36 +1,36 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class AddToList<T> : PropertyModifier<List<T>>
-  {
-    private readonly List<T> _elements;
-    private readonly int _priority;
-
-    public AddToList(List<T> elements, int priority = 1)
+    public class AddToList<T> : PropertyModifier<List<T>>
     {
-      _elements = elements;
-      _priority = priority;
-    }
+        private readonly List<T> _elements;
+        private readonly int _priority;
 
-    public AddToList(T element, int priority = 1)
-    {
-      _elements = new List<T> {element};
-      _priority = priority;
-    }
+        public AddToList(List<T> elements, int priority = 1)
+        {
+            _elements = elements;
+            _priority = priority;
+        }
 
-    private AddToList() {}
+        public AddToList(T element, int priority = 1)
+        {
+            _elements = new List<T> { element };
+            _priority = priority;
+        }
 
-    public override int Priority
-    {
-      get { return _priority; }
-    }
+        private AddToList() { }
 
-    public override List<T> Apply(List<T> before)
-    {
-      var after = new List<T>(before);
-      after.AddRange(_elements);
-      return after;
+        public override int Priority
+        {
+            get { return _priority; }
+        }
+
+        public override List<T> Apply(List<T> before)
+        {
+            var after = new List<T>(before);
+            after.AddRange(_elements);
+            return after;
+        }
     }
-  }
 }

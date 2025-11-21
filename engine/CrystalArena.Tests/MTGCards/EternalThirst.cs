@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class EternalThirst
-  {
-    public class Ai : AiScenario
+    public class EternalThirst
     {
-      [Fact (Skip = "Old card")]
-      public void JuggernautGetsCounter()
-      {
-        var juggernaut = C("Juggernaut").IsEnchantedWith("Eternal Thirst");
-        Battlefield(P1, juggernaut);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void JuggernautGetsCounter()
+            {
+                var juggernaut = C("Juggernaut").IsEnchantedWith("Eternal Thirst");
+                Battlefield(P1, juggernaut);
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears");
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(6, C(juggernaut).Power);
-      }
+                Equal(6, C(juggernaut).Power);
+            }
+        }
     }
-  }
 }

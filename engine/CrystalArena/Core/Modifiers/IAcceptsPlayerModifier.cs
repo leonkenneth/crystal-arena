@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  public interface IAcceptsPlayerModifier
-  {
-    void Accept(IPlayerModifier modifier);    
-  }
+    public interface IAcceptsPlayerModifier
+    {
+        void Accept(IPlayerModifier modifier);
+    }
 }

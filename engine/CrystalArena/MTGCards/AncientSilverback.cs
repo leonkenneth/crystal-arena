@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class AncientSilverback : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class AncientSilverback : CardTemplateSource
     {
-      yield return Card
-        .Named("Ancient Silverback")
-        .ManaCost("{4}{G}{G}")
-        .Type("Forward Ape")
-        .Text(
-          "{G}: Regenerate Ancient Silverback")
-        .FlavorText("The Phyrexian killing machines couldn't have known the seriousness of their mistake in wounding the ape—they'd never seen it angry.")
-        .Power(6)
-        .Toughness(5)
-        .Regenerate(cost: "{G}".Parse(), text: "{G}: Regenerate Ancient Silverback");
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Ancient Silverback")
+                .ManaCost("{4}{G}{G}")
+                .Type("Forward Ape")
+                .Text("{G}: Regenerate Ancient Silverback")
+                .FlavorText(
+                    "The Phyrexian killing machines couldn't have known the seriousness of their mistake in wounding the ape—they'd never seen it angry."
+                )
+                .Power(6)
+                .Toughness(5)
+                .Regenerate(cost: "{G}".Parse(), text: "{G}: Regenerate Ancient Silverback");
+        }
     }
-  }
 }

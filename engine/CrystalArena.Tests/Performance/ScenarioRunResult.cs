@@ -1,17 +1,17 @@
 ﻿namespace CrystalArena.Tests.Performance
 {
-  using System;
+    using System;
 
-  [Serializable]
-  public class ScenarioRunResult
-  {
-    public readonly TimeSpan Duration;
-    public readonly string Name;
-
-    public ScenarioRunResult(string name, TimeSpan duration)
+    [Serializable]
+    public class ScenarioRunResult
     {
-      Name = name;
-      Duration = duration;
+        public readonly TimeSpan Duration;
+        public readonly string Name;
+
+        public ScenarioRunResult(string name, TimeSpan duration)
+        {
+            Name = name;
+            Duration = duration;
+        }
     }
-  }
 }

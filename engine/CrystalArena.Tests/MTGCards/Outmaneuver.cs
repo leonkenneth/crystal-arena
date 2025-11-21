@@ -1,25 +1,32 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Outmaneuver
-  {
-    public class Ai : AiScenario
+    public class Outmaneuver
     {
-      [Fact (Skip = "Old card")]
-      public void AttackForKill()
-      {
-        Hand(P1, "Outmaneuver");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Trained Armodon", "Trained Armodon");
-        Battlefield(P2, "Fog Bank", "Fog Bank");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void AttackForKill()
+            {
+                Hand(P1, "Outmaneuver");
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Trained Armodon",
+                    "Trained Armodon"
+                );
+                Battlefield(P2, "Fog Bank", "Fog Bank");
 
-        P2.Life = 6;
+                P2.Life = 6;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BribersPurse
-  {
-    public class Ai : AiScenario
+    public class BribersPurse
     {
-      [Fact (Skip = "Old card")]
-      public void DisableOpponentForward()
-      {
-        Hand(P1, "Briber's Purse");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Grizzly Bears");
-        Battlefield(P2, "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DisableOpponentForward()
+            {
+                Hand(P1, "Briber's Purse");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Grizzly Bears");
+                Battlefield(P2, "Grizzly Bears");
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

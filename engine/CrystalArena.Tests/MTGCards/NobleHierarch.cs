@@ -1,35 +1,35 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class NobleHierarch
-  {
-    public class Ai : AiScenario
+    public class NobleHierarch
     {
-      [Fact (Skip = "Old card")]
-      public void NobleGains11WhenAttacks()
-      {
-        Battlefield(P1, "Noble Hierarch");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void NobleGains11WhenAttacks()
+            {
+                Battlefield(P1, "Noble Hierarch");
 
-        P2.Life = 1;
+                P2.Life = 1;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void BearsAttackWithoutEnchancement()
-      {
-        Battlefield(P1, "Noble Hierarch", "Grizzly Bears", "Grizzly Bears");
+            [Fact(Skip = "Old card")]
+            public void BearsAttackWithoutEnchancement()
+            {
+                Battlefield(P1, "Noble Hierarch", "Grizzly Bears", "Grizzly Bears");
 
-        P2.Life = 5;
+                P2.Life = 5;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Life);
-      }
+                Equal(1, P2.Life);
+            }
+        }
     }
-  }
 }

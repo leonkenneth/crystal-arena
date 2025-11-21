@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.UserInterface.Spell
 {
-  using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+    using Avalonia.Controls;
+    using Avalonia.Markup.Xaml;
 
-  /// <summary>
-  ///     Interaction logic for View.xaml
-  /// </summary>
-  public partial class View : UserControl
-  {
-    public View()
+    /// <summary>
+    ///     Interaction logic for View.xaml
+    /// </summary>
+    public partial class View : UserControl
     {
-      AvaloniaXamlLoader.Load(this);
+        public View()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
     }
-  }
 }

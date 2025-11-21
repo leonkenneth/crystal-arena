@@ -1,27 +1,28 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class BatheInDragonfire : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class BatheInDragonfire : CardTemplateSource
     {
-      yield return Card
-        .Named("Bathe in Dragonfire")
-        .ManaCost("{2}{R}")
-        .Type("Sorcery")
-        .Text("Bathe in Dragonfire deals 4 damage to target forward.")
-        .FlavorText("The scent of cooked flesh lingers in the charred backupscape of Tarkir.")
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new DealDamageToTargets(4);
-          p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
-          p.TargetingRule(new EffectDealDamage(4));
-        });
+            yield return Card.Named("Bathe in Dragonfire")
+                .ManaCost("{2}{R}")
+                .Type("Sorcery")
+                .Text("Bathe in Dragonfire deals 4 damage to target forward.")
+                .FlavorText(
+                    "The scent of cooked flesh lingers in the charred backupscape of Tarkir."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new DealDamageToTargets(4);
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TargetingRule(new EffectDealDamage(4));
+                });
+        }
     }
-  }
 }

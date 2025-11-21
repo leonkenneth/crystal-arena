@@ -1,34 +1,40 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class JasmineSeer : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class JasmineSeer : CardTemplateSource
     {
-      yield return Card
-        .Named("Jasmine Seer")
-        .ManaCost("{3}{W}")
-        .Type("Forward Human Wizard")
-        .Text(
-          "{2}{W},{T}: Reveal any number of light cards in your hand. You gain 2 life for each card revealed this way.")
-        .Power(1)
-        .Toughness(1)
-        .ActivatedAbility(p =>
-          {
-            p.Text =
-              "{2}{W},{T}: Reveal any number of light cards in your hand. You gain 2 life for each card revealed this way.";
-            p.Cost = new AggregateCost(
-              new PayMana("{2}{W}".Parse()),
-              new Tap());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Jasmine Seer")
+                .ManaCost("{3}{W}")
+                .Type("Forward Human Wizard")
+                .Text(
+                    "{2}{W},{T}: Reveal any number of light cards in your hand. You gain 2 life for each card revealed this way."
+                )
+                .Power(1)
+                .Toughness(1)
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{2}{W},{T}: Reveal any number of light cards in your hand. You gain 2 life for each card revealed this way.";
+                    p.Cost = new AggregateCost(new PayMana("{2}{W}".Parse()), new Tap());
 
-            p.Effect = () => new GainLifeForEachRevealedCard(c => c.HasColor(CardColor.Light), 2);
-            p.TimingRule(new WhenYourHandCountIs(minCount: 1, selector: c => c.HasColor(CardColor.Light)));
-            p.TimingRule(new Any(new OnEndOfOpponentsTurn(), new WhenOwningCardWillBeDestroyed()));
-          });
+                    p.Effect = () =>
+                        new GainLifeForEachRevealedCard(c => c.HasColor(CardColor.Light), 2);
+                    p.TimingRule(
+                        new WhenYourHandCountIs(
+                            minCount: 1,
+                            selector: c => c.HasColor(CardColor.Light)
+                        )
+                    );
+                    p.TimingRule(
+                        new Any(new OnEndOfOpponentsTurn(), new WhenOwningCardWillBeDestroyed())
+                    );
+                });
+        }
     }
-  }
 }

@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class RainOfSalt
-  {
-    public class Ai : AiScenario
+    public class RainOfSalt
     {
-      [Fact (Skip = "Old card")]
-      public void Destroy2Backups()
-      {
-        Hand(P1, "Rain of Salt");
-        Battlefield(P1, "Mountain", "Mountain", "Island", "Island", "Island", "Island");
-        Battlefield(P2, "Mountain", "Mountain", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Destroy2Backups()
+            {
+                Hand(P1, "Rain of Salt");
+                Battlefield(P1, "Mountain", "Mountain", "Island", "Island", "Island", "Island");
+                Battlefield(P2, "Mountain", "Mountain", "Forest");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P2.Battlefield.Backups.Count());
-      }
+                Equal(1, P2.Battlefield.Backups.Count());
+            }
+        }
     }
-  }
 }

@@ -1,22 +1,23 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
+    using System.Collections.Generic;
+    using Effects;
 
-  public class TerraStomper : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class TerraStomper : CardTemplateSource
     {
-      yield return Card
-        .Named("Terra Stomper")
-        .ManaCost("{3}{G}{G}{G}")
-        .Type("Forward - Beast")
-        .Text("Terra Stomper can't be countered.{EOL}{Trample}")
-        .FlavorText("Its footfalls cause violent earthquakes, hurtling boulders, and unseasonable dust storms.")
-        .Power(8)
-        .Toughness(8)
-        .SimpleAbilities(Static.Trample)
-        .Cast(p => p.Effect = () => new CastPermanent {CanBeCountered = false});
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Terra Stomper")
+                .ManaCost("{3}{G}{G}{G}")
+                .Type("Forward - Beast")
+                .Text("Terra Stomper can't be countered.{EOL}{Trample}")
+                .FlavorText(
+                    "Its footfalls cause violent earthquakes, hurtling boulders, and unseasonable dust storms."
+                )
+                .Power(8)
+                .Toughness(8)
+                .SimpleAbilities(Static.Trample)
+                .Cast(p => p.Effect = () => new CastPermanent { CanBeCountered = false });
+        }
     }
-  }
 }

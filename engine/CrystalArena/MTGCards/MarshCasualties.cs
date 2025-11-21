@@ -1,41 +1,51 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Costs;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.Modifiers;
+    using System.Collections.Generic;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.Costs;
+    using CrystalArena.Effects;
+    using CrystalArena.Modifiers;
 
-  public class MarshCasualties : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class MarshCasualties : CardTemplateSource
     {
-      yield return Card
-        .Named("Marsh Casualties")
-        .ManaCost("{B}{B}")
-        .Type("Sorcery")
-        .Text(
-          "{Kicker} {3}{EOL}Forwards target player controls get -1/-1 until end of turn. If Marsh Casualties was kicked, those forwards get -2/-2 until end of turn instead.")
-        .Cast(p =>
-          {
-            p.Effect = () => new ApplyModifiersToPermanents(
-              selector: (c, ctx) => c.Is().Forward && ctx.Target == c.Controller,
-              modifier: () => new AddPowerAndToughness(-1, -1) {UntilEot = true}) {ToughnessReduction = 1};
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Marsh Casualties")
+                .ManaCost("{B}{B}")
+                .Type("Sorcery")
+                .Text(
+                    "{Kicker} {3}{EOL}Forwards target player controls get -1/-1 until end of turn. If Marsh Casualties was kicked, those forwards get -2/-2 until end of turn instead."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new ApplyModifiersToPermanents(
+                            selector: (c, ctx) => c.Is().Forward && ctx.Target == c.Controller,
+                            modifier: () => new AddPowerAndToughness(-1, -1) { UntilEot = true }
+                        )
+                        {
+                            ToughnessReduction = 1,
+                        };
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
-            p.TargetingRule(new EffectOpponent());
-          })
-        .Cast(p =>
-          {
-            p.Text = p.KickerDescription;
-            p.Cost = new PayMana("{3}{B}{B}".Parse());
-            p.Effect = () => new ApplyModifiersToPermanents(
-              selector: (c, ctx) => c.Is().Forward && ctx.Target == c.Controller,
-              modifier: () => new AddPowerAndToughness(-2, -2) {UntilEot = true}) {ToughnessReduction = 2};
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
+                    p.TargetingRule(new EffectOpponent());
+                })
+                .Cast(p =>
+                {
+                    p.Text = p.KickerDescription;
+                    p.Cost = new PayMana("{3}{B}{B}".Parse());
+                    p.Effect = () =>
+                        new ApplyModifiersToPermanents(
+                            selector: (c, ctx) => c.Is().Forward && ctx.Target == c.Controller,
+                            modifier: () => new AddPowerAndToughness(-2, -2) { UntilEot = true }
+                        )
+                        {
+                            ToughnessReduction = 2,
+                        };
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Player());
-            p.TargetingRule(new EffectOpponent());
-          });
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
+                    p.TargetingRule(new EffectOpponent());
+                });
+        }
     }
-  }
 }

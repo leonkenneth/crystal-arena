@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ViashinoSandswimmer
-  {
-    public class Ai : AiScenario
+    public class ViashinoSandswimmer
     {
-      [Fact (Skip = "Old card")]
-      public void GoesToHandOrToBreakZone()
-      {
-        var sandswimmer = C("Viashino Sandswimmer");
-        
-        Hand(P2, "Shock");        
-        Battlefield(P1, sandswimmer, "Mountain");
-        Battlefield(P2, "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GoesToHandOrToBreakZone()
+            {
+                var sandswimmer = C("Viashino Sandswimmer");
 
-        RunGame(1);
+                Hand(P2, "Shock");
+                Battlefield(P1, sandswimmer, "Mountain");
+                Battlefield(P2, "Mountain");
 
-        True(Zone.BreakZone == C(sandswimmer).Zone || Zone.Hand == C(sandswimmer).Zone);        
-      }
+                RunGame(1);
+
+                True(Zone.BreakZone == C(sandswimmer).Zone || Zone.Hand == C(sandswimmer).Zone);
+            }
+        }
     }
-  }
 }

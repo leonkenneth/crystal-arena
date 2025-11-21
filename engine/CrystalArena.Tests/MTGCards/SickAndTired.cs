@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SickAndTired
-  {
-    public class Ai : AiScenario
+    public class SickAndTired
     {
-      [Fact (Skip = "Old card")]
-      public void Kill2Elves()
-      {
-        Hand(P1, "Sick and Tired");
-        Battlefield(P1, "Swamp", "Swamp", "Swamp");
-        Battlefield(P2, "Llanowar Elves", "Llanowar Elves");
-        
-        RunGame(2);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Kill2Elves()
+            {
+                Hand(P1, "Sick and Tired");
+                Battlefield(P1, "Swamp", "Swamp", "Swamp");
+                Battlefield(P2, "Llanowar Elves", "Llanowar Elves");
 
-        Equal(2, P2.BreakZone.Count);
-      }
+                RunGame(2);
+
+                Equal(2, P2.BreakZone.Count);
+            }
+        }
     }
-  }
 }

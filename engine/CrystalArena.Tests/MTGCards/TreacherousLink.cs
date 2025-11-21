@@ -1,29 +1,29 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class TreacherousLink
-  {
-    public class Ai : AiScenario
+    public class TreacherousLink
     {
-      [Fact (Skip = "Old card")]
-      public void EnchantWallWithLinkToWin()
-      {
-        var wall = C("Wall of Blossoms");
-        var link = C("Treacherous Link");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void EnchantWallWithLinkToWin()
+            {
+                var wall = C("Wall of Blossoms");
+                var link = C("Treacherous Link");
 
-        Hand(P1, link);
-        Battlefield(P1, "Swamp", "Swamp", "Grizzly Bears");        
-        Battlefield(P2, wall);
+                Hand(P1, link);
+                Battlefield(P1, "Swamp", "Swamp", "Grizzly Bears");
+                Battlefield(P2, wall);
 
-        P2.Life = 2;
+                P2.Life = 2;
 
-        RunGame(1);
+                RunGame(1);
 
-        True(C(link).AttachedTo == C(wall));
-        Equal(0, P2.Life);
-      }
+                True(C(link).AttachedTo == C(wall));
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

@@ -1,55 +1,59 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using CrystalArena.Decisions;
-  using Modifiers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CrystalArena.Decisions;
+    using Modifiers;
 
-  public class TargetGainsProtectionFromChosenColor : CustomizableEffect
-  {
-    public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
+    public class TargetGainsProtectionFromChosenColor : CustomizableEffect
     {
-      CardColor? color = null;
-
-      if (!Stack.IsEmpty && !Stack.TopSpell.HasColor(CardColor.Colorless) && 
-          !Stack.TopSpell.HasColor(CardColor.None))
-      {
-        color = Stack.TopSpell.Colors[0];
-      }
-
-      color = color ?? GetMostCommonColor(Controller.Opponent.Battlefield);
-
-      return new ChosenOptions(ChoiceToColorMap.Single(x => x.Color == color).Choice);
-    }
-
-    public override void ProcessResults(ChosenOptions results)
-    {
-      var color = ChoiceToColorMap.Single(x => x.Choice.Equals(results.Options[0])).Color;
-
-      var modifier = new AddProtectionFromColors(color) {UntilEot = true};
-
-      var parameters = new ModifierParameters
+        public override ChosenOptions ChooseResult(List<IEffectChoice> candidates)
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard
-        };
+            CardColor? color = null;
 
-      Target.Card().AddModifier(modifier, parameters);
-    }
+            if (
+                !Stack.IsEmpty
+                && !Stack.TopSpell.HasColor(CardColor.Colorless)
+                && !Stack.TopSpell.HasColor(CardColor.None)
+            )
+            {
+                color = Stack.TopSpell.Colors[0];
+            }
 
-    public override string GetText()
-    {
-      return "Target gains protection from #0.";
-    }
+            color = color ?? GetMostCommonColor(Controller.Opponent.Battlefield);
 
-    public override IEnumerable<IEffectChoice> GetChoices()
-    {
-      yield return new DiscreteEffectChoice(
-        EffectOption.Light,
-        EffectOption.Water,
-        EffectOption.Dark,
-        EffectOption.Fire,
-        EffectOption.Wind);
+            return new ChosenOptions(ChoiceToColorMap.Single(x => x.Color == color).Choice);
+        }
+
+        public override void ProcessResults(ChosenOptions results)
+        {
+            var color = ChoiceToColorMap.Single(x => x.Choice.Equals(results.Options[0])).Color;
+
+            var modifier = new AddProtectionFromColors(color) { UntilEot = true };
+
+            var parameters = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+            };
+
+            Target.Card().AddModifier(modifier, parameters);
+        }
+
+        public override string GetText()
+        {
+            return "Target gains protection from #0.";
+        }
+
+        public override IEnumerable<IEffectChoice> GetChoices()
+        {
+            yield return new DiscreteEffectChoice(
+                EffectOption.Light,
+                EffectOption.Water,
+                EffectOption.Dark,
+                EffectOption.Fire,
+                EffectOption.Wind
+            );
+        }
     }
-  }
 }

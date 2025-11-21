@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class PlayerDrawsCardEvent
-  {
-    public readonly Player Player;
-    
-    public PlayerDrawsCardEvent(Player player)
+    public class PlayerDrawsCardEvent
     {
-      Player = player;
+        public readonly Player Player;
+
+        public PlayerDrawsCardEvent(Player player)
+        {
+            Player = player;
+        }
     }
-  }
 }

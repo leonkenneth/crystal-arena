@@ -1,59 +1,63 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using System.Linq;
-  using Decisions;
+    using System;
+    using System.Linq;
+    using Decisions;
 
-  public class PayLifeOrTapBackup : Effect, IProcessDecisionResults<BooleanResult>, 
-    IChooseDecisionResults<BooleanResult>
-  {
-    private readonly int _life;
-
-    private PayLifeOrTapBackup() {}
-
-    public PayLifeOrTapBackup(int life)
+    public class PayLifeOrTapBackup
+        : Effect,
+            IProcessDecisionResults<BooleanResult>,
+            IChooseDecisionResults<BooleanResult>
     {
-      _life = life;
-    }
+        private readonly int _life;
 
-    public BooleanResult ChooseResult()
-    {
-      var controller = Controller;
+        private PayLifeOrTapBackup() { }
 
-      var spellsWithCost = controller.Hand
-        .Where(x => x.ManaCost != null)
-        .ToList();
-
-      if (spellsWithCost.Count == 0)
-      {
-        return false;
-      }
-
-      // one less is available because the backup
-      // is already counted
-      var available = controller.GetAvailableManaCount() - 1;
-
-      return spellsWithCost.Any(x =>
-        x.ManaCost.Converted == available + 1);
-    }
-
-    public void ProcessResults(BooleanResult results)
-    {
-      if (results.IsTrue)
-        return;
-
-      Source.OwningCard.Tap();
-    }
-
-    protected override void ResolveEffect()
-    {
-      Enqueue(new PayOr(Controller, p =>
+        public PayLifeOrTapBackup(int life)
         {
-          p.Life = _life;
-          p.Text = String.Format("Pay {0} life?", _life);
-          p.ChooseDecisionResults = this;
-          p.ProcessDecisionResults = this;
-        }));
+            _life = life;
+        }
+
+        public BooleanResult ChooseResult()
+        {
+            var controller = Controller;
+
+            var spellsWithCost = controller.Hand.Where(x => x.ManaCost != null).ToList();
+
+            if (spellsWithCost.Count == 0)
+            {
+                return false;
+            }
+
+            // one less is available because the backup
+            // is already counted
+            var available = controller.GetAvailableManaCount() - 1;
+
+            return spellsWithCost.Any(x => x.ManaCost.Converted == available + 1);
+        }
+
+        public void ProcessResults(BooleanResult results)
+        {
+            if (results.IsTrue)
+                return;
+
+            Source.OwningCard.Tap();
+        }
+
+        protected override void ResolveEffect()
+        {
+            Enqueue(
+                new PayOr(
+                    Controller,
+                    p =>
+                    {
+                        p.Life = _life;
+                        p.Text = String.Format("Pay {0} life?", _life);
+                        p.ChooseDecisionResults = this;
+                        p.ProcessDecisionResults = this;
+                    }
+                )
+            );
+        }
     }
-  }
 }

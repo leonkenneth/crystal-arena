@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectRedirectDamageToControllerMonster : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectRedirectDamageToControllerMonster : TargetingRule
     {
-      var candidates = p.Candidates<Card>(ControlledBy.Opponent)
-        .OrderByDescending(x => x.Toughness);
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>(ControlledBy.Opponent)
+                .OrderByDescending(x => x.Toughness);
 
-      return Group(candidates, 1);
+            return Group(candidates, 1);
+        }
     }
-  }
 }

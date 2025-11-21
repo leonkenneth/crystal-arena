@@ -1,40 +1,46 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class FaithHealer : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class FaithHealer : CardTemplateSource
     {
-      yield return Card
-        .Named("Faith Healer")
-        .ManaCost("{1}{W}")
-        .Type("Forward Human Cleric")
-        .Text("Sacrifice an monster: You gain life equal to the sacrificed monster's converted mana cost.")
-        .FlavorText("The power of faith is quiet. It is the leaf unmoved by the hurricane.")
-        .Power(1)
-        .Toughness(1)
-        .Cast(p => p.TimingRule(new OnFirstMain()))
-        .ActivatedAbility(p =>
-          {
-            p.Text =
-              "Sacrifice an monster: You gain life equal to the sacrificed monster's converted mana cost.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Faith Healer")
+                .ManaCost("{1}{W}")
+                .Type("Forward Human Cleric")
+                .Text(
+                    "Sacrifice an monster: You gain life equal to the sacrificed monster's converted mana cost."
+                )
+                .FlavorText("The power of faith is quiet. It is the leaf unmoved by the hurricane.")
+                .Power(1)
+                .Toughness(1)
+                .Cast(p => p.TimingRule(new OnFirstMain()))
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "Sacrifice an monster: You gain life equal to the sacrificed monster's converted mana cost.";
 
-            p.Cost = new Sacrifice();
-            p.Effect = () => new ChangeLife(amount: P(e => e.Target.Card().ConvertedCost), whos: P(e => e.Controller));
+                    p.Cost = new Sacrifice();
+                    p.Effect = () =>
+                        new ChangeLife(
+                            amount: P(e => e.Target.Card().ConvertedCost),
+                            whos: P(e => e.Controller)
+                        );
 
-            p.TargetSelector.AddCost(
-              trg => trg
-                .Is.Card(x => x.Is().Monster, controlledBy: ControlledBy.SpellOwner)
-                .On.Battlefield(),
-              trg => trg.Message = "Select an monster to sacrifice.");
+                    p.TargetSelector.AddCost(
+                        trg =>
+                            trg.Is.Card(x => x.Is().Monster, controlledBy: ControlledBy.SpellOwner)
+                                .On.Battlefield(),
+                        trg => trg.Message = "Select an monster to sacrifice."
+                    );
 
-            p.TargetingRule(new CostSacrificeToGainLife());
-          });
+                    p.TargetingRule(new CostSacrificeToGainLife());
+                });
+        }
     }
-  }
 }

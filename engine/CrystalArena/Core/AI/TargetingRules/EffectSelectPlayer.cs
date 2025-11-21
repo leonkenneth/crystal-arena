@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System;
-  using System.Collections.Generic;
-  using CrystalArena.Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using CrystalArena.Infrastructure;
 
-  public class EffectSelectPlayer : TargetingRule
-  {
-    private readonly Func<TargetingRuleParameters, Game, Player> _selector;
-
-    public EffectSelectPlayer(Func<TargetingRuleParameters, Game, Player> selector)
+    public class EffectSelectPlayer : TargetingRule
     {
-      _selector = selector;
-    }
+        private readonly Func<TargetingRuleParameters, Game, Player> _selector;
 
-    private EffectSelectPlayer() {}
+        public EffectSelectPlayer(Func<TargetingRuleParameters, Game, Player> selector)
+        {
+            _selector = selector;
+        }
 
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
-    {
-      var candidates = _selector(p, Game).ToEnumerable();
-      return Group(candidates, 1);
+        private EffectSelectPlayer() { }
+
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = _selector(p, Game).ToEnumerable();
+            return Group(candidates, 1);
+        }
     }
-  }
 }

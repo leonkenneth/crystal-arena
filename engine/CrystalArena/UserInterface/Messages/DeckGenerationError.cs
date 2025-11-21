@@ -1,6 +1,4 @@
 ﻿namespace CrystalArena.UserInterface.Messages
 {
-  public class DeckGenerationError
-  {    
-  }
+    public class DeckGenerationError { }
 }

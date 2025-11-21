@@ -1,21 +1,19 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class SandbarMerfolk : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SandbarMerfolk : CardTemplateSource
     {
-      yield return Card
-        .Named("Sandbar Merfolk")
-        .ManaCost("{U}")
-        .Type("Forward - Merfolk")
-        .Text("{Cycling} {2}({2}, Discard this card: Draw a card.)")
-        .FlavorText(
-          "You are not prey until a predator knows of your existence.")
-        .Power(1)
-        .Toughness(1)
-        .Cycling("{2}");
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Sandbar Merfolk")
+                .ManaCost("{U}")
+                .Type("Forward - Merfolk")
+                .Text("{Cycling} {2}({2}, Discard this card: Draw a card.)")
+                .FlavorText("You are not prey until a predator knows of your existence.")
+                .Power(1)
+                .Toughness(1)
+                .Cycling("{2}");
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SimianGrunts
-  {
-    public class Ai : AiScenario
+    public class SimianGrunts
     {
-      [Fact (Skip = "Old card")]
-      public void KillBears()
-      {
-        var bears = C("Grizzly Bears");
-        Battlefield(P1, bears);
-        Battlefield(P2, "Forest", "Forest", "Forest");
-        Hand(P2, "Simian Grunts");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillBears()
+            {
+                var bears = C("Grizzly Bears");
+                Battlefield(P1, bears);
+                Battlefield(P2, "Forest", "Forest", "Forest");
+                Hand(P2, "Simian Grunts");
 
-        RunGame(1);
-        Equal(Zone.BreakZone, C(bears).Zone);
-      }
+                RunGame(1);
+                Equal(Zone.BreakZone, C(bears).Zone);
+            }
+        }
     }
-  }
 }

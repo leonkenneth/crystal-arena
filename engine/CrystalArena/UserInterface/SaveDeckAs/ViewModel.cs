@@ -1,31 +1,33 @@
 ﻿namespace CrystalArena.UserInterface.SaveDeckAs
 {
-  using Infrastructure;
+    using Infrastructure;
 
-  public class ViewModel
-  {
-    [Updates("CanSave")]
-    public virtual string DeckName { get; set; }
-
-    public bool WasCanceled { get; set; }
-
-    public bool CanSave { get { return !string.IsNullOrEmpty(DeckName); } }
-    
-
-    public void Save()
+    public class ViewModel
     {
-      this.Close();
-    }
+        [Updates("CanSave")]
+        public virtual string DeckName { get; set; }
 
-    public void Cancel()
-    {
-      WasCanceled = true;
-      this.Close();
-    }
+        public bool WasCanceled { get; set; }
 
-    public interface IFactory
-    {
-      ViewModel Create();
+        public bool CanSave
+        {
+            get { return !string.IsNullOrEmpty(DeckName); }
+        }
+
+        public void Save()
+        {
+            this.Close();
+        }
+
+        public void Cancel()
+        {
+            WasCanceled = true;
+            this.Close();
+        }
+
+        public interface IFactory
+        {
+            ViewModel Create();
+        }
     }
-  }
 }

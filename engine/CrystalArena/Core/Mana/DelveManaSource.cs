@@ -1,35 +1,32 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class DelveManaSource : IManaSource
-  {
-    private readonly ManaUnit[] _units;
-
-    public DelveManaSource(Card card, int rank = 100)
+    public class DelveManaSource : IManaSource
     {
-      OwningCard = card;
-      _units = new[]
+        private readonly ManaUnit[] _units;
+
+        public DelveManaSource(Card card, int rank = 100)
         {
-          new ManaUnit(ManaColor.Colorless, rank: rank, source: this)
-        };
-    }
+            OwningCard = card;
+            _units = new[] { new ManaUnit(ManaColor.Colorless, rank: rank, source: this) };
+        }
 
-    public bool CanActivate()
-    {
-      return true;
-    }
+        public bool CanActivate()
+        {
+            return true;
+        }
 
-    public void PayActivationCost()
-    {
-      OwningCard.RemoveFromPlay(null);
-    }
+        public void PayActivationCost()
+        {
+            OwningCard.RemoveFromPlay(null);
+        }
 
-    public Card OwningCard { get; private set; }
+        public Card OwningCard { get; private set; }
 
-    public IEnumerable<ManaUnit> GetUnits()
-    {
-      return _units;
+        public IEnumerable<ManaUnit> GetUnits()
+        {
+            return _units;
+        }
     }
-  }
 }

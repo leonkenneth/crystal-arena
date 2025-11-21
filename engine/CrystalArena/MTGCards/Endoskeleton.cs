@@ -1,41 +1,41 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using CrystalArena.Costs;
-  using CrystalArena.Effects;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.Modifiers;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.Costs;
+    using CrystalArena.Effects;
+    using CrystalArena.Modifiers;
 
-  public class Endoskeleton : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Endoskeleton : CardTemplateSource
     {
-      yield return Card
-        .Named("Endoskeleton")
-        .ManaCost("{2}")
-        .Type("Artifact")
-        .Text(
-          "You may choose not to untap Endoskeleton during your untap step.{EOL}{2},{T}: Target forward gets +0/+3 for as long as Endoskeleton remains tapped.")
-        .MayChooseToUntap()
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{2},{T}: Target forward gets +0/+3 for as long as Endoskeleton remains tapped.";
-            p.Cost = new AggregateCost(
-              new PayMana(2.Colorless()),
-              new Tap());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Endoskeleton")
+                .ManaCost("{2}")
+                .Type("Artifact")
+                .Text(
+                    "You may choose not to untap Endoskeleton during your untap step.{EOL}{2},{T}: Target forward gets +0/+3 for as long as Endoskeleton remains tapped."
+                )
+                .MayChooseToUntap()
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{2},{T}: Target forward gets +0/+3 for as long as Endoskeleton remains tapped.";
+                    p.Cost = new AggregateCost(new PayMana(2.Colorless()), new Tap());
 
-            p.Effect = () => new ApplyModifiersToTargets(() =>
-              {
-                var modifier = new AddPowerAndToughness(0, 3);
-                modifier.AddLifetime(new ModifierSourceGetsUntapedLifetime());
-                return modifier;
-              });
+                    p.Effect = () =>
+                        new ApplyModifiersToTargets(() =>
+                        {
+                            var modifier = new AddPowerAndToughness(0, 3);
+                            modifier.AddLifetime(new ModifierSourceGetsUntapedLifetime());
+                            return modifier;
+                        });
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
-            p.TimingRule(new PumpTargetCardTimingRule(untilEot: false));
-            p.TargetingRule(new EffectPumpSummon(0, 3, untilEot: false));
-          });
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TimingRule(new PumpTargetCardTimingRule(untilEot: false));
+                    p.TargetingRule(new EffectPumpSummon(0, 3, untilEot: false));
+                });
+        }
     }
-  }
 }

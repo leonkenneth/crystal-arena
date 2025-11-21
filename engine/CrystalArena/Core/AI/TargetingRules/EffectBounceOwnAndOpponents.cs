@@ -1,19 +1,22 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectBounceOwnAndOpponents : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectBounceOwnAndOpponents : TargetingRule
     {
-      var ownCandidates = p.Candidates<Card>(selectorIndex: 0)
-        .OrderBy(c => c.Score);
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var ownCandidates = p.Candidates<Card>(selectorIndex: 0).OrderBy(c => c.Score);
 
-      var opponentCandidates = GetBounceCandidates(p, selectorIndex: 1);
+            var opponentCandidates = GetBounceCandidates(p, selectorIndex: 1);
 
-      return Group(ownCandidates, opponentCandidates,
-        (t, tgs) => tgs.AddEffect(t), (t, tgs) => tgs.AddEffect(t));
+            return Group(
+                ownCandidates,
+                opponentCandidates,
+                (t, tgs) => tgs.AddEffect(t),
+                (t, tgs) => tgs.AddEffect(t)
+            );
+        }
     }
-  }
 }

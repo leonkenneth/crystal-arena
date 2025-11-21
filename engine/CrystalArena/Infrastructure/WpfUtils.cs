@@ -1,19 +1,17 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  using System;
-  using System.Windows;
-  using Caliburn.Micro;
+    using System;
+    using System.Windows;
+    using Caliburn.Micro;
 
-  
-
-  [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, Inherited = true)]
-  public class UpdatesAttribute : Attribute
-  {
-    public UpdatesAttribute(params string[] propertyNames)
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, Inherited = true)]
+    public class UpdatesAttribute : Attribute
     {
-      PropertyNames = propertyNames;
-    }
+        public UpdatesAttribute(params string[] propertyNames)
+        {
+            PropertyNames = propertyNames;
+        }
 
-    public string[] PropertyNames { get; set; }
-  }
+        public string[] PropertyNames { get; set; }
+    }
 }

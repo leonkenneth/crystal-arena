@@ -1,37 +1,43 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.Costs;
-  using CrystalArena.Effects;
-  using CrystalArena.AI;
-  using CrystalArena.AI.TargetingRules;
-  using CrystalArena.AI.TimingRules;
+    using System.Collections.Generic;
+    using CrystalArena.AI;
+    using CrystalArena.AI.TargetingRules;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Costs;
+    using CrystalArena.Effects;
 
-  public class WesternPaladin : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class WesternPaladin : CardTemplateSource
     {
-      yield return Card
-        .Named("Western Paladin")
-        .ManaCost("{2}{B}{B}")
-        .Type("Forward Zombie Knight")
-        .Text("{B}{B},{T} : Destroy target light forward.")
-        .FlavorText(
-          "Their weak laws. Their flawed systems. They inhibit the Grand Evolution. In Yawgmoth's name, we shall erase them.")
-        .Power(3)
-        .Toughness(3)
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{B}{B},{T}: Destroy target light forward.";
-            p.Cost = new AggregateCost(new PayMana("{B}{B}".Parse()), new Tap());
-            p.Effect = () => new DestroyTargetPermanents();
-            p.TargetSelector.AddEffect(trg => trg
-              .Is.Card(c => c.Is().Forward && c.HasColor(CardColor.Light))
-              .On.Battlefield());
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Western Paladin")
+                .ManaCost("{2}{B}{B}")
+                .Type("Forward Zombie Knight")
+                .Text("{B}{B},{T} : Destroy target light forward.")
+                .FlavorText(
+                    "Their weak laws. Their flawed systems. They inhibit the Grand Evolution. In Yawgmoth's name, we shall erase them."
+                )
+                .Power(3)
+                .Toughness(3)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{B}{B},{T}: Destroy target light forward.";
+                    p.Cost = new AggregateCost(new PayMana("{B}{B}".Parse()), new Tap());
+                    p.Effect = () => new DestroyTargetPermanents();
+                    p.TargetSelector.AddEffect(trg =>
+                        trg.Is.Card(c => c.Is().Forward && c.HasColor(CardColor.Light))
+                            .On.Battlefield()
+                    );
 
-            p.TargetingRule(new EffectDestroy());
-            p.TimingRule(new TargetRemovalTimingRule().RemovalTags(EffectTag.Destroy, EffectTag.ForwardsOnly));
-          });
+                    p.TargetingRule(new EffectDestroy());
+                    p.TimingRule(
+                        new TargetRemovalTimingRule().RemovalTags(
+                            EffectTag.Destroy,
+                            EffectTag.ForwardsOnly
+                        )
+                    );
+                });
+        }
     }
-  }
 }

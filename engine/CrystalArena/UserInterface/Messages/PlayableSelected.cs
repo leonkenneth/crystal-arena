@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena.UserInterface.Messages
 {
-  using Decisions;
+    using Decisions;
 
-  public class PlayableSelected
-  {
-    public Playable Playable { get; set; }
-  }
+    public class PlayableSelected
+    {
+        public Playable Playable { get; set; }
+    }
 }

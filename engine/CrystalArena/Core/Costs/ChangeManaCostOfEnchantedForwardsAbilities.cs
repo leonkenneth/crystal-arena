@@ -1,17 +1,18 @@
 ﻿namespace CrystalArena.Costs
 {
-  public class ChangeManaCostOfEnchantedForwardsAbilities : CostModifier
-  {
-    private ChangeManaCostOfEnchantedForwardsAbilities() {}
-
-    public ChangeManaCostOfEnchantedForwardsAbilities(int amount) : base(amount) {}
-    
-    protected override bool ShouldApply(Card card, CostType type)
+    public class ChangeManaCostOfEnchantedForwardsAbilities : CostModifier
     {
-      if (type != CostType.Ability)
-        return false;
+        private ChangeManaCostOfEnchantedForwardsAbilities() { }
 
-      return card == Source.AttachedTo;
+        public ChangeManaCostOfEnchantedForwardsAbilities(int amount)
+            : base(amount) { }
+
+        protected override bool ShouldApply(Card card, CostType type)
+        {
+            if (type != CostType.Ability)
+                return false;
+
+            return card == Source.AttachedTo;
+        }
     }
-  }
 }

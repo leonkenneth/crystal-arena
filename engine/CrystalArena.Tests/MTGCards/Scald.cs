@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Scald
-  {
-    public class Ai : AiScenario
+    public class Scald
     {
-      [Fact (Skip = "Old card")]
-      public void Deal2Damage()
-      {
-        Hand(P1, "Shivan Dragon");
-        Battlefield(P1, "Island", "Island", "Mountain", "Mountain", "Mountain", "Mountain");
-        Battlefield(P2, "Scald");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Deal2Damage()
+            {
+                Hand(P1, "Shivan Dragon");
+                Battlefield(P1, "Island", "Island", "Mountain", "Mountain", "Mountain", "Mountain");
+                Battlefield(P2, "Scald");
 
-        RunGame(3);
+                RunGame(3);
 
-        Equal(18, P1.Life);
-      }
+                Equal(18, P1.Life);
+            }
+        }
     }
-  }
 }

@@ -1,43 +1,50 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.RepetitionRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.RepetitionRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class SunbladeElf : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class SunbladeElf : CardTemplateSource
     {
-      yield return Card
-        .Named("Sunblade Elf")
-        .ManaCost("{G}")
-        .Type("Forward — Elf Warrior")
-        .Text(
-          "Sunblade Elf gets +1/+1 as long as you control a Plains.{EOL}{4}{W}: Forwards you control get +1/+1 until end of turn.")
-        .FlavorText("\"We patrol the steppes to keep enemies from the forest verge.\"")
-        .Power(1)
-        .Toughness(1)
-        .StaticAbility(p =>
-          {
-            p.Modifier(() => new AddPowerAndToughness(1, 1));
-            p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("plains"));
-          })
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{4}{W}: Forwards you control get +1/+1 until end of turn.";
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Sunblade Elf")
+                .ManaCost("{G}")
+                .Type("Forward — Elf Warrior")
+                .Text(
+                    "Sunblade Elf gets +1/+1 as long as you control a Plains.{EOL}{4}{W}: Forwards you control get +1/+1 until end of turn."
+                )
+                .FlavorText("\"We patrol the steppes to keep enemies from the forest verge.\"")
+                .Power(1)
+                .Toughness(1)
+                .StaticAbility(p =>
+                {
+                    p.Modifier(() => new AddPowerAndToughness(1, 1));
+                    p.Condition = cond => cond.OwnerControlsPermanent(c => c.Is("plains"));
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{4}{W}: Forwards you control get +1/+1 until end of turn.";
 
-            p.Cost = new PayMana("{4}{W}".Parse(), supportsRepetitions: true);
+                    p.Cost = new PayMana("{4}{W}".Parse(), supportsRepetitions: true);
 
-            p.Effect = () => new ApplyModifiersToPermanents(
-              (c, ctx) => c.Is().Forward && ctx.You == c.Controller,
-              () => new AddPowerAndToughness(1, 1) {UntilEot = true});
+                    p.Effect = () =>
+                        new ApplyModifiersToPermanents(
+                            (c, ctx) => c.Is().Forward && ctx.You == c.Controller,
+                            () => new AddPowerAndToughness(1, 1) { UntilEot = true }
+                        );
 
-            p.TimingRule(new Any(new AfterOpponentDeclaresAttackers(), new AfterOpponentDeclaresBlockers()));
-            p.RepetitionRule(new RepeatMaxTimes());
-          });
+                    p.TimingRule(
+                        new Any(
+                            new AfterOpponentDeclaresAttackers(),
+                            new AfterOpponentDeclaresBlockers()
+                        )
+                    );
+                    p.RepetitionRule(new RepeatMaxTimes());
+                });
+        }
     }
-  }
 }

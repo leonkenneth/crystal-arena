@@ -1,16 +1,16 @@
 ﻿namespace CrystalArena.UserInterface.MagnifiedCard
 {
-  using Infrastructure;
-  using Messages;
+    using Infrastructure;
+    using Messages;
 
-  public class ViewModel : IReceive<PlayersInterestChanged>
-  {
-    public virtual object Visual { get; protected set; }
-
-    public void Receive(PlayersInterestChanged message)
+    public class ViewModel : IReceive<PlayersInterestChanged>
     {
-      if (message.HasLostInterest == false)
-        Visual = message.Visual;
+        public virtual object Visual { get; protected set; }
+
+        public void Receive(PlayersInterestChanged message)
+        {
+            if (message.HasLostInterest == false)
+                Visual = message.Visual;
+        }
     }
-  }
 }

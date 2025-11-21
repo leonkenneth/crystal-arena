@@ -1,11 +1,15 @@
 ﻿namespace CrystalArena.AI.CostRules
 {
-  public class XIsOptimalDamage : CostRule
-  {
-    public override int CalculateX(CostRuleParameters p)
+    public class XIsOptimalDamage : CostRule
     {
-      const int maxXToTry = 6;
-      return MassRemovalParameterOptimizer.CalculateOptimalDamage(p.Controller, p.Controller.Opponent, maxXToTry);      
+        public override int CalculateX(CostRuleParameters p)
+        {
+            const int maxXToTry = 6;
+            return MassRemovalParameterOptimizer.CalculateOptimalDamage(
+                p.Controller,
+                p.Controller.Opponent,
+                maxXToTry
+            );
+        }
     }
-  }
 }

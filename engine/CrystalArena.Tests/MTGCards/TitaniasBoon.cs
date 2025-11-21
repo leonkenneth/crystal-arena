@@ -1,22 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class TitaniasBoon
-  {
-    public class Ai : AiScenario
+    public class TitaniasBoon
     {
-      [Fact (Skip = "Old card")]
-      public void PutCountersOnBears()
-      {
-        Hand(P1, "Titania's Boon");
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutCountersOnBears()
+            {
+                Hand(P1, "Titania's Boon");
+                Battlefield(
+                    P1,
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Grizzly Bears"
+                );
 
-        RunGame(3);
+                RunGame(3);
 
-        Equal(2, P2.Life);
-      }
+                Equal(2, P2.Life);
+            }
+        }
     }
-  }
 }

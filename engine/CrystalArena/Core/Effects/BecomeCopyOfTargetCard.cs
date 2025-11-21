@@ -1,29 +1,27 @@
 ﻿namespace CrystalArena.Effects
 {
-  using Events;
-  using Modifiers;
+    using Events;
+    using Modifiers;
 
-  public class BecomeCopyOfTargetCard : Effect
-  {
-    protected override void ResolveEffect()
+    public class BecomeCopyOfTargetCard : Effect
     {
-      var p = new ModifierParameters
+        protected override void ResolveEffect()
         {
-          SourceEffect = this,
-          SourceCard = Source.OwningCard,
-          X = X
-        };
+            var p = new ModifierParameters
+            {
+                SourceEffect = this,
+                SourceCard = Source.OwningCard,
+                X = X,
+            };
 
-      var target = (Card) Target;
+            var target = (Card)Target;
 
-      var modifier = new ChangeCardTemplate(target.Template);
-      Source.OwningCard.AddModifier(modifier, p);
+            var modifier = new ChangeCardTemplate(target.Template);
+            Source.OwningCard.AddModifier(modifier, p);
 
-      // this will trigger  comes into play triggered abilities 
-      // of the copy
-      Publish(new ZoneChangedEvent(Source.OwningCard,
-        Zone.Stack,
-        Zone.Battlefield));
+            // this will trigger  comes into play triggered abilities
+            // of the copy
+            Publish(new ZoneChangedEvent(Source.OwningCard, Zone.Stack, Zone.Battlefield));
+        }
     }
-  }
 }

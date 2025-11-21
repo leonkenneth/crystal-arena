@@ -1,35 +1,43 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class UnyieldingKrumar : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class UnyieldingKrumar : CardTemplateSource
     {
-      yield return Card
-        .Named("Unyielding Krumar")
-        .ManaCost("{3}{B}")
-        .Type("Forward - Orc Warrior")
-        .Text("{1}{W}: Unyielding Krumar gains first strike until end of turn.")
-        .FlavorText("\"The man whom I call father killed the orc who sired me, offering his world and his blade in return.\"")
-        .Power(3)
-        .Toughness(3)
-        .ActivatedAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "{1}{W}: Unyielding Krumar gains first strike until end of turn.";
+            yield return Card.Named("Unyielding Krumar")
+                .ManaCost("{3}{B}")
+                .Type("Forward - Orc Warrior")
+                .Text("{1}{W}: Unyielding Krumar gains first strike until end of turn.")
+                .FlavorText(
+                    "\"The man whom I call father killed the orc who sired me, offering his world and his blade in return.\""
+                )
+                .Power(3)
+                .Toughness(3)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{1}{W}: Unyielding Krumar gains first strike until end of turn.";
 
-          p.Cost = new PayMana("{1}{W}".Parse());
+                    p.Cost = new PayMana("{1}{W}".Parse());
 
-          p.Effect = () => new ApplyModifiersToSelf(
-            () => new AddSimpleAbility(Static.FirstStrike) { UntilEot = true });
+                    p.Effect = () =>
+                        new ApplyModifiersToSelf(() =>
+                            new AddSimpleAbility(Static.FirstStrike) { UntilEot = true }
+                        );
 
-          p.TimingRule(new Any(new BeforeYouDeclareAttackers(), new AfterOpponentDeclaresAttackers()));
-          p.TimingRule(new WhenCardHas(c => !c.Has().FirstStrike && !c.IsTapped));
-        });
+                    p.TimingRule(
+                        new Any(
+                            new BeforeYouDeclareAttackers(),
+                            new AfterOpponentDeclaresAttackers()
+                        )
+                    );
+                    p.TimingRule(new WhenCardHas(c => !c.Has().FirstStrike && !c.IsTapped));
+                });
+        }
     }
-  }
 }

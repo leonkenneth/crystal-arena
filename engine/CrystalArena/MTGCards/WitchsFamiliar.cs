@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class WitchsFamiliar : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class WitchsFamiliar : CardTemplateSource
     {
-      yield return Card
-        .Named("Witch's Familiar")
-        .ManaCost("{2}{B}")
-        .Type("Forward - Frog")
-        .FlavorText(
-          "Some bog witches practice the strange art of batrachomancy, reading portents in the number, size, and color of warts on a toad's hide.")
-        .Power(2)
-        .Toughness(3);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Witch's Familiar")
+                .ManaCost("{2}{B}")
+                .Type("Forward - Frog")
+                .FlavorText(
+                    "Some bog witches practice the strange art of batrachomancy, reading portents in the number, size, and color of warts on a toad's hide."
+                )
+                .Power(2)
+                .Toughness(3);
+        }
     }
-  }
 }

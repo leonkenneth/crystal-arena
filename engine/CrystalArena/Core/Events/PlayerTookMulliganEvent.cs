@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Events
 {
-  public class PlayerTookMulliganEvent
-  {
-    public readonly Player Player;
-
-    public PlayerTookMulliganEvent(Player player)
+    public class PlayerTookMulliganEvent
     {
-      Player = player;
+        public readonly Player Player;
+
+        public PlayerTookMulliganEvent(Player player)
+        {
+            Player = player;
+        }
     }
-  }
 }

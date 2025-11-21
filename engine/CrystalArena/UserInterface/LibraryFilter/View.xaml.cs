@@ -8,14 +8,14 @@ using Avalonia.Markup.Xaml;
 
 namespace CrystalArena.UserInterface.MainDeckFilter
 {
-  /// <summary>
-  /// Interaction logic for View.xaml
-  /// </summary>
-  public partial class View : UserControl
-  {
-    public View()
+    /// <summary>
+    /// Interaction logic for View.xaml
+    /// </summary>
+    public partial class View : UserControl
     {
-      AvaloniaXamlLoader.Load(this);
+        public View()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
     }
-  }
 }

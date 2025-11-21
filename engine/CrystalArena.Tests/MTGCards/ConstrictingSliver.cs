@@ -1,60 +1,59 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Xunit;
-   using Infrastructure;
+    using Infrastructure;
+    using Xunit;
 
-  public class ConstrictingSliver
-  {
-    public class Ai : AiScenario
+    public class ConstrictingSliver
     {
-      [Fact (Skip = "Old card")]
-      public void PlaySliverRemoveFromPlayDragon()
-      {
-        var dragon = C("Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PlaySliverRemoveFromPlayDragon()
+            {
+                var dragon = C("Shivan Dragon");
 
-        Hand(P1, "Venom Sliver");        
-        Battlefield(P1, "Constricting Sliver", "Forest", "Forest");                
-        Battlefield(P2, dragon);
+                Hand(P1, "Venom Sliver");
+                Battlefield(P1, "Constricting Sliver", "Forest", "Forest");
+                Battlefield(P2, dragon);
 
-        RunGame(1);
-        
-        Equal(Zone.RemovedFromPlay, C(dragon).Zone);
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void PlaySelfRemoveFromPlayDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        var sliver = C("Constricting Sliver");
+                Equal(Zone.RemovedFromPlay, C(dragon).Zone);
+            }
 
-        Hand(P1, sliver);
-        Battlefield(P1, "Plains", "Forest", "Forest", "Plains", "Forest", "Forest");
-        Battlefield(P2, dragon);
+            [Fact(Skip = "Old card")]
+            public void PlaySelfRemoveFromPlayDragon()
+            {
+                var dragon = C("Shivan Dragon");
+                var sliver = C("Constricting Sliver");
 
-        RunGame(1);
+                Hand(P1, sliver);
+                Battlefield(P1, "Plains", "Forest", "Forest", "Plains", "Forest", "Forest");
+                Battlefield(P2, dragon);
 
-        Equal(Zone.Battlefield, C(sliver).Zone);
-        Equal(Zone.RemovedFromPlay, C(dragon).Zone);
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void ReturnDragonToPlay()
-      {
-        var dragon = C("Shivan Dragon");
-        var sliver = C("Venom Sliver");
+                Equal(Zone.Battlefield, C(sliver).Zone);
+                Equal(Zone.RemovedFromPlay, C(dragon).Zone);
+            }
 
-        Hand(P1, sliver);
-        Battlefield(P1, "Constricting Sliver", "Forest", "Forest");
-        
-        Hand(P2, "Shock");
-        Battlefield(P2, dragon, "Mountain");
+            [Fact(Skip = "Old card")]
+            public void ReturnDragonToPlay()
+            {
+                var dragon = C("Shivan Dragon");
+                var sliver = C("Venom Sliver");
 
-        RunGame(2);
+                Hand(P1, sliver);
+                Battlefield(P1, "Constricting Sliver", "Forest", "Forest");
 
-        Equal(Zone.BreakZone, C(sliver).Zone);
-        Equal(Zone.Battlefield, C(dragon).Zone);
-      }
+                Hand(P2, "Shock");
+                Battlefield(P2, dragon, "Mountain");
+
+                RunGame(2);
+
+                Equal(Zone.BreakZone, C(sliver).Zone);
+                Equal(Zone.Battlefield, C(dragon).Zone);
+            }
+        }
     }
-
-  }
 }

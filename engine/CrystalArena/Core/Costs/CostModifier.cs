@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.Costs
 {
-  public abstract class CostModifier : GameObject
-  {
-    private readonly int _amount;
-    protected Card Source;
-
-    protected CostModifier() {}
-
-    protected CostModifier(int amount)
+    public abstract class CostModifier : GameObject
     {
-      _amount = amount;
-    }
+        private readonly int _amount;
+        protected Card Source;
 
-    public void Initialize(Card source, Game game)
-    {
-      Game = game;
-      Source = source;
-    }
+        protected CostModifier() { }
 
-    protected virtual bool ShouldApply(Card card, CostType type)
-    {
-      return true;
-    }
+        protected CostModifier(int amount)
+        {
+            _amount = amount;
+        }
 
-    public virtual int GetChange(CostType type, Card card)
-    {
-      return ShouldApply(card, type) ? _amount : 0;
+        public void Initialize(Card source, Game game)
+        {
+            Game = game;
+            Source = source;
+        }
+
+        protected virtual bool ShouldApply(Card card, CostType type)
+        {
+            return true;
+        }
+
+        public virtual int GetChange(CostType type, Card card)
+        {
+            return ShouldApply(card, type) ? _amount : 0;
+        }
     }
-  }
 }

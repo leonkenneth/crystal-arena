@@ -1,34 +1,38 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class DeadDrop : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class DeadDrop : CardTemplateSource
     {
-      yield return Card
-        .Named("Dead Drop")
-        .ManaCost("{9}{B}")
-        .Type("Sorcery")
-        .Text("{Delve}{I}(Each card you exile from your breakZone while casting this spell pays for {1}.){/I}{EOL}Target player sacrifices two forwards.")
-        .FlavorText("Got a diving lesson{EOL}—Sultai expression meaning{EOL}\"was fed to the crocodiles\"")
-        .SimpleAbilities(Static.Delve)
-        .Cast(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Effect = () => new TargetPlayerSacrificesPermanents(
-              count: 2,
-              filter: c => c.Is().Forward,
-              text: "Sacrifice two forwards."
-              );
+            yield return Card.Named("Dead Drop")
+                .ManaCost("{9}{B}")
+                .Type("Sorcery")
+                .Text(
+                    "{Delve}{I}(Each card you exile from your breakZone while casting this spell pays for {1}.){/I}{EOL}Target player sacrifices two forwards."
+                )
+                .FlavorText(
+                    "Got a diving lesson{EOL}—Sultai expression meaning{EOL}\"was fed to the crocodiles\""
+                )
+                .SimpleAbilities(Static.Delve)
+                .Cast(p =>
+                {
+                    p.Effect = () =>
+                        new TargetPlayerSacrificesPermanents(
+                            count: 2,
+                            filter: c => c.Is().Forward,
+                            text: "Sacrifice two forwards."
+                        );
 
-          p.TargetSelector.AddEffect(trg => trg.Is.Player());
+                    p.TargetSelector.AddEffect(trg => trg.Is.Player());
 
-          p.TargetingRule(new EffectOpponent());
-          p.TimingRule(new NonTargetRemovalTimingRule(2));
-        });
+                    p.TargetingRule(new EffectOpponent());
+                    p.TimingRule(new NonTargetRemovalTimingRule(2));
+                });
+        }
     }
-  }
 }

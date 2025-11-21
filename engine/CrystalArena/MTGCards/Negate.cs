@@ -1,32 +1,32 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
 
-  public class Negate : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class Negate : CardTemplateSource
     {
-      yield return Card
-        .Named("Negate")
-        .ManaCost("{1}{U}")
-        .Type("Summon")
-        .Text("Counter target nonforward spell.")
-        .FlavorText(
-          "Masters of the arcane savor a delicious irony. Their study of deep and complex arcana leads to such a simple end: the ability to say merely yes or no.")
-        .Cast(p =>
-          {
-            p.Effect = () => new CounterTargetSpell();
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Negate")
+                .ManaCost("{1}{U}")
+                .Type("Summon")
+                .Text("Counter target nonforward spell.")
+                .FlavorText(
+                    "Masters of the arcane savor a delicious irony. Their study of deep and complex arcana leads to such a simple end: the ability to say merely yes or no."
+                )
+                .Cast(p =>
+                {
+                    p.Effect = () => new CounterTargetSpell();
 
-            p.TargetSelector.AddEffect(t => t
-              .Is.CounterableSpell(e => !e.Source.OwningCard.Is().Forward)
-              .On.Stack());
+                    p.TargetSelector.AddEffect(t =>
+                        t.Is.CounterableSpell(e => !e.Source.OwningCard.Is().Forward).On.Stack()
+                    );
 
-            p.TargetingRule(new EffectCounterspell());
-            p.TimingRule(new WhenTopSpellIsCounterable());
-          });
+                    p.TargetingRule(new EffectCounterspell());
+                    p.TimingRule(new WhenTopSpellIsCounterable());
+                });
+        }
     }
-  }
 }

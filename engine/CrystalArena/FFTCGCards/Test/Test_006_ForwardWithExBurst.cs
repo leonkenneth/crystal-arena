@@ -8,8 +8,7 @@ public class Test_006_ForwardWithExBurst : CardTemplateSource
 {
     public override IEnumerable<CardTemplate> GetCards()
     {
-        yield return Card
-            .Code("0-006X")
+        yield return Card.Code("0-006X")
             .Named("Test Forward with ExBurst")
             .Cost(2, "R")
             .Forward(multiplayable: true)

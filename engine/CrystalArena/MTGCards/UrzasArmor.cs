@@ -1,25 +1,32 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using CrystalArena.AI.TimingRules;
-  using CrystalArena.Modifiers;
+    using System.Collections.Generic;
+    using CrystalArena.AI.TimingRules;
+    using CrystalArena.Modifiers;
 
-  public class UrzasArmor : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class UrzasArmor : CardTemplateSource
     {
-      yield return Card
-        .Named("Urza's Armor")
-        .ManaCost("{6}")
-        .Type("Artifact")
-        .Text("If a source would deal damage to you, prevent 1 of that damage.")
-        .FlavorText(
-          "Tawnos's blueprints were critical to the creation of my armor. As he once sealed himself in steel, I sealed myself in a walking crypt.")
-        .Cast(p => p.TimingRule(new OnFirstMain()))
-        .StaticAbility(p => p.Modifier(() => new AddDamagePrevention(
-          modifier => new PreventDamageToTarget(
-           target: modifier.SourceCard.Controller, 
-           amount: delegate { return 1; }))));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Urza's Armor")
+                .ManaCost("{6}")
+                .Type("Artifact")
+                .Text("If a source would deal damage to you, prevent 1 of that damage.")
+                .FlavorText(
+                    "Tawnos's blueprints were critical to the creation of my armor. As he once sealed himself in steel, I sealed myself in a walking crypt."
+                )
+                .Cast(p => p.TimingRule(new OnFirstMain()))
+                .StaticAbility(p =>
+                    p.Modifier(() =>
+                        new AddDamagePrevention(modifier => new PreventDamageToTarget(
+                            target: modifier.SourceCard.Controller,
+                            amount: delegate
+                            {
+                                return 1;
+                            }
+                        ))
+                    )
+                );
+        }
     }
-  }
 }

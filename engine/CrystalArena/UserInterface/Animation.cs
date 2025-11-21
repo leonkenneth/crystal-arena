@@ -1,31 +1,31 @@
 ﻿namespace CrystalArena.UserInterface
 {
-  using System;
-  using Infrastructure;
+    using System;
+    using Infrastructure;
 
-  public class Animation
-  {
-    private EventHandler _finished = delegate { };
-    private ThreadBlocker _threadBlocker;
-
-    public virtual bool ShouldStart { get; protected set; }
-
-    public void Stop()
+    public class Animation
     {
-      _finished(this, EventArgs.Empty);
-    }
+        private EventHandler _finished = delegate { };
+        private ThreadBlocker _threadBlocker;
 
-    public void Start()
-    {
-      ShouldStart = true;
+        public virtual bool ShouldStart { get; protected set; }
 
-      //_threadBlocker = new ThreadBlocker();
-      //_threadBlocker.BlockUntilCompleted(() => { _finished += delegate { _threadBlocker.Completed(); }; });
-    }
+        public void Stop()
+        {
+            _finished(this, EventArgs.Empty);
+        }
 
-    public static Animation Create()
-    {
-      return Bindable.Create<Animation>();
+        public void Start()
+        {
+            ShouldStart = true;
+
+            //_threadBlocker = new ThreadBlocker();
+            //_threadBlocker.BlockUntilCompleted(() => { _finished += delegate { _threadBlocker.Completed(); }; });
+        }
+
+        public static Animation Create()
+        {
+            return Bindable.Create<Animation>();
+        }
     }
-  }
 }

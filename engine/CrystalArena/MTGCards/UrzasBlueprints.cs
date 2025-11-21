@@ -1,31 +1,30 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
+    using System.Collections.Generic;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
 
-  public class UrzasBlueprints : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class UrzasBlueprints : CardTemplateSource
     {
-      yield return Card
-        .Named("Urza's Blueprints")
-        .ManaCost("{6}")
-        .Type("Artifact")
-        .Text("{Echo} {6}{EOL}{T}: Draw a card.")
-        .FlavorText("From concept to paper to reality.")
-        .Echo("{6}")
-        .Cast(p => p.TimingRule(new OnFirstMain()))
-        .ActivatedAbility(p =>
-          {
-            p.Text = "{T}: Draw a card.";
-            p.Cost = new Tap();
-            p.Effect = () => new DrawCards(1);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Urza's Blueprints")
+                .ManaCost("{6}")
+                .Type("Artifact")
+                .Text("{Echo} {6}{EOL}{T}: Draw a card.")
+                .FlavorText("From concept to paper to reality.")
+                .Echo("{6}")
+                .Cast(p => p.TimingRule(new OnFirstMain()))
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{T}: Draw a card.";
+                    p.Cost = new Tap();
+                    p.Effect = () => new DrawCards(1);
 
-            p.TimingRule(new OnFirstMain());
-            p.TimingRule(new WhenStackIsEmpty());
-          });
+                    p.TimingRule(new OnFirstMain());
+                    p.TimingRule(new WhenStackIsEmpty());
+                });
+        }
     }
-  }
 }

@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena
 {
-  public interface IHasColors
-  {
-    bool HasColor(CardColor color);
-  }
+    public interface IHasColors
+    {
+        bool HasColor(CardColor color);
+    }
 }

@@ -1,25 +1,42 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
-  using System.Linq;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class WakeofDestruction
-  {
-    public class Ai : AiScenario
+    public class WakeofDestruction
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyAllIslands()
-      {
-        Hand(P1, "Wake of Destruction");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Island");
-        Battlefield(P2, "Mountain", "Mountain", "Island", "Island", "Island", "Island", "Island");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyAllIslands()
+            {
+                Hand(P1, "Wake of Destruction");
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Island"
+                );
+                Battlefield(
+                    P2,
+                    "Mountain",
+                    "Mountain",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(1, P1.BreakZone.Count(c => c.Name == "Island"));
-        Equal(5, P2.BreakZone.Count(c => c.Name == "Island"));
-      }
+                Equal(1, P1.BreakZone.Count(c => c.Name == "Island"));
+                Equal(5, P2.BreakZone.Count(c => c.Name == "Island"));
+            }
+        }
     }
-  }
 }

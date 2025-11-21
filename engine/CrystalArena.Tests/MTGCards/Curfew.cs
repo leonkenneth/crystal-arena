@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class Curfew
-  {
-    public class Ai : AiScenario
+    public class Curfew
     {
-      [Fact (Skip = "Old card")]
-      public void BounceDragon()
-      {
-        Hand(P2, "Curfew");
-        Battlefield(P2, "Island");
-        Battlefield(P1, "Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void BounceDragon()
+            {
+                Hand(P2, "Curfew");
+                Battlefield(P2, "Island");
+                Battlefield(P1, "Shivan Dragon");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P1.Battlefield.Count());
-      }
+                Equal(0, P1.Battlefield.Count());
+            }
+        }
     }
-  }
 }

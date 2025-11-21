@@ -1,46 +1,68 @@
 ﻿namespace CrystalArena
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using AI;
-  using AI.CostRules;
-  using AI.RepetitionRules;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Infrastructure;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AI;
+    using AI.CostRules;
+    using AI.RepetitionRules;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Infrastructure;
 
-  [Copyable]
-  public abstract class AbilityParameters
-  {
-    public readonly List<MachinePlayRule> Rules = new List<MachinePlayRule>();
-    public int DistributeAmount;
-    public Effect.Factory Effect;
-    public TargetSelector TargetSelector = new TargetSelector();
-    public string Text;
-    public bool UsesStack = true;
-    public bool HasExBurst = false;
-    public Zone? PlayZone;
-
-    private string? _id;
-    public string Id
+    [Copyable]
+    public abstract class AbilityParameters
     {
-      get
-      {
-        if (_id == null)
+        public readonly List<MachinePlayRule> Rules = new List<MachinePlayRule>();
+        public int DistributeAmount;
+        public Effect.Factory Effect;
+        public TargetSelector TargetSelector = new TargetSelector();
+        public string Text;
+        public bool UsesStack = true;
+        public bool HasExBurst = false;
+        public Zone? PlayZone;
+
+        private string? _id;
+        public string Id
         {
-          _id = System.Guid.NewGuid().ToString();
+            get
+            {
+                if (_id == null)
+                {
+                    _id = System.Guid.NewGuid().ToString();
+                }
+
+                return _id;
+            }
         }
 
-        return _id;
-      }
+        public bool HasTimingRules
+        {
+            get { return Rules.Any(x => x is TimingRule); }
+        }
+
+        public void TimingRule(TimingRule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        public void RepetitionRule(RepetitionRule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        public void TargetingRule(TargetingRule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        public void CostRule(CostRule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        public void ExBurst()
+        {
+            HasExBurst = true;
+        }
     }
-
-    public bool HasTimingRules { get { return Rules.Any(x => x is TimingRule); } }
-
-    public void TimingRule(TimingRule rule) { Rules.Add(rule); }
-    public void RepetitionRule(RepetitionRule rule) { Rules.Add(rule); }
-    public void TargetingRule(TargetingRule rule) { Rules.Add(rule); }
-    public void CostRule(CostRule rule) { Rules.Add(rule); }
-    public void ExBurst() { HasExBurst = true; }
-  }
 }

@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  using System.Collections.Generic;
-  using System.Linq;
+    using System.Collections.Generic;
+    using System.Linq;
 
-  public class EffectAttachToOwningCard : TargetingRule
-  {
-    protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+    public class EffectAttachToOwningCard : TargetingRule
     {
-      var candidates = p.Candidates<Card>()
-        .Where(x => x.IsGoodTarget(p.Card, p.Card.Controller))
-        .OrderByDescending(x => x.Score)
-        .ToList();
+        protected override IEnumerable<Targets> SelectTargets(TargetingRuleParameters p)
+        {
+            var candidates = p.Candidates<Card>()
+                .Where(x => x.IsGoodTarget(p.Card, p.Card.Controller))
+                .OrderByDescending(x => x.Score)
+                .ToList();
 
-      return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
+            return Group(candidates, p.TotalMinTargetCount(), p.TotalMaxTargetCount());
+        }
     }
-  }
 }

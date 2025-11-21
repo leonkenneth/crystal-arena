@@ -1,32 +1,36 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Effects;
+    using Triggers;
 
-  public class EmperorCrocodile : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class EmperorCrocodile : CardTemplateSource
     {
-      yield return Card
-        .Named("Emperor Crocodile")
-        .ManaCost("{3}{G}")
-        .Type("Forward Crocodile")
-        .Text("When you control no other forwards, sacrifice Emperor Crocodile.")
-        .FlavorText("The king of Yavimaya's waters pays constant attention to his subjects . . . and thrives on their adulation.")
-        .Power(5)
-        .Toughness(5)        
-        .TriggeredAbility(p =>
-          {
-            p.Text = "When you control no other forwards, sacrifice Emperor Crocodile.";
-            p.Trigger(new OnEffectResolved(
-              filter: (ability, game) => ability.OwningCard.Controller
-                .Battlefield.Forwards.Count() <= 1));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Emperor Crocodile")
+                .ManaCost("{3}{G}")
+                .Type("Forward Crocodile")
+                .Text("When you control no other forwards, sacrifice Emperor Crocodile.")
+                .FlavorText(
+                    "The king of Yavimaya's waters pays constant attention to his subjects . . . and thrives on their adulation."
+                )
+                .Power(5)
+                .Toughness(5)
+                .TriggeredAbility(p =>
+                {
+                    p.Text = "When you control no other forwards, sacrifice Emperor Crocodile.";
+                    p.Trigger(
+                        new OnEffectResolved(
+                            filter: (ability, game) =>
+                                ability.OwningCard.Controller.Battlefield.Forwards.Count() <= 1
+                        )
+                    );
 
-            p.Effect = () => new SacrificeOwner();
-            p.TriggerOnlyIfOwningCardIsInPlay = true;
-          });
+                    p.Effect = () => new SacrificeOwner();
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

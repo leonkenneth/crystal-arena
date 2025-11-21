@@ -1,28 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class UrzasArmor
-  {
-    public class PredefinedAi : PredefinedAiScenario
+    public class UrzasArmor
     {
-      [Fact (Skip = "Old card")]
-      public void Prevent1CombatDamage()
-      {
-        var bear = C("Grizzly Bears");
-        var armor = C("Urza's armor");
+        public class PredefinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Prevent1CombatDamage()
+            {
+                var bear = C("Grizzly Bears");
+                var armor = C("Urza's armor");
 
-        Battlefield(P1, bear);
-        Battlefield(P2, armor);
+                Battlefield(P1, bear);
+                Battlefield(P2, armor);
 
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(bear),
-          At(Step.SecondMain)
-            .Verify(() => Equal(19, P2.Life))
-          );
-      }
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(bear),
+                    At(Step.SecondMain).Verify(() => Equal(19, P2.Life))
+                );
+            }
+        }
     }
-  }
 }

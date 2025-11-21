@@ -2,404 +2,666 @@
 
 namespace CrystalArena.Tests.Scenarios
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class Bugs
-  {
-    public class Ai : AiScenario
+    public class Bugs
     {
-      [Fact (Skip = "Old")]
-      public void BugRepeatedPayWithBloodVasal()
-      {
-        Battlefield(P1, "Blood Vassal", "Nantuko Shade");
-        RunGame(1);
-      }
-
-      [Fact (Skip = "Old but probably relevant")]
-      public void NotEnoughManaAvailableWhenActivatingAnAbilityWithRepetitions()
-      {
-        Hand(P1, "Shower of Sparks", "Outmaneuver", "Forest", "Pit Trap");
-        Hand(P2);
-        Battlefield(P1, "Mountain", "Forest", "Acridian", "Mountain", "Mountain", "Forest", "Priest of Titania",
-          "Shivan Hellkite");
-        Battlefield(P2, "Forest", "Plains", "Rune of Protection: Water", "Forest", "Silent Attendant", "Forest", "Plains",
-          "Priest of Titania", "Sanctum Custodian", "Argothian Swine", "Forest", "Mobile Fort");
-
-        RunGame(1);
-      }
-
-      [Fact]
-      public void IndexOutOfRange()
-      {
-        // todo find a bug
-
-        Hand(P1, "Urza's Armor", "Skittering Skirge", "Island", "Bog Raiders");
-        Hand(P2, "Hollow Dogs", "Swamp", "Swamp");
-
-        Battlefield(P1, "Island", "Swamp", "Swamp", "Island", "Blood Vassal");
-        Battlefield(P2, "Mountain", "Swamp", "Wall of Junk", "Mountain",
-          C("Bog Raiders").IsEnchantedWith("Parasitic Bond"), "Mountain");
-
-        RunGame(2);
-      }
-
-      [Fact (Skip = "Old")]
-      public void BugDoAttackWithTrollsAndWildwood()
-      {
-        Hand(P1, "Birds of Paradise");
-        Hand(P2, "Plains");
-
-        Battlefield(P1, "Forest", "Sunpetal CrystalArena", C("Troll Ascetic").IsEquipedWith("Sword of Feast and Famine"),
-          "Stirring Wildwood", "Stirring Wildwood", "Troll Ascetic", "Forest", "Birds of Paradise");
-        Battlefield(P2, "Plains", "Plains", "Plains", "Plains", "Plains", "Plains", "Plains", "Wall of Reverence");
-
-        P2.Life = 25;
-
-        RunGame(1);
-
-        Equal(19, P2.Life);
-      }
-
-      [Fact]
-      public void BugDoNotTapBackupsUselessly()
-      {
-        var mountain = C("Mountain");
-        Battlefield(P1, C("Forest"), C("Forest"), mountain);
-        Hand(P1, C("Llanowar Elves"));
-
-        RunGame(maxTurnCount: 2);
-
-        Equal(1, P1.Battlefield.Count(x => x.Name == "Forest" && x.IsTapped));
-        False(mountain.IsTapped);
-      }
-
-      [Fact (Skip = "Old")]
-      public void BeastSacWithOpponentAbility()
-      {
-        Battlefield(P1, "Ravenous Baloth");
-        Battlefield(P2, "Leatherback Baloth");
-
-        RunGame(maxTurnCount: 2);
-        Equal(1, P2.Battlefield.Count());
-      }
-
-      [Fact]
-      public void BugGameHangsWhenEndOfGameIsReached1()
-      {
-        Battlefield(P1, C("Grizzly Bears"));
-        P2.Life = 2;
-
-        RunGame(maxTurnCount: 2);
-
-        True(Game.IsFinished);
-      }
-
-      [Fact]
-      public void BugGameHangsWhenEndOfGameIsReached2()
-      {
-        Battlefield(P2, C("Liliana's Specter"), C("Swamp"), C("Swamp"), C("Swamp"), C("Nantuko Shade"));
-        Battlefield(P1, C("Mountain"), C("Forest"), C("Forest"));
-
-        P1.Life = 1;
-
-        RunGame(maxTurnCount: 2);
-
-        True(Game.IsFinished);
-      }
-
-      [Fact]
-      public void BugIncorrectStateCopy()
-      {
-        Battlefield(P1, C("Copperline Gorge"), C("Forest"),
-          C("Leatherback Baloth").IsEquipedWith(C("Sword of Feast and Famine")), C("Ravenous Baloth"));
-
-        RunGame(maxTurnCount: 1);
-      }
-
-      [Fact (Skip = "Old")]
-      public void BugLeakedCopyBasiliskCollar()
-      {
-        Hand(P2, "Martial Coup", "Deathless Angel", "Plains", "Deathless Angel");
-        Hand(P1, "Stirring Wildwood", "Sunpetal CrystalArena", "Plains", "Basilisk Collar");
-        Battlefield(P2, "Plains", "Plains", "Plains", "Plains", "Hero of Bladehold");
-        Battlefield(P1, "Razorverge Thicket", C("Student of Warfare").IsEnchantedWith("Rancor"), "Razorverge Thicket",
-          "Plains", "Sword of Feast and Famine");
-
-        RunGame(2);
-      }
-    }
-
-    public class PredifinedAi : PredefinedAiScenario
-    {
-      [Fact (Skip = "Old")]
-      public void BugBaneslayerAngelWontAttackAlone()
-      {
-        var angel = C("Baneslayer Angel");
-
-        Hand(P1, "Copperline Gorge", "Thrun, the Last Troll");
-        Hand(P2);
-        Battlefield(P1, "Copperline Gorge", "Birds of Paradise", "Forest", "Copperline Gorge", "Rumbling Slum",
-          "Rootbound Crag", "Forest", "Ravenous Baloth", "Forest", "Thrun, the Last Troll");
-        Battlefield(P2, "Plains", "Plains", "Light Knight", "Plains", "Glorious Anthem", "Plains", "Light Knight",
-          "Wall of Reverence", "Plains", "Plains", angel);
-
-        Exec(
-          At(Step.SecondMain, turn: 2)
-            .Verify(() =>
-              {
-                Equal(13, P1.Life);
-                True(C(angel).IsTapped);
-              })
-          );
-      }
-
-      [Fact (Skip = "Old")]
-      public void BugSwordAngel()
-      {
-        var angel = C("Baneslayer Angel");
-        var swords = C("Swords to Plowshares");
-
-        Hand(P2, swords);
-
-        Battlefield(P1, "Plains", "Plains", "Light Knight", "Plains", "Plains",
-          "Hero of Bladehold", "Plains", angel, "Plains", "Light Knight", "Plains");
-        Battlefield(P2, "Forest", "Sunpetal CrystalArena", "Plains", "Llanowar Elves", "Plains",
-          "Basilisk Collar", "Acidic Slime", "Wurmcoil Engine", "Thrun, the Last Troll", "Plains", "Troll Ascetic");
-
-        P2.Life = 5;
-
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(angel),
-          At(Step.SecondMain, turn: 1)
-            .Verify(() =>
-              {
-                Equal(Zone.BreakZone, C(swords).Zone);
-                Equal(Zone.RemovedFromPlay, C(angel).Zone);
-                Equal(5, P2.Life);
-              })
-          );
-      }
-
-      [Fact (Skip = "Old")]
-      public void BugDoNotBlockStudentWithTroll()
-      {
-        var student = C("Student of Warfare");
-        var troll = C("Troll Ascetic");
-
-        Battlefield(P1, student);
-        Battlefield(P2, troll);
-
-        Exec(
-          At(Step.FirstMain)
-            .Activate(student)
-            .Activate(student),
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(student),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(17, P2.Life);
-                Equals(Zone.Battlefield, troll);
-              })
-          );
-      }
-
-      [Fact (Skip = "Old")]
-      public void BugRegenerateCombatDamage()
-      {
-        var thrun = C("Thrun, the Last Troll");
-        var baloth = C("Ravenous Baloth");
-
-        Battlefield(P1, baloth);
-        Battlefield(P2, "Forest", "Forest", thrun);
-
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(baloth),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(Zone.BreakZone, C(baloth).Zone);
-                Equal(Zone.Battlefield, C(thrun).Zone);
-              })
-          );
-      }
-
-      [Fact]
-      public void BugAiBuffsTifaNeedlessly()
-      {
-        EnableLogging("Debug");
-        var tifa = C("23-012C");
-        Battlefield(P2, tifa);
-        P2.ManaCache.AddManaToPool("{Z}".Parse(), ManaUsage.Any);
-        True(P2.HasMana("{Z}".Parse()));
-        
-        Exec(
-          At(Step.FirstMain, turn: 1).Verify(() =>
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old")]
+            public void BugRepeatedPayWithBloodVasal()
             {
-              True(P2.HasMana("{Z}".Parse()));
-            }),
-        At(Step.FirstMain, turn: 2).Verify(() =>
-          {
-            True(P2.HasMana("{Z}".Parse()));
-          })
-          );
-      }
+                Battlefield(P1, "Blood Vassal", "Nantuko Shade");
+                RunGame(1);
+            }
 
-      [Fact]
-      public void BugSearchWithoutResults()
-      {
-        var dragon = C("Shivan Dragon");
-        var forest = C("Forest");
+            [Fact(Skip = "Old but probably relevant")]
+            public void NotEnoughManaAvailableWhenActivatingAnAbilityWithRepetitions()
+            {
+                Hand(P1, "Shower of Sparks", "Outmaneuver", "Forest", "Pit Trap");
+                Hand(P2);
+                Battlefield(
+                    P1,
+                    "Mountain",
+                    "Forest",
+                    "Acridian",
+                    "Mountain",
+                    "Mountain",
+                    "Forest",
+                    "Priest of Titania",
+                    "Shivan Hellkite"
+                );
+                Battlefield(
+                    P2,
+                    "Forest",
+                    "Plains",
+                    "Rune of Protection: Water",
+                    "Forest",
+                    "Silent Attendant",
+                    "Forest",
+                    "Plains",
+                    "Priest of Titania",
+                    "Sanctum Custodian",
+                    "Argothian Swine",
+                    "Forest",
+                    "Mobile Fort"
+                );
 
-        Battlefield(P1, C("Forest").Tap(), forest, C("Mountain").Tap(), C("Mountain").Tap(),
-          C("Mountain").Tap(), C("Llanowar Elves").Tap(), C("Llanowar Elves").Tap());
-        Hand(P1, dragon);
+                RunGame(1);
+            }
 
-        Battlefield(P2, C("Forest").Tap(), C("Mountain").Tap(), C("Grizzly Bears"), C("Forest"));
-        Hand(P2, C("Elvish Warrior"), C("Grizzly Bears"), C("Order of the Sacred Bell"));
+            [Fact]
+            public void IndexOutOfRange()
+            {
+                // todo find a bug
 
-        Exec(
-          At(Step.FirstMain)
-            .Activate(forest) /* 1 mana must be left in pool after casting to trigger the bug*/
-            .Cast(dragon)
-            .Verify(() => Equal(Zone.Battlefield, C(dragon).Zone))
-          );
-      }
+                Hand(P1, "Urza's Armor", "Skittering Skirge", "Island", "Bog Raiders");
+                Hand(P2, "Hollow Dogs", "Swamp", "Swamp");
 
-      [Fact]
-      public void BugAttackingCausesEndOfGame()
-      {
-        var gameEnded = true;
+                Battlefield(P1, "Island", "Swamp", "Swamp", "Island", "Blood Vassal");
+                Battlefield(
+                    P2,
+                    "Mountain",
+                    "Swamp",
+                    "Wall of Junk",
+                    "Mountain",
+                    C("Bog Raiders").IsEnchantedWith("Parasitic Bond"),
+                    "Mountain"
+                );
 
-        var knight = C("Light Knight");
-        var student = C("Student of Warfare");
-        var hero = C("Hero of Bladehold");
+                RunGame(2);
+            }
 
-        Hand(P1, "Deathless Angel", "Baneslayer Angel", "Day of Judgment");
-        Hand(P2, "Troll Ascetic");
-        Battlefield(P1, "Plains", "Plains", "Plains", "Glorious Anthem", "Plains", knight, "Plains", student, hero);
-        Battlefield(P2, "Razorverge Thicket", "Llanowar Elves", "Forest", "Troll Ascetic", "Plains", "Troll Ascetic",
-          "Stirring Wildwood", "Plains", "Plains", "Wurmcoil Engine", "Birds of Paradise");
+            [Fact(Skip = "Old")]
+            public void BugDoAttackWithTrollsAndWildwood()
+            {
+                Hand(P1, "Birds of Paradise");
+                Hand(P2, "Plains");
 
-        Exec(
-          At(Step.FirstMain)
-            .Activate(student)
-            .Activate(student),
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(knight, student, hero),
-          At(Step.SecondMain)
-            .Verify(() => { gameEnded = false; })
-          );
+                Battlefield(
+                    P1,
+                    "Forest",
+                    "Sunpetal CrystalArena",
+                    C("Troll Ascetic").IsEquipedWith("Sword of Feast and Famine"),
+                    "Stirring Wildwood",
+                    "Stirring Wildwood",
+                    "Troll Ascetic",
+                    "Forest",
+                    "Birds of Paradise"
+                );
+                Battlefield(
+                    P2,
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Wall of Reverence"
+                );
 
-        False(gameEnded);
-      }
+                P2.Life = 25;
 
-      [Fact (Skip = "Old")]
-      public void BugLeakedCopyWithShivsEmbrace()
-      {
-        var anaconda = C("Anaconda");
-        var shivs = C("Shiv's Embrace");
-        var bear = C("Grizzly Bears");
-        var cradle = C("Cradle Guard");
+                RunGame(1);
 
+                Equal(19, P2.Life);
+            }
 
-        Battlefield(P1, anaconda.IsEnchantedWith(shivs), "Mountain", "Mountain", "Forest", "Mountain");
-        Hand(P2, cradle);
-        Battlefield(P2, bear, "Forest", "Forest", "Mountain", "Forest");
+            [Fact]
+            public void BugDoNotTapBackupsUselessly()
+            {
+                var mountain = C("Mountain");
+                Battlefield(P1, C("Forest"), C("Forest"), mountain);
+                Hand(P1, C("Llanowar Elves"));
 
-        RunGame(2);
-      }
+                RunGame(maxTurnCount: 2);
 
-      [Fact (Skip = "Old")]
-      public void BugSymbiosisIncorectAiTargetAssignement()
-      {
-        Hand(P1, "Humble", "Remote Isle", "Confiscate");
-        Hand(P2, "Symbiosis", "Hush", "Thundering Giant", "Torch Song", "Hidden Ancients");
+                Equal(1, P1.Battlefield.Count(x => x.Name == "Forest" && x.IsTapped));
+                False(mountain.IsTapped);
+            }
 
-        Battlefield(P1, "Island", "Swamp", "Island", "Swamp", "Swamp", "Plains", "Swamp",
-          C("Sandbar Serpent").IsTrackedBy("Diabolic Servitude"));
+            [Fact(Skip = "Old")]
+            public void BeastSacWithOpponentAbility()
+            {
+                Battlefield(P1, "Ravenous Baloth");
+                Battlefield(P2, "Leatherback Baloth");
 
-        Battlefield(P2, "Mountain", "Slippery Karst", "Thran Turbine", "Smoldering Crater", "Goblin War Buggy", "Forest",
-          "Cradle Guard", "Goblin War Buggy");
+                RunGame(maxTurnCount: 2);
+                Equal(1, P2.Battlefield.Count());
+            }
 
-        RunGame(2);
-      }
+            [Fact]
+            public void BugGameHangsWhenEndOfGameIsReached1()
+            {
+                Battlefield(P1, C("Grizzly Bears"));
+                P2.Life = 2;
 
-      [Fact (Skip = "Old")]
-      public void BugAnnulValidator()
-      {
-        Hand(P2, "Copper Gnomes", "Annul");
-        Battlefield(P2, "Island", "Forest", "Forest", "Island");
+                RunGame(maxTurnCount: 2);
 
-        RunGame(2);
-      }
+                True(Game.IsFinished);
+            }
 
-      [Fact (Skip = "Old")]
-      public void BugCitanulHierophantsManaSourcesAddRemove()
-      {
-        Hand(P1, "Bulwark", "Congregate", "Disorder", "Cloak of Mists", "Creeping Tar Pit");
-        Hand(P2, "Plains");
-        Battlefield(P1, "Creeping Tar Pit", "Island", "Island", "Drowned Catacomb", "Creeping Tar Pit", "Mountain",
-          "Back to Basics", "Drowned Catacomb", "Plains", "Forest", "Citanul Hierophants");
-        Battlefield(P2, "Razorverge Thicket", "Forest", "Drowned Catacomb", "Argothian Enchantress", "Island",
-          "Chimeric Staff", "Drowned Catacomb", "Drowned Catacomb", "Island", "Swamp", "Plains", "Swamp", "Forest");
+            [Fact]
+            public void BugGameHangsWhenEndOfGameIsReached2()
+            {
+                Battlefield(
+                    P2,
+                    C("Liliana's Specter"),
+                    C("Swamp"),
+                    C("Swamp"),
+                    C("Swamp"),
+                    C("Nantuko Shade")
+                );
+                Battlefield(P1, C("Mountain"), C("Forest"), C("Forest"));
 
-        RunGame(2);
-      }
+                P1.Life = 1;
 
-      [Fact (Skip = "Old")]
-      public void BugContiniousEffectFromCitanulAppliedTwiceToBarrin()
-      {
-        Hand(P1, "Annul", "Back to Basics", "Crater Hellion", "Argothian Elder", "Antagonism", "Cave Tiger", "Bedlam");
-        Hand(P2, "Discordant Dirge", "Annul", "Barrin, Master Wizard", "Crater Hellion");
-        Battlefield(P1, "Creeping Tar Pit", "Mountain", "Rootbound Crag", "Swamp", "Swamp", "Darkest Hour",
-          "Creeping Tar Pit");
-        Battlefield(P2, "Razorverge Thicket", "Creeping Tar Pit", "Mountain", "Disruptive Student", "Island",
-          "Back to Basics", "Crystal Chimes", "Swamp", "Phyrexian Ghoul", "Forest", "Citanul Hierophants", "Island");
+                RunGame(maxTurnCount: 2);
 
-        RunGame(2);
-      }
+                True(Game.IsFinished);
+            }
 
-      [Fact (Skip = "Old")]
-      public void BugDarkRitualCheckSpellsWithNoCastingCost()
-      {
-        Hand(P1, "Argothian Elder", "Copper Gnomes", "Dark Hatchling", "Forest", "Island", "Dark Ritual", "Disorder");
-        Hand(P2, "Congregate", "Dark Ritual", "Island", "Dark Ritual", "Dark Ritual", "Cloak of Mists", "Crater Hellion");
-        Battlefield(P1, "Creeping Tar Pit");
-        Battlefield(P2, "Creeping Tar Pit");
+            [Fact]
+            public void BugIncorrectStateCopy()
+            {
+                Battlefield(
+                    P1,
+                    C("Copperline Gorge"),
+                    C("Forest"),
+                    C("Leatherback Baloth").IsEquipedWith(C("Sword of Feast and Famine")),
+                    C("Ravenous Baloth")
+                );
 
-        RunGame(2);
-      }
+                RunGame(maxTurnCount: 1);
+            }
 
-      [Fact]
-      public void GameHangsBecauseOfABuginManaPool()
-      {
-        Hand(P1, "Lightning Dragon");
-        Hand(P2, "Swords to Plowshares", "Plains", "Plains", "Plains", "Trip Noose");
-        Battlefield(P1, "Forest", C("Copperline Gorge").IsEnchantedWith("Fertile Ground"), "Mountain", "Mountain",
-          "Forest", C("Lightning Dragon").IsEnchantedWith("Rancor").IsEnchantedWith("Rancor"));
-        Battlefield(P2, "Plains", "Plains", "Plains", "Glorious Anthem", "Plains", "Glorious Anthem", "Plains",
-          "Baneslayer Angel", "Plains");
+            [Fact(Skip = "Old")]
+            public void BugLeakedCopyBasiliskCollar()
+            {
+                Hand(P2, "Martial Coup", "Deathless Angel", "Plains", "Deathless Angel");
+                Hand(P1, "Stirring Wildwood", "Sunpetal CrystalArena", "Plains", "Basilisk Collar");
+                Battlefield(P2, "Plains", "Plains", "Plains", "Plains", "Hero of Bladehold");
+                Battlefield(
+                    P1,
+                    "Razorverge Thicket",
+                    C("Student of Warfare").IsEnchantedWith("Rancor"),
+                    "Razorverge Thicket",
+                    "Plains",
+                    "Sword of Feast and Famine"
+                );
 
-        P1.Life = 12;
-        P2.Life = 17;
+                RunGame(2);
+            }
+        }
 
-        RunGame(3);
-      }
+        public class PredifinedAi : PredefinedAiScenario
+        {
+            [Fact(Skip = "Old")]
+            public void BugBaneslayerAngelWontAttackAlone()
+            {
+                var angel = C("Baneslayer Angel");
 
-      [Fact (Skip = "Old")]
-      public void BugStackOverflowDueToJunkDiverExtruder()
-      {
-        Battlefield(P2, "Forest", "Forest", "Island", "Junk Diver", "Forest", "Extruder");
-        P1.Life = 19;
-        P2.Life = 14;
+                Hand(P1, "Copperline Gorge", "Thrun, the Last Troll");
+                Hand(P2);
+                Battlefield(
+                    P1,
+                    "Copperline Gorge",
+                    "Birds of Paradise",
+                    "Forest",
+                    "Copperline Gorge",
+                    "Rumbling Slum",
+                    "Rootbound Crag",
+                    "Forest",
+                    "Ravenous Baloth",
+                    "Forest",
+                    "Thrun, the Last Troll"
+                );
+                Battlefield(
+                    P2,
+                    "Plains",
+                    "Plains",
+                    "Light Knight",
+                    "Plains",
+                    "Glorious Anthem",
+                    "Plains",
+                    "Light Knight",
+                    "Wall of Reverence",
+                    "Plains",
+                    "Plains",
+                    angel
+                );
 
-        RunGame(2);
-      }
+                Exec(
+                    At(Step.SecondMain, turn: 2)
+                        .Verify(() =>
+                        {
+                            Equal(13, P1.Life);
+                            True(C(angel).IsTapped);
+                        })
+                );
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugSwordAngel()
+            {
+                var angel = C("Baneslayer Angel");
+                var swords = C("Swords to Plowshares");
+
+                Hand(P2, swords);
+
+                Battlefield(
+                    P1,
+                    "Plains",
+                    "Plains",
+                    "Light Knight",
+                    "Plains",
+                    "Plains",
+                    "Hero of Bladehold",
+                    "Plains",
+                    angel,
+                    "Plains",
+                    "Light Knight",
+                    "Plains"
+                );
+                Battlefield(
+                    P2,
+                    "Forest",
+                    "Sunpetal CrystalArena",
+                    "Plains",
+                    "Llanowar Elves",
+                    "Plains",
+                    "Basilisk Collar",
+                    "Acidic Slime",
+                    "Wurmcoil Engine",
+                    "Thrun, the Last Troll",
+                    "Plains",
+                    "Troll Ascetic"
+                );
+
+                P2.Life = 5;
+
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(angel),
+                    At(Step.SecondMain, turn: 1)
+                        .Verify(() =>
+                        {
+                            Equal(Zone.BreakZone, C(swords).Zone);
+                            Equal(Zone.RemovedFromPlay, C(angel).Zone);
+                            Equal(5, P2.Life);
+                        })
+                );
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugDoNotBlockStudentWithTroll()
+            {
+                var student = C("Student of Warfare");
+                var troll = C("Troll Ascetic");
+
+                Battlefield(P1, student);
+                Battlefield(P2, troll);
+
+                Exec(
+                    At(Step.FirstMain).Activate(student).Activate(student),
+                    At(Step.DeclareAttackers).DeclareAttackers(student),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(17, P2.Life);
+                            Equals(Zone.Battlefield, troll);
+                        })
+                );
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugRegenerateCombatDamage()
+            {
+                var thrun = C("Thrun, the Last Troll");
+                var baloth = C("Ravenous Baloth");
+
+                Battlefield(P1, baloth);
+                Battlefield(P2, "Forest", "Forest", thrun);
+
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(baloth),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(Zone.BreakZone, C(baloth).Zone);
+                            Equal(Zone.Battlefield, C(thrun).Zone);
+                        })
+                );
+            }
+
+            [Fact]
+            public void BugAiBuffsTifaNeedlessly()
+            {
+                EnableLogging("Debug");
+                var tifa = C("23-012C");
+                Battlefield(P2, tifa);
+                P2.ManaCache.AddManaToPool("{Z}".Parse(), ManaUsage.Any);
+                True(P2.HasMana("{Z}".Parse()));
+
+                Exec(
+                    At(Step.FirstMain, turn: 1)
+                        .Verify(() =>
+                        {
+                            True(P2.HasMana("{Z}".Parse()));
+                        }),
+                    At(Step.FirstMain, turn: 2)
+                        .Verify(() =>
+                        {
+                            True(P2.HasMana("{Z}".Parse()));
+                        })
+                );
+            }
+
+            [Fact]
+            public void BugSearchWithoutResults()
+            {
+                var dragon = C("Shivan Dragon");
+                var forest = C("Forest");
+
+                Battlefield(
+                    P1,
+                    C("Forest").Tap(),
+                    forest,
+                    C("Mountain").Tap(),
+                    C("Mountain").Tap(),
+                    C("Mountain").Tap(),
+                    C("Llanowar Elves").Tap(),
+                    C("Llanowar Elves").Tap()
+                );
+                Hand(P1, dragon);
+
+                Battlefield(
+                    P2,
+                    C("Forest").Tap(),
+                    C("Mountain").Tap(),
+                    C("Grizzly Bears"),
+                    C("Forest")
+                );
+                Hand(P2, C("Elvish Warrior"), C("Grizzly Bears"), C("Order of the Sacred Bell"));
+
+                Exec(
+                    At(Step.FirstMain)
+                        .Activate(forest) /* 1 mana must be left in pool after casting to trigger the bug*/
+                        .Cast(dragon)
+                        .Verify(() => Equal(Zone.Battlefield, C(dragon).Zone))
+                );
+            }
+
+            [Fact]
+            public void BugAttackingCausesEndOfGame()
+            {
+                var gameEnded = true;
+
+                var knight = C("Light Knight");
+                var student = C("Student of Warfare");
+                var hero = C("Hero of Bladehold");
+
+                Hand(P1, "Deathless Angel", "Baneslayer Angel", "Day of Judgment");
+                Hand(P2, "Troll Ascetic");
+                Battlefield(
+                    P1,
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Glorious Anthem",
+                    "Plains",
+                    knight,
+                    "Plains",
+                    student,
+                    hero
+                );
+                Battlefield(
+                    P2,
+                    "Razorverge Thicket",
+                    "Llanowar Elves",
+                    "Forest",
+                    "Troll Ascetic",
+                    "Plains",
+                    "Troll Ascetic",
+                    "Stirring Wildwood",
+                    "Plains",
+                    "Plains",
+                    "Wurmcoil Engine",
+                    "Birds of Paradise"
+                );
+
+                Exec(
+                    At(Step.FirstMain).Activate(student).Activate(student),
+                    At(Step.DeclareAttackers).DeclareAttackers(knight, student, hero),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            gameEnded = false;
+                        })
+                );
+
+                False(gameEnded);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugLeakedCopyWithShivsEmbrace()
+            {
+                var anaconda = C("Anaconda");
+                var shivs = C("Shiv's Embrace");
+                var bear = C("Grizzly Bears");
+                var cradle = C("Cradle Guard");
+
+                Battlefield(
+                    P1,
+                    anaconda.IsEnchantedWith(shivs),
+                    "Mountain",
+                    "Mountain",
+                    "Forest",
+                    "Mountain"
+                );
+                Hand(P2, cradle);
+                Battlefield(P2, bear, "Forest", "Forest", "Mountain", "Forest");
+
+                RunGame(2);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugSymbiosisIncorectAiTargetAssignement()
+            {
+                Hand(P1, "Humble", "Remote Isle", "Confiscate");
+                Hand(P2, "Symbiosis", "Hush", "Thundering Giant", "Torch Song", "Hidden Ancients");
+
+                Battlefield(
+                    P1,
+                    "Island",
+                    "Swamp",
+                    "Island",
+                    "Swamp",
+                    "Swamp",
+                    "Plains",
+                    "Swamp",
+                    C("Sandbar Serpent").IsTrackedBy("Diabolic Servitude")
+                );
+
+                Battlefield(
+                    P2,
+                    "Mountain",
+                    "Slippery Karst",
+                    "Thran Turbine",
+                    "Smoldering Crater",
+                    "Goblin War Buggy",
+                    "Forest",
+                    "Cradle Guard",
+                    "Goblin War Buggy"
+                );
+
+                RunGame(2);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugAnnulValidator()
+            {
+                Hand(P2, "Copper Gnomes", "Annul");
+                Battlefield(P2, "Island", "Forest", "Forest", "Island");
+
+                RunGame(2);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugCitanulHierophantsManaSourcesAddRemove()
+            {
+                Hand(P1, "Bulwark", "Congregate", "Disorder", "Cloak of Mists", "Creeping Tar Pit");
+                Hand(P2, "Plains");
+                Battlefield(
+                    P1,
+                    "Creeping Tar Pit",
+                    "Island",
+                    "Island",
+                    "Drowned Catacomb",
+                    "Creeping Tar Pit",
+                    "Mountain",
+                    "Back to Basics",
+                    "Drowned Catacomb",
+                    "Plains",
+                    "Forest",
+                    "Citanul Hierophants"
+                );
+                Battlefield(
+                    P2,
+                    "Razorverge Thicket",
+                    "Forest",
+                    "Drowned Catacomb",
+                    "Argothian Enchantress",
+                    "Island",
+                    "Chimeric Staff",
+                    "Drowned Catacomb",
+                    "Drowned Catacomb",
+                    "Island",
+                    "Swamp",
+                    "Plains",
+                    "Swamp",
+                    "Forest"
+                );
+
+                RunGame(2);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugContiniousEffectFromCitanulAppliedTwiceToBarrin()
+            {
+                Hand(
+                    P1,
+                    "Annul",
+                    "Back to Basics",
+                    "Crater Hellion",
+                    "Argothian Elder",
+                    "Antagonism",
+                    "Cave Tiger",
+                    "Bedlam"
+                );
+                Hand(P2, "Discordant Dirge", "Annul", "Barrin, Master Wizard", "Crater Hellion");
+                Battlefield(
+                    P1,
+                    "Creeping Tar Pit",
+                    "Mountain",
+                    "Rootbound Crag",
+                    "Swamp",
+                    "Swamp",
+                    "Darkest Hour",
+                    "Creeping Tar Pit"
+                );
+                Battlefield(
+                    P2,
+                    "Razorverge Thicket",
+                    "Creeping Tar Pit",
+                    "Mountain",
+                    "Disruptive Student",
+                    "Island",
+                    "Back to Basics",
+                    "Crystal Chimes",
+                    "Swamp",
+                    "Phyrexian Ghoul",
+                    "Forest",
+                    "Citanul Hierophants",
+                    "Island"
+                );
+
+                RunGame(2);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugDarkRitualCheckSpellsWithNoCastingCost()
+            {
+                Hand(
+                    P1,
+                    "Argothian Elder",
+                    "Copper Gnomes",
+                    "Dark Hatchling",
+                    "Forest",
+                    "Island",
+                    "Dark Ritual",
+                    "Disorder"
+                );
+                Hand(
+                    P2,
+                    "Congregate",
+                    "Dark Ritual",
+                    "Island",
+                    "Dark Ritual",
+                    "Dark Ritual",
+                    "Cloak of Mists",
+                    "Crater Hellion"
+                );
+                Battlefield(P1, "Creeping Tar Pit");
+                Battlefield(P2, "Creeping Tar Pit");
+
+                RunGame(2);
+            }
+
+            [Fact]
+            public void GameHangsBecauseOfABuginManaPool()
+            {
+                Hand(P1, "Lightning Dragon");
+                Hand(P2, "Swords to Plowshares", "Plains", "Plains", "Plains", "Trip Noose");
+                Battlefield(
+                    P1,
+                    "Forest",
+                    C("Copperline Gorge").IsEnchantedWith("Fertile Ground"),
+                    "Mountain",
+                    "Mountain",
+                    "Forest",
+                    C("Lightning Dragon").IsEnchantedWith("Rancor").IsEnchantedWith("Rancor")
+                );
+                Battlefield(
+                    P2,
+                    "Plains",
+                    "Plains",
+                    "Plains",
+                    "Glorious Anthem",
+                    "Plains",
+                    "Glorious Anthem",
+                    "Plains",
+                    "Baneslayer Angel",
+                    "Plains"
+                );
+
+                P1.Life = 12;
+                P2.Life = 17;
+
+                RunGame(3);
+            }
+
+            [Fact(Skip = "Old")]
+            public void BugStackOverflowDueToJunkDiverExtruder()
+            {
+                Battlefield(P2, "Forest", "Forest", "Island", "Junk Diver", "Forest", "Extruder");
+                P1.Life = 19;
+                P2.Life = 14;
+
+                RunGame(2);
+            }
+        }
     }
-  }
 }

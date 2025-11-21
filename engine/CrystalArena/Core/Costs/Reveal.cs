@@ -1,18 +1,18 @@
 ﻿namespace CrystalArena.Costs
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class Reveal : Cost
-  {
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class Reveal : Cost
     {
-      return Card.Controller.Hand.Count > 0;      
-    }
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            return Card.Controller.Hand.Count > 0;
+        }
 
-    public override void PayPartial(PayCostParameters p)
-    {      
-      var card = p.Targets.Cost.FirstOrDefault().Card();
-      card.Reveal();
+        public override void PayPartial(PayCostParameters p)
+        {
+            var card = p.Targets.Cost.FirstOrDefault().Card();
+            card.Reveal();
+        }
     }
-  }
 }

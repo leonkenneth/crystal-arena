@@ -1,37 +1,46 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class AvariceAmulet
-  {
-    public class Ai : AiScenario
+    public class AvariceAmulet
     {
-      [Fact (Skip = "Old card")]
-      public void OpponentGainsControlOfAmulet()
-      {
-        var amulet = C("Avarice Amulet");
-        Battlefield(P1, "Grizzly Bears", "Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void OpponentGainsControlOfAmulet()
+            {
+                var amulet = C("Avarice Amulet");
+                Battlefield(P1, "Grizzly Bears", "Grizzly Bears");
 
-        P2.Life = 4;        
-        Battlefield(P2, C("Grizzly Bears").IsEquipedWith(amulet));
+                P2.Life = 4;
+                Battlefield(P2, C("Grizzly Bears").IsEquipedWith(amulet));
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(P1, C(amulet).Controller);        
-      }
+                Equal(P1, C(amulet).Controller);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void ChangeControllerModifierShouldNotGetAttachmentLifetimeBug()
-      {
-        var amulet = C("Avarice Amulet");
-        Battlefield(P1, "Grizzly Bears", C("Brood Keeper").IsEquipedWith(amulet));
+            [Fact(Skip = "Old card")]
+            public void ChangeControllerModifierShouldNotGetAttachmentLifetimeBug()
+            {
+                var amulet = C("Avarice Amulet");
+                Battlefield(P1, "Grizzly Bears", C("Brood Keeper").IsEquipedWith(amulet));
 
-        Battlefield(P2, "Island", "Island", "Island", "Island", "Grizzly Bears", "Grizzly Bears", "Juggernaut");
+                Battlefield(
+                    P2,
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Island",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Juggernaut"
+                );
 
-        RunGame(2);
-      }
+                RunGame(2);
+            }
+        }
     }
-  }
 }

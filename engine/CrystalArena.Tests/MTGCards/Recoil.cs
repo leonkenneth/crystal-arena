@@ -1,25 +1,25 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Recoil
-  {
-    public class Ai : AiScenario
+    public class Recoil
     {
-      [Fact (Skip = "Old card")]
-      public void BounceBlocker()
-      {
-        var engine = C("Wurmcoil Engine");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void BounceBlocker()
+            {
+                var engine = C("Wurmcoil Engine");
 
-        Hand(P1, "Recoil");
-        Battlefield(P1, "Swamp", "Swamp", "Island", "Ravenous Baloth");
-        Battlefield(P2, engine);
+                Hand(P1, "Recoil");
+                Battlefield(P1, "Swamp", "Swamp", "Island", "Ravenous Baloth");
+                Battlefield(P2, engine);
 
-        RunGame(maxTurnCount: 1);
-        Equal(16, P2.Life);
-        Equal(Zone.BreakZone, C(engine).Zone);
-      }
+                RunGame(maxTurnCount: 1);
+                Equal(16, P2.Life);
+                Equal(Zone.BreakZone, C(engine).Zone);
+            }
+        }
     }
-  }
 }

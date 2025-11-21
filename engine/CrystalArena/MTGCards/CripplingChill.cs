@@ -1,44 +1,51 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Effects;
+    using Modifiers;
 
-  public class CripplingChill : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class CripplingChill : CardTemplateSource
     {
-      yield return Card
-        .Named("Crippling Chill")
-        .ManaCost("{2}{U}")
-        .Type("Summon")
-        .Text("Tap target forward. It doesn't untap during its controller's next untap step.{EOL}Draw a card.")
-        .FlavorText("In the silence of the ice, even dreams become still.")
-        .Cast(p =>
-          {
-            p.Effect = () => new CompoundEffect(
-              new TapTargets(),
-              new ApplyModifiersToTargets(() =>
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Crippling Chill")
+                .ManaCost("{2}{U}")
+                .Type("Summon")
+                .Text(
+                    "Tap target forward. It doesn't untap during its controller's next untap step.{EOL}Draw a card."
+                )
+                .FlavorText("In the silence of the ice, even dreams become still.")
+                .Cast(p =>
                 {
-                  var modifier = new AddSimpleAbility(Static.DoesNotUntap);
+                    p.Effect = () =>
+                        new CompoundEffect(
+                            new TapTargets(),
+                            new ApplyModifiersToTargets(() =>
+                            {
+                                var modifier = new AddSimpleAbility(Static.DoesNotUntap);
 
-                  modifier.AddLifetime(new EndOfStep(
-                    Step.Untap,
-                    l => l.Modifier.SourceCard.Controller.IsActive));
+                                modifier.AddLifetime(
+                                    new EndOfStep(
+                                        Step.Untap,
+                                        l => l.Modifier.SourceCard.Controller.IsActive
+                                    )
+                                );
 
-                  return modifier;
-                }),
-              new DrawCards(1));
+                                return modifier;
+                            }),
+                            new DrawCards(1)
+                        );
 
-            p.TargetSelector.AddEffect(
-              trg => trg.Is.Forward().On.Battlefield(),
-              trg => trg.Message = "Select a forward to tap.");
+                    p.TargetSelector.AddEffect(
+                        trg => trg.Is.Forward().On.Battlefield(),
+                        trg => trg.Message = "Select a forward to tap."
+                    );
 
-            p.TargetingRule(new EffectGiveDoesNotUntap());
-            p.TimingRule(new OnStep(Step.BeginningOfCombat));
-          });
+                    p.TargetingRule(new EffectGiveDoesNotUntap());
+                    p.TimingRule(new OnStep(Step.BeginningOfCombat));
+                });
+        }
     }
-  }
 }

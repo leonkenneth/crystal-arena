@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class BileBlight
-  {
-    public class Ai : AiScenario
+    public class BileBlight
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyAllGrizzlies()
-      {
-        Hand(P1, "Bile Blight");
-        Battlefield(P1, "Runeclaw Bear", "Swamp", "Swamp");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyAllGrizzlies()
+            {
+                Hand(P1, "Bile Blight");
+                Battlefield(P1, "Runeclaw Bear", "Swamp", "Swamp");
 
-        P2.Life = 2;
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
+                P2.Life = 2;
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-        Equal(3, P2.BreakZone.Count);
-      }
+                Equal(0, P2.Life);
+                Equal(3, P2.BreakZone.Count);
+            }
+        }
     }
-  }
 }

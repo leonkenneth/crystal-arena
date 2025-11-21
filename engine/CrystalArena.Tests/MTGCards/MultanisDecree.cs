@@ -1,24 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class MultanisDecree
-  {
-    public class Ai : AiScenario
+    public class MultanisDecree
     {
-      [Fact (Skip = "Old card")]
-      public void DestroyAllGain4Life()
-      {
-        Hand(P1, "Multani's Decree");
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest");
-        Battlefield(P2, "Worship", C("Grizzly Bears").IsEnchantedWith("Rancor"));
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DestroyAllGain4Life()
+            {
+                Hand(P1, "Multani's Decree");
+                Battlefield(P1, "Forest", "Forest", "Forest", "Forest");
+                Battlefield(P2, "Worship", C("Grizzly Bears").IsEnchantedWith("Rancor"));
 
-        RunGame(1);
+                RunGame(1);
 
-
-        Equal(24, P1.Life);
-      }  
-    }            
-  }
+                Equal(24, P1.Life);
+            }
+        }
+    }
 }

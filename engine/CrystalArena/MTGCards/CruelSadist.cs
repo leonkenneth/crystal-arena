@@ -1,57 +1,64 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using AI;
-  using AI.CostRules;
-  using AI.TargetingRules;
-  using AI.TimingRules;
-  using Costs;
-  using Effects;
-  using Modifiers;
+    using System.Collections.Generic;
+    using AI;
+    using AI.CostRules;
+    using AI.TargetingRules;
+    using AI.TimingRules;
+    using Costs;
+    using Effects;
+    using Modifiers;
 
-  public class CruelSadist : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class CruelSadist : CardTemplateSource
     {
-      yield return Card
-          .Named("Cruel Sadist")
-          .ManaCost("{B}")
-          .Type("Forward — Human Assassin")
-          .Text("{B},{T}, Pay 1 life: Put a +1/+1 counter on Cruel Sadist.{EOL}{2}{B},{T}, Remove X +1/+1 counters from Cruel Sadist: Cruel Sadist deals X damage to target forward.")
-          .FlavorText("Face of innocence. Hand of death.")
-          .Power(1)
-          .Toughness(1)          
-          .ActivatedAbility(p =>
-          {
-            p.Text = "{B},{T}, Pay 1 life: Put a +1/+1 counter on Cruel Sadist.";
-            
-            p.Cost = new AggregateCost(
-              new PayMana(Mana.Dark),
-              new Tap(),
-              new PayLife(1));
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Cruel Sadist")
+                .ManaCost("{B}")
+                .Type("Forward — Human Assassin")
+                .Text(
+                    "{B},{T}, Pay 1 life: Put a +1/+1 counter on Cruel Sadist.{EOL}{2}{B},{T}, Remove X +1/+1 counters from Cruel Sadist: Cruel Sadist deals X damage to target forward."
+                )
+                .FlavorText("Face of innocence. Hand of death.")
+                .Power(1)
+                .Toughness(1)
+                .ActivatedAbility(p =>
+                {
+                    p.Text = "{B},{T}, Pay 1 life: Put a +1/+1 counter on Cruel Sadist.";
 
-            p.Effect = () => new ApplyModifiersToSelf(() => new AddCounters(
-              () => new PowerToughness(1, 1), count: 1)).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
+                    p.Cost = new AggregateCost(new PayMana(Mana.Dark), new Tap(), new PayLife(1));
 
-            p.TimingRule(new Any(new PumpOwningCardTimingRule(1, 1), new OnEndOfOpponentsTurn()));
-          })
-          .ActivatedAbility(p =>
-          {
-            p.Text = "{2}{B},{T}, Remove X +1/+1 counters from Cruel Sadist: Cruel Sadist deals X damage to target forward.";
+                    p.Effect = () =>
+                        new ApplyModifiersToSelf(() =>
+                            new AddCounters(() => new PowerToughness(1, 1), count: 1)
+                        ).SetTags(EffectTag.IncreasePower, EffectTag.IncreaseToughness);
 
-            p.Cost = new AggregateCost(
-              new PayMana("{2}{B}".Parse()),
-              new Tap(),
-              new RemoveCounters(CounterType.PowerToughness, hasX: true));
-           
-            p.Effect = () => new DealDamageToTargets(P(e => e.Source.OwningCard.CountersCount(CounterType.PowerToughness)));
+                    p.TimingRule(
+                        new Any(new PumpOwningCardTimingRule(1, 1), new OnEndOfOpponentsTurn())
+                    );
+                })
+                .ActivatedAbility(p =>
+                {
+                    p.Text =
+                        "{2}{B},{T}, Remove X +1/+1 counters from Cruel Sadist: Cruel Sadist deals X damage to target forward.";
 
-            p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
-            
-            p.TargetingRule(new EffectDealDamage());
-            p.CostRule(new XIsTargetsLifepointsLeft());
-            p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
-          });
+                    p.Cost = new AggregateCost(
+                        new PayMana("{2}{B}".Parse()),
+                        new Tap(),
+                        new RemoveCounters(CounterType.PowerToughness, hasX: true)
+                    );
+
+                    p.Effect = () =>
+                        new DealDamageToTargets(
+                            P(e => e.Source.OwningCard.CountersCount(CounterType.PowerToughness))
+                        );
+
+                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+
+                    p.TargetingRule(new EffectDealDamage());
+                    p.CostRule(new XIsTargetsLifepointsLeft());
+                    p.TimingRule(new TargetRemovalTimingRule(removalTag: EffectTag.DealDamage));
+                });
+        }
     }
-  }
 }

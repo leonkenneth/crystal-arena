@@ -1,39 +1,46 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SpinedFluke
-  {
-    public class Ai : AiScenario
+    public class SpinedFluke
     {
-      [Fact (Skip = "Old card")]
-      public void CastFluke()
-      {
-        var fluke = C("Spined Fluke");
-        var bears = C("Grizzly Bears");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void CastFluke()
+            {
+                var fluke = C("Spined Fluke");
+                var bears = C("Grizzly Bears");
 
-        Hand(P1, fluke);
-        Battlefield(P1, bears, "Swamp", "Swamp", "Swamp");
-        Battlefield(P2, "Grizzly Bears");
+                Hand(P1, fluke);
+                Battlefield(P1, bears, "Swamp", "Swamp", "Swamp");
+                Battlefield(P2, "Grizzly Bears");
 
-        RunGame(4);
+                RunGame(4);
 
-        Equal(Zone.Battlefield, C(fluke).Zone);
-        Equal(Zone.BreakZone, C(bears).Zone);
-      }
+                Equal(Zone.Battlefield, C(fluke).Zone);
+                Equal(Zone.BreakZone, C(bears).Zone);
+            }
 
-      [Fact (Skip = "Old card")]
-      public void AttackWithFluke()
-      {
-        var fluke = C("Spined Fluke");
-        Battlefield(P1, fluke, "Swamp", "Llanowar Elves", "Llanowar Elves", "Llanowar Elves");
-        Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
+            [Fact(Skip = "Old card")]
+            public void AttackWithFluke()
+            {
+                var fluke = C("Spined Fluke");
+                Battlefield(
+                    P1,
+                    fluke,
+                    "Swamp",
+                    "Llanowar Elves",
+                    "Llanowar Elves",
+                    "Llanowar Elves"
+                );
+                Battlefield(P2, "Grizzly Bears", "Grizzly Bears");
 
-        RunGame(1);
+                RunGame(1);
 
-        True(C(fluke).IsTapped);
-      }
+                True(C(fluke).IsTapped);
+            }
+        }
     }
-  }
 }

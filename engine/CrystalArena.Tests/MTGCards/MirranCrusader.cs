@@ -1,54 +1,51 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class MirranCrusader
-  {
-    public class Ai : AiScenario
+    public class MirranCrusader
     {
-      [Fact (Skip = "Old card")]
-      public void DoubleStrike1()
-      {
-        Battlefield(P1, "Mirran Crusader", "Mirran Crusader", "Llanowar Elves");
-        Battlefield(P2, "Savannah Lions", "Savannah Lions");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DoubleStrike1()
+            {
+                Battlefield(P1, "Mirran Crusader", "Mirran Crusader", "Llanowar Elves");
+                Battlefield(P2, "Savannah Lions", "Savannah Lions");
 
-        P2.Life = 4;
+                P2.Life = 4;
 
-        RunGame(maxTurnCount: 1);
+                RunGame(maxTurnCount: 1);
 
-        Equal(0, P2.Battlefield.Count());
-        Equal(3, P1.Battlefield.Count());
-        Equal(3, P2.Life);
-      }
+                Equal(0, P2.Battlefield.Count());
+                Equal(3, P1.Battlefield.Count());
+                Equal(3, P2.Life);
+            }
+        }
+
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void RemoveFromCombatAfterLeathalFirstStrikeDamage()
+            {
+                var troll = C("Troll Ascetic");
+                var mirran = C("Mirran Crusader");
+
+                Battlefield(P1, troll);
+                Battlefield(P2, mirran);
+
+                Exec(
+                    At(Step.DeclareAttackers).DeclareAttackers(troll),
+                    At(Step.DeclareBlocker).DeclareBlockers(troll, mirran).Activate(troll),
+                    At(Step.SecondMain)
+                        .Verify(() =>
+                        {
+                            Equal(Zone.Battlefield, C(troll).Zone);
+                            True(C(troll).IsTapped);
+                        })
+                );
+            }
+        }
     }
-
-    public class Predefined : PredefinedScenario
-    {
-      [Fact (Skip = "Old card")]
-      public void RemoveFromCombatAfterLeathalFirstStrikeDamage()
-      {
-        var troll = C("Troll Ascetic");
-        var mirran = C("Mirran Crusader");
-
-        Battlefield(P1, troll);
-        Battlefield(P2, mirran);
-
-        Exec(
-          At(Step.DeclareAttackers)
-            .DeclareAttackers(troll),
-          At(Step.DeclareBlocker)
-            .DeclareBlockers(troll, mirran)
-            .Activate(troll),
-          At(Step.SecondMain)
-            .Verify(() =>
-              {
-                Equal(Zone.Battlefield, C(troll).Zone);
-                True(C(troll).IsTapped);
-              })
-          );
-      }
-    }
-  }
 }

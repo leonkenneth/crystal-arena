@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class YisanTheWandererBard
-  {
-    public class Ai : AiScenario
+    public class YisanTheWandererBard
     {
-      [Fact (Skip = "Old card")]
-      public void PutCounterOnYisanDontSearchForCard()
-      {
-        var yisan = C("Yisan, the Wanderer Bard");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PutCounterOnYisanDontSearchForCard()
+            {
+                var yisan = C("Yisan, the Wanderer Bard");
 
-        Battlefield(P1, yisan, "Forest", "Forest", "Forest");
-        Battlefield(P2, "Wall of Denial");
-        RunGame(2);
+                Battlefield(P1, yisan, "Forest", "Forest", "Forest");
+                Battlefield(P2, "Wall of Denial");
+                RunGame(2);
 
-        Equal(1, C(yisan).CountersCount());
-      }
+                Equal(1, C(yisan).CountersCount());
+            }
+        }
     }
-  }
 }

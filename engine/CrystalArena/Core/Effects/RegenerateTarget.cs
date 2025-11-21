@@ -1,17 +1,17 @@
 ﻿namespace CrystalArena.Effects
 {
-  using CrystalArena.AI;
+    using CrystalArena.AI;
 
-  public class RegenerateTarget : Effect
-  {
-    public RegenerateTarget()
+    public class RegenerateTarget : Effect
     {
-      SetTags(EffectTag.Regenerate);
-    }
+        public RegenerateTarget()
+        {
+            SetTags(EffectTag.Regenerate);
+        }
 
-    protected override void ResolveEffect()
-    {
-      Target.Card().HasRegenerationShield = true;
+        protected override void ResolveEffect()
+        {
+            Target.Card().HasRegenerationShield = true;
+        }
     }
-  }
 }

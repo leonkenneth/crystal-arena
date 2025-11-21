@@ -1,12 +1,12 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class DiscardAndDrawANewHand : Effect
-  {
-    protected override void ResolveEffect()
+    public class DiscardAndDrawANewHand : Effect
     {
-      var count = Controller.Hand.Count;
-      Controller.DiscardHand();
-      Controller.DrawCards(count);
+        protected override void ResolveEffect()
+        {
+            var count = Controller.Hand.Count;
+            Controller.DiscardHand();
+            Controller.DrawCards(count);
+        }
     }
-  }
 }

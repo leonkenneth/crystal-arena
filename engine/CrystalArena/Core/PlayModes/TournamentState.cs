@@ -1,9 +1,9 @@
 ﻿namespace CrystalArena
 {
-  public enum TournamentState
-  {
-    GeneratingDecks,
-    Ready,
-    RoundInProgress
-  }
+    public enum TournamentState
+    {
+        GeneratingDecks,
+        Ready,
+        RoundInProgress,
+    }
 }

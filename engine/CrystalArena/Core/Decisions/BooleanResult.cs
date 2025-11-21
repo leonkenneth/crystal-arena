@@ -1,20 +1,20 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
+    using System;
 
-  [Serializable]
-  public class BooleanResult
-  {
-    public BooleanResult(bool value)
+    [Serializable]
+    public class BooleanResult
     {
-      IsTrue = value;
-    }
+        public BooleanResult(bool value)
+        {
+            IsTrue = value;
+        }
 
-    public bool IsTrue { get; private set; }
+        public bool IsTrue { get; private set; }
 
-    public static implicit operator BooleanResult(bool value)
-    {
-      return new BooleanResult(value);
+        public static implicit operator BooleanResult(bool value)
+        {
+            return new BooleanResult(value);
+        }
     }
-  }
 }

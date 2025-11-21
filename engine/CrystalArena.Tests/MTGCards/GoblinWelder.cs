@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class GoblinWelder
-  {
-    public class Ai : AiScenario
+    public class GoblinWelder
     {
-      [Fact (Skip = "Old card")]
-      public void ExchangePitTrapAndEngine()
-      {
-        var trap = C("Pit Trap");
-        var engine = C("Wurmcoil Engine");
-        
-        Battlefield(P1, trap, "Goblin Welder");        
-        BreakZone(P1, engine);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void ExchangePitTrapAndEngine()
+            {
+                var trap = C("Pit Trap");
+                var engine = C("Wurmcoil Engine");
 
-        RunGame(1);
+                Battlefield(P1, trap, "Goblin Welder");
+                BreakZone(P1, engine);
 
-        Equal(Zone.Battlefield,C(engine).Zone);
-        Equal(Zone.BreakZone,C(trap).Zone);
-      }
+                RunGame(1);
+
+                Equal(Zone.Battlefield, C(engine).Zone);
+                Equal(Zone.BreakZone, C(trap).Zone);
+            }
+        }
     }
-  }
 }

@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class StaffOfTheSunMagus
-  {
-    public class Ai : AiScenario
+    public class StaffOfTheSunMagus
     {
-      [Fact (Skip = "Old card")]
-      public void Gain2Life()
-      {        
-        Hand(P1, "Plains", "Oreskos Swiftclaw");                
-        Battlefield(P1, "Staff of the Sun Magus", "Plains", "Plains");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Gain2Life()
+            {
+                Hand(P1, "Plains", "Oreskos Swiftclaw");
+                Battlefield(P1, "Staff of the Sun Magus", "Plains", "Plains");
 
-        RunGame(2);               
-        Equal(22, P1.Life);
-      }
+                RunGame(2);
+                Equal(22, P1.Life);
+            }
+        }
     }
-  }
 }

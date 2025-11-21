@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class WhenYouHaveBiggerHand : TimingRule
-  {
-    private readonly int _minDifference;
-
-    private WhenYouHaveBiggerHand() {}
-
-    public WhenYouHaveBiggerHand(int minDifference)
+    public class WhenYouHaveBiggerHand : TimingRule
     {
-      _minDifference = minDifference;
-    }
+        private readonly int _minDifference;
 
-    public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
-    {
-      var controllerCount = p.Controller.Hand.Count;
-      var opponentCount = p.Controller.Opponent.Hand.Count;
+        private WhenYouHaveBiggerHand() { }
 
-      return controllerCount - _minDifference <= opponentCount;
+        public WhenYouHaveBiggerHand(int minDifference)
+        {
+            _minDifference = minDifference;
+        }
+
+        public override bool ShouldPlayAfterTargets(TimingRuleParameters p)
+        {
+            var controllerCount = p.Controller.Hand.Count;
+            var opponentCount = p.Controller.Opponent.Hand.Count;
+
+            return controllerCount - _minDifference <= opponentCount;
+        }
     }
-  }
 }

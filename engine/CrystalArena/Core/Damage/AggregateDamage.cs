@@ -12,6 +12,7 @@ public class AggregateDamage : IDamage
     public bool IsCombat { get; private set; }
     public bool CanBePrevented { get; private set; }
     public bool IsLeathal { get; set; }
+
     public bool WasAlreadyRedirected(DamageRedirection damageRedirection)
     {
         return false;
@@ -40,19 +41,16 @@ public class AggregateDamage : IDamage
                 return Damages.Sum(c => c.Amount);
             }
         }
-        set
-        {
-            throw new ArgumentException("Cannot set Amount of AggregateDamage.");
-        }
+        set { throw new ArgumentException("Cannot set Amount of AggregateDamage."); }
     }
     public IDamageable Target { get; private set; }
 
     public enum AggregateType
     {
         Max,
-        Sum
+        Sum,
     }
-    
+
     public AggregateDamage(Party source, IEnumerable<Damage> damages, IDamageable target)
     {
         Damages = damages;

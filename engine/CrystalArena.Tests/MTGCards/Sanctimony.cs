@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Sanctimony
-  {
-    public class Ai : AiScenario
+    public class Sanctimony
     {
-      [Fact (Skip = "Old card")]
-      public void Gain4Life()
-      {
-        Hand(P1, "Shivan Dragon");
-        Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Forest", "Forest");
-        Battlefield(P2, "Sanctimony");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Gain4Life()
+            {
+                Hand(P1, "Shivan Dragon");
+                Battlefield(P1, "Mountain", "Mountain", "Mountain", "Mountain", "Forest", "Forest");
+                Battlefield(P2, "Sanctimony");
 
-        RunGame(3);
+                RunGame(3);
 
-        Equal(19, P2.Life);
-      }
+                Equal(19, P2.Life);
+            }
+        }
     }
-  }
 }

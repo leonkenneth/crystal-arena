@@ -1,13 +1,13 @@
 ﻿namespace CrystalArena.Modifiers
 {
-  using CrystalArena.Events;
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Events;
+    using CrystalArena.Infrastructure;
 
-  public class EndOfTurnLifetime : Lifetime, IReceive<EndOfTurnEvent>
-  {
-    public void Receive(EndOfTurnEvent message)
+    public class EndOfTurnLifetime : Lifetime, IReceive<EndOfTurnEvent>
     {
-      End();
+        public void Receive(EndOfTurnEvent message)
+        {
+            End();
+        }
     }
-  }
 }

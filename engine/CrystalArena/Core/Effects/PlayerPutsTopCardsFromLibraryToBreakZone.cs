@@ -1,24 +1,26 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class PlayerPutsTopCardsFromMainDeckToBreakZone : Effect
-  {
-    private readonly DynParam<int> _count;
-    private readonly DynParam<Player> _player;
-
-    private PlayerPutsTopCardsFromMainDeckToBreakZone() {}
-
-    public PlayerPutsTopCardsFromMainDeckToBreakZone(DynParam<Player> player, DynParam<int> count)
+    public class PlayerPutsTopCardsFromMainDeckToBreakZone : Effect
     {
-      _count = count;
-      _player = player;
+        private readonly DynParam<int> _count;
+        private readonly DynParam<Player> _player;
 
-      RegisterDynamicParameters(player, count);
-    }
+        private PlayerPutsTopCardsFromMainDeckToBreakZone() { }
 
-    protected override void ResolveEffect()
-    {
-      _player.Value.Mill(_count.Value);
-      
+        public PlayerPutsTopCardsFromMainDeckToBreakZone(
+            DynParam<Player> player,
+            DynParam<int> count
+        )
+        {
+            _count = count;
+            _player = player;
+
+            RegisterDynamicParameters(player, count);
+        }
+
+        protected override void ResolveEffect()
+        {
+            _player.Value.Mill(_count.Value);
+        }
     }
-  }
 }

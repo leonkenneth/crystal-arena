@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Infrastructure
 {
-  using System;
-  
-  [Copyable]
-  public class ReentryGuard : IDisposable
-  {
-    private bool _set;
-    
-    public bool IsSet
-    {
-      get { return _set; }
-    }
+    using System;
 
-    public void Dispose()
+    [Copyable]
+    public class ReentryGuard : IDisposable
     {
-      _set = false;
-    }
+        private bool _set;
 
-    public IDisposable Set()
-    {
-      _set = true;
-      return this;
+        public bool IsSet
+        {
+            get { return _set; }
+        }
+
+        public void Dispose()
+        {
+            _set = false;
+        }
+
+        public IDisposable Set()
+        {
+            _set = true;
+            return this;
+        }
     }
-  }
 }

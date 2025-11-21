@@ -1,50 +1,51 @@
 ﻿namespace CrystalArena
 {
-  using System.Linq;
-  using CrystalArena.Infrastructure;
-  using Modifiers;
+    using System.Linq;
+    using CrystalArena.Infrastructure;
+    using Modifiers;
 
-  [Copyable]
-  public class DamageRedirections : IAcceptsGameModifier, IHashable
-  {
-    private readonly TrackableList<DamageRedirection> _redirections = new TrackableList<DamageRedirection>();
-
-    public int CalculateHash(HashCalculator calc)
+    [Copyable]
+    public class DamageRedirections : IAcceptsGameModifier, IHashable
     {
-      return calc.Calculate(_redirections);
-    }
+        private readonly TrackableList<DamageRedirection> _redirections =
+            new TrackableList<DamageRedirection>();
 
-    public void Accept(IGameModifier modifier)
-    {
-      modifier.Apply(this);
-    }
-
-    public void Initialize(ChangeTracker changeTracker)
-    {
-      _redirections.Initialize(changeTracker);
-    }
-
-    public void Add(DamageRedirection prevention)
-    {
-      _redirections.Add(prevention);
-    }
-
-    public bool RedirectDamage(IDamage damage, ITarget target)
-    {
-      foreach (var redirection in _redirections.ToList())
-      {
-        if (redirection.RedirectDamage(damage, target))
+        public int CalculateHash(HashCalculator calc)
         {
-          return true;
+            return calc.Calculate(_redirections);
         }
-      }
 
-      return false;
-    }
+        public void Accept(IGameModifier modifier)
+        {
+            modifier.Apply(this);
+        }
 
-    public void Remove(DamageRedirection preventaion)
-    {
-      _redirections.Remove(preventaion);
+        public void Initialize(ChangeTracker changeTracker)
+        {
+            _redirections.Initialize(changeTracker);
+        }
+
+        public void Add(DamageRedirection prevention)
+        {
+            _redirections.Add(prevention);
+        }
+
+        public bool RedirectDamage(IDamage damage, ITarget target)
+        {
+            foreach (var redirection in _redirections.ToList())
+            {
+                if (redirection.RedirectDamage(damage, target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void Remove(DamageRedirection preventaion)
+        {
+            _redirections.Remove(preventaion);
+        }
     }
-  }
 }

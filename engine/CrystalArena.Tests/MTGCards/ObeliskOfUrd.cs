@@ -1,38 +1,58 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public partial class EngineeredPlague
-  {
-    public class ObeliskOfUrd
+    public partial class EngineeredPlague
     {
-      public class Ai : AiScenario
-      {
-        [Fact (Skip = "Old card")]
-        public void Confiscate()
+        public class ObeliskOfUrd
         {
-          var obelisk = C("Obelisk of Urd");
+            public class Ai : AiScenario
+            {
+                [Fact(Skip = "Old card")]
+                public void Confiscate()
+                {
+                    var obelisk = C("Obelisk of Urd");
 
-          Hand(P1, obelisk);
-          Hand(P2, "Confiscate");
+                    Hand(P1, obelisk);
+                    Hand(P2, "Confiscate");
 
-          var bear1 = C("Grizzly Bears");
-          var bear2 = C("Grizzly Bears");
+                    var bear1 = C("Grizzly Bears");
+                    var bear2 = C("Grizzly Bears");
 
-          Battlefield(P1, "Swamp", "Swamp", "Swamp", "Swamp", "Swamp", "Swamp",
-            bear1, "Grizzly Bears", "Grizzly Bears");
-          
-          Battlefield(P2, bear2, "Grizzly Bears", "Grizzly Bears", 
-            "Island", "Island", "Island", "Island", "Island", "Island");
+                    Battlefield(
+                        P1,
+                        "Swamp",
+                        "Swamp",
+                        "Swamp",
+                        "Swamp",
+                        "Swamp",
+                        "Swamp",
+                        bear1,
+                        "Grizzly Bears",
+                        "Grizzly Bears"
+                    );
 
-          RunGame(2);
+                    Battlefield(
+                        P2,
+                        bear2,
+                        "Grizzly Bears",
+                        "Grizzly Bears",
+                        "Island",
+                        "Island",
+                        "Island",
+                        "Island",
+                        "Island",
+                        "Island"
+                    );
 
-          Equal(P2, C(obelisk).Controller);
-          Equal(2, C(bear1).Power);
-          Equal(4, C(bear2).Power);
+                    RunGame(2);
+
+                    Equal(P2, C(obelisk).Controller);
+                    Equal(2, C(bear1).Power);
+                    Equal(4, C(bear2).Power);
+                }
+            }
         }
-      }
     }
-  }
 }

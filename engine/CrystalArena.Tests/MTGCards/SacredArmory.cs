@@ -1,22 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class SacredArmory
-  {
-    public class Ai : AiScenario
+    public class SacredArmory
     {
-      [Fact (Skip = "Old card")]
-      public void PumpBear()
-      {
-        Battlefield(P1, "Grizzly Bears", "Sacred Armory", "Mountain", "Mountain", "Mountain", "Mountain");
-        P2.Life = 4;
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void PumpBear()
+            {
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Sacred Armory",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
+                P2.Life = 4;
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(0, P2.Life);
-      }
+                Equal(0, P2.Life);
+            }
+        }
     }
-  }
 }

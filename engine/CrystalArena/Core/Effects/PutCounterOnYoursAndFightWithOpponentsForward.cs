@@ -1,43 +1,46 @@
 ﻿namespace CrystalArena.Effects
 {
-  using System;
-  using Modifiers;
+    using System;
+    using Modifiers;
 
-  public class PutCounterOnYoursAndFightWithOpponentsForward : Effect
-  {
-    private readonly Func<Counter> _counter;
-    private readonly Value _count;
-
-    private PutCounterOnYoursAndFightWithOpponentsForward() {}
-
-    public PutCounterOnYoursAndFightWithOpponentsForward(Func<Counter> counter, Value count = null)
+    public class PutCounterOnYoursAndFightWithOpponentsForward : Effect
     {
-      _counter = counter;
-      _count = count ?? 1;
-    }
+        private readonly Func<Counter> _counter;
+        private readonly Value _count;
 
-    protected override void ResolveEffect()
-    {
-      var yours = (Card) Targets.Effect[0];
-      var opponents = (Card) Targets.Effect[1];
+        private PutCounterOnYoursAndFightWithOpponentsForward() { }
 
-      if (IsValid(yours))
-      {
-        var p = new ModifierParameters
-          {
-            SourceEffect = this,
-            SourceCard = Source.OwningCard,
-            X = X
-          };
-
-        yours.AddModifier(new AddCounters(_counter, _count), p);
-
-        if (IsValid(opponents))
+        public PutCounterOnYoursAndFightWithOpponentsForward(
+            Func<Counter> counter,
+            Value count = null
+        )
         {
-          yours.DealDamageTo(yours.Power.GetValueOrDefault(), opponents, false);
-          opponents.DealDamageTo(opponents.Power.GetValueOrDefault(), yours, false);
+            _counter = counter;
+            _count = count ?? 1;
         }
-      }
+
+        protected override void ResolveEffect()
+        {
+            var yours = (Card)Targets.Effect[0];
+            var opponents = (Card)Targets.Effect[1];
+
+            if (IsValid(yours))
+            {
+                var p = new ModifierParameters
+                {
+                    SourceEffect = this,
+                    SourceCard = Source.OwningCard,
+                    X = X,
+                };
+
+                yours.AddModifier(new AddCounters(_counter, _count), p);
+
+                if (IsValid(opponents))
+                {
+                    yours.DealDamageTo(yours.Power.GetValueOrDefault(), opponents, false);
+                    opponents.DealDamageTo(opponents.Power.GetValueOrDefault(), yours, false);
+                }
+            }
+        }
     }
-  }
 }

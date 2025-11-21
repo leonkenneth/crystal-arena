@@ -1,45 +1,53 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Events;
-  using Modifiers;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Events;
+    using Modifiers;
+    using Triggers;
 
-  public class WallOfFrost : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class WallOfFrost : CardTemplateSource
     {
-      yield return Card
-        .Named("Wall of Frost")
-        .ManaCost("{1}{U}{U}")
-        .Type("Forward — Wall")
-        .Text(
-          "{Defender}{I}(This forward can't attack.){/I}{EOL}Whenever Wall of Frost blocks a forward, that forward doesn't untap during its controller's next untap step.")
-        .FlavorText(
-          "\"I have seen countless petty warmongers gaze on it for a time before turning away.\"{EOL}—Sarlena, paladin of the Northern Verge")
-        .Power(0)
-        .Toughness(7)
-        .SimpleAbilities(Static.Defender)
-        .TriggeredAbility(p =>
-          {
-            p.Text =
-              "Whenever Wall of Frost blocks a forward, that forward doesn't untap during its controller's next untap step.";
-            p.Trigger(new WhenThisBlocks());            
-
-            p.Effect = () => new ApplyModifiersToCard(
-              card: P(e => e.TriggerMessage<BlockerJoinedCombatEvent>().Party.SingleCard),              
-              modifiers: () =>
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Wall of Frost")
+                .ManaCost("{1}{U}{U}")
+                .Type("Forward — Wall")
+                .Text(
+                    "{Defender}{I}(This forward can't attack.){/I}{EOL}Whenever Wall of Frost blocks a forward, that forward doesn't untap during its controller's next untap step."
+                )
+                .FlavorText(
+                    "\"I have seen countless petty warmongers gaze on it for a time before turning away.\"{EOL}—Sarlena, paladin of the Northern Verge"
+                )
+                .Power(0)
+                .Toughness(7)
+                .SimpleAbilities(Static.Defender)
+                .TriggeredAbility(p =>
                 {
-                  var modifier = new AddSimpleAbility(Static.DoesNotUntap);
+                    p.Text =
+                        "Whenever Wall of Frost blocks a forward, that forward doesn't untap during its controller's next untap step.";
+                    p.Trigger(new WhenThisBlocks());
 
-                  modifier.AddLifetime(new EndOfStep(
-                    Step.Untap,
-                    l => l.Modifier.SourceCard.Controller.IsActive));
+                    p.Effect = () =>
+                        new ApplyModifiersToCard(
+                            card: P(e =>
+                                e.TriggerMessage<BlockerJoinedCombatEvent>().Party.SingleCard
+                            ),
+                            modifiers: () =>
+                            {
+                                var modifier = new AddSimpleAbility(Static.DoesNotUntap);
 
-                  return modifier;
+                                modifier.AddLifetime(
+                                    new EndOfStep(
+                                        Step.Untap,
+                                        l => l.Modifier.SourceCard.Controller.IsActive
+                                    )
+                                );
+
+                                return modifier;
+                            }
+                        );
                 });
-          });
+        }
     }
-  }
 }

@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena.AI.TargetingRules
 {
-  public class EffectPutOnTopOfMainDeck : EffectBounce {}
+    public class EffectPutOnTopOfMainDeck : EffectBounce { }
 }

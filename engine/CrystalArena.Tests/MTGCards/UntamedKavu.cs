@@ -1,41 +1,41 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using System.Collections.Generic;
-  using System.Linq;
-  using Infrastructure;
-  using Xunit;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Infrastructure;
+    using Xunit;
 
-  public class UntamedKavu
-  {
-    public class Ai : AiScenario
+    public class UntamedKavu
     {
-      [Fact (Skip = "Old card")]
-      public void NoKicker()
-      {
-        var kavu = C("Untamed Kavu");
-        
-        Hand(P1, kavu);
-        Battlefield(P1, "Forest", "Forest");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void NoKicker()
+            {
+                var kavu = C("Untamed Kavu");
 
-        RunGame(1);
+                Hand(P1, kavu);
+                Battlefield(P1, "Forest", "Forest");
 
-        Equal(Zone.Battlefield, C(kavu).Zone);
-        Equal(2, C(kavu).Power);        
-      }
+                RunGame(1);
 
-      [Fact (Skip = "Old card")]
-      public void Kicker()
-      {
-        var kavu = C("Untamed Kavu");
+                Equal(Zone.Battlefield, C(kavu).Zone);
+                Equal(2, C(kavu).Power);
+            }
 
-        Hand(P1, kavu);
-        Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest");
+            [Fact(Skip = "Old card")]
+            public void Kicker()
+            {
+                var kavu = C("Untamed Kavu");
 
-        RunGame(1);
+                Hand(P1, kavu);
+                Battlefield(P1, "Forest", "Forest", "Forest", "Forest", "Forest");
 
-        Equal(Zone.Battlefield, C(kavu).Zone);
-        Equal(5, C(kavu).Power);
-      }
+                RunGame(1);
+
+                Equal(Zone.Battlefield, C(kavu).Zone);
+                Equal(5, C(kavu).Power);
+            }
+        }
     }
-  }
 }

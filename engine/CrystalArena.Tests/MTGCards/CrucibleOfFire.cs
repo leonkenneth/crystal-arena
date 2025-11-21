@@ -1,21 +1,21 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class CrucibleOfFire
-  {
-    public class Ai : AiScenario
+    public class CrucibleOfFire
     {
-      [Fact (Skip = "Old card")]
-      public void DragonHasIncreasedStrength()
-      {
-        Battlefield(P1, "Crucible Of Fire", "Shivan Dragon");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void DragonHasIncreasedStrength()
+            {
+                Battlefield(P1, "Crucible Of Fire", "Shivan Dragon");
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(12, P2.Life);
-      }
+                Equal(12, P2.Life);
+            }
+        }
     }
-  }
 }

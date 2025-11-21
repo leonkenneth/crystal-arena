@@ -1,4 +1,4 @@
 ﻿namespace CrystalArena.Events
 {
-  public class EndOfTurnEvent {}
+    public class EndOfTurnEvent { }
 }

@@ -1,37 +1,37 @@
 ﻿namespace CrystalArena
 {
-  using CrystalArena.Infrastructure;
+    using CrystalArena.Infrastructure;
 
-  [Copyable]
-  public abstract class DamageRedirection : GameObject, IHashable
-  {
-    public Modifier Modifier { get; private set; }
-
-    public abstract int CalculateHash(HashCalculator calc);    
-
-    public bool RedirectDamage(IDamage damage, ITarget target)
+    [Copyable]
+    public abstract class DamageRedirection : GameObject, IHashable
     {
-      if (damage.WasAlreadyRedirected(this))
-        return false;
+        public Modifier Modifier { get; private set; }
 
-      var redirect = WillRedirect(damage, target);
+        public abstract int CalculateHash(HashCalculator calc);
 
-      if (redirect)
-      {
-        damage.AddRedirection(this);
-        Redirect(damage, target);
-      }
+        public bool RedirectDamage(IDamage damage, ITarget target)
+        {
+            if (damage.WasAlreadyRedirected(this))
+                return false;
 
-      return redirect;
+            var redirect = WillRedirect(damage, target);
+
+            if (redirect)
+            {
+                damage.AddRedirection(this);
+                Redirect(damage, target);
+            }
+
+            return redirect;
+        }
+
+        public virtual void Initialize(Modifier modifier, Game game)
+        {
+            Modifier = modifier;
+            Game = game;
+        }
+
+        protected abstract void Redirect(IDamage damage, ITarget target);
+        protected abstract bool WillRedirect(IDamage damage, ITarget target);
     }
-
-    public virtual void Initialize(Modifier modifier, Game game)
-    {
-      Modifier = modifier;
-      Game = game;
-    }
-
-    protected abstract void Redirect(IDamage damage, ITarget target);
-    protected abstract bool WillRedirect(IDamage damage, ITarget target);
-  }
 }

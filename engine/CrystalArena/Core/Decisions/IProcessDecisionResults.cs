@@ -1,24 +1,24 @@
 ﻿namespace CrystalArena.Decisions
 {
-  using System;
+    using System;
 
-  public class ProcessDecisionResultsHelper<T> : IProcessDecisionResults<T>
-  {
-    private readonly Action<T> _processResults;
-
-    public ProcessDecisionResultsHelper(Action<T> processResults)
+    public class ProcessDecisionResultsHelper<T> : IProcessDecisionResults<T>
     {
-      _processResults = processResults;
+        private readonly Action<T> _processResults;
+
+        public ProcessDecisionResultsHelper(Action<T> processResults)
+        {
+            _processResults = processResults;
+        }
+
+        public void ProcessResults(T results)
+        {
+            _processResults(results);
+        }
     }
 
-    public void ProcessResults(T results)
+    public interface IProcessDecisionResults<in T>
     {
-      _processResults(results);
+        void ProcessResults(T results);
     }
-  }
-  
-  public interface IProcessDecisionResults<in T>
-  {
-    void ProcessResults(T results);
-  }
 }

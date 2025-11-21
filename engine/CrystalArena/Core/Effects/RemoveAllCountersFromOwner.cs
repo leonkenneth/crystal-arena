@@ -1,19 +1,19 @@
 ﻿namespace CrystalArena.Effects
 {
-  public class RemoveAllCountersFromOwner : Effect
-  {
-    private readonly CounterType _counterType;
-
-    private RemoveAllCountersFromOwner() {}
-
-    public RemoveAllCountersFromOwner(CounterType counterType)
+    public class RemoveAllCountersFromOwner : Effect
     {
-      _counterType = counterType;
-    }
+        private readonly CounterType _counterType;
 
-    protected override void ResolveEffect()
-    {
-      Source.OwningCard.RemoveCounters(_counterType);
+        private RemoveAllCountersFromOwner() { }
+
+        public RemoveAllCountersFromOwner(CounterType counterType)
+        {
+            _counterType = counterType;
+        }
+
+        protected override void ResolveEffect()
+        {
+            Source.OwningCard.RemoveCounters(_counterType);
+        }
     }
-  }
 }

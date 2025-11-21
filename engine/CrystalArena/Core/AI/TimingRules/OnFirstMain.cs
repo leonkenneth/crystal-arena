@@ -1,10 +1,10 @@
 ﻿namespace CrystalArena.AI.TimingRules
 {
-  public class OnFirstMain : TimingRule
-  {
-    public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+    public class OnFirstMain : TimingRule
     {
-      return p.Controller.IsActive && Turn.Step == Step.FirstMain && Stack.IsEmpty;
+        public override bool ShouldPlayBeforeTargets(TimingRuleParameters p)
+        {
+            return p.Controller.IsActive && Turn.Step == Step.FirstMain && Stack.IsEmpty;
+        }
     }
-  }
 }

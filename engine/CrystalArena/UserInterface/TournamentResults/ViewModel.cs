@@ -1,8 +1,4 @@
 ﻿namespace CrystalArena.UserInterface.TournamentResults
 {
-  public class ViewModel
-  {
-    
-
-  }
+    public class ViewModel { }
 }

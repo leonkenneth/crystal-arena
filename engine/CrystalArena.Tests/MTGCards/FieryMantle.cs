@@ -1,22 +1,31 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class FieryMantle
-  {
-    public class Ai : AiScenario
+    public class FieryMantle
     {
-      [Fact (Skip = "Old card")]
-      public void BearDeals6Damage()
-      {
-        Hand(P1, "Fiery Mantle");
-        Battlefield(P1, "Grizzly Bears", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void BearDeals6Damage()
+            {
+                Hand(P1, "Fiery Mantle");
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain",
+                    "Mountain"
+                );
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(14, P2.Life);
-      }
+                Equal(14, P2.Life);
+            }
+        }
     }
-  }
 }

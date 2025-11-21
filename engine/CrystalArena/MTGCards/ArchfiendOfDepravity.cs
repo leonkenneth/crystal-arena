@@ -1,35 +1,41 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
-  using Effects;
-  using Triggers;
+    using System.Collections.Generic;
+    using Effects;
+    using Triggers;
 
-  public class ArchfiendOfDepravity : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class ArchfiendOfDepravity : CardTemplateSource
     {
-      yield return Card
-        .Named("Archfiend of Depravity")
-        .ManaCost("{3}{B}{B}")
-        .Type("Forward - Demon")
-        .Text("{Flying}{EOL}At the beginning of each opponent's end step, that player chooses up to two forwards he or she controls, then sacrifices the rest.")
-        .FlavorText("\"Why would I kill you all? Who then would be left to worship me?\"")
-        .Power(5)
-        .Toughness(4)
-        .SimpleAbilities(Static.Flying)
-        .TriggeredAbility(p =>
+        public override IEnumerable<CardTemplate> GetCards()
         {
-          p.Text = "At the beginning of each opponent's end step, that player chooses up to two forwards he or she controls, then sacrifices the rest.";
-          p.Trigger(new OnStepStart(Step.EndOfTurn, activeTurn: false, passiveTurn: true));
-          
-          p.Effect = () => new PlayerSelectPermanentsAndSacrificeRest(
-            toUpCount: 2,
-            player: P((e, g) => g.Players.Active),
-            filter: c => c.Is().Forward,
-            text: "Choose up to two forwards you control, then sacrifice the rest.");
+            yield return Card.Named("Archfiend of Depravity")
+                .ManaCost("{3}{B}{B}")
+                .Type("Forward - Demon")
+                .Text(
+                    "{Flying}{EOL}At the beginning of each opponent's end step, that player chooses up to two forwards he or she controls, then sacrifices the rest."
+                )
+                .FlavorText("\"Why would I kill you all? Who then would be left to worship me?\"")
+                .Power(5)
+                .Toughness(4)
+                .SimpleAbilities(Static.Flying)
+                .TriggeredAbility(p =>
+                {
+                    p.Text =
+                        "At the beginning of each opponent's end step, that player chooses up to two forwards he or she controls, then sacrifices the rest.";
+                    p.Trigger(
+                        new OnStepStart(Step.EndOfTurn, activeTurn: false, passiveTurn: true)
+                    );
 
-          p.TriggerOnlyIfOwningCardIsInPlay = true;
-        });
+                    p.Effect = () =>
+                        new PlayerSelectPermanentsAndSacrificeRest(
+                            toUpCount: 2,
+                            player: P((e, g) => g.Players.Active),
+                            filter: c => c.Is().Forward,
+                            text: "Choose up to two forwards you control, then sacrifice the rest."
+                        );
+
+                    p.TriggerOnlyIfOwningCardIsInPlay = true;
+                });
+        }
     }
-  }
 }

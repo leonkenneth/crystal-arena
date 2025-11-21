@@ -1,20 +1,21 @@
 ﻿namespace CrystalArena.CardsMainDeck
 {
-  using System.Collections.Generic;
+    using System.Collections.Generic;
 
-  public class HighspireMantis : CardTemplateSource
-  {
-    public override IEnumerable<CardTemplate> GetCards()
+    public class HighspireMantis : CardTemplateSource
     {
-      yield return Card
-        .Named("Highspire Mantis")
-        .ManaCost("{2}{R}{W}")
-        .Type("Forward — Insect")
-        .Text("{Flying}, {trample}")
-        .FlavorText("Its wings produce a high-pitched, barely audible whirring sound in flight. Only Jeskai masters are quiet enough to hear one coming.")
-        .Power(3)
-        .Toughness(3)
-        .SimpleAbilities(Static.Flying, Static.Trample);
+        public override IEnumerable<CardTemplate> GetCards()
+        {
+            yield return Card.Named("Highspire Mantis")
+                .ManaCost("{2}{R}{W}")
+                .Type("Forward — Insect")
+                .Text("{Flying}, {trample}")
+                .FlavorText(
+                    "Its wings produce a high-pitched, barely audible whirring sound in flight. Only Jeskai masters are quiet enough to hear one coming."
+                )
+                .Power(3)
+                .Toughness(3)
+                .SimpleAbilities(Static.Flying, Static.Trample);
+        }
     }
-  }
 }

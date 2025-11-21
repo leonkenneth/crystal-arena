@@ -1,23 +1,23 @@
 ﻿namespace CrystalArena.Costs
 {
-  using System.Linq;
+    using System.Linq;
 
-  public class SacrificeTarget : Cost
-  {
-    public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+    public class SacrificeTarget : Cost
     {
-      return
-        Controller.Battlefield.Any(
-          permanent => permanent != Card && Validator.IsTargetValid(permanent, Card));
-    }
+        public override CanPayResult CanPayPartial(bool needsToPayManaCost)
+        {
+            return Controller.Battlefield.Any(permanent =>
+                permanent != Card && Validator.IsTargetValid(permanent, Card)
+            );
+        }
 
-    public override void PayPartial(PayCostParameters p)
-    {
-      var target = p.Targets.Cost.FirstOrDefault();
-      if (target != null)
-      {
-        target.Card().Sacrifice();
-      }
+        public override void PayPartial(PayCostParameters p)
+        {
+            var target = p.Targets.Cost.FirstOrDefault();
+            if (target != null)
+            {
+                target.Card().Sacrifice();
+            }
+        }
     }
-  }
 }

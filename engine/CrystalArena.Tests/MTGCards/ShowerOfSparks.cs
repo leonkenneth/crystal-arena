@@ -1,26 +1,26 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ShowerOfSparks
-  {
-    public class Ai : AiScenario
+    public class ShowerOfSparks
     {
-      [Fact (Skip = "Old card")]
-      public void KillTheBirdDamageOpponent()
-      {
-        var bird = C("Birds of Paradise");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void KillTheBirdDamageOpponent()
+            {
+                var bird = C("Birds of Paradise");
 
-        Hand(P1, "Shower of Sparks");
-        Battlefield(P1, "Mountain");
-        Battlefield(P2, bird);
+                Hand(P1, "Shower of Sparks");
+                Battlefield(P1, "Mountain");
+                Battlefield(P2, bird);
 
-        RunGame(1);
+                RunGame(1);
 
-        Equal(Zone.BreakZone, C(bird).Zone);
-        Equal(19, P2.Life);
-      }
+                Equal(Zone.BreakZone, C(bird).Zone);
+                Equal(19, P2.Life);
+            }
+        }
     }
-  }
 }

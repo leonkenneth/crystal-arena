@@ -1,47 +1,66 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class ChordOfCalling
-  {
-    public class Ai : AiScenario
+    public class ChordOfCalling
     {
-      [Fact (Skip = "Old card")]
-      public void SearchForDragon()
-      {
-        var dragon = C("Shivan Dragon");
-        
-        Hand(P1, "Chord of Calling");
-        MainDeck(P1, "Mountain", dragon);
-        
-        Battlefield(P1, "Grizzly Bears", "Grizzly Bears", "Grizzly Bears", "Grizzly Bears", 
-          "Forest", "Mountain", "Forest", "Forest", "Mountain");
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void SearchForDragon()
+            {
+                var dragon = C("Shivan Dragon");
 
-        Battlefield(P2, "Shivan Dragon");
+                Hand(P1, "Chord of Calling");
+                MainDeck(P1, "Mountain", dragon);
 
-        RunGame(2);
+                Battlefield(
+                    P1,
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Grizzly Bears",
+                    "Forest",
+                    "Mountain",
+                    "Forest",
+                    "Forest",
+                    "Mountain"
+                );
 
-        Equal(Zone.Battlefield, C(dragon).Zone);
-      }
+                Battlefield(P2, "Shivan Dragon");
 
-      [Fact (Skip = "Old card")]
-      public void MysticShouldNotBeCountedForConvokeAndItsManaAbilityBug()
-      {
-        var dragon = C("Shivan Dragon");
+                RunGame(2);
 
-        Hand(P1, "Chord of Calling");
-        MainDeck(P1, "Mountain", dragon);
+                Equal(Zone.Battlefield, C(dragon).Zone);
+            }
 
-        Battlefield(P1, "Elvish Mystic", "Forest", "Forest",
-          "Forest", "Mountain", "Forest", "Forest", "Mountain");
+            [Fact(Skip = "Old card")]
+            public void MysticShouldNotBeCountedForConvokeAndItsManaAbilityBug()
+            {
+                var dragon = C("Shivan Dragon");
 
-        Battlefield(P2, "Shivan Dragon");
+                Hand(P1, "Chord of Calling");
+                MainDeck(P1, "Mountain", dragon);
 
-        RunGame(2);
+                Battlefield(
+                    P1,
+                    "Elvish Mystic",
+                    "Forest",
+                    "Forest",
+                    "Forest",
+                    "Mountain",
+                    "Forest",
+                    "Forest",
+                    "Mountain"
+                );
 
-        Equal(Zone.MainDeck, C(dragon).Zone);
-      }
+                Battlefield(P2, "Shivan Dragon");
+
+                RunGame(2);
+
+                Equal(Zone.MainDeck, C(dragon).Zone);
+            }
+        }
     }
-  }
 }

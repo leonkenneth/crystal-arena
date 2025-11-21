@@ -1,22 +1,22 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class Soulmender
-  {
-    public class Ai : AiScenario
+    public class Soulmender
     {
-      [Fact (Skip = "Old card")]
-      public void GainLife()
-      {
-        Battlefield(P1, "Soulmender");
-        Battlefield(P2, "Wall of Blossoms");
-        
-        RunGame(2);
+        public class Ai : AiScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void GainLife()
+            {
+                Battlefield(P1, "Soulmender");
+                Battlefield(P2, "Wall of Blossoms");
 
-        Equal(21, P1.Life);
-      }
+                RunGame(2);
+
+                Equal(21, P1.Life);
+            }
+        }
     }
-  }
 }

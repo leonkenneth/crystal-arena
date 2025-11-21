@@ -1,27 +1,30 @@
 ﻿namespace CrystalArena.Tests.Cards
 {
-  using Infrastructure;
-  using Xunit;
+    using Infrastructure;
+    using Xunit;
 
-  public class HiddenHerd
-  {
-    public class Predefined : PredefinedScenario
+    public class HiddenHerd
     {
-      [Fact (Skip = "Old card")]
-      public void Becomes33Beast()
-      {
-        var herd = C("Hidden Herd");
-        var ravine = C("Raging Ravine");
+        public class Predefined : PredefinedScenario
+        {
+            [Fact(Skip = "Old card")]
+            public void Becomes33Beast()
+            {
+                var herd = C("Hidden Herd");
+                var ravine = C("Raging Ravine");
 
-        Battlefield(P2, herd);
-        Hand(P1, ravine);
+                Battlefield(P2, herd);
+                Hand(P1, ravine);
 
-        Exec(
-          At(Step.FirstMain)
-            .Cast(ravine)
-            .Verify(() => { Equal(3, C(herd).Power); })
-          );
-      }
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(ravine)
+                        .Verify(() =>
+                        {
+                            Equal(3, C(herd).Power);
+                        })
+                );
+            }
+        }
     }
-  }
 }
