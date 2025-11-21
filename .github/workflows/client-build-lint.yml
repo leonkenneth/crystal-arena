@@ -1,6 +1,8 @@
 name: Client Build and Lint
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: ["**"]
     paths:
