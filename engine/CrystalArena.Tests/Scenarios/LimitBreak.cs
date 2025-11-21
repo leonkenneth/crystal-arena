@@ -12,7 +12,7 @@
             [Fact]
             public void LimitBreakZoneExists()
             {
-                var limitBreakForward = C("0-006X");
+                var limitBreakForward = C("0-007X");
                 LimitBreak(P1, limitBreakForward);
 
                 Exec(At(Step.FirstMain).Verify(() => Equal(1, P1.LimitBreak.Count)));
@@ -21,9 +21,9 @@
             [Fact]
             public void CanCastFromLimitBreakInMainPhase()
             {
-                var limitBreakForward1 = C("0-006X");
-                var limitBreakForward2 = C("0-006X");
-                var limitBreakForward3 = C("0-006X");
+                var limitBreakForward1 = C("0-007X");
+                var limitBreakForward2 = C("0-007X");
+                var limitBreakForward3 = C("0-007X");
                 var forward = C("0-002X");
                 Hand(P1, forward);
                 LimitBreak(P1, limitBreakForward1, limitBreakForward2, limitBreakForward3);
@@ -45,7 +45,7 @@
             [Fact]
             public void CannotCastIfNoLBLeft()
             {
-                var limitBreakForward = C("0-006X");
+                var limitBreakForward = C("0-007X");
                 var forward = C("0-002X");
                 Hand(P1, forward);
                 LimitBreak(P1, limitBreakForward);
@@ -62,9 +62,9 @@
             [Fact]
             public void RevealsLBCardsToCast()
             {
-                var limitBreakForward1 = C("0-006X");
-                var limitBreakForward2 = C("0-006X");
-                var limitBreakForward3 = C("0-006X");
+                var limitBreakForward1 = C("0-007X");
+                var limitBreakForward2 = C("0-007X");
+                var limitBreakForward3 = C("0-007X");
                 var forward = C("0-002X");
                 Hand(P1, forward);
                 LimitBreak(P1, limitBreakForward1, limitBreakForward2, limitBreakForward3);
