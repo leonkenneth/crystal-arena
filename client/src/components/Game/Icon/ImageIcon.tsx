@@ -37,6 +37,7 @@ type Props = {
 };
 export default function ImageIcon({ icon }: Props) {
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={icons[icon].src}
       alt={icon}
