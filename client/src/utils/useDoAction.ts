@@ -31,6 +31,6 @@ export default function useDoAction<T extends Record<string, unknown> | undefine
       doAction(gameId, oid, action, otherParams);
       refresh();
     },
-    [oid.oid, gameId, refresh]
+    [oid, gameId, refresh]
   );
 }
