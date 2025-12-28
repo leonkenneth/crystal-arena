@@ -1,4 +1,3 @@
-import Hand from "./HandAndLBDeck/Hand";
 import BattlefieldRow from "./BattlefieldRow/index";
 import PlayerName from "./PlayerName";
 import LifeAndDamageZone from "./LifeAndDamageZone";
@@ -18,6 +17,7 @@ import HoveredCard from "./HoveredCard";
 import { DroppableZone } from "../ui/DroppableZone";
 import DragAndDropHandler from "./Card/DragAndDropHandler";
 import HandAndLBDeck from "./HandAndLBDeck";
+import OpponentsHand from "./OpponentsHand";
 
 export default function GameContent() {
   const { gameState } = useLoadedGameContext();
@@ -54,7 +54,7 @@ export default function GameContent() {
               </HStack>
             </HStack>
             <HStack w="full" flexGrow={1} flexShrink={1} overflowX="auto" justifyContent="center">
-              <Hand hand={screen.zones.opponentsHand} />
+              <OpponentsHand hand={screen.zones.opponentsHand} />
             </HStack>
           </VStack>
 

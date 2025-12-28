@@ -5,9 +5,10 @@ import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
   card: CardOutsideFieldState;
+  isZoomed: boolean;
 };
 
-export default function CardInHand({ card }: Props) {
+export default function CardInHand({ card, isZoomed }: Props) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: card.cardId,
     data: card,
@@ -20,9 +21,20 @@ export default function CardInHand({ card }: Props) {
     pointerEvents: "auto" as React.CSSProperties["pointerEvents"],
   };
 
+  let divProps = {};
+
+  if (isZoomed) {
+    divProps = {
+      ref: setNodeRef,
+      style,
+      ...listeners,
+      ...attributes,
+    }
+  }
+
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <Card card={card} />
+    <div {...divProps}>
+      <Card card={card} size={isZoomed ? "sm" : "xs"} isInteractable={isZoomed} />
     </div>
   );
 }
