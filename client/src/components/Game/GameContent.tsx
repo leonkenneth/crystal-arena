@@ -117,7 +117,7 @@ export default function GameContent() {
               w="full"
               p={4}
               justify="space-between"
-              align="flex-start"
+              align="center"
               maxW="100vw"
               bg="cyan.900"
               pointerEvents="auto"
