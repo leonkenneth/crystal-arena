@@ -32,7 +32,7 @@ export default function PlayNowButton({ children, ...props }: Props) {
   const buttonContent = isLoading ? "Creating game..." : children;
 
   return (
-    <VStack gap={2}>
+    <VStack gap={2} w={{ base: "full", sm: "auto" }}>
       {!error && (
         <Button onClick={onPlayNowClick} loading={isLoading} {...props}>
           {buttonContent}
