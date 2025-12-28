@@ -1,4 +1,4 @@
-import Hand from "./Hand";
+import Hand from "./HandAndLBDeck/Hand";
 import BattlefieldRow from "./BattlefieldRow/index";
 import PlayerName from "./PlayerName";
 import LifeAndDamageZone from "./LifeAndDamageZone";
@@ -17,7 +17,7 @@ import { ClientContext } from "@/utils/ClientContext";
 import HoveredCard from "./HoveredCard";
 import { DroppableZone } from "../ui/DroppableZone";
 import DragAndDropHandler from "./Card/DragAndDropHandler";
-import LimitBreak from "./LimitBreak";
+import HandAndLBDeck from "./HandAndLBDeck";
 
 export default function GameContent() {
   const { gameState } = useLoadedGameContext();
@@ -54,7 +54,7 @@ export default function GameContent() {
               </HStack>
             </HStack>
             <HStack w="full" flexGrow={1} flexShrink={1} overflowX="auto" justifyContent="center">
-              <Hand hand={screen.zones.opponentsHand} upsideDown />
+              <Hand hand={screen.zones.opponentsHand} />
             </HStack>
           </VStack>
 
@@ -99,19 +99,7 @@ export default function GameContent() {
             gap={0}
             pointerEvents="none"
           >
-            <HStack
-              w="full"
-              p={4}
-              flexGrow={1}
-              pointerEvents="none"
-              bg="transparent"
-              flexShrink={1}
-              overflowX="auto"
-              justifyContent="center"
-            >
-              <Hand hand={screen.zones.yourHand} />
-            </HStack>
-            <LimitBreak limitBreak={screen.zones.yourLimitBreak} />
+            <HandAndLBDeck hand={screen.zones.yourHand} limitBreak={screen.zones.yourLimitBreak} />
             {/* Steps and Pass Priority Button */}
             <HStack
               w="full"
