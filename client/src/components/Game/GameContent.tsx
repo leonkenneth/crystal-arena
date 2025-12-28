@@ -115,7 +115,8 @@ export default function GameContent() {
             {/* Steps and Pass Priority Button */}
             <HStack
               w="full"
-              p={4}
+              px={{ base: 2, md: 4 }}
+              py={{ base: 1, md: 4 }}
               justify="space-between"
               align="center"
               maxW="100vw"
