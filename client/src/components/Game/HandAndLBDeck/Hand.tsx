@@ -2,7 +2,7 @@ import { CardOutsideFieldState } from "@/types";
 import CardInHand from "./CardInHand";
 import { Box, VStack, HStack, Text } from "@chakra-ui/react";
 import useHover from "@/utils/useHover";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 type Props = {
   cards?: CardOutsideFieldState[];
@@ -15,15 +15,17 @@ type Props = {
 
 export default function Hand({ cards, toggleText, onClickToggle, showToggleText, onZoomOut, zoomable = true }: Props) {
   const [isHovered, setIsHovered] = useState(false);
+  const handleHoverIn = useCallback(() => {
+    setIsHovered(true);
+  }, []);
+  const handleHoverOut = useCallback(() => {
+    setIsHovered(false);
+    onZoomOut?.();
+  }, [onZoomOut]);
   const { ref } = useHover({
     triggerTimeout: 200,
-    onHoverIn: () => {
-      setIsHovered(true);
-    },
-    onHoverOut: () => {
-      setIsHovered(false);
-      onZoomOut?.();
-    },
+    onHoverIn: handleHoverIn,
+    onHoverOut: handleHoverOut,
     enabled: zoomable,
   });
 

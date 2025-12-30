@@ -65,9 +65,9 @@ export default function Card({
     onHoverOut: () => {
       setHoveredCard(null);
     },
-    enabled: isInteractable && displayHoverCard,
+    enabled: displayHoverCard,
   });
-  const displayedText = text || card.text;
+  const displayedText = text;
 
   const imageUrl = buildUrl(card);
 
@@ -94,7 +94,7 @@ export default function Card({
       {card.isVisibleInUi ? (
         <>
           <Image src={imageUrl} alt={card.serial} draggable={false} />
-          {displayTextOverlay && (
+          {displayTextOverlay && displayedText && (
             <CardBody
               style={{
                 position: "absolute",

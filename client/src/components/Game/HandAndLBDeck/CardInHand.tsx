@@ -34,7 +34,7 @@ export default function CardInHand({ card, isZoomed }: Props) {
 
   return (
     <div {...divProps}>
-      <Card card={card} size={isZoomed ? "sm" : "xs"} isInteractable={isZoomed} />
+      <Card card={card} size={isZoomed ? "sm" : "xs"} displayHoverCard={isZoomed} />
     </div>
   );
 }

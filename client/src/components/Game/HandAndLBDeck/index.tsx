@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { HStack, VStack, Text, Box} from "@chakra-ui/react";
+import { useCallback, useState } from "react";
+import { HStack, VStack } from "@chakra-ui/react";
 import { HandState, LimitBreakState } from "@/types";
 import Hand from "./Hand";
-import LimitBreak from "./LimitBreak";
 
 type Props = {
   hand: HandState;
@@ -17,9 +16,12 @@ export default function HandAndLBDeck({ hand, limitBreak }: Props) {
       showToggleText = lbCount > 0,
       toggleText = "Switch to LB";
 
-  const onClickToggle = () => {
+  const onClickToggle = useCallback(() => {
     setShowLimitBreak(!showLimitBreak);
-  }
+  }, [showLimitBreak]);
+  const onZoomOut = useCallback(() => {
+    setShowLimitBreak(false);
+  }, []);
 
   if (showLimitBreak) {
     shownCards = limitBreak.cards;
@@ -39,7 +41,7 @@ export default function HandAndLBDeck({ hand, limitBreak }: Props) {
         overflowX="auto"
         justifyContent="center"
       >
-        <Hand cards={shownCards} showToggleText={showToggleText} toggleText={toggleText} onClickToggle={onClickToggle} onZoomOut={() => setShowLimitBreak(false)} />
+        <Hand cards={shownCards} showToggleText={showToggleText} toggleText={toggleText} onClickToggle={onClickToggle} onZoomOut={onZoomOut} />
       </HStack>
     </VStack>
   );
