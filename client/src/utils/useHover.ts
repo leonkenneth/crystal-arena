@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 type UseHoverProps = {
   onHoverIn: () => void;
@@ -16,6 +16,18 @@ type HoverNodeInfo = {
   lastInteractionStartedAt: number | null;
   hovered: boolean;
 };
+
+const isTouchDevice = () => {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
+if (isTouchDevice()) {
+  window.oncontextmenu = function(event: MouseEvent) {
+    if (event.button != 2 && !(event.clientX === 1 && event.clientY === 1)) {
+        event.preventDefault();
+    }
+  }
+}
 
 class HoverManager {
   private nodes: HoverNodeInfo[] = [];
@@ -38,51 +50,69 @@ class HoverManager {
   }
 
   stop(node : HTMLElement | null) {
+    for (const nodeInfo of this.nodes) {
+      if (nodeInfo.node === node) {
+        this.checkHovering(nodeInfo);
+        break;
+      }
+    }
     this.nodes = this.nodes.filter(n => n.node !== node);
   }
 
   private setupListeners() {
     this.runNextTick();
-    window.addEventListener("pointermove", this.handlePointerMove);
-    window.addEventListener("mousemove", this.handlePointerMove);
+    if (isTouchDevice()) {
+      window.addEventListener("pointermove", this.handlePointerMove);
+    } else {
+      window.addEventListener("mousemove", this.handlePointerMove);
+    }
   }
 
   private handlePointerMove = (event: PointerEvent | MouseEvent) => {
     this.pointerPosition = { x: event.clientX, y: event.clientY };
   }
 
+  private checkHovering(nodeInfo: HoverNodeInfo) {
+    const { node, enabled, onHoverIn } = nodeInfo;
+
+    if (!node) return;
+
+    if (!enabled && nodeInfo.hovered) {
+      this.stopHovering(nodeInfo);
+      return;
+    }
+
+    const rect = node.getBoundingClientRect();
+    const isInside = this.pointerPosition && this.pointerPosition.x >= rect.left && this.pointerPosition.x <= rect.right && this.pointerPosition.y >= rect.top && this.pointerPosition.y <= rect.bottom;
+    if (isInside && !nodeInfo.lastInteractionStartedAt) {
+      nodeInfo.lastInteractionStartedAt = performance.now();
+    }
+
+    if (isInside && nodeInfo.lastInteractionStartedAt && (performance.now() - nodeInfo.lastInteractionStartedAt > nodeInfo.triggerTimeout) && !nodeInfo.hovered) {
+      onHoverIn();
+      nodeInfo.hovered = true;
+    }
+    
+    if (!isInside) {
+      this.stopHovering(nodeInfo);
+    }
+  }
+
   private runNextTick() {
     window.requestAnimationFrame(() => {
       for (const nodeInfo of this.nodes) {
-        const { node, enabled, onHoverIn, onHoverOut } = nodeInfo;
-        if (!node) continue;
-
-        if (!enabled) {
-          onHoverOut();
-          nodeInfo.hovered = false;
-          nodeInfo.lastInteractionStartedAt = null;
-          continue;
-        }
-
-        const rect = node.getBoundingClientRect();
-        const isInside = this.pointerPosition && this.pointerPosition.x >= rect.left && this.pointerPosition.x <= rect.right && this.pointerPosition.y >= rect.top && this.pointerPosition.y <= rect.bottom;
-        if (isInside && !nodeInfo.lastInteractionStartedAt) {
-          nodeInfo.lastInteractionStartedAt = Date.now();
-        }
-
-        if (isInside && nodeInfo.lastInteractionStartedAt && Date.now() - nodeInfo.lastInteractionStartedAt > nodeInfo.triggerTimeout && !nodeInfo.hovered) {
-          onHoverIn();
-          nodeInfo.hovered = true;
-        }
-        
-        if (!isInside && nodeInfo.hovered) {
-          onHoverOut();
-          nodeInfo.hovered = false;
-          nodeInfo.lastInteractionStartedAt = null;
-        }
+        this.checkHovering(nodeInfo);
       }
       this.runNextTick();
     });
+  }
+
+  private stopHovering(nodeInfo: HoverNodeInfo) {
+    if (nodeInfo.hovered) {
+      nodeInfo.onHoverOut();
+    }
+    nodeInfo.hovered = false;
+    nodeInfo.lastInteractionStartedAt = null;
   }
 
   static singleton: HoverManager | null = null;
@@ -104,18 +134,20 @@ const defaultTriggerTimeout = 500;
 
 export default function useHover(props: UseHoverProps) {
   const hoverTriggerTimeout = props.triggerTimeout || defaultTriggerTimeout;
-  const onHoverIn = props.onHoverIn;
-  const onHoverOut = props.onHoverOut;
+  const onHoverInRef = useRef(props.onHoverIn);
+  const onHoverOutRef = useRef(props.onHoverOut);
+  onHoverInRef.current = props.onHoverIn;
+  onHoverOutRef.current = props.onHoverOut;
   const enabled = typeof props.enabled === "undefined" ? true : props.enabled;
   const [isHovered, setIsHovered] = useState(false);
   const handleHoverIn = useCallback(() => {
-    onHoverIn();
+    onHoverInRef.current();
     setIsHovered(true);
-  }, [onHoverIn, setIsHovered]);
+  }, [setIsHovered]);
   const handleHoverOut = useCallback(() => {
-    onHoverOut();
+    onHoverOutRef.current();
     setIsHovered(false);
-  }, [onHoverOut, setIsHovered]);
+  }, [setIsHovered]);
   const ref = useCallback(
     (node: HTMLDivElement | null) => {
         HoverManager.start(node, { onHoverIn: handleHoverIn, onHoverOut: handleHoverOut, triggerTimeout: hoverTriggerTimeout, enabled });
