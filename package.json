@@ -1,0 +1,13 @@
+{
+  "name": "crystal-arena",
+  "private": true,
+  "scripts": {
+    "type-check:client": "cd client && pnpm run type-check",
+    "lint:client": "cd client && pnpm run lint",
+    "check:client": "pnpm run type-check:client && pnpm run lint:client",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
