@@ -18,10 +18,11 @@ type HoverNodeInfo = {
 };
 
 const isTouchDevice = () => {
+  if (typeof window === 'undefined') return false;
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
-if (isTouchDevice()) {
+if (typeof window !== 'undefined' && isTouchDevice()) {
   window.oncontextmenu = function(event: MouseEvent) {
     if (event.button != 2 && !(event.clientX === 1 && event.clientY === 1)) {
         event.preventDefault();

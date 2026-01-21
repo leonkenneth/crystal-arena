@@ -6,5 +6,5 @@ type Props = {
 };
 
 export default function LimitBreak({ limitBreak }: Props) {
-  return <Hand cards={limitBreak.cards} />
+  return <Hand cards={limitBreak.cards} showToggleText={false} />
 }
