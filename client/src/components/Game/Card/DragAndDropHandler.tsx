@@ -27,10 +27,9 @@ export default function DragAndDropHandler({
   const { gameState } = useLoadedGameContext();
   const [draggedCard, setDraggedCard] = useState<CardState | null>(null);
   const sensor = useSensor(PointerSensor, {
-    // Press delay of 150ms, with tolerance of 5px of movement
+    // Require a small movement before dragging to avoid accidental drags on touch.
     activationConstraint: {
-      delay: 150,
-      tolerance: 5,
+      distance: 8,
     },
   });
   const sensors = useSensors(sensor);

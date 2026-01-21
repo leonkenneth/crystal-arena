@@ -42,6 +42,7 @@ type Props = {
   containerProps?: Partial<CardContainerProps>;
   displayTextOverlay?: boolean;
   displayHoverCard?: boolean;
+  isInteractable?: boolean;
 };
 
 export default function Card({
@@ -52,23 +53,21 @@ export default function Card({
   containerProps,
   displayTextOverlay = true,
   displayHoverCard = card.isVisibleInUi,
+  isInteractable = card.isPlayable,
 }: Props) {
   const doAction = useDoAction(card.oid);
   const { gameState } = useLoadedGameContext();
   const { setHoveredCard } = useContext(ClientContext);
   const { ref } = useHover({
     onHoverIn: () => {
-      if (displayHoverCard) {
-        setHoveredCard(card);
-      }
+      setHoveredCard(card);
     },
     onHoverOut: () => {
-      if (displayHoverCard) {
-        setHoveredCard(null);
-      }
+      setHoveredCard(null);
     },
+    enabled: displayHoverCard,
   });
-  const displayedText = text || card.text;
+  const displayedText = text;
 
   const imageUrl = buildUrl(card);
 
@@ -85,9 +84,9 @@ export default function Card({
       isTapped={card.isTapped}
       isPlayable={card.isPlayable}
       isSelected={isSelected}
-      isInteractable={card.isPlayable}
+      isInteractable={isInteractable}
       dataCardId={dataCardId || `card-${card.cardId}`}
-      onClick={onClick}
+      onClick={isInteractable ? onClick : undefined}
       size={size}
       ref={ref}
       {...containerProps}
@@ -95,7 +94,7 @@ export default function Card({
       {card.isVisibleInUi ? (
         <>
           <Image src={imageUrl} alt={card.serial} draggable={false} />
-          {displayTextOverlay && (
+          {displayTextOverlay && displayedText && (
             <CardBody
               style={{
                 position: "absolute",

@@ -52,6 +52,7 @@ export default forwardRef(function CardContainer(
       size="sm"
       w={`${width}px`}
       h={`${height}px`}
+      transition="width 200ms ease, height 200ms ease"
       borderRadius="md"
       overflow="hidden"
       flexShrink={0}
