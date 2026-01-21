@@ -29,7 +29,7 @@ export default function CardInHand({ card, isZoomed }: Props) {
       style,
       ...listeners,
       ...attributes,
-    }
+    };
   }
 
   return (

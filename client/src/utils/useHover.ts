@@ -18,24 +18,24 @@ type HoverNodeInfo = {
 };
 
 const isTouchDevice = () => {
-  if (typeof window === 'undefined') return false;
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
+  if (typeof window === "undefined") return false;
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+};
 
-if (typeof window !== 'undefined' && isTouchDevice()) {
-  window.oncontextmenu = function(event: MouseEvent) {
+if (typeof window !== "undefined" && isTouchDevice()) {
+  window.oncontextmenu = function (event: MouseEvent) {
     if (event.button != 2 && !(event.clientX === 1 && event.clientY === 1)) {
-        event.preventDefault();
+      event.preventDefault();
     }
-  }
+  };
 }
 
 class HoverManager {
   private nodes: HoverNodeInfo[] = [];
   private isStarted: boolean = false;
-  private pointerPosition: { x: number, y: number } | null = null;
+  private pointerPosition: { x: number; y: number } | null = null;
 
-  start(node : HTMLElement | null, props : UseHoverProps) {
+  start(node: HTMLElement | null, props: UseHoverProps) {
     this.nodes.push({
       triggerTimeout: props.triggerTimeout || defaultTriggerTimeout,
       node,
@@ -50,14 +50,14 @@ class HoverManager {
     }
   }
 
-  stop(node : HTMLElement | null) {
+  stop(node: HTMLElement | null) {
     for (const nodeInfo of this.nodes) {
       if (nodeInfo.node === node) {
         this.checkHovering(nodeInfo);
         break;
       }
     }
-    this.nodes = this.nodes.filter(n => n.node !== node);
+    this.nodes = this.nodes.filter((n) => n.node !== node);
   }
 
   private setupListeners() {
@@ -71,7 +71,7 @@ class HoverManager {
 
   private handlePointerMove = (event: PointerEvent | MouseEvent) => {
     this.pointerPosition = { x: event.clientX, y: event.clientY };
-  }
+  };
 
   private checkHovering(nodeInfo: HoverNodeInfo) {
     const { node, enabled, onHoverIn } = nodeInfo;
@@ -84,16 +84,26 @@ class HoverManager {
     }
 
     const rect = node.getBoundingClientRect();
-    const isInside = this.pointerPosition && this.pointerPosition.x >= rect.left && this.pointerPosition.x <= rect.right && this.pointerPosition.y >= rect.top && this.pointerPosition.y <= rect.bottom;
+    const isInside =
+      this.pointerPosition &&
+      this.pointerPosition.x >= rect.left &&
+      this.pointerPosition.x <= rect.right &&
+      this.pointerPosition.y >= rect.top &&
+      this.pointerPosition.y <= rect.bottom;
     if (isInside && !nodeInfo.lastInteractionStartedAt) {
       nodeInfo.lastInteractionStartedAt = performance.now();
     }
 
-    if (isInside && nodeInfo.lastInteractionStartedAt && (performance.now() - nodeInfo.lastInteractionStartedAt > nodeInfo.triggerTimeout) && !nodeInfo.hovered) {
+    if (
+      isInside &&
+      nodeInfo.lastInteractionStartedAt &&
+      performance.now() - nodeInfo.lastInteractionStartedAt > nodeInfo.triggerTimeout &&
+      !nodeInfo.hovered
+    ) {
       onHoverIn();
       nodeInfo.hovered = true;
     }
-    
+
     if (!isInside) {
       this.stopHovering(nodeInfo);
     }
@@ -122,7 +132,6 @@ class HoverManager {
       HoverManager.singleton = new HoverManager();
       // @ts-expect-error - window is not typed
       window.HoverManager = HoverManager.singleton;
-      
     }
     HoverManager.singleton.start(node, props);
   }
@@ -151,12 +160,17 @@ export default function useHover(props: UseHoverProps) {
   }, [setIsHovered]);
   const ref = useCallback(
     (node: HTMLDivElement | null) => {
-        HoverManager.start(node, { onHoverIn: handleHoverIn, onHoverOut: handleHoverOut, triggerTimeout: hoverTriggerTimeout, enabled });
+      HoverManager.start(node, {
+        onHoverIn: handleHoverIn,
+        onHoverOut: handleHoverOut,
+        triggerTimeout: hoverTriggerTimeout,
+        enabled,
+      });
 
-        return () => {
-          HoverManager.stop(node);
-        };
-      },
+      return () => {
+        HoverManager.stop(node);
+      };
+    },
     [enabled, handleHoverIn, handleHoverOut, hoverTriggerTimeout]
   );
   return { isHovered, ref };

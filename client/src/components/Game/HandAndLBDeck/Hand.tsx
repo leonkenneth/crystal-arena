@@ -13,7 +13,14 @@ type Props = {
   zoomable?: boolean;
 };
 
-export default function Hand({ cards, toggleText, onClickToggle, showToggleText, onZoomOut, zoomable = true }: Props) {
+export default function Hand({
+  cards,
+  toggleText,
+  onClickToggle,
+  showToggleText,
+  onZoomOut,
+  zoomable = true,
+}: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const handleHoverIn = useCallback(() => {
     setIsHovered(true);

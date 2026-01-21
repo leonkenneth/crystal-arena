@@ -13,8 +13,8 @@ export default function HandAndLBDeck({ hand, limitBreak }: Props) {
   const lbCount = limitBreak.cards.length;
 
   let shownCards = hand.cards,
-      showToggleText = lbCount > 0,
-      toggleText = "Switch to LB";
+    showToggleText = lbCount > 0,
+    toggleText = "Switch to LB";
 
   const onClickToggle = useCallback(() => {
     setShowLimitBreak(!showLimitBreak);
@@ -41,10 +41,14 @@ export default function HandAndLBDeck({ hand, limitBreak }: Props) {
         overflowX="auto"
         justifyContent="center"
       >
-        <Hand cards={shownCards} showToggleText={showToggleText} toggleText={toggleText} onClickToggle={onClickToggle} onZoomOut={onZoomOut} />
+        <Hand
+          cards={shownCards}
+          showToggleText={showToggleText}
+          toggleText={toggleText}
+          onClickToggle={onClickToggle}
+          onZoomOut={onZoomOut}
+        />
       </HStack>
     </VStack>
   );
 }
-
-

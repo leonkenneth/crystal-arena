@@ -6,7 +6,5 @@ type Props = {
 };
 
 export default function OpponentsHand({ hand }: Props) {
-  return (
-    <Hand cards={hand.cards} showToggleText={false} zoomable={false} />
-  );
+  return <Hand cards={hand.cards} showToggleText={false} zoomable={false} />;
 }
