@@ -1,1 +1,2 @@
 pnpm run check:client
+pnpm run check:engine

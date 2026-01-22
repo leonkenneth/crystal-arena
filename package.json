@@ -4,7 +4,11 @@
   "scripts": {
     "type-check:client": "cd client && pnpm run type-check",
     "lint:client": "cd client && pnpm run lint",
-    "check:client": "pnpm run type-check:client && pnpm run lint:client",
+    "format:client": "cd client && pnpm run format:check",
+    "check:client": "pnpm run type-check:client && pnpm run lint:client && pnpm run format:client",
+    "format:engine": "cd engine && dotnet tool restore && dotnet csharpier check .",
+    "test:engine": "cd engine && dotnet restore CrystalArena.Tests/CrystalArena.Tests.csproj && dotnet build CrystalArena.Tests/CrystalArena.Tests.csproj --configuration Release --no-restore && dotnet test CrystalArena.Tests/CrystalArena.Tests.csproj --configuration Release --no-build",
+    "check:engine": "pnpm run format:engine && pnpm run test:engine",
     "prepare": "husky"
   },
   "devDependencies": {
