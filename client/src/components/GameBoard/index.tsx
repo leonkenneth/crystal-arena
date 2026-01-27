@@ -8,74 +8,207 @@ import useCardContext, { CardContext } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
 
 // Create a procedural felt texture for the game board
-function useBoardTexture() {
+function useBoardTextures() {
   return useMemo(() => {
+    const size = 1024
     const canvas = document.createElement('canvas')
-    canvas.width = 512
-    canvas.height = 512
+    canvas.width = size
+    canvas.height = size
     const ctx = canvas.getContext('2d')!
 
-    // Base color - dark blue felt
-    ctx.fillStyle = '#1a1a2f'
-    ctx.fillRect(0, 0, 512, 512)
+    // Base color - rich dark blue-green felt
+    const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size * 0.7)
+    gradient.addColorStop(0, '#1e2a3a')
+    gradient.addColorStop(0.5, '#1a1a2f')
+    gradient.addColorStop(1, '#151525')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, size, size)
 
-    // Add noise/grain for texture
-    for (let i = 0; i < 15000; i++) {
-      const x = Math.random() * 512
-      const y = Math.random() * 512
-      const brightness = Math.random() * 0.15
-      const blue = Math.floor(40 + brightness * 60)
-      ctx.fillStyle = `rgba(${blue * 0.5}, ${blue * 0.6}, ${blue}, ${0.3 + Math.random() * 0.3})`
-      ctx.fillRect(x, y, 1 + Math.random() * 2, 1 + Math.random() * 2)
+    // Add fine noise/grain for felt fiber texture
+    for (let i = 0; i < 40000; i++) {
+      const x = Math.random() * size
+      const y = Math.random() * size
+      const brightness = Math.random() * 0.2
+      const hue = 200 + Math.random() * 40 // Blue-ish hue variation
+      const sat = 30 + Math.random() * 20
+      const light = 15 + brightness * 25
+      ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${0.2 + Math.random() * 0.4})`
+      ctx.fillRect(x, y, 1 + Math.random() * 1.5, 1 + Math.random() * 1.5)
     }
 
-    // Add subtle diagonal lines for felt texture
-    ctx.strokeStyle = 'rgba(30, 30, 60, 0.15)'
+    // Add diagonal weave pattern for felt texture
+    ctx.strokeStyle = 'rgba(25, 35, 55, 0.2)'
     ctx.lineWidth = 1
-    for (let i = -512; i < 1024; i += 8) {
+    for (let i = -size; i < size * 2; i += 6) {
       ctx.beginPath()
       ctx.moveTo(i, 0)
-      ctx.lineTo(i + 512, 512)
+      ctx.lineTo(i + size, size)
+      ctx.stroke()
+    }
+    ctx.strokeStyle = 'rgba(35, 25, 45, 0.15)'
+    for (let i = -size; i < size * 2; i += 6) {
+      ctx.beginPath()
+      ctx.moveTo(i + size, 0)
+      ctx.lineTo(i, size)
       ctx.stroke()
     }
 
-    // Add some subtle lighter patches
-    for (let i = 0; i < 20; i++) {
-      const x = Math.random() * 512
-      const y = Math.random() * 512
-      const radius = 30 + Math.random() * 60
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
-      gradient.addColorStop(0, 'rgba(40, 40, 70, 0.1)')
-      gradient.addColorStop(1, 'rgba(40, 40, 70, 0)')
-      ctx.fillStyle = gradient
+    // Add subtle wear patterns / lighter patches
+    for (let i = 0; i < 30; i++) {
+      const x = Math.random() * size
+      const y = Math.random() * size
+      const radius = 40 + Math.random() * 80
+      const patchGradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
+      patchGradient.addColorStop(0, 'rgba(50, 55, 80, 0.12)')
+      patchGradient.addColorStop(0.5, 'rgba(45, 50, 75, 0.06)')
+      patchGradient.addColorStop(1, 'rgba(40, 45, 70, 0)')
+      ctx.fillStyle = patchGradient
       ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
     }
 
-    const texture = new THREE.CanvasTexture(canvas)
-    texture.wrapS = THREE.RepeatWrapping
-    texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(4, 4)
-    texture.needsUpdate = true
-    return texture
+    // Add darker worn spots
+    for (let i = 0; i < 15; i++) {
+      const x = Math.random() * size
+      const y = Math.random() * size
+      const radius = 20 + Math.random() * 40
+      const darkGradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
+      darkGradient.addColorStop(0, 'rgba(10, 10, 20, 0.15)')
+      darkGradient.addColorStop(1, 'rgba(10, 10, 20, 0)')
+      ctx.fillStyle = darkGradient
+      ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
+    }
+
+    // Add subtle wood grain border effect at edges
+    const edgeGradient = ctx.createLinearGradient(0, 0, size, 0)
+    edgeGradient.addColorStop(0, 'rgba(60, 45, 30, 0.1)')
+    edgeGradient.addColorStop(0.05, 'rgba(60, 45, 30, 0)')
+    edgeGradient.addColorStop(0.95, 'rgba(60, 45, 30, 0)')
+    edgeGradient.addColorStop(1, 'rgba(60, 45, 30, 0.1)')
+    ctx.fillStyle = edgeGradient
+    ctx.fillRect(0, 0, size, size)
+
+    const colorTexture = new THREE.CanvasTexture(canvas)
+    colorTexture.wrapS = THREE.RepeatWrapping
+    colorTexture.wrapT = THREE.RepeatWrapping
+    colorTexture.repeat.set(3, 3)
+    colorTexture.needsUpdate = true
+
+    // Create a roughness map for specular variation
+    const roughnessCanvas = document.createElement('canvas')
+    roughnessCanvas.width = 512
+    roughnessCanvas.height = 512
+    const roughnessCtx = roughnessCanvas.getContext('2d')!
+
+    // Base roughness (felt is fairly rough)
+    roughnessCtx.fillStyle = '#b0b0b0' // ~0.7 roughness
+    roughnessCtx.fillRect(0, 0, 512, 512)
+
+    // Add variation for worn/polished spots (lower roughness = more specular)
+    for (let i = 0; i < 50; i++) {
+      const x = Math.random() * 512
+      const y = Math.random() * 512
+      const radius = 20 + Math.random() * 60
+      const roughnessGradient = roughnessCtx.createRadialGradient(x, y, 0, x, y, radius)
+      const variation = Math.random() > 0.5 ? 0.85 : 0.65 // Vary between rougher and smoother
+      const colorVal = Math.floor(variation * 255)
+      roughnessGradient.addColorStop(0, `rgb(${colorVal}, ${colorVal}, ${colorVal})`)
+      roughnessGradient.addColorStop(1, '#b0b0b0')
+      roughnessCtx.fillStyle = roughnessGradient
+      roughnessCtx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
+    }
+
+    // Add fine noise to roughness
+    for (let i = 0; i < 8000; i++) {
+      const x = Math.random() * 512
+      const y = Math.random() * 512
+      const val = 140 + Math.random() * 80
+      roughnessCtx.fillStyle = `rgb(${val}, ${val}, ${val})`
+      roughnessCtx.fillRect(x, y, 2, 2)
+    }
+
+    const roughnessTexture = new THREE.CanvasTexture(roughnessCanvas)
+    roughnessTexture.wrapS = THREE.RepeatWrapping
+    roughnessTexture.wrapT = THREE.RepeatWrapping
+    roughnessTexture.repeat.set(3, 3)
+    roughnessTexture.needsUpdate = true
+
+    // Create a normal map for surface detail
+    const normalCanvas = document.createElement('canvas')
+    normalCanvas.width = 256
+    normalCanvas.height = 256
+    const normalCtx = normalCanvas.getContext('2d')!
+
+    // Neutral normal (pointing up)
+    normalCtx.fillStyle = '#8080ff'
+    normalCtx.fillRect(0, 0, 256, 256)
+
+    // Add subtle bumps for felt texture
+    for (let i = 0; i < 3000; i++) {
+      const x = Math.random() * 256
+      const y = Math.random() * 256
+      const nx = 128 + (Math.random() - 0.5) * 30
+      const ny = 128 + (Math.random() - 0.5) * 30
+      normalCtx.fillStyle = `rgb(${nx}, ${ny}, 255)`
+      normalCtx.fillRect(x, y, 1 + Math.random(), 1 + Math.random())
+    }
+
+    const normalTexture = new THREE.CanvasTexture(normalCanvas)
+    normalTexture.wrapS = THREE.RepeatWrapping
+    normalTexture.wrapT = THREE.RepeatWrapping
+    normalTexture.repeat.set(6, 6)
+    normalTexture.needsUpdate = true
+
+    return { colorTexture, roughnessTexture, normalTexture }
   }, [])
 }
 
 // Table surface with divider
 function TableSurface({ onClick }: { onClick: () => void }) {
-  const texture = useBoardTexture()
+  const { colorTexture, roughnessTexture, normalTexture } = useBoardTextures()
 
   return (
     <group>
-      {/* Table surface */}
-      <mesh position={[0, 0, -0.2]} onClick={onClick}>
+      {/* Table surface with enhanced materials */}
+      <mesh position={[0, 0, -0.2]} onClick={onClick} receiveShadow>
         <boxGeometry args={[20, 15, 0.1]} />
-        <meshStandardMaterial map={texture} />
+        <meshStandardMaterial
+          map={colorTexture}
+          roughnessMap={roughnessTexture}
+          normalMap={normalTexture}
+          normalScale={new THREE.Vector2(0.3, 0.3)}
+          roughness={0.7}
+          metalness={0.05}
+          envMapIntensity={0.8}
+        />
       </mesh>
 
-      {/* Center divider line */}
+      {/* Raised table edge/border - wood trim */}
+      <mesh position={[0, 7.55, -0.15]}>
+        <boxGeometry args={[20.2, 0.15, 0.2]} />
+        <meshStandardMaterial color="#3d2a1a" roughness={0.4} metalness={0.1} />
+      </mesh>
+      <mesh position={[0, -7.55, -0.15]}>
+        <boxGeometry args={[20.2, 0.15, 0.2]} />
+        <meshStandardMaterial color="#3d2a1a" roughness={0.4} metalness={0.1} />
+      </mesh>
+      <mesh position={[10.05, 0, -0.15]}>
+        <boxGeometry args={[0.15, 15.1, 0.2]} />
+        <meshStandardMaterial color="#3d2a1a" roughness={0.4} metalness={0.1} />
+      </mesh>
+      <mesh position={[-10.05, 0, -0.15]}>
+        <boxGeometry args={[0.15, 15.1, 0.2]} />
+        <meshStandardMaterial color="#3d2a1a" roughness={0.4} metalness={0.1} />
+      </mesh>
+
+      {/* Center divider line with metallic trim */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[20, 0.1, 0.05]} />
-        <meshStandardMaterial color="#3a4a5a" />
+        <boxGeometry args={[20, 0.08, 0.04]} />
+        <meshStandardMaterial
+          color="#c9a86c"
+          roughness={0.25}
+          metalness={0.7}
+          envMapIntensity={1.2}
+        />
       </mesh>
     </group>
   )
@@ -1145,18 +1278,54 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       {/* Responsive camera adjustment */}
       <ResponsiveCamera />
 
-      {/* Lighting */}
-      <ambientLight intensity={0.4} />
+      {/* Lighting - enhanced for specular highlights */}
+      <ambientLight intensity={0.3} />
+
+      {/* Main overhead light - creates primary specular reflections */}
       <directionalLight
-        position={[3, -5, 12]}
-        intensity={0.8}
+        position={[2, -3, 15]}
+        intensity={1.2}
         castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-far={50}
+        shadow-camera-left={-15}
+        shadow-camera-right={15}
+        shadow-camera-top={15}
+        shadow-camera-bottom={-15}
       />
-      <pointLight position={[-5, 5, 5]} intensity={0.3} color="#6688cc" />
-      <pointLight position={[5, 5, -5]} intensity={0.3} color="#cc8866" />
-      <Environment preset="city" environmentIntensity={0.5} />
+
+      {/* Secondary fill light from the side */}
+      <directionalLight
+        position={[-8, 2, 10]}
+        intensity={0.5}
+        color="#e8e0f0"
+      />
+
+      {/* Accent lights for dramatic specular highlights */}
+      <spotLight
+        position={[6, -6, 12]}
+        angle={0.4}
+        penumbra={0.5}
+        intensity={0.8}
+        color="#fff8e8"
+        castShadow
+      />
+      <spotLight
+        position={[-6, 6, 10]}
+        angle={0.5}
+        penumbra={0.6}
+        intensity={0.6}
+        color="#e8f0ff"
+      />
+
+      {/* Colored rim lights for atmosphere */}
+      <pointLight position={[-8, 6, 4]} intensity={0.4} color="#6688cc" distance={20} />
+      <pointLight position={[8, -6, 4]} intensity={0.4} color="#cc8866" distance={20} />
+      <pointLight position={[0, 0, 8]} intensity={0.25} color="#ffffff" distance={15} />
+
+      {/* Environment for realistic reflections */}
+      <Environment preset="city" environmentIntensity={0.7} />
 
       {/* Game board scene */}
       <GameBoardScene {...props} />
