@@ -24,6 +24,7 @@ const COLORS = {
   hand: '#4a3728',
 }
 import back from "@/assets/back.jpeg";
+import { getStepsToDisplay } from "./Steps";
 function CardMesh({ card, faceDown }: { card: CardState; faceDown: boolean }) {
   const imageUrl = getImageUrl(card);
   const frontTexture = useTexture(imageUrl);
@@ -74,8 +75,14 @@ export default function GameContent() {
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
   const stack = screen.stack;
-  const yourHealth = 25;
-  const opponentHealth = 18;
+  const yourHealth = screen.you.life;
+  const opponentHealth = screen.opponent.life;
+  const stepsToDisplay = getStepsToDisplay(screen.steps.steps);
+  const steps = stepsToDisplay.map((step) => ({
+    id: step.name,
+    label: step.name,
+    isActive: step.isCurrent,
+  }));
 
   const renderDialog = () => {
     return <Dialogs />;
@@ -127,7 +134,7 @@ export default function GameContent() {
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
       getCardId={(card: CardState) => card.cardId}
-      steps={[]}
+      steps={steps}
       renderMessage={renderMessage}
       renderBottomBar={() => null}
       renderDialog={renderDialog}
