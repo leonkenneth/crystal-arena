@@ -832,7 +832,7 @@ function GameBoardScene<T>({
 }
 
 // Preview card overlay (hover/long-press) - no actions
-function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode }) {
+function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { previewCard } = useCardContext()
 
   if (!previewCard) return null
@@ -852,13 +852,13 @@ function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, f
 }
 
 // Selected card overlay with action menu
-function SelectedCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode }) {
+function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { selectedCard, setSelectedCard } = useCardContext()
 
   if (!selectedCard) return null
 
   const handleAction = (action: string) => {
-    console.log(`Action "${action}" triggered for card:`, selectedCard.label)
+    console.log(`Action "${action}" triggered for card:`, getCardId(selectedCard))
     // In a real game, this would trigger game logic
     setSelectedCard(null)
   }
@@ -988,7 +988,7 @@ function SelectedCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, 
 }
 
 // Expanded pile overlay (deck or graveyard contents)
-function ExpandedPileOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode }) {
+function ExpandedPileOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { expandedPile, setExpandedPile, setSelectedCard } = useCardContext()
   const { isPortrait } = useLayout()
 
@@ -1076,7 +1076,7 @@ function ExpandedPileOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, 
         >
           {expandedPile.cards.map((card, index) => (
             <div
-              key={card.id}
+              key={getCardId(card)}
               onClick={() => handleCardClick(card)}
               style={{
                 flexShrink: 0,
@@ -1188,9 +1188,9 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       <GameBoardScene {...props} />
 
       {/* Card overlays */}
-      <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} />
-      <SelectedCardOverlay renderHtmlCard={props.renderHtmlCard} />
-      <ExpandedPileOverlay renderHtmlCard={props.renderHtmlCard} />
+      <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
+      <SelectedCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
+      <ExpandedPileOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
     </>
   )
 }
@@ -1257,8 +1257,7 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              pointerEvents: 'auto',
+              pointerEvents: 'none',
             }}
           >
             {dialogContent}

@@ -1,132 +1,114 @@
-import BattlefieldRow from "./BattlefieldRow/index";
-import PlayerName from "./PlayerName";
-import LifeAndDamageZone from "./LifeAndDamageZone";
-import CollapsedZone from "./CollapsedZone/index";
-import MessageBox from "./Dialogs/MessageBox";
-import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-import { VStack, HStack, StackSeparator, Box, Flex } from "@chakra-ui/react";
-import Dialogs from "./Dialogs/index";
-import Stack from "./Stack";
-import CPPool from "./CPPool";
-import PassPriorityButton from "./PassPriorityButton";
-import Steps from "./Steps";
-import { useState } from "react";
 import { CardState } from "@/types";
-import { ClientContext } from "@/utils/ClientContext";
-import HoveredCard from "./HoveredCard";
-import { DroppableZone } from "../ui/DroppableZone";
-import DragAndDropHandler from "./Card/DragAndDropHandler";
-import HandAndLBDeck from "./HandAndLBDeck";
-import OpponentsHand from "./OpponentsHand";
+import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
+import GameBoard from "../GameBoard";
+import Card from "./Card";
+import { RoundedBox } from "@react-three/drei";
+import Dialogs from "./Dialogs";
+import MessageBox from "./Dialogs/MessageBox";
+import { ChakraProvider } from "@chakra-ui/react";
+import { system } from "@/components/ui/system";
+const CARD_WIDTH = 0.7
+const CARD_HEIGHT = 1
+const CARD_DEPTH = 0.02
+
+const COLORS = {
+  cardFront: '#e8e0d5',
+  cardBack: '#2a4858',
+  cardBorder: '#1a1a1a',
+  deck: '#1e3a4c',
+  graveyard: '#3d2c3d',
+  battlefield: '#2d5a3d',
+  hand: '#4a3728',
+}
+function renderCard(card: CardState, faceDown: boolean): React.ReactNode {
+  const color = COLORS.cardFront;
+  return (
+    <group>
+      <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
+        <meshStandardMaterial color={faceDown ? COLORS.cardBack : color} />
+      </RoundedBox>
+      {/* Card border/frame */}
+      <RoundedBox
+        args={[CARD_WIDTH * 0.92, CARD_HEIGHT * 0.92, CARD_DEPTH + 0.005]}
+        radius={0.02}
+        smoothness={4}
+        position={[0, 0, 0.001]}
+      >
+        <meshStandardMaterial color={faceDown ? COLORS.cardBack : color} />
+      </RoundedBox>
+    </group>
+  )
+}
+
+function renderEmptySlot(): React.ReactNode {
+  return (
+    <group>
+      <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
+        <meshStandardMaterial color={COLORS.cardBack} />
+      </RoundedBox>
+    </group>
+  )
+}
 
 export default function GameContent() {
-  const { gameState } = useLoadedGameContext();
-  const [hoveredCard, setHoveredCard] = useState<CardState | null>(null);
+  const loadedGameContext = useLoadedGameContext();
+  const gameState = loadedGameContext.gameState;
   const screen = gameState.screen;
 
+  const yourHand = screen.zones.yourHand.cards;
+  const yourBattlefield = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents));
+  const yourDeck = screen.zones.yourMainDeck.cards;
+  const yourGraveyard = screen.zones.yourBreakZone.cards;
+  const opponentHand = screen.zones.opponentsHand.cards;
+  const opponentBattlefield = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents));
+  const opponentDeck = screen.zones.opponentsMainDeck.cards;
+  const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
+  const yourHealth = 25;
+  const opponentHealth = 18;
+
+  const renderDialog = () => {
+    return <Dialogs />;
+  }
+
+  const renderMessage = () => {
+    const messageBox = gameState.messageBox;
+    if (!messageBox) {
+      return null;
+    }
+    return <MessageBox messageBox={messageBox} />;
+  }
+
+  const renderHtmlCard = (card: CardState, faceDown: boolean): React.ReactNode => {
+    return (
+      <ChakraProvider value={system}>
+      <LoadedGameContext.Provider value={loadedGameContext}>
+        <Card card={card} size="xl" />
+      </LoadedGameContext.Provider>
+      </ChakraProvider>
+    );
+  }
+
   return (
-    <ClientContext.Provider value={{ hoveredCard, setHoveredCard }}>
-      <DragAndDropHandler
-        onDraggedCardEnd={() => {
-          setHoveredCard(null);
-        }}
-        onDraggedCardStart={() => {
-          setHoveredCard(null);
-        }}
-      >
-        <VStack h="100dvh" w="100vw" overflowX="hidden" overflowY="auto" userSelect="none" gap={0}>
-          {/* Opponent Area */}
-          <VStack p={4} w="full">
-            <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
-              <HStack flexShrink={1} align="flex-start" justify="flex-start">
-                <Box>
-                  <PlayerName player={screen.opponent} />
-                  <LifeAndDamageZone
-                    damageZone={screen.zones.opponentsDamageZone}
-                    damageZoneName="Opponent's DamageZone"
-                  />
-                </Box>
-                <CPPool pool={screen.opponentsManaPool} />
-              </HStack>
-              <HStack>
-                <CollapsedZone zone={screen.zones.opponentsMainDeck} name="Opponent's Deck" />
-                <CollapsedZone zone={screen.zones.opponentsBreakZone} name="Opponent's BreakZone" />
-              </HStack>
-            </HStack>
-            <HStack w="full" flexGrow={1} flexShrink={1} overflowX="auto" justifyContent="center">
-              <OpponentsHand hand={screen.zones.opponentsHand} />
-            </HStack>
-          </VStack>
-
-          {/* Battlefield */}
-
-          <VStack gap={4} w="full" bg="cyan.950">
-            <BattlefieldRow row={screen.opponentsBattlefield.row2} />
-            <BattlefieldRow row={screen.opponentsBattlefield.row1} />
-            <StackSeparator />
-            <DroppableZone id="Battlefield" style={{ width: "100%" }}>
-              <BattlefieldRow row={screen.yourBattlefield.row2} />
-              <BattlefieldRow row={screen.yourBattlefield.row1} />
-            </DroppableZone>
-          </VStack>
-
-          {/* Your Area */}
-          <VStack p={4} w="full">
-            <HStack flexShrink={0} align="flex-start" justify="space-between" w="full">
-              <HStack flexShrink={1} align="flex-start" justify="flex-start">
-                <Box>
-                  <PlayerName player={screen.you} />
-                  <LifeAndDamageZone
-                    damageZone={screen.zones.yourDamageZone}
-                    damageZoneName="Your DamageZone"
-                  />
-                </Box>
-                <CPPool pool={screen.yourManaPool} />
-              </HStack>
-              <HStack>
-                <CollapsedZone zone={screen.zones.yourMainDeck} name="Your Deck" />
-                <DroppableZone id="BreakZone">
-                  <CollapsedZone zone={screen.zones.yourBreakZone} name="Your BreakZone" />
-                </DroppableZone>
-              </HStack>
-            </HStack>
-          </VStack>
-          <VStack
-            w="full"
-            position="sticky"
-            bottom={0}
-            zIndex="sticky"
-            gap={0}
-            pointerEvents="none"
-          >
-            <HandAndLBDeck hand={screen.zones.yourHand} limitBreak={screen.zones.yourLimitBreak} />
-            {/* Steps and Pass Priority Button */}
-            <HStack
-              w="full"
-              px={{ base: 2, md: 4 }}
-              py={{ base: 1, md: 4 }}
-              justify="space-between"
-              align="center"
-              maxW="100vw"
-              bg="cyan.900"
-              pointerEvents="auto"
-            >
-              <Flex flexGrow={1} flexShrink={1} overflowX="auto" h="full" placeItems="center">
-                <Steps />
-              </Flex>
-              <Box flexGrow={0} flexShrink={0}>
-                <PassPriorityButton />
-              </Box>
-            </HStack>
-          </VStack>
-
-          {/* Global dialogs */}
-          {gameState.messageBox && <MessageBox messageBox={gameState.messageBox} />}
-          <Dialogs />
-          <Stack />
-          <HoveredCard />
-        </VStack>
-      </DragAndDropHandler>
-    </ClientContext.Provider>
+  <GameBoard<CardState>
+      renderHtmlCard={renderHtmlCard}
+      renderCard={renderCard}
+      renderEmptySlot={renderEmptySlot}
+      getCardId={(card: CardState) => card.cardId}
+      stack={null}
+      steps={[]}
+      renderMessage={renderMessage}
+      renderBottomBar={() => null}
+      renderDialog={renderDialog}
+      yourHand={yourHand}
+      yourBattlefield={yourBattlefield}
+      yourDeck={yourDeck}
+      yourGraveyard={yourGraveyard}
+      yourHealth={yourHealth}
+      opponentHand={opponentHand}
+      opponentBattlefield={opponentBattlefield}
+      opponentDeck={opponentDeck}
+      opponentGraveyard={opponentGraveyard}
+      opponentHealth={opponentHealth}
+    />
   );
 }
