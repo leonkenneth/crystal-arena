@@ -51,7 +51,15 @@ function CardMesh({ card }: { card: CardState }) {
 }
 
 function renderCardMesh(card: CardState): React.ReactNode {
-  return <CardMesh card={card} />;
+  const isTapped = card.isTapped;
+  const rotation: [number, number, number] = isTapped ? [0, 0, -Math.PI / 12] : [0, 0, 0];
+  const scale = isTapped ? 0.95 : 1;
+
+  return (
+    <group rotation={rotation} scale={scale}>
+      <CardMesh card={card} />
+    </group>
+  );
 }
 
 function renderEmptySlot(): React.ReactNode {
