@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { Canvas, useThree, ThreeEvent, useFrame } from '@react-three/fiber'
-import { RoundedBox, Text, Html, Environment, useTexture } from '@react-three/drei'
+import { RoundedBox, Text, Html, Environment, useTexture, Billboard } from '@react-three/drei'
 import * as THREE from 'three'
 import useCardContext, { CardContext } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
@@ -805,6 +805,138 @@ function StepIndicator({
   )
 }
 
+// Mana sphere with translucent shell and billboard icon inside
+function ManaSphere({
+  src,
+  position,
+  visible = true,
+  delay = 0,
+}: {
+  src: string
+  position: [number, number, number]
+  visible?: boolean
+  delay?: number
+}) {
+  const texture = useTexture(src)
+  const groupRef = useRef<THREE.Group>(null)
+  const animationState = useRef({
+    currentScale: 0,
+    targetScale: visible ? 1 : 0,
+    delayRemaining: delay,
+  })
+
+  // Update target when visible changes
+  React.useEffect(() => {
+    animationState.current.targetScale = visible ? 1 : 0
+    if (visible) {
+      animationState.current.delayRemaining = delay
+    }
+  }, [visible, delay])
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return
+
+    const state = animationState.current
+
+    // Handle delay
+    if (state.delayRemaining > 0) {
+      state.delayRemaining -= delta
+      return
+    }
+
+    // Spring animation towards target
+    const diff = state.targetScale - state.currentScale
+    if (Math.abs(diff) > 0.001) {
+      // Spring physics: faster when far, with slight overshoot
+      const spring = 8
+      const damping = 0.8
+      state.currentScale += diff * spring * delta * damping
+
+      // Add slight bounce overshoot when appearing
+      if (state.targetScale === 1 && state.currentScale > 0.95 && state.currentScale < 1.05) {
+        state.currentScale = Math.min(state.currentScale, 1.08)
+      }
+
+      groupRef.current.scale.setScalar(Math.max(0, state.currentScale))
+    } else {
+      state.currentScale = state.targetScale
+      groupRef.current.scale.setScalar(state.targetScale)
+    }
+  })
+
+  return (
+    <group ref={groupRef} position={position} scale={0}>
+      {/* Translucent outer sphere */}
+      <mesh renderOrder={1}>
+        <sphereGeometry args={[0.15, 32, 32]} />
+        <meshStandardMaterial
+          color="#88ccff"
+          transparent
+          opacity={0.25}
+          roughness={0.1}
+          metalness={0.3}
+          envMapIntensity={1.5}
+          depthWrite={false}
+        />
+      </mesh>
+      {/* Billboard icon inside */}
+      <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
+        <mesh renderOrder={2}>
+          <planeGeometry args={[0.2, 0.2]} />
+          <meshBasicMaterial
+            map={texture}
+            transparent
+            depthTest={false}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </Billboard>
+    </group>
+  )
+}
+
+type ManaPoolProps = {
+  textures: string[]
+  position?: [number, number, number]
+  scale?: number
+}
+
+function ManaPool({
+  textures,
+  position = [0, 0, 0],
+  scale = 1,
+}: ManaPoolProps) {
+  if (textures.length === 0) return null
+
+  // Spiral parameters
+  const baseRadius = 0.15
+  const radiusGrowth = 0.08
+  const angleStep = Math.PI * 0.6 // Golden angle-ish for nice distribution
+  const staggerDelay = 0.08 // Delay between each sphere appearing
+
+  return (
+    <group position={position} scale={scale}>
+      {textures.map((src, index) => {
+        const angle = index * angleStep
+        const radius = baseRadius + index * radiusGrowth
+        const xOffset = Math.cos(angle) * radius
+        const yOffset = Math.sin(angle) * radius
+        const zOffset = index * 0.05 // Slight z-stacking for depth
+
+        return (
+          <ManaSphere
+            key={`${src}-${index}`}
+            src={src}
+            position={[xOffset, yOffset, zOffset]}
+            visible={true}
+            delay={index * staggerDelay}
+          />
+        )
+      })}
+    </group>
+  )
+}
+
 type PlayerAreaProps<T> = {
   isOpponent?: boolean
   deckCards?: T[]
@@ -839,6 +971,7 @@ type GameBoardProps<T> = {
   stackButton?: () => React.ReactNode
   steps?: Step[]
   isOpponentTurn?: boolean
+  manaPoolTextures?: string[]
   renderDialog?: () => React.ReactNode | null
   renderMessage?: () => React.ReactNode | null
   renderBottomBar?: () => React.ReactNode | null
@@ -937,6 +1070,7 @@ function GameBoardScene<T>({
   stackButton,
   steps,
   isOpponentTurn,
+  manaPoolTextures,
 }: GameBoardProps<T>) {
   const layout = useLayout()
   const { viewport, isPortrait, scale } = layout
@@ -1018,6 +1152,15 @@ function GameBoardScene<T>({
           position={[(isPortrait ? -2 : -4) * scale, (isPortrait ? -5.5 : -4.5) * scale, 1]}
           scale={scale * (isPortrait ? 0.8 : 1)}
           isOpponentTurn={isOpponentTurn}
+        />
+      )}
+
+      {/* Mana pool in bottom-right corner */}
+      {manaPoolTextures && manaPoolTextures.length > 0 && (
+        <ManaPool
+          textures={manaPoolTextures}
+          position={[(isPortrait ? 2 : 4) * scale, (isPortrait ? -5.5 : -4.5) * scale, 1]}
+          scale={scale * (isPortrait ? 0.8 : 1)}
         />
       )}
     </group>

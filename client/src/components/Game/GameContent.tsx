@@ -15,6 +15,17 @@ const CARD_HEIGHT = 1
 const CARD_DEPTH = 0.02
 import human from "@/assets/human.png";
 import computer from "@/assets/computer.png";
+import lightIcon from "@/assets/icons/light.png";
+import waterIcon from "@/assets/icons/water.png";
+import darkIcon from "@/assets/icons/dark.png";
+import fireIcon from "@/assets/icons/fire.png";
+import windIcon from "@/assets/icons/wind.png";
+import iceIcon from "@/assets/icons/ice.png";
+import earthIcon from "@/assets/icons/earth.png";
+import lightningIcon from "@/assets/icons/lightning.png";
+import crystalIcon from "@/assets/icons/crystal.png";
+import dullIcon from "@/assets/icons/dull.png";
+import { ManaPoolState } from "@/types/player";
 
 const COLORS = {
   cardFront: '#e8e0d5',
@@ -27,6 +38,42 @@ const COLORS = {
 }
 import back from "@/assets/back.jpeg";
 import { getStepsToDisplay } from "./Steps";
+
+const manaIconMap: Record<string, string> = {
+  light: lightIcon.src,
+  water: waterIcon.src,
+  dark: darkIcon.src,
+  fire: fireIcon.src,
+  wind: windIcon.src,
+  ice: iceIcon.src,
+  earth: earthIcon.src,
+  lightning: lightningIcon.src,
+  crystal: crystalIcon.src,
+  colorless: dullIcon.src,
+  multi: crystalIcon.src, // Use crystal for multi
+};
+
+function getManaPoolTextures(manaPool: ManaPoolState): string[] {
+  const textures: string[] = [];
+
+  const manaTypes: (keyof ManaPoolState)[] = [
+    'light', 'water', 'dark', 'fire', 'wind',
+    'ice', 'earth', 'lightning', 'crystal', 'colorless', 'multi'
+  ];
+
+  for (const manaType of manaTypes) {
+    const count = manaPool[manaType];
+    const icon = manaIconMap[manaType];
+    if (icon && count > 0) {
+      for (let i = 0; i < count; i++) {
+        textures.push(icon);
+      }
+    }
+  }
+
+  return textures;
+}
+
 function CardMesh({ card }: { card: CardState }) {
   const imageUrl = getImageUrl(card);
   const frontTexture = useTexture(imageUrl);
@@ -167,6 +214,7 @@ export default function GameContent() {
       isOpponentTurn={screen.opponent.isActive}
       yourAvatarSrc={human.src}
       opponentAvatarSrc={computer.src}
+      manaPoolTextures={getManaPoolTextures(screen.yourManaPool)}
     />
   );
 }
