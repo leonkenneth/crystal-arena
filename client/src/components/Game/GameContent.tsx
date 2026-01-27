@@ -25,12 +25,13 @@ const COLORS = {
 }
 import back from "@/assets/back.jpeg";
 import { getStepsToDisplay } from "./Steps";
-function CardMesh({ card, faceDown }: { card: CardState; faceDown: boolean }) {
+function CardMesh({ card }: { card: CardState }) {
   const imageUrl = getImageUrl(card);
   const frontTexture = useTexture(imageUrl);
   const backTexture = useTexture(back.src);
   const imageWidth = CARD_WIDTH * 0.96;
   const imageHeight = CARD_HEIGHT * 0.96;
+  const faceDown = !card.isVisibleInUi;
 
   return (
     <group>
@@ -47,8 +48,8 @@ function CardMesh({ card, faceDown }: { card: CardState; faceDown: boolean }) {
   )
 }
 
-function renderCardMesh(card: CardState, faceDown: boolean): React.ReactNode {
-  return <CardMesh card={card} faceDown={faceDown} />;
+function renderCardMesh(card: CardState): React.ReactNode {
+  return <CardMesh card={card} />;
 }
 
 function renderEmptySlot(): React.ReactNode {
@@ -96,8 +97,7 @@ export default function GameContent() {
     return <MessageBox messageBox={messageBox} />;
   }
 
-  const renderHtmlCard = (card: CardState, _faceDown: boolean): React.ReactNode => {
-    void _faceDown;
+  const renderHtmlCard = (card: CardState): React.ReactNode => {
     return (
       <ChakraProvider value={system}>
       <LoadedGameContext.Provider value={loadedGameContext}>

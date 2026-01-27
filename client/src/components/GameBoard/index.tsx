@@ -272,22 +272,20 @@ function useLayout() {
 // Wrapper component that adds interaction to rendered cards
 type InteractiveCardProps<T> = {
   card: T
-  faceDown: boolean
   interactive: boolean
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
 }
 
 function InteractiveCard<T>({
   card,
-  faceDown,
   interactive,
   renderCardMesh,
 }: InteractiveCardProps<T>) {
-  const interactions = useCardInteraction<T>(interactive && !faceDown ? card : null)
+  const interactions = useCardInteraction<T>(interactive ? card : null)
 
   return (
-    <group {...(interactive && !faceDown ? interactions : {})}>
-      {renderCardMesh(card, faceDown)}
+    <group {...(interactive ? interactions : {})}>
+      {renderCardMesh(card)}
     </group>
   )
 }
@@ -298,7 +296,7 @@ type DeckProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
 }
 
 function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCardMesh }: DeckProps<T>) {
@@ -325,7 +323,7 @@ function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], 
       </RoundedBox>
       {/* Top card - face down */}
       <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-        {cards.length > 0 && renderCardMesh(cards[0]!, true)}
+        {cards.length > 0 && renderCardMesh(cards[0]!)}
       </group>
       {/* Card count */}
       <Text
@@ -347,7 +345,7 @@ type GraveyardProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode,
+  renderCardMesh: (card: T) => React.ReactNode,
   renderEmptySlot: () => React.ReactNode,
 }
 
@@ -383,7 +381,7 @@ function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = 
           </RoundedBox>
           {/* Top card (face up in graveyard) */}
           <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-            {topCard && renderCardMesh(topCard, false)}
+            {topCard && renderCardMesh(topCard)}
             {!topCard && renderEmptySlot()}
           </group>
         </>
@@ -448,7 +446,6 @@ function Hand<T>({
           >
             <InteractiveCard
               card={card}
-              faceDown={isOpponent}
               interactive={!isOpponent}
               renderCardMesh={renderCardMesh}
             />
@@ -464,7 +461,7 @@ type BattlefieldProps<T> = {
   position?: [number, number, number]
   isOpponent?: boolean
   maxSlots?: number
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
   getCardId: (card: T) => string | number
 }
 
@@ -492,10 +489,9 @@ function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, 
             </mesh>
             {/* Card if present */}
             {card && (
-              <group position={[0, 0, CARD_DEPTH / 2]} rotation={[isOpponent ? Math.PI : 0, 0, 0]}>
+              <group position={[0, 0, CARD_DEPTH / 2]}>
                 <InteractiveCard
                   card={card}
-                  faceDown={false}
                   interactive={true}
                   renderCardMesh={renderCardMesh}
                 />
@@ -512,7 +508,7 @@ type StackDisplayProps<T> = {
   stack: StackEffect<T>[]
   position?: [number, number, number]
   scale?: number
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
   getCardId: (card: T) => string | number
   renderButton?: () => React.ReactNode
 }
@@ -553,7 +549,6 @@ function StackDisplay<T>({
           >
             <InteractiveCard
               card={effect.card}
-              faceDown={false}
               interactive={true}
               renderCardMesh={renderCardMesh}
             />
@@ -740,7 +735,7 @@ type PlayerAreaProps<T> = {
   graveyardCards?: T[]
   handCards?: T[]
   battlefieldCards?: T[]
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
 }
@@ -756,8 +751,8 @@ type GameBoardProps<T> = {
   opponentDeck: T[]
   opponentGraveyard: T[]
   opponentHealth: number
-  renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
+  renderHtmlCard: (card: T) => React.ReactNode
+  renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
   onCardClick?: (card: T, zone: Zone) => void
@@ -948,7 +943,7 @@ function GameBoardScene<T>({
 }
 
 // Preview card overlay (hover/long-press) - no actions
-function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
+function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { previewCard } = useCardContext()
 
   if (!previewCard) return null
@@ -962,13 +957,13 @@ function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T, f
         userSelect: 'none',
       }}
     >
-    {renderHtmlCard(previewCard, false)}
+    {renderHtmlCard(previewCard)}
     </Html>
   )
 }
 
 // Selected card overlay with action menu
-function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
+function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { selectedCard, setSelectedCard } = useCardContext()
 
   if (!selectedCard) return null
@@ -1018,7 +1013,7 @@ function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard:
           }}
         >
         {/* Zoomed card */}
-        {renderHtmlCard(selectedCard, false)}
+        {renderHtmlCard(selectedCard)}
 
         {/* Action menu */}
         <div
@@ -1104,7 +1099,7 @@ function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard:
 }
 
 // Expanded pile overlay (deck or graveyard contents)
-function ExpandedPileOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode, getCardId: (card: T) => string | number }) {
+function ExpandedPileOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T) => React.ReactNode, getCardId: (card: T) => string | number }) {
   const { expandedPile, setExpandedPile, setSelectedCard } = useCardContext()
   const { isPortrait } = useLayout()
 
