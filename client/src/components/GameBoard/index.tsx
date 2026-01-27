@@ -540,28 +540,38 @@ function StackDisplay<T>({
   if (stack.length === 0) return null
 
   return (
-    <group position={position} scale={scale}>
+    <Billboard position={position} scale={scale}>
       {/* Stack label */}
       <Text
-        position={[0, CARD_HEIGHT / 2 + 0.15, 0.1]}
+        position={[0, CARD_HEIGHT + 1.3, 0.1]}
         fontSize={0.12}
         color="#ddd"
         anchorX="center"
         anchorY="middle"
+        scale={2}
       >
         Stack ({stack.length})
       </Text>
 
-      {/* Cards in stack - fanned tightly, newest on top */}
+      {/* Cards in stack - fanned like a hand, facing camera */}
       {stack.map((effect, index) => {
-        // Horizontal offset for tight fan
-        const xOffset = (index - (stack.length - 1) / 2) * CARD_WIDTH * 0.35
-        const zOffset = index * 0.02 // slight z offset so newer cards are on top
+        const spreadAngle = 12
+        const spreadRadius = 2.5
+        const totalSpread = (stack.length - 1) * spreadAngle
+        const startAngle = -totalSpread / 2
+
+        const angleDeg = startAngle + index * spreadAngle
+        const angleRad = angleDeg * (Math.PI / 180)
+
+        const xOffset = Math.sin(angleRad) * spreadRadius
+        const yOffset = -(1 - Math.cos(angleRad)) * 2
+        const zOffset = (stack.length - Math.abs(index - (stack.length - 1) / 2)) * 0.03
 
         return (
-          <group
-            key={getCardId(effect.card)}
-            position={[xOffset, 0, zOffset + CARD_DEPTH / 2]}
+          <group key={getCardId(effect.card)}
+          position={[xOffset, yOffset + CARD_HEIGHT, zOffset]}
+          scale={2}
+          rotation={[0, 0, angleRad]}
           >
             <InteractiveCard
               card={effect.card}
@@ -582,7 +592,7 @@ function StackDisplay<T>({
           {renderButton()}
         </Html>
       )}
-    </group>
+    </Billboard>
   )
 }
 
