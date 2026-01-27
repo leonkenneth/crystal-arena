@@ -131,8 +131,8 @@ function useLayout() {
     // Reduce battlefield slots on portrait
     maxBattlefieldSlots: isPortrait ? 5 : 7,
     // Hand spread settings - wider for better readability
-    handSpreadAngle: isPortrait ? 8 : 12,
-    handSpreadRadius: isPortrait ? 1.8 : 3,
+    handSpreadAngle: 12,
+    handSpreadRadius: 3,
   }
 }
 
