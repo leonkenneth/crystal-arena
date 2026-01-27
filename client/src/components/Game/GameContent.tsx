@@ -2,11 +2,12 @@ import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
 import GameBoard from "../GameBoard";
 import Card from "./Card";
-import { RoundedBox } from "@react-three/drei";
+import { RoundedBox, useTexture } from "@react-three/drei";
 import Dialogs from "./Dialogs";
 import MessageBox from "./Dialogs/MessageBox";
 import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/components/ui/system";
+import { getImageUrl } from "./Card/CardImage";
 const CARD_WIDTH = 0.7
 const CARD_HEIGHT = 1
 const CARD_DEPTH = 0.02
@@ -20,24 +21,32 @@ const COLORS = {
   battlefield: '#2d5a3d',
   hand: '#4a3728',
 }
-function renderCard(card: CardState, faceDown: boolean): React.ReactNode {
-  const color = COLORS.cardFront;
+function CardMesh({ card, faceDown }: { card: CardState; faceDown: boolean }) {
+  const imageUrl = getImageUrl(card);
+  const texture = useTexture(imageUrl);
+  const imageWidth = CARD_WIDTH * 0.88;
+  const imageHeight = CARD_HEIGHT * 0.88;
+
   return (
     <group>
       <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
-        <meshStandardMaterial color={faceDown ? COLORS.cardBack : color} />
+        <meshStandardMaterial
+          color={faceDown ? COLORS.cardBack : "#ffffff"}
+        />
       </RoundedBox>
+      {!faceDown && (
+        <mesh position={[0, 0, CARD_DEPTH / 2 + 0.002]}>
+          <planeGeometry args={[imageWidth, imageHeight]} />
+          <meshStandardMaterial map={texture} />
+        </mesh>
+      )}
       {/* Card border/frame */}
-      <RoundedBox
-        args={[CARD_WIDTH * 0.92, CARD_HEIGHT * 0.92, CARD_DEPTH + 0.005]}
-        radius={0.02}
-        smoothness={4}
-        position={[0, 0, 0.001]}
-      >
-        <meshStandardMaterial color={faceDown ? COLORS.cardBack : color} />
-      </RoundedBox>
     </group>
   )
+}
+
+function renderCardMesh(card: CardState, faceDown: boolean): React.ReactNode {
+  return <CardMesh card={card} faceDown={faceDown} />;
 }
 
 function renderEmptySlot(): React.ReactNode {
@@ -78,7 +87,8 @@ export default function GameContent() {
     return <MessageBox messageBox={messageBox} />;
   }
 
-  const renderHtmlCard = (card: CardState, faceDown: boolean): React.ReactNode => {
+  const renderHtmlCard = (card: CardState, _faceDown: boolean): React.ReactNode => {
+    void _faceDown;
     return (
       <ChakraProvider value={system}>
       <LoadedGameContext.Provider value={loadedGameContext}>
@@ -91,7 +101,7 @@ export default function GameContent() {
   return (
   <GameBoard<CardState>
       renderHtmlCard={renderHtmlCard}
-      renderCard={renderCard}
+      renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
       getCardId={(card: CardState) => card.cardId}
       stack={null}

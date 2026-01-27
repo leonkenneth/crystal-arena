@@ -147,20 +147,20 @@ type InteractiveCardProps<T> = {
   card: T
   faceDown: boolean
   interactive: boolean
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
 }
 
 function InteractiveCard<T>({
   card,
   faceDown,
   interactive,
-  renderCard,
+  renderCardMesh,
 }: InteractiveCardProps<T>) {
   const interactions = useCardInteraction<T>(interactive && !faceDown ? card : null)
 
   return (
     <group {...(interactive && !faceDown ? interactions : {})}>
-      {renderCard(card, faceDown)}
+      {renderCardMesh(card, faceDown)}
     </group>
   )
 }
@@ -171,10 +171,10 @@ type DeckProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
 }
 
-function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCard }: DeckProps<T>) {
+function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCardMesh }: DeckProps<T>) {
   const { setExpandedPile } = useCardContext()
   const stackHeight = Math.min(cardCount, 30) * 0.01
 
@@ -198,7 +198,7 @@ function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], 
       </RoundedBox>
       {/* Top card - face down */}
       <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-        {cards.length > 0 && renderCard(cards[0]!, true)}
+        {cards.length > 0 && renderCardMesh(cards[0]!, true)}
       </group>
       {/* Card count */}
       <Text
@@ -220,11 +220,11 @@ type GraveyardProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode,
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode,
   renderEmptySlot: () => React.ReactNode,
 }
 
-function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', renderCard, renderEmptySlot }: GraveyardProps<T>) {
+function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', renderCardMesh, renderEmptySlot }: GraveyardProps<T>) {
   const { setExpandedPile } = useCardContext()
   const stackHeight = Math.min(cardCount, 20) * 0.008
   const topCard = cards.length > 0 ? cards[cards.length - 1] : null
@@ -256,7 +256,7 @@ function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = 
           </RoundedBox>
           {/* Top card (face up in graveyard) */}
           <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-            {topCard && renderCard(topCard, false)}
+            {topCard && renderCardMesh(topCard, false)}
             {!topCard && renderEmptySlot()}
           </group>
         </>
@@ -282,7 +282,7 @@ type HandProps<T> = {
   position?: [number, number, number]
   spreadAngle?: number
   spreadRadius?: number
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   getCardId: (card: T) => string | number
 }
 
@@ -292,7 +292,7 @@ function Hand<T>({
   position = [0, 0, 0],
   spreadAngle = 12,
   spreadRadius = 3,
-  renderCard,
+  renderCardMesh,
   getCardId,
 }: HandProps<T>) {
   const totalSpread = (cards.length - 1) * spreadAngle
@@ -323,7 +323,7 @@ function Hand<T>({
               card={card}
               faceDown={isOpponent}
               interactive={!isOpponent}
-              renderCard={renderCard}
+              renderCardMesh={renderCardMesh}
             />
           </group>
         )
@@ -337,11 +337,11 @@ type BattlefieldProps<T> = {
   position?: [number, number, number]
   isOpponent?: boolean
   maxSlots?: number
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   getCardId: (card: T) => string | number
 }
 
-function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, maxSlots = 7, renderCard, getCardId }: BattlefieldProps<T>) {
+function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, maxSlots = 7, renderCardMesh, getCardId }: BattlefieldProps<T>) {
   const slotWidth = CARD_WIDTH + 0.15
 
   return (
@@ -370,7 +370,7 @@ function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, 
                   card={card}
                   faceDown={false}
                   interactive={true}
-                  renderCard={renderCard}
+                  renderCardMesh={renderCardMesh}
                 />
               </group>
             )}
@@ -385,7 +385,7 @@ type StackDisplayProps<T> = {
   stack: Stack<T>
   position?: [number, number, number]
   scale?: number
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   getCardId: (card: T) => string | number
 }
 
@@ -393,7 +393,7 @@ function StackDisplay<T>({
   stack,
   position = [0, 0, 0],
   scale = 1,
-  renderCard,
+  renderCardMesh,
   getCardId,
 }: StackDisplayProps<T>) {
   if (stack.effects.length === 0) return null
@@ -426,7 +426,7 @@ function StackDisplay<T>({
               card={effect.card}
               faceDown={false}
               interactive={true}
-              renderCard={renderCard}
+              renderCardMesh={renderCardMesh}
             />
           </group>
         )
@@ -630,7 +630,7 @@ type PlayerAreaProps<T> = {
   graveyardCards?: T[]
   handCards?: T[]
   battlefieldCards?: T[]
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
 }
@@ -647,7 +647,7 @@ type GameBoardProps<T> = {
   opponentGraveyard: T[]
   opponentHealth: number
   renderHtmlCard: (card: T, faceDown: boolean) => React.ReactNode
-  renderCard: (card: T, faceDown: boolean) => React.ReactNode
+  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
   onCardClick?: (card: T, zone: Zone) => void
@@ -665,7 +665,7 @@ function PlayerArea<T>({
   graveyardCards = [],
   handCards = [],
   battlefieldCards = [],
-  renderCard,
+  renderCardMesh,
   renderEmptySlot,
   getCardId,
 }: PlayerAreaProps<T>) {
@@ -694,7 +694,7 @@ function PlayerArea<T>({
         position={[0, handY, isOpponent ? 0 : 1]}
         spreadAngle={layout.handSpreadAngle}
         spreadRadius={layout.handSpreadRadius}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
         getCardId={getCardId}
       />
 
@@ -704,7 +704,7 @@ function PlayerArea<T>({
         isOpponent={isOpponent}
         position={[0, battlefieldY, 0]}
         maxSlots={layout.maxBattlefieldSlots}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
         getCardId={getCardId}
       />
 
@@ -715,7 +715,7 @@ function PlayerArea<T>({
         label={`${playerLabel} Deck`}
         position={[sideX, sideY, 0]}
         scale={deckGraveyardScale}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
       />
 
       {/* Graveyard (next to deck) */}
@@ -725,7 +725,7 @@ function PlayerArea<T>({
         label={`${playerLabel} Graveyard`}
         position={[sideX - (isPortrait ? 0.9 : 1.2), sideY, 0]}
         scale={deckGraveyardScale}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
       />
     </group>
@@ -743,7 +743,7 @@ function GameBoardScene<T>({
   opponentDeck,
   opponentGraveyard,
   opponentHealth,
-  renderCard,
+  renderCardMesh,
   renderEmptySlot,
   getCardId,
   stack,
@@ -776,7 +776,7 @@ function GameBoardScene<T>({
           stack={stack}
           position={[isPortrait ? 2.2 : 4, isPortrait ? -0.5 : -0.3, 0.5]}
           scale={scale * (isPortrait ? 0.8 : 0.9)}
-          renderCard={renderCard}
+          renderCardMesh={renderCardMesh}
           getCardId={getCardId}
         />
       )}
@@ -788,7 +788,7 @@ function GameBoardScene<T>({
         graveyardCards={yourGraveyard}
         handCards={yourHand}
         battlefieldCards={yourBattlefield}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
       />
@@ -800,7 +800,7 @@ function GameBoardScene<T>({
         graveyardCards={opponentGraveyard}
         handCards={opponentHand}
         battlefieldCards={opponentBattlefield}
-        renderCard={renderCard}
+        renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
       />

@@ -1,6 +1,5 @@
 import { CardState } from "@/types";
 import { CardBody } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
 import useDoAction from "@/utils/useDoAction";
 import CardBack, { CardBackImage } from "./CardBack";
 import CardContainer, { type Props as CardContainerProps } from "./CardContainer";
@@ -11,28 +10,7 @@ import { useContext } from "react";
 import { isTargeted } from "@/utils/gameStateQueries";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import CardText from "./CardText";
-
-const imageProxyBaseUrl = process.env.NEXT_PUBLIC_IMAGE_PROXY_BASE_URL || "http://localhost:4000";
-
-function addArrayToQueryParams(searchParams: URLSearchParams, key: string, array: string[]) {
-  array.forEach((item) => {
-    searchParams.append(key, item);
-  });
-}
-
-function buildUrl(card: CardState) {
-  const { name, serial, power, manaCost } = card;
-  const queryParams: Record<string, string> = {
-    name,
-    power: power ? power.toString() : "",
-    manaCost,
-    cardType: card.cardTypes[0],
-  };
-  const query = new URLSearchParams(queryParams);
-  addArrayToQueryParams(query, "jobs", card.jobs);
-  addArrayToQueryParams(query, "categories", card.categories);
-  return new URL(`/images/cards/full/${serial}_eg.jpg?${query}`, imageProxyBaseUrl).toString();
-}
+import CardImage from "./CardImage";
 
 type Props = {
   card: CardState;
@@ -69,8 +47,6 @@ export default function Card({
   });
   const displayedText = text;
 
-  const imageUrl = buildUrl(card);
-
   const onClick = () => {
     return doAction("Select");
   };
@@ -93,7 +69,7 @@ export default function Card({
     >
       {card.isVisibleInUi ? (
         <>
-          <Image src={imageUrl} alt={card.serial} draggable={false} />
+          <CardImage card={card} />
           {displayTextOverlay && displayedText && (
             <CardBody
               style={{
