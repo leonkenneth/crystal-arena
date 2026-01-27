@@ -662,25 +662,31 @@ type StepIndicatorProps = {
   steps: Step[]
   position?: [number, number, number]
   scale?: number
+  isOpponentTurn?: boolean
 }
 
 function StepIndicator({
   steps,
   position = [0, 0, 0],
   scale = 1,
+  isOpponentTurn = false,
 }: StepIndicatorProps) {
   const stepSize = 0.3
   const stepGap = 0.15
   const totalWidth = steps.length * stepSize + (steps.length - 1) * stepGap
   const activeStep = steps.find((step) => step.isActive)
 
+  // Colors change based on whose turn it is
+  const activeColor = isOpponentTurn ? '#c44' : '#48c'
+  const activeFrameColor = isOpponentTurn ? '#faa' : '#adf'
+  const activeEmissive = isOpponentTurn ? '#c44' : '#48c'
+
   return (
     <group position={position} scale={scale}>
       {steps.map((step, index) => {
         const xOffset = index * (stepSize + stepGap) - totalWidth / 2 + stepSize / 2
-        const activeColor = '#48c'
         const inactiveColor = '#3a3a4a'
-        const frameColor = step.isActive ? '#adf' : '#2a2a3a'
+        const frameColor = step.isActive ? activeFrameColor : '#2a2a3a'
 
         return (
           <group key={step.id} position={[xOffset, 0, 0]}>
@@ -692,7 +698,7 @@ function StepIndicator({
             >
               <meshStandardMaterial
                 color={frameColor}
-                emissive={step.isActive ? '#48c' : '#000'}
+                emissive={step.isActive ? activeEmissive : '#000'}
                 emissiveIntensity={step.isActive ? 0.3 : 0}
               />
             </RoundedBox>
@@ -717,7 +723,7 @@ function StepIndicator({
         <Text
           position={[0, -stepSize / 2 - 0.2, 0.1]}
           fontSize={0.18}
-          color="#adf"
+          color={activeFrameColor}
           anchorX="center"
           anchorY="top"
         >
@@ -759,6 +765,7 @@ type GameBoardProps<T> = {
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
+  isOpponentTurn?: boolean
   renderDialog?: () => React.ReactNode | null
   renderMessage?: () => React.ReactNode | null
   renderBottomBar?: () => React.ReactNode | null
@@ -854,6 +861,7 @@ function GameBoardScene<T>({
   stack,
   stackButton,
   steps,
+  isOpponentTurn,
 }: GameBoardProps<T>) {
   const layout = useLayout()
   const { viewport, isPortrait, scale } = layout
@@ -932,6 +940,7 @@ function GameBoardScene<T>({
           steps={steps}
           position={[(isPortrait ? -2 : -4) * scale, (isPortrait ? -5.5 : -4.5) * scale, 1]}
           scale={scale * (isPortrait ? 0.8 : 1)}
+          isOpponentTurn={isOpponentTurn}
         />
       )}
     </group>

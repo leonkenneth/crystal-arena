@@ -154,6 +154,7 @@ export default function GameContent() {
         })) || []
       }
       stackButton={renderStackButton}
+      isOpponentTurn={screen.opponent.isActive}
     />
   );
 }
