@@ -74,6 +74,18 @@ function getManaPoolTextures(manaPool: ManaPoolState): string[] {
   return textures;
 }
 
+function getCardBorderColor(card: CardState): string | null {
+  // Blue border for selected/targeted cards (higher priority)
+  if (card.isSelected || card.isSelectedForCombat || card.isTargetOfSpell) {
+    return '#4488ff';
+  }
+  // Green border for playable cards
+  if (card.isPlayable) {
+    return '#44cc44';
+  }
+  return null;
+}
+
 function CardMesh({ card }: { card: CardState }) {
   const imageUrl = getImageUrl(card);
   const frontTexture = useTexture(imageUrl);
@@ -81,18 +93,35 @@ function CardMesh({ card }: { card: CardState }) {
   const imageWidth = CARD_WIDTH * 0.96;
   const imageHeight = CARD_HEIGHT * 0.96;
   const faceDown = !card.isVisibleInUi;
+  const borderColor = getCardBorderColor(card);
 
   return (
     <group>
+      {/* Colored border (rendered behind the card) */}
+      {borderColor && (
+        <RoundedBox
+          args={[CARD_WIDTH + 0.06, CARD_HEIGHT + 0.06, CARD_DEPTH]}
+          radius={0.04}
+          smoothness={4}
+          position={[0, 0, -0.01]}
+        >
+          <meshStandardMaterial
+            color={borderColor}
+            emissive={borderColor}
+            emissiveIntensity={0.5}
+          />
+        </RoundedBox>
+      )}
+      {/* Card body */}
       <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
         <meshStandardMaterial
           color={faceDown ? COLORS.cardBack : COLORS.cardFront}
         />
       </RoundedBox>
-        <mesh position={[0, 0, CARD_DEPTH / 2 + 0.002]}>
-          <planeGeometry args={[imageWidth, imageHeight]} />
-          <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
-        </mesh>
+      <mesh position={[0, 0, CARD_DEPTH / 2 + 0.002]}>
+        <planeGeometry args={[imageWidth, imageHeight]} />
+        <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
+      </mesh>
     </group>
   )
 }
