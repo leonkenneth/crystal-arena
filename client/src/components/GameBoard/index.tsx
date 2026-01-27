@@ -112,12 +112,6 @@ export type StackEffect<T> = {
   targetCardIds: string[]
 }
 
-// Stack data
-export type Stack<T> = {
-  onResolveClick: () => void
-  effects: StackEffect<T>[]
-}
-
 // Hook to get layout info based on viewport
 function useLayout() {
   const { viewport } = useThree()
@@ -382,11 +376,12 @@ function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, 
 }
 
 type StackDisplayProps<T> = {
-  stack: Stack<T>
+  stack: StackEffect<T>[]
   position?: [number, number, number]
   scale?: number
   renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   getCardId: (card: T) => string | number
+  renderButton?: () => React.ReactNode
 }
 
 function StackDisplay<T>({
@@ -395,8 +390,9 @@ function StackDisplay<T>({
   scale = 1,
   renderCardMesh,
   getCardId,
+  renderButton,
 }: StackDisplayProps<T>) {
-  if (stack.effects.length === 0) return null
+  if (stack.length === 0) return null
 
   return (
     <group position={position} scale={scale}>
@@ -408,13 +404,13 @@ function StackDisplay<T>({
         anchorX="center"
         anchorY="middle"
       >
-        Stack ({stack.effects.length})
+        Stack ({stack.length})
       </Text>
 
       {/* Cards in stack - fanned tightly, newest on top */}
-      {stack.effects.map((effect, index) => {
+      {stack.map((effect, index) => {
         // Horizontal offset for tight fan
-        const xOffset = (index - (stack.effects.length - 1) / 2) * CARD_WIDTH * 0.35
+        const xOffset = (index - (stack.length - 1) / 2) * CARD_WIDTH * 0.35
         const zOffset = index * 0.02 // slight z offset so newer cards are on top
 
         return (
@@ -432,41 +428,16 @@ function StackDisplay<T>({
         )
       })}
 
-      {/* Resolve button */}
-      <Html
-        position={[0, -CARD_HEIGHT / 2 - 0.25, 0.1]}
-        center
-        style={{ pointerEvents: 'auto' }}
-      >
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            stack.onResolveClick()
-          }}
-          style={{
-            padding: '6px 16px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            backgroundColor: '#6a4a8a',
-            color: 'white',
-            border: '2px solid #8a6aaa',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            transition: 'transform 0.1s, background-color 0.1s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#8a6aaa'
-            e.currentTarget.style.transform = 'scale(1.05)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#6a4a8a'
-            e.currentTarget.style.transform = 'scale(1)'
-          }}
+      {/* Stack button */}
+      {renderButton && (
+        <Html
+          position={[0, -CARD_HEIGHT / 2 - 0.25, 0.1]}
+          center
+          style={{ pointerEvents: 'auto' }}
         >
-          Resolve
-        </button>
-      </Html>
+          {renderButton()}
+        </Html>
+      )}
     </group>
   )
 }
@@ -652,7 +623,8 @@ type GameBoardProps<T> = {
   getCardId: (card: T) => string | number
   onCardClick?: (card: T, zone: Zone) => void
   onCardHover?: (card: T | null) => void
-  stack?: Stack<T> | null
+  stack?: StackEffect<T>[] | null
+  stackButton?: () => React.ReactNode
   steps?: Step[]
   renderDialog?: () => React.ReactNode | null
   renderMessage?: () => React.ReactNode | null
@@ -747,6 +719,7 @@ function GameBoardScene<T>({
   renderEmptySlot,
   getCardId,
   stack,
+  stackButton,
   steps,
 }: GameBoardProps<T>) {
   const layout = useLayout()
@@ -771,13 +744,14 @@ function GameBoardScene<T>({
       </mesh>
 
       {/* Stack display (on player's side, right of center) */}
-      {stack && stack.effects.length > 0 && (
+      {stack && stack.length > 0 && (
         <StackDisplay
           stack={stack}
           position={[isPortrait ? 2.2 : 4, isPortrait ? -0.5 : -0.3, 0.5]}
           scale={scale * (isPortrait ? 0.8 : 0.9)}
           renderCardMesh={renderCardMesh}
           getCardId={getCardId}
+          renderButton={stackButton}
         />
       )}
 

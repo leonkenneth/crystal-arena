@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { RoundedBox, Text } from '@react-three/drei'
-import GameBoard, { Stack, Step } from '../GameBoard'
+import GameBoard, { StackEffect, Step } from '../GameBoard'
 
 const CARD_WIDTH = 0.7
 const CARD_HEIGHT = 1
@@ -93,21 +93,16 @@ const sampleSteps: Step[] = [
 ]
 
 // Sample stack for testing
-const sampleStack: Stack<CardData> = {
-  onResolveClick: () => {
-    console.log('Resolve clicked!')
+const sampleStack: StackEffect<CardData>[] = [
+  {
+    card: { id: 601, color: '#e8a040', label: 'Fireball', description: 'Deals 5 damage to target creature.', attack: 5 },
+    targetCardIds: ['111'],
   },
-  effects: [
-    {
-      card: { id: 601, color: '#e8a040', label: 'Fireball', description: 'Deals 5 damage to target creature.', attack: 5 },
-      targetCardIds: ['111'],
-    },
-    {
-      card: { id: 602, color: '#40a0e8', label: 'Counterspell', description: 'Counter target spell.', attack: undefined, health: undefined },
-      targetCardIds: ['601'],
-    },
-  ],
-}
+  {
+    card: { id: 602, color: '#40a0e8', label: 'Counterspell', description: 'Counter target spell.', attack: undefined, health: undefined },
+    targetCardIds: ['601'],
+  },
+]
 
 type CardProps = {
   color?: string
@@ -390,7 +385,7 @@ function HtmlCard({ card: previewCard }: { card: CardData, faceDown: boolean }):
 
 export default function DummyGameBoard() {
   const [showDialog, setShowDialog] = React.useState(true)
-  const [stack, setStack] = React.useState<Stack<CardData> | null>(sampleStack);
+  const [stack, setStack] = React.useState<StackEffect<CardData>[] | null>(sampleStack);
 
   return (
     <GameBoard<CardData>
@@ -409,6 +404,23 @@ export default function DummyGameBoard() {
       renderEmptySlot={() => <Card faceDown />}
       getCardId={getCardDataId}
       stack={stack}
+      stackButton={() => (
+        <button
+          onClick={() => console.log('Resolve clicked!')}
+          style={{
+            padding: '6px 16px',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            backgroundColor: '#6a4a8a',
+            color: 'white',
+            border: '2px solid #8a6aaa',
+            borderRadius: '6px',
+            cursor: 'pointer',
+          }}
+        >
+          Resolve
+        </button>
+      )}
       steps={sampleSteps}
       renderMessage={() => <SampleMessage onClose={() => setStack(null)} />}
       renderBottomBar={() => <SampleBottomBar />}

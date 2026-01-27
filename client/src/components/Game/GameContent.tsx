@@ -9,6 +9,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/components/ui/system";
 import { getImageUrl } from "./Card/CardImage";
 import { doAction } from "@/utils/useDoAction";
+import PassPriorityButton from "./PassPriorityButton";
 const CARD_WIDTH = 0.7
 const CARD_HEIGHT = 1
 const CARD_DEPTH = 0.02
@@ -72,6 +73,7 @@ export default function GameContent() {
   const opponentBattlefield = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents));
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
+  const stack = screen.stack;
   const yourHealth = 25;
   const opponentHealth = 18;
 
@@ -98,6 +100,19 @@ export default function GameContent() {
     );
   }
 
+  const renderStackButton = () => {
+    if (stack?.effects.length === 0) {
+      return null;
+    }
+    return (
+      <ChakraProvider value={system}>
+      <LoadedGameContext.Provider value={loadedGameContext}>
+        <PassPriorityButton />
+      </LoadedGameContext.Provider>
+      </ChakraProvider>
+    );
+  }
+
   const handleCardClick = (card: CardState | null) => {
     if (!card) {
       return;
@@ -112,7 +127,6 @@ export default function GameContent() {
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
       getCardId={(card: CardState) => card.cardId}
-      stack={null}
       steps={[]}
       renderMessage={renderMessage}
       renderBottomBar={() => null}
@@ -127,6 +141,12 @@ export default function GameContent() {
       opponentDeck={opponentDeck}
       opponentGraveyard={opponentGraveyard}
       opponentHealth={opponentHealth}
+      stack={stack?.effects.map((effect) => ({
+          card: effect.card,
+          targetCardIds: effect.targets.filter((t) => t.targetType === "Card").map((c) => c.cardId.toString()),
+        })) || []
+      }
+      stackButton={renderStackButton}
     />
   );
 }
