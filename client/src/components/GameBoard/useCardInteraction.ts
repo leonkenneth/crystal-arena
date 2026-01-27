@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef } from "react"
+import { useCallback, useRef, useState } from "react"
 import { ThreeEvent } from "@react-three/fiber"
 import useCardContext from "./useCardContext"
 
@@ -10,15 +10,17 @@ const LONG_PRESS_DURATION = 400
 
 // Hook for handling hover, long-press, and click
 export default function useCardInteraction<T>(cardData: T | null) {
-  const { setPreviewCard, setSelectedCard, selectedCard } = useCardContext()
+  const { previewCard, setPreviewCard, setSelectedCard, selectedCard } = useCardContext()
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isLongPress = useRef(false)
   const pointerDownTime = useRef(0)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handlePointerEnter = useCallback(() => {
     // Only show preview if no card is currently selected
     if (cardData && !selectedCard) {
       setPreviewCard(cardData)
+      setIsHovered(true)
     }
   }, [cardData, setPreviewCard, selectedCard])
 
@@ -27,8 +29,13 @@ export default function useCardInteraction<T>(cardData: T | null) {
       clearTimeout(longPressTimer.current)
       longPressTimer.current = null
     }
-    setPreviewCard(null)
-  }, [setPreviewCard])
+    // Only clear preview if it's still showing this card
+    // (prevents race condition when moving between cards quickly)
+    if (previewCard === cardData) {
+      setPreviewCard(null)
+    }
+    setIsHovered(false)
+  }, [setPreviewCard, previewCard, cardData])
 
   const handlePointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (!cardData) return
@@ -81,5 +88,6 @@ export default function useCardInteraction<T>(cardData: T | null) {
     onPointerDown: handlePointerDown,
     onPointerUp: handlePointerUp,
     onClick: handleClick,
+    isHovered,
   }
 }

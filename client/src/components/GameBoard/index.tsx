@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useCallback, useMemo } from 'react'
-import { Canvas, useThree, ThreeEvent } from '@react-three/fiber'
-import { RoundedBox, Text, Html, Environment } from '@react-three/drei'
+import React, { useState, useCallback, useMemo, useRef } from 'react'
+import { Canvas, useThree, ThreeEvent, useFrame } from '@react-three/fiber'
+import { RoundedBox, Text, Html, Environment, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import useCardContext, { CardContext } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
@@ -281,10 +281,26 @@ function InteractiveCard<T>({
   interactive,
   renderCardMesh,
 }: InteractiveCardProps<T>) {
-  const interactions = useCardInteraction<T>(interactive ? card : null)
+  const { isHovered, ...interactions } = useCardInteraction<T>(interactive ? card : null)
+  const groupRef = useRef<THREE.Group>(null)
+
+  // Animate hover effect - small zoom towards camera
+  useFrame((_, delta) => {
+    if (!groupRef.current) return
+
+    const targetZ = isHovered ? 0.15 : 0
+    const targetScale = isHovered ? 1.08 : 1
+
+    // Smooth lerp towards target values
+    const lerpSpeed = 12 * delta
+    groupRef.current.position.z += (targetZ - groupRef.current.position.z) * lerpSpeed
+    groupRef.current.scale.x += (targetScale - groupRef.current.scale.x) * lerpSpeed
+    groupRef.current.scale.y += (targetScale - groupRef.current.scale.y) * lerpSpeed
+    groupRef.current.scale.z += (targetScale - groupRef.current.scale.z) * lerpSpeed
+  })
 
   return (
-    <group {...(interactive ? interactions : {})}>
+    <group ref={groupRef} {...(interactive ? interactions : {})}>
       {renderCardMesh(card)}
     </group>
   )
@@ -575,6 +591,61 @@ type PlayerAvatarProps = {
   isOpponent?: boolean
   position?: [number, number, number]
   scale?: number
+  avatarSrc?: string
+}
+
+// Shader for rounded corners on avatar
+const roundedAvatarShader = {
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D map;
+    uniform float radius;
+    varying vec2 vUv;
+
+    float roundedBoxSDF(vec2 p, vec2 b, float r) {
+      vec2 q = abs(p) - b + r;
+      return length(max(q, 0.0)) - r;
+    }
+
+    void main() {
+      vec2 uv = vUv - 0.5;
+      float d = roundedBoxSDF(uv, vec2(0.5), radius);
+      if (d > 0.0) discard;
+
+      vec4 texColor = texture2D(map, vUv);
+      gl_FragColor = texColor;
+    }
+  `,
+}
+
+// Inner component that loads and displays the avatar texture with rounded corners
+function AvatarImage({ src }: { src: string }) {
+  const texture = useTexture(src)
+
+  // Create unique uniforms for each instance
+  const uniforms = useMemo(() => ({
+    map: { value: texture },
+    radius: { value: 0.15 },
+  }), [texture])
+
+  return (
+    <mesh position={[0, 0.15, 0.08]}>
+      <planeGeometry args={[1.0, 1.0]} />
+      <shaderMaterial
+        attach="material"
+        uniforms={uniforms}
+        vertexShader={roundedAvatarShader.vertexShader}
+        fragmentShader={roundedAvatarShader.fragmentShader}
+        transparent
+      />
+    </mesh>
+  )
 }
 
 function PlayerAvatar({
@@ -582,6 +653,7 @@ function PlayerAvatar({
   isOpponent = false,
   position = [0, 0, 0],
   scale = 1,
+  avatarSrc,
 }: PlayerAvatarProps) {
   const primaryColor = isOpponent ? '#c44' : '#48c'
   const secondaryColor = isOpponent ? '#822' : '#269'
@@ -610,15 +682,19 @@ function PlayerAvatar({
           <meshStandardMaterial color={primaryColor} />
         </RoundedBox>
 
-        {/* Inner accent */}
-        <RoundedBox
-          args={[0.9, 0.9, 0.14]}
-          radius={0.1}
-          smoothness={4}
-          position={[0, 0.15, 0]}
-        >
-          <meshStandardMaterial color={secondaryColor} />
-        </RoundedBox>
+        {/* Avatar image or fallback color */}
+        {avatarSrc ? (
+          <AvatarImage src={avatarSrc} />
+        ) : (
+          <RoundedBox
+            args={[0.9, 0.9, 0.14]}
+            radius={0.1}
+            smoothness={4}
+            position={[0, 0.15, 0]}
+          >
+            <meshStandardMaterial color={secondaryColor} />
+          </RoundedBox>
+        )}
 
         {/* Health display at bottom */}
         <group position={[0, -0.55, 0.1]}>
@@ -746,11 +822,13 @@ type GameBoardProps<T> = {
   yourDeck: T[]
   yourGraveyard: T[]
   yourHealth: number
+  yourAvatarSrc?: string
   opponentHand: T[]
   opponentBattlefield: T[]
   opponentDeck: T[]
   opponentGraveyard: T[]
   opponentHealth: number
+  opponentAvatarSrc?: string
   renderHtmlCard: (card: T) => React.ReactNode
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
@@ -845,11 +923,13 @@ function GameBoardScene<T>({
   yourDeck,
   yourGraveyard,
   yourHealth,
+  yourAvatarSrc,
   opponentHand,
   opponentBattlefield,
   opponentDeck,
   opponentGraveyard,
   opponentHealth,
+  opponentAvatarSrc,
   renderCardMesh,
   renderEmptySlot,
   getCardId,
@@ -921,12 +1001,14 @@ function GameBoardScene<T>({
         isOpponent={false}
         position={[(isPortrait ? -2.5 : -5) * scale, (isPortrait ? -3.2 : -2.5) * scale, 1]}
         scale={scale * (isPortrait ? 0.7 : 0.85)}
+        avatarSrc={yourAvatarSrc}
       />
       <PlayerAvatar
         health={opponentHealth}
         isOpponent={true}
         position={[(isPortrait ? -2.5 : -5) * scale, (isPortrait ? 3.2 : 2.5) * scale, 1]}
         scale={scale * (isPortrait ? 0.7 : 0.85)}
+        avatarSrc={opponentAvatarSrc}
       />
 
       {/* Step indicator in bottom-left corner */}

@@ -13,6 +13,8 @@ import PassPriorityButton from "./PassPriorityButton";
 const CARD_WIDTH = 0.7
 const CARD_HEIGHT = 1
 const CARD_DEPTH = 0.02
+import human from "@/assets/human.png";
+import computer from "@/assets/computer.png";
 
 const COLORS = {
   cardFront: '#e8e0d5',
@@ -155,6 +157,8 @@ export default function GameContent() {
       }
       stackButton={renderStackButton}
       isOpponentTurn={screen.opponent.isActive}
+      yourAvatarSrc={human.src}
+      opponentAvatarSrc={computer.src}
     />
   );
 }
