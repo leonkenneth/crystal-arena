@@ -22,26 +22,25 @@ const COLORS = {
   battlefield: '#2d5a3d',
   hand: '#4a3728',
 }
+import back from "@/assets/back.jpeg";
 function CardMesh({ card, faceDown }: { card: CardState; faceDown: boolean }) {
   const imageUrl = getImageUrl(card);
-  const texture = useTexture(imageUrl);
-  const imageWidth = CARD_WIDTH * 0.88;
-  const imageHeight = CARD_HEIGHT * 0.88;
+  const frontTexture = useTexture(imageUrl);
+  const backTexture = useTexture(back.src);
+  const imageWidth = CARD_WIDTH * 0.96;
+  const imageHeight = CARD_HEIGHT * 0.96;
 
   return (
     <group>
       <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
         <meshStandardMaterial
-          color={faceDown ? COLORS.cardBack : "#ffffff"}
+          color={faceDown ? COLORS.cardBack : COLORS.cardFront}
         />
       </RoundedBox>
-      {!faceDown && (
         <mesh position={[0, 0, CARD_DEPTH / 2 + 0.002]}>
           <planeGeometry args={[imageWidth, imageHeight]} />
-          <meshStandardMaterial map={texture} />
+          <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
         </mesh>
-      )}
-      {/* Card border/frame */}
     </group>
   )
 }

@@ -310,7 +310,7 @@ function Hand<T>({
         const xOffset = Math.sin(angleRad) * spreadRadius
         const yOffset = -5*(1 - Math.cos(angleRad)) * 0.5 * fanDirection
         const zOffset = (cards.length - Math.abs(index - (cards.length - 1) / 2)) * 0.03
-        const xRotation = isOpponent ? -0.5 : 0.7
+        const xRotation = 0.7
         const zRotation = -angleRad * fanDirection
 
         return (
