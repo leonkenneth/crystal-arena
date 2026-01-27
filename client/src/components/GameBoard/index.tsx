@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react'
 import { Canvas, useThree, ThreeEvent } from '@react-three/fiber'
-import { RoundedBox, Text, Html } from '@react-three/drei'
+import { RoundedBox, Text, Html, Environment } from '@react-three/drei'
 import * as THREE from 'three'
 import useCardContext, { CardContext } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
@@ -1174,7 +1174,7 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       {/* Lighting */}
       <ambientLight intensity={0.4} />
       <directionalLight
-        position={[5, 10, 5]}
+        position={[3, -5, 12]}
         intensity={0.8}
         castShadow
         shadow-mapSize-width={1024}
@@ -1182,6 +1182,7 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       />
       <pointLight position={[-5, 5, 5]} intensity={0.3} color="#6688cc" />
       <pointLight position={[5, 5, -5]} intensity={0.3} color="#cc8866" />
+      <Environment preset="city" environmentIntensity={0.5} />
 
       {/* Game board scene */}
       <GameBoardScene {...props} />
