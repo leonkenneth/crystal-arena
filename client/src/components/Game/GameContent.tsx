@@ -8,6 +8,7 @@ import MessageBox from "./Dialogs/MessageBox";
 import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/components/ui/system";
 import { getImageUrl } from "./Card/CardImage";
+import { doAction } from "@/utils/useDoAction";
 const CARD_WIDTH = 0.7
 const CARD_HEIGHT = 1
 const CARD_DEPTH = 0.02
@@ -98,8 +99,16 @@ export default function GameContent() {
     );
   }
 
+  const handleCardClick = (card: CardState | null) => {
+    if (!card) {
+      return;
+    }
+    return doAction(loadedGameContext.gameId, card.oid, "Select");
+  }
+
   return (
   <GameBoard<CardState>
+      onCardClick={handleCardClick}
       renderHtmlCard={renderHtmlCard}
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}

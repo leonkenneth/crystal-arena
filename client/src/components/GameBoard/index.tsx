@@ -1205,7 +1205,7 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
   const bottomBarContent = props.renderBottomBar?.()
 
   return (
-    <CardContext.Provider value={{ previewCard, setPreviewCard, selectedCard, setSelectedCard, expandedPile, setExpandedPile }}>
+    <CardContext.Provider value={{ previewCard, setPreviewCard, selectedCard, setSelectedCard: (card: T) => props.onCardClick?.(card, 'hand'), expandedPile, setExpandedPile }}>
       <div style={{ position: 'relative', width: '100dvw', height: '100dvh', userSelect: 'none', WebkitUserSelect: 'none' }}>
         <Canvas
           shadows
