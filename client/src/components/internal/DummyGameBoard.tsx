@@ -92,6 +92,22 @@ const sampleOpponentExile: CardData[] = [
   { id: 702, color: '#4a5a4a', label: 'Erased', description: 'Wiped from existence.', attack: 2, health: 5 },
 ]
 
+const samplePlayerPrizeCards: CardData[] = [
+  { id: 801, color: '#5a5a6a', label: 'Prize 1', description: 'A hidden prize card.' },
+  { id: 802, color: '#5a5a6a', label: 'Prize 2', description: 'A hidden prize card.' },
+  { id: 803, color: '#5a5a6a', label: 'Prize 3', description: 'A hidden prize card.' },
+  { id: 804, color: '#5a5a6a', label: 'Prize 4', description: 'A hidden prize card.' },
+]
+
+const sampleOpponentPrizeCards: CardData[] = [
+  { id: 901, color: '#6a5a5a', label: 'Prize 1', description: 'A hidden prize card.' },
+  { id: 902, color: '#6a5a5a', label: 'Prize 2', description: 'A hidden prize card.' },
+  { id: 903, color: '#6a5a5a', label: 'Prize 3', description: 'A hidden prize card.' },
+  { id: 904, color: '#6a5a5a', label: 'Prize 4', description: 'A hidden prize card.' },
+  { id: 905, color: '#6a5a5a', label: 'Prize 5', description: 'A hidden prize card.' },
+  { id: 906, color: '#6a5a5a', label: 'Prize 6', description: 'A hidden prize card.' },
+]
+
 // Sample steps for testing
 const sampleSteps: Step[] = [
   { id: 'untap', label: 'Untap', isActive: false },
@@ -403,18 +419,21 @@ export default function DummyGameBoard() {
       yourDeck={samplePlayerDeck}
       yourGraveyard={samplePlayerGraveyard}
       yourExile={samplePlayerExile}
+      yourPrizeCards={samplePlayerPrizeCards}
       yourHealth={25}
       opponentHand={sampleOpponentHand}
       opponentBattlefield={sampleOpponentBattlefield}
       opponentDeck={sampleOpponentDeck}
       opponentGraveyard={sampleOpponentGraveyard}
       opponentsExile={sampleOpponentExile}
+      opponentsPrizeCards={sampleOpponentPrizeCards}
       opponentHealth={18}
       renderCardMesh={renderSampleCardMesh}
       renderHtmlCard={(card: CardData) => <HtmlCard card={card} faceDown={false} />}
       renderEmptySlot={() => <Card faceDown />}
       getCardId={getCardDataId}
       onExileClick={(isOpponent) => console.log('Exile clicked:', isOpponent ? 'opponent' : 'player')}
+      onPrizeCardsClick={(isOpponent) => console.log('Prize cards clicked:', isOpponent ? 'opponent' : 'player')}
       stack={stack}
       stackButton={() => (
         <button

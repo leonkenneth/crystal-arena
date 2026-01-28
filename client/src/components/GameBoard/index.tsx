@@ -235,7 +235,7 @@ type Zone = 'hand' | 'battlefield' | 'deck' | 'graveyard'
 
 // Expanded pile data
 export type ExpandedPile<T> = {
-  type: 'deck' | 'graveyard' | 'exile'
+  type: 'deck' | 'graveyard' | 'exile' | 'prize'
   cards: T[]
   title: string
 }
@@ -469,6 +469,43 @@ function Exile<T>({ cardCount = 0, position = [0, 0, 0], scale = 1, cards = [], 
           {label} ({cardCount})
         </Text>
       )}
+    </group>
+  )
+}
+
+type PrizeCardsProps<T> = {
+  cards?: T[]
+  position?: [number, number, number]
+  scale?: number
+  renderCardMesh: (card: T) => React.ReactNode
+  onClick?: () => void
+}
+
+function PrizeCards<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCardMesh, onClick }: PrizeCardsProps<T>) {
+  // Don't render if no cards
+  if (cards.length === 0) return null
+
+  const cardSpacing = CARD_HEIGHT * 0.25 // Tight vertical spacing for prize cards
+  const totalHeight = (cards.length - 1) * cardSpacing
+
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
+    onClick?.()
+  }, [onClick])
+
+  return (
+    <group position={position} scale={scale} onClick={handleClick}>
+      {/* Cards arranged vertically with overlap */}
+      {cards.map((card, index) => {
+        const yOffset = index * cardSpacing - totalHeight / 2
+        const zOffset = index * 0.02 // Slight z-stacking
+
+        return (
+          <group key={index} position={[0, yOffset, zOffset]} scale={0.6}>
+            {renderCardMesh(card)}
+          </group>
+        )
+      })}
     </group>
   )
 }
@@ -1024,6 +1061,7 @@ type GameBoardProps<T> = {
   yourDeck: T[]
   yourGraveyard: T[]
   yourExile: T[]
+  yourPrizeCards: T[]
   yourHealth: number
   yourAvatarSrc?: string
   opponentHand: T[]
@@ -1031,6 +1069,7 @@ type GameBoardProps<T> = {
   opponentDeck: T[]
   opponentGraveyard: T[]
   opponentsExile: T[]
+  opponentsPrizeCards: T[]
   opponentHealth: number
   opponentAvatarSrc?: string
   renderHtmlCard: (card: T) => React.ReactNode
@@ -1042,6 +1081,7 @@ type GameBoardProps<T> = {
   onDeckClick?: (isOpponent: boolean) => void
   onGraveyardClick?: (isOpponent: boolean) => void
   onExileClick?: (isOpponent: boolean) => void
+  onPrizeCardsClick?: (isOpponent: boolean) => void
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
@@ -1150,6 +1190,7 @@ function GameBoardScene<T>({
   yourDeck,
   yourGraveyard,
   yourExile,
+  yourPrizeCards,
   yourHealth,
   yourAvatarSrc,
   opponentHand,
@@ -1157,6 +1198,7 @@ function GameBoardScene<T>({
   opponentDeck,
   opponentGraveyard,
   opponentsExile,
+  opponentsPrizeCards,
   opponentHealth,
   opponentAvatarSrc,
   renderCardMesh,
@@ -1165,6 +1207,7 @@ function GameBoardScene<T>({
   onDeckClick,
   onGraveyardClick,
   onExileClick,
+  onPrizeCardsClick,
   stack,
   stackButton,
   steps,
@@ -1249,6 +1292,22 @@ function GameBoardScene<T>({
         position={[(isPortrait ? -2.5 : -5) * scale, (isPortrait ? 3.2 : 2.5) * scale, 1]}
         scale={scale * (isPortrait ? 0.7 : 0.85)}
         avatarSrc={opponentAvatarSrc}
+      />
+
+      {/* Prize cards - below each player's avatar */}
+      <PrizeCards
+        cards={yourPrizeCards}
+        position={[(isPortrait ? -2.5 : -5) * scale, (isPortrait ? -3.9 : -3.3) * scale, 0.5]}
+        scale={scale * (isPortrait ? 0.7 : 0.85)}
+        renderCardMesh={renderCardMesh}
+        onClick={onPrizeCardsClick ? () => onPrizeCardsClick(false) : undefined}
+      />
+      <PrizeCards
+        cards={opponentsPrizeCards}
+        position={[(isPortrait ? -2.5 : -5) * scale, (isPortrait ? 3.9 : 3.3) * scale, 0.5]}
+        scale={scale * (isPortrait ? 0.7 : 0.85)}
+        renderCardMesh={renderCardMesh}
+        onClick={onPrizeCardsClick ? () => onPrizeCardsClick(true) : undefined}
       />
 
       {/* Step indicator in bottom-left corner */}
