@@ -8,30 +8,40 @@ import useCardContext from "./useCardContext"
 // Long press duration in ms
 const LONG_PRESS_DURATION = 400
 
-// Hook for handling hover, long-press, and click
+// Drag activation distance in pixels
+const DRAG_DISTANCE_THRESHOLD = 8
+
+// Check if card has playable activations (can be dragged)
+function canDrag<T>(card: T): boolean {
+  const cardAny = card as any
+  return cardAny?.playableActivations && cardAny.playableActivations.length > 0
+}
+
+// Hook for handling hover, long-press, click, and drag
 export default function useCardInteraction<T>(cardData: T | null) {
-  const { previewCard, setPreviewCard, setSelectedCard, selectedCard } = useCardContext()
+  const { previewCard, setPreviewCard, setSelectedCard, selectedCard, dragState, setDragState, onDragEnd, setIsCardInteracting } = useCardContext()
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isLongPress = useRef(false)
   const pointerDownTime = useRef(0)
+  const pointerDownPosition = useRef<{ x: number; y: number } | null>(null)
+  const isDragging = useRef(false)
   const [isHovered, setIsHovered] = useState(false)
 
   const handlePointerEnter = useCallback(() => {
-    // Only show preview if no card is currently selected
-    if (cardData && !selectedCard) {
+    // Only show preview if no card is currently selected and not dragging
+    if (cardData && !selectedCard && !dragState) {
       setPreviewCard(cardData)
       setIsHovered(true)
     }
-  }, [cardData, setPreviewCard, selectedCard])
+  }, [cardData, setPreviewCard, selectedCard, dragState])
 
   const handlePointerLeave = useCallback(() => {
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current)
       longPressTimer.current = null
     }
-    // Only clear preview if it's still showing this card
-    // (prevents race condition when moving between cards quickly)
-    if (previewCard === cardData) {
+    // Only clear preview if it's still showing this card and not dragging
+    if (previewCard === cardData && !isDragging.current) {
       setPreviewCard(null)
     }
     setIsHovered(false)
@@ -41,19 +51,67 @@ export default function useCardInteraction<T>(cardData: T | null) {
     if (!cardData) return
     e.stopPropagation()
 
+    // Mark that a card interaction is in progress (prevents panning)
+    setIsCardInteracting(true)
+
     pointerDownTime.current = Date.now()
+    pointerDownPosition.current = { x: e.nativeEvent.clientX, y: e.nativeEvent.clientY }
     isLongPress.current = false
+    isDragging.current = false
 
     longPressTimer.current = setTimeout(() => {
-      isLongPress.current = true
-      // Long press shows preview (for mobile)
-      setPreviewCard(cardData)
+      // Only trigger long press if not dragging
+      if (!isDragging.current) {
+        isLongPress.current = true
+        // Long press shows preview (for mobile)
+        setPreviewCard(cardData)
+      }
     }, LONG_PRESS_DURATION)
-  }, [cardData, setPreviewCard])
+  }, [cardData, setPreviewCard, setIsCardInteracting])
+
+  const handlePointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
+    if (!cardData || !pointerDownPosition.current) return
+
+    const dx = e.nativeEvent.clientX - pointerDownPosition.current.x
+    const dy = e.nativeEvent.clientY - pointerDownPosition.current.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    // Check if we should start dragging
+    if (!isDragging.current && distance >= DRAG_DISTANCE_THRESHOLD && canDrag(cardData)) {
+      isDragging.current = true
+
+      // Cancel long press timer when drag starts
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current)
+        longPressTimer.current = null
+      }
+
+      // Clear preview when starting drag
+      setPreviewCard(null)
+
+      // Start drag
+      setDragState({
+        card: cardData,
+        startPosition: pointerDownPosition.current,
+        currentPosition: { x: e.nativeEvent.clientX, y: e.nativeEvent.clientY },
+      })
+    }
+
+    // Update drag position
+    if (isDragging.current && dragState) {
+      setDragState({
+        ...dragState,
+        currentPosition: { x: e.nativeEvent.clientX, y: e.nativeEvent.clientY },
+      })
+    }
+  }, [cardData, setPreviewCard, dragState, setDragState])
 
   const handlePointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (!cardData) return
     e.stopPropagation()
+
+    // Mark that card interaction is complete
+    setIsCardInteracting(false)
 
     const pressDuration = Date.now() - pointerDownTime.current
 
@@ -61,6 +119,25 @@ export default function useCardInteraction<T>(cardData: T | null) {
       clearTimeout(longPressTimer.current)
       longPressTimer.current = null
     }
+
+    // Handle drag end
+    if (isDragging.current) {
+      isDragging.current = false
+      pointerDownPosition.current = null
+
+      // Find drop zone from pointer position
+      const dropZone = findDropZone(e.nativeEvent.clientX, e.nativeEvent.clientY)
+
+      // Notify about drag end
+      if (onDragEnd) {
+        onDragEnd(cardData, dropZone)
+      }
+
+      setDragState(null)
+      return
+    }
+
+    pointerDownPosition.current = null
 
     // If it was a long press, just hide preview on release
     if (isLongPress.current) {
@@ -74,7 +151,7 @@ export default function useCardInteraction<T>(cardData: T | null) {
       setPreviewCard(null)
       setSelectedCard(cardData)
     }
-  }, [cardData, setPreviewCard, setSelectedCard])
+  }, [cardData, setPreviewCard, setSelectedCard, onDragEnd, setDragState, setIsCardInteracting])
 
   // Stop click events from propagating to the table surface
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
@@ -86,8 +163,24 @@ export default function useCardInteraction<T>(cardData: T | null) {
     onPointerEnter: handlePointerEnter,
     onPointerLeave: handlePointerLeave,
     onPointerDown: handlePointerDown,
+    onPointerMove: handlePointerMove,
     onPointerUp: handlePointerUp,
     onClick: handleClick,
     isHovered,
   }
+}
+
+// Find drop zone based on screen coordinates
+function findDropZone(clientX: number, clientY: number): string | null {
+  // Get element at pointer position
+  const element = document.elementFromPoint(clientX, clientY)
+  if (!element) return null
+
+  // Look for drop zone data attribute
+  const dropZoneElement = element.closest('[data-drop-zone]')
+  if (dropZoneElement) {
+    return dropZoneElement.getAttribute('data-drop-zone')
+  }
+
+  return null
 }

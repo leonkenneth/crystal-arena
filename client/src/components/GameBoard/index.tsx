@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { Canvas, useThree, ThreeEvent, useFrame } from '@react-three/fiber'
 import { RoundedBox, Text, Html, Environment, useTexture, Billboard } from '@react-three/drei'
 import * as THREE from 'three'
-import useCardContext, { CardContext } from './useCardContext'
+import useCardContext, { CardContext, DragState } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
 
 // Create a procedural felt texture for the game board
@@ -334,11 +334,21 @@ function InteractiveCard<T>({
   renderCardMesh,
 }: InteractiveCardProps<T>) {
   const { isHovered, ...interactions } = useCardInteraction<T>(interactive ? card : null)
+  const { dragState } = useCardContext()
   const groupRef = useRef<THREE.Group>(null)
+
+  // Check if this card is being dragged
+  const isBeingDragged = dragState?.card === card
 
   // Animate hover effect - small zoom towards camera
   useFrame((_, delta) => {
     if (!groupRef.current) return
+
+    // Hide card while dragging
+    if (isBeingDragged) {
+      groupRef.current.scale.setScalar(0)
+      return
+    }
 
     const targetZ = isHovered ? 0.15 : 0
     const targetScale = isHovered ? 1.08 : 1
@@ -1133,6 +1143,7 @@ type GameBoardProps<T> = {
   onGraveyardClick?: (isOpponent: boolean) => void
   onExileClick?: (isOpponent: boolean) => void
   onPrizeCardsClick?: (isOpponent: boolean) => void
+  onCardDragEnd?: (card: T, zone: string | null) => void
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
@@ -1539,6 +1550,54 @@ function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard:
   )
 }
 
+// Dragged card overlay - 3D card that follows pointer
+function DraggedCardOverlay<T>({ renderCardMesh }: { renderCardMesh: (card: T) => React.ReactNode }) {
+  const { dragState } = useCardContext()
+  const { camera, viewport } = useThree()
+  const groupRef = useRef<THREE.Group>(null)
+
+  // Convert screen coordinates to 3D world position
+  useFrame(() => {
+    if (!groupRef.current || !dragState) return
+
+    // Convert screen position to normalized device coordinates (-1 to 1)
+    const x = (dragState.currentPosition.x / window.innerWidth) * 2 - 1
+    const y = -(dragState.currentPosition.y / window.innerHeight) * 2 + 1
+
+    // Create a vector at the pointer position
+    const vector = new THREE.Vector3(x, y, 0.5)
+    vector.unproject(camera)
+
+    // Get direction from camera to the unprojected point
+    const dir = vector.sub(camera.position).normalize()
+
+    // Calculate intersection with a plane at z = 2 (in front of board)
+    const distance = (2 - camera.position.z) / dir.z
+    const pos = camera.position.clone().add(dir.multiplyScalar(distance))
+
+    // Update position with slight offset
+    groupRef.current.position.set(pos.x, pos.y, 3)
+  })
+
+  if (!dragState) return null
+
+  return (
+    <group ref={groupRef}>
+      <group rotation={[0, 0, -0.1]} scale={1.1}>
+        {/* Render the card mesh with transparency */}
+        <group>
+          {renderCardMesh(dragState.card)}
+        </group>
+        {/* Add a semi-transparent overlay to indicate dragging */}
+        <mesh position={[0, 0, 0.03]}>
+          <planeGeometry args={[CARD_WIDTH, CARD_HEIGHT]} />
+          <meshBasicMaterial color="#88ccff" transparent opacity={0.3} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
 // Camera bounds for vertical panning
 const CAMERA_BOUNDS = {
   minY: -6,
@@ -1548,14 +1607,17 @@ const CAMERA_BOUNDS = {
 // Responsive camera with vertical touch/drag panning
 function ResponsiveCamera() {
   const { viewport, camera, gl } = useThree()
+  const { dragState, isCardInteracting } = useCardContext()
   const isPortrait = viewport.height > viewport.width
 
   // Store base camera position and current offset
   const basePosition = useRef({ x: 0, y: isPortrait ? -6 : -8, z: isPortrait ? 14 : 12 })
   const offsetY = useRef(0)
-  const isDragging = useRef(false)
+  const isPanning = useRef(false)
   const lastTouchY = useRef(0)
   const velocityY = useRef(0)
+  // Track if touch started on a card to prevent panning
+  const touchStartedOnCard = useRef(false)
 
   // Update base position when orientation changes
   React.useEffect(() => {
@@ -1585,13 +1647,19 @@ function ResponsiveCamera() {
     const canvas = gl.domElement
 
     const handleStart = (clientY: number) => {
-      isDragging.current = true
+      // Don't start panning if a card is being interacted with or dragged
+      if (dragState || isCardInteracting) {
+        touchStartedOnCard.current = true
+        return
+      }
+      isPanning.current = true
       lastTouchY.current = clientY
       velocityY.current = 0
     }
 
     const handleMove = (clientY: number) => {
-      if (!isDragging.current) return
+      // Don't pan if card interaction/drag is active or touch started on card
+      if (!isPanning.current || dragState || isCardInteracting || touchStartedOnCard.current) return
 
       const deltaY = (clientY - lastTouchY.current) * 0.02
 
@@ -1609,7 +1677,8 @@ function ResponsiveCamera() {
     }
 
     const handleEnd = () => {
-      isDragging.current = false
+      isPanning.current = false
+      touchStartedOnCard.current = false
     }
 
     // Touch events
@@ -1621,8 +1690,10 @@ function ResponsiveCamera() {
 
     const onTouchMove = (e: TouchEvent) => {
       if (e.touches.length === 1) {
-        // Prevent pull-to-refresh browser behavior
-        e.preventDefault()
+        // Prevent pull-to-refresh browser behavior only if we're panning
+        if (isPanning.current && !touchStartedOnCard.current) {
+          e.preventDefault()
+        }
         handleMove(e.touches[0].clientY)
       }
     }
@@ -1665,11 +1736,14 @@ function ResponsiveCamera() {
       canvas.removeEventListener('mouseup', onMouseUp)
       canvas.removeEventListener('mouseleave', onMouseUp)
     }
-  }, [camera, gl])
+  }, [camera, gl, dragState, isCardInteracting])
 
   // Momentum animation
   useFrame(() => {
-    if (!isDragging.current && Math.abs(velocityY.current) > 0.001) {
+    // Don't apply momentum if card is being dragged
+    if (dragState) return
+
+    if (!isPanning.current && Math.abs(velocityY.current) > 0.001) {
       // Apply friction
       velocityY.current *= 0.92
 
@@ -1746,21 +1820,87 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       {/* Card overlays */}
       <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
       <SelectedCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
+      <DraggedCardOverlay renderCardMesh={props.renderCardMesh} />
     </>
   )
+}
+
+// Find drop zone based on screen coordinates
+function findDropZone(clientX: number, clientY: number): string | null {
+  const element = document.elementFromPoint(clientX, clientY)
+  if (!element) return null
+
+  const dropZoneElement = element.closest('[data-drop-zone]')
+  if (dropZoneElement) {
+    return dropZoneElement.getAttribute('data-drop-zone')
+  }
+
+  return null
 }
 
 export default function GameBoard<T>(props: GameBoardProps<T>) {
   const [previewCard, setPreviewCard] = useState<T | null>(null)
   const [selectedCard, setSelectedCard] = useState<T | null>(null)
+  const [dragState, setDragState] = useState<DragState<T>>(null)
+  const [isCardInteracting, setIsCardInteracting] = useState(false)
+
+  // Handle drag end callback
+  const handleDragEnd = useCallback((card: T, zone: string | null) => {
+    props.onCardDragEnd?.(card, zone)
+  }, [props.onCardDragEnd])
+
+  // Global pointer move handler for drag tracking
+  useEffect(() => {
+    if (!dragState) return
+
+    const handlePointerMove = (e: PointerEvent) => {
+      setDragState(prev => prev ? {
+        ...prev,
+        currentPosition: { x: e.clientX, y: e.clientY },
+      } : null)
+    }
+
+    const handlePointerUp = (e: PointerEvent) => {
+      if (dragState) {
+        const zone = findDropZone(e.clientX, e.clientY)
+        handleDragEnd(dragState.card, zone)
+        setDragState(null)
+        setIsCardInteracting(false)
+      }
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+  }, [dragState, handleDragEnd])
 
   const dialogContent = props.renderDialog?.()
   const messageContent = props.renderMessage?.()
   const bottomBarContent = props.renderBottomBar?.()
   const overlayContent = props.renderOverlay?.()
 
+  const contextValue = useMemo(() => ({
+    previewCard,
+    setPreviewCard,
+    selectedCard,
+    setSelectedCard: (card: T | null) => {
+      if (card) {
+        props.onCardClick?.(card, 'hand')
+      }
+    },
+    dragState,
+    setDragState,
+    onDragEnd: handleDragEnd,
+    isCardInteracting,
+    setIsCardInteracting,
+  }), [previewCard, selectedCard, dragState, handleDragEnd, isCardInteracting, props])
+
   return (
-    <CardContext.Provider value={{ previewCard, setPreviewCard, selectedCard, setSelectedCard: (card: T) => props.onCardClick?.(card, 'hand') }}>
+    <CardContext.Provider value={contextValue}>
       <div style={{ position: 'relative', width: '100dvw', height: '100dvh', userSelect: 'none', WebkitUserSelect: 'none' }}>
         <Canvas
           shadows
