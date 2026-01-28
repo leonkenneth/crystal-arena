@@ -313,18 +313,16 @@ type DeckProps<T> = {
   cards?: T[]
   label?: string
   renderCardMesh: (card: T) => React.ReactNode
+  onClick?: () => void
 }
 
-function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCardMesh }: DeckProps<T>) {
-  const { setExpandedPile } = useCardContext()
+function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCardMesh, onClick }: DeckProps<T>) {
   const stackHeight = Math.min(cardCount, 30) * 0.01
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
-    if (cards.length > 0) {
-      setExpandedPile({ type: 'deck', cards, title: label })
-    }
-  }, [cards, label, setExpandedPile])
+    onClick?.()
+  }, [onClick])
 
   return (
     <group position={position} scale={scale} onClick={handleClick}>
@@ -361,21 +359,19 @@ type GraveyardProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
-  renderCardMesh: (card: T) => React.ReactNode,
-  renderEmptySlot: () => React.ReactNode,
+  renderCardMesh: (card: T) => React.ReactNode
+  renderEmptySlot: () => React.ReactNode
+  onClick?: () => void
 }
 
-function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', renderCardMesh, renderEmptySlot }: GraveyardProps<T>) {
-  const { setExpandedPile } = useCardContext()
+function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', renderCardMesh, renderEmptySlot, onClick }: GraveyardProps<T>) {
   const stackHeight = Math.min(cardCount, 20) * 0.008
   const topCard = cards.length > 0 ? cards[cards.length - 1] : null
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
-    if (cards.length > 0) {
-      setExpandedPile({ type: 'graveyard', cards, title: label })
-    }
-  }, [cards, label, setExpandedPile])
+    onClick?.()
+  }, [onClick])
 
   return (
     <group position={position} scale={scale} onClick={handleClick}>
@@ -956,6 +952,8 @@ type PlayerAreaProps<T> = {
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
+  onDeckClick?: () => void
+  onGraveyardClick?: () => void
 }
 
 type GameBoardProps<T> = {
@@ -977,6 +975,8 @@ type GameBoardProps<T> = {
   getCardId: (card: T) => string | number
   onCardClick?: (card: T, zone: Zone) => void
   onCardHover?: (card: T | null) => void
+  onDeckClick?: (isOpponent: boolean) => void
+  onGraveyardClick?: (isOpponent: boolean) => void
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
@@ -985,6 +985,7 @@ type GameBoardProps<T> = {
   renderDialog?: () => React.ReactNode | null
   renderMessage?: () => React.ReactNode | null
   renderBottomBar?: () => React.ReactNode | null
+  renderOverlay?: () => React.ReactNode | null
 }
 
 function PlayerArea<T>({
@@ -996,6 +997,8 @@ function PlayerArea<T>({
   renderCardMesh,
   renderEmptySlot,
   getCardId,
+  onDeckClick,
+  onGraveyardClick,
 }: PlayerAreaProps<T>) {
   const layout = useLayout()
   const { isPortrait, scale } = layout
@@ -1044,6 +1047,7 @@ function PlayerArea<T>({
         position={[sideX, sideY, 0]}
         scale={deckGraveyardScale}
         renderCardMesh={renderCardMesh}
+        onClick={onDeckClick}
       />
 
       {/* Graveyard (next to deck) */}
@@ -1055,6 +1059,7 @@ function PlayerArea<T>({
         scale={deckGraveyardScale}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
+        onClick={onGraveyardClick}
       />
     </group>
   )
@@ -1076,6 +1081,8 @@ function GameBoardScene<T>({
   renderCardMesh,
   renderEmptySlot,
   getCardId,
+  onDeckClick,
+  onGraveyardClick,
   stack,
   stackButton,
   steps,
@@ -1084,13 +1091,12 @@ function GameBoardScene<T>({
 }: GameBoardProps<T>) {
   const layout = useLayout()
   const { viewport, isPortrait, scale } = layout
-  const { setSelectedCard, setExpandedPile } = useCardContext()
+  const { setSelectedCard } = useCardContext()
 
   // Click on empty space to deselect
   const handleBackgroundClick = useCallback(() => {
     setSelectedCard(null)
-    setExpandedPile(null)
-  }, [setSelectedCard, setExpandedPile])
+  }, [setSelectedCard])
 
   return (
     <group>
@@ -1125,6 +1131,8 @@ function GameBoardScene<T>({
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
+        onDeckClick={onDeckClick ? () => onDeckClick(false) : undefined}
+        onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(false) : undefined}
       />
 
       {/* Opponent's area (top) */}
@@ -1137,6 +1145,8 @@ function GameBoardScene<T>({
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
+        onDeckClick={onDeckClick ? () => onDeckClick(true) : undefined}
+        onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(true) : undefined}
       />
 
       {/* Player avatars with health - same vertical as deck/graveyard, on left side */}
@@ -1333,164 +1343,6 @@ function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard:
   )
 }
 
-// Expanded pile overlay (deck or graveyard contents)
-function ExpandedPileOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T) => React.ReactNode, getCardId: (card: T) => string | number }) {
-  const { expandedPile, setExpandedPile, setSelectedCard } = useCardContext()
-  const { isPortrait } = useLayout()
-
-  if (!expandedPile) return null
-
-  const handleClose = () => {
-    setExpandedPile(null)
-  }
-
-  const handleCardClick = (card: T) => {
-    setExpandedPile(null)
-    setSelectedCard(card)
-  }
-
-  const isDeck = expandedPile.type === 'deck'
-  const baseZ = isPortrait ? 7 : 4
-
-  return (
-    <Html
-      center
-      position={[0, 0, baseZ]}
-      style={{
-        pointerEvents: 'none',
-      }}
-    >
-      {/* Full screen container */}
-      <div
-        onClick={handleClose}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'auto',
-        }}
-      >
-        {/* Pile viewer container */}
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '12px',
-            maxWidth: '90vw',
-          }}
-        >
-        {/* Title */}
-        <div
-          style={{
-            fontSize: '20px',
-            fontWeight: 'bold',
-            color: 'white',
-            textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          <span>{isDeck ? '📚' : '💀'}</span>
-          <span>{expandedPile.title}</span>
-          <span style={{ fontSize: '14px', color: '#aaa' }}>
-            ({expandedPile.cards.length} cards)
-          </span>
-        </div>
-
-        {/* Scrollable card list */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '12px',
-            padding: '16px',
-            overflowX: 'auto',
-            overflowY: 'hidden',
-            maxWidth: '85vw',
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            borderRadius: '12px',
-            border: `2px solid ${isDeck ? '#1e3a4c' : '#3d2c3d'}`,
-          }}
-        >
-          {expandedPile.cards.map((card, index) => (
-            <div
-              key={getCardId(card)}
-              onClick={() => handleCardClick(card)}
-              style={{
-                flexShrink: 0,
-                width: '120px',
-                height: '168px',
-                backgroundColor: isDeck ? COLORS.cardBack : card.color,
-                borderRadius: '8px',
-                border: '2px solid #1a1a1a',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '8px',
-                color: isDeck ? '#aaa' : '#333',
-                fontFamily: 'system-ui, sans-serif',
-                cursor: 'pointer',
-                transition: 'transform 0.15s, box-shadow 0.15s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)'
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.6)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.4)'
-              }}
-            >
-              {/* Card index for deck */}
-              {isDeck && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '4px',
-                    right: '4px',
-                    fontSize: '10px',
-                    color: '#666',
-                  }}
-                >
-                  #{index + 1}
-                </div>
-              )}
-
-              {renderHtmlCard(card, false)}
-            </div>
-          ))}
-        </div>
-
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          style={{
-            padding: '10px 24px',
-            fontSize: '14px',
-            backgroundColor: '#555',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-          }}
-        >
-          Close
-        </button>
-        </div>
-      </div>
-    </Html>
-  )
-}
-
 // Responsive camera that adjusts based on viewport
 function ResponsiveCamera() {
   const { viewport, camera } = useThree()
@@ -1572,7 +1424,6 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       {/* Card overlays */}
       <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
       <SelectedCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
-      <ExpandedPileOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
     </>
   )
 }
@@ -1580,14 +1431,14 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
 export default function GameBoard<T>(props: GameBoardProps<T>) {
   const [previewCard, setPreviewCard] = useState<T | null>(null)
   const [selectedCard, setSelectedCard] = useState<T | null>(null)
-  const [expandedPile, setExpandedPile] = useState<ExpandedPile<T> | null>(null)
 
   const dialogContent = props.renderDialog?.()
   const messageContent = props.renderMessage?.()
   const bottomBarContent = props.renderBottomBar?.()
+  const overlayContent = props.renderOverlay?.()
 
   return (
-    <CardContext.Provider value={{ previewCard, setPreviewCard, selectedCard, setSelectedCard: (card: T) => props.onCardClick?.(card, 'hand'), expandedPile, setExpandedPile }}>
+    <CardContext.Provider value={{ previewCard, setPreviewCard, selectedCard, setSelectedCard: (card: T) => props.onCardClick?.(card, 'hand') }}>
       <div style={{ position: 'relative', width: '100dvw', height: '100dvh', userSelect: 'none', WebkitUserSelect: 'none' }}>
         <Canvas
           shadows
@@ -1643,6 +1494,20 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
             }}
           >
             {dialogContent}
+          </div>
+        )}
+        {overlayContent && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              pointerEvents: 'auto',
+            }}
+          >
+            {overlayContent}
           </div>
         )}
       </div>

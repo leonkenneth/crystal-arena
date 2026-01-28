@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
 import GameBoard from "../GameBoard";
@@ -5,6 +6,7 @@ import Card from "./Card";
 import { RoundedBox, useTexture } from "@react-three/drei";
 import Dialogs from "./Dialogs";
 import MessageBox from "./Dialogs/MessageBox";
+import ExpandedZoneDialog from "./CollapsedZone/ExpandedZoneDialog";
 import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/components/ui/system";
 import { getImageUrl } from "./Card/CardImage";
@@ -148,10 +150,16 @@ function renderEmptySlot(): React.ReactNode {
   )
 }
 
+type ExpandedZone = {
+  type: 'deck' | 'graveyard';
+  isOpponent: boolean;
+} | null;
+
 export default function GameContent() {
   const loadedGameContext = useLoadedGameContext();
   const gameState = loadedGameContext.gameState;
   const screen = gameState.screen;
+  const [expandedZone, setExpandedZone] = useState<ExpandedZone>(null);
 
   const yourHand = screen.zones.yourHand.cards;
   const yourBattlefield = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents));
@@ -213,12 +221,47 @@ export default function GameContent() {
     return doAction(loadedGameContext.gameId, card.oid, "Select");
   }
 
+  const handleDeckClick = (isOpponent: boolean) => {
+    setExpandedZone({ type: 'deck', isOpponent });
+  };
+
+  const handleGraveyardClick = (isOpponent: boolean) => {
+    setExpandedZone({ type: 'graveyard', isOpponent });
+  };
+
+  const renderOverlay = () => {
+    if (!expandedZone) return null;
+
+    const cards = expandedZone.type === 'deck'
+      ? (expandedZone.isOpponent ? opponentDeck : yourDeck)
+      : (expandedZone.isOpponent ? opponentGraveyard : yourGraveyard);
+
+    const ownerLabel = expandedZone.isOpponent ? "Opponent's" : "Your";
+    const zoneLabel = expandedZone.type === 'deck' ? 'Deck' : 'Graveyard';
+    const title = `${ownerLabel} ${zoneLabel}`;
+
+    return (
+      <ChakraProvider value={system}>
+        <LoadedGameContext.Provider value={loadedGameContext}>
+          <ExpandedZoneDialog
+            title={title}
+            cards={cards}
+            onClose={() => setExpandedZone(null)}
+          />
+        </LoadedGameContext.Provider>
+      </ChakraProvider>
+    );
+  };
+
   return (
   <GameBoard<CardState>
       onCardClick={handleCardClick}
+      onDeckClick={handleDeckClick}
+      onGraveyardClick={handleGraveyardClick}
       renderHtmlCard={renderHtmlCard}
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
+      renderOverlay={renderOverlay}
       getCardId={(card: CardState) => card.cardId}
       steps={steps}
       renderMessage={renderMessage}
