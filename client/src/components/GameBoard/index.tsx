@@ -14,7 +14,46 @@ function useBoardTextures() {
     const canvas = document.createElement('canvas')
     canvas.width = size
     canvas.height = size
-    const ctx = canvas.getContext('2d')!
+    const ctx = canvas.getContext('2d')
+
+    // Fallback if canvas context is not available - create solid color textures
+    if (!ctx) {
+      // Create a simple solid color canvas for fallback
+      const fallbackCanvas = document.createElement('canvas')
+      fallbackCanvas.width = 16
+      fallbackCanvas.height = 16
+      const fallbackCtx = fallbackCanvas.getContext('2d')
+      if (fallbackCtx) {
+        fallbackCtx.fillStyle = '#1a1a2e'
+        fallbackCtx.fillRect(0, 0, 16, 16)
+      }
+      const colorTexture = new THREE.CanvasTexture(fallbackCanvas)
+      colorTexture.needsUpdate = true
+
+      const roughnessCanvas = document.createElement('canvas')
+      roughnessCanvas.width = 16
+      roughnessCanvas.height = 16
+      const roughnessCtx = roughnessCanvas.getContext('2d')
+      if (roughnessCtx) {
+        roughnessCtx.fillStyle = '#b0b0b0'
+        roughnessCtx.fillRect(0, 0, 16, 16)
+      }
+      const roughnessTexture = new THREE.CanvasTexture(roughnessCanvas)
+      roughnessTexture.needsUpdate = true
+
+      const normalCanvas = document.createElement('canvas')
+      normalCanvas.width = 16
+      normalCanvas.height = 16
+      const normalCtx = normalCanvas.getContext('2d')
+      if (normalCtx) {
+        normalCtx.fillStyle = '#8080ff'
+        normalCtx.fillRect(0, 0, 16, 16)
+      }
+      const normalTexture = new THREE.CanvasTexture(normalCanvas)
+      normalTexture.needsUpdate = true
+
+      return { colorTexture, roughnessTexture, normalTexture }
+    }
 
     // Base color - rich dark blue-green felt
     const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size * 0.7)
@@ -97,66 +136,78 @@ function useBoardTextures() {
     const roughnessCanvas = document.createElement('canvas')
     roughnessCanvas.width = 512
     roughnessCanvas.height = 512
-    const roughnessCtx = roughnessCanvas.getContext('2d')!
+    const roughnessCtx = roughnessCanvas.getContext('2d')
 
-    // Base roughness (felt is fairly rough)
-    roughnessCtx.fillStyle = '#b0b0b0' // ~0.7 roughness
-    roughnessCtx.fillRect(0, 0, 512, 512)
+    let roughnessTexture: THREE.Texture
+    if (roughnessCtx) {
+      // Base roughness (felt is fairly rough)
+      roughnessCtx.fillStyle = '#b0b0b0' // ~0.7 roughness
+      roughnessCtx.fillRect(0, 0, 512, 512)
 
-    // Add variation for worn/polished spots (lower roughness = more specular)
-    for (let i = 0; i < 50; i++) {
-      const x = Math.random() * 512
-      const y = Math.random() * 512
-      const radius = 20 + Math.random() * 60
-      const roughnessGradient = roughnessCtx.createRadialGradient(x, y, 0, x, y, radius)
-      const variation = Math.random() > 0.5 ? 0.85 : 0.65 // Vary between rougher and smoother
-      const colorVal = Math.floor(variation * 255)
-      roughnessGradient.addColorStop(0, `rgb(${colorVal}, ${colorVal}, ${colorVal})`)
-      roughnessGradient.addColorStop(1, '#b0b0b0')
-      roughnessCtx.fillStyle = roughnessGradient
-      roughnessCtx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
+      // Add variation for worn/polished spots (lower roughness = more specular)
+      for (let i = 0; i < 50; i++) {
+        const x = Math.random() * 512
+        const y = Math.random() * 512
+        const radius = 20 + Math.random() * 60
+        const roughnessGradient = roughnessCtx.createRadialGradient(x, y, 0, x, y, radius)
+        const variation = Math.random() > 0.5 ? 0.85 : 0.65 // Vary between rougher and smoother
+        const colorVal = Math.floor(variation * 255)
+        roughnessGradient.addColorStop(0, `rgb(${colorVal}, ${colorVal}, ${colorVal})`)
+        roughnessGradient.addColorStop(1, '#b0b0b0')
+        roughnessCtx.fillStyle = roughnessGradient
+        roughnessCtx.fillRect(x - radius, y - radius, radius * 2, radius * 2)
+      }
+
+      // Add fine noise to roughness
+      for (let i = 0; i < 8000; i++) {
+        const x = Math.random() * 512
+        const y = Math.random() * 512
+        const val = 140 + Math.random() * 80
+        roughnessCtx.fillStyle = `rgb(${val}, ${val}, ${val})`
+        roughnessCtx.fillRect(x, y, 2, 2)
+      }
+
+      roughnessTexture = new THREE.CanvasTexture(roughnessCanvas)
+      roughnessTexture.wrapS = THREE.RepeatWrapping
+      roughnessTexture.wrapT = THREE.RepeatWrapping
+      roughnessTexture.repeat.set(3, 3)
+      roughnessTexture.needsUpdate = true
+    } else {
+      roughnessTexture = new THREE.Texture()
+      roughnessTexture.needsUpdate = true
     }
-
-    // Add fine noise to roughness
-    for (let i = 0; i < 8000; i++) {
-      const x = Math.random() * 512
-      const y = Math.random() * 512
-      const val = 140 + Math.random() * 80
-      roughnessCtx.fillStyle = `rgb(${val}, ${val}, ${val})`
-      roughnessCtx.fillRect(x, y, 2, 2)
-    }
-
-    const roughnessTexture = new THREE.CanvasTexture(roughnessCanvas)
-    roughnessTexture.wrapS = THREE.RepeatWrapping
-    roughnessTexture.wrapT = THREE.RepeatWrapping
-    roughnessTexture.repeat.set(3, 3)
-    roughnessTexture.needsUpdate = true
 
     // Create a normal map for surface detail
     const normalCanvas = document.createElement('canvas')
     normalCanvas.width = 256
     normalCanvas.height = 256
-    const normalCtx = normalCanvas.getContext('2d')!
+    const normalCtx = normalCanvas.getContext('2d')
 
-    // Neutral normal (pointing up)
-    normalCtx.fillStyle = '#8080ff'
-    normalCtx.fillRect(0, 0, 256, 256)
+    let normalTexture: THREE.Texture
+    if (normalCtx) {
+      // Neutral normal (pointing up)
+      normalCtx.fillStyle = '#8080ff'
+      normalCtx.fillRect(0, 0, 256, 256)
 
-    // Add subtle bumps for felt texture
-    for (let i = 0; i < 3000; i++) {
-      const x = Math.random() * 256
-      const y = Math.random() * 256
-      const nx = 128 + (Math.random() - 0.5) * 30
-      const ny = 128 + (Math.random() - 0.5) * 30
-      normalCtx.fillStyle = `rgb(${nx}, ${ny}, 255)`
-      normalCtx.fillRect(x, y, 1 + Math.random(), 1 + Math.random())
+      // Add subtle bumps for felt texture
+      for (let i = 0; i < 3000; i++) {
+        const x = Math.random() * 256
+        const y = Math.random() * 256
+        const nx = 128 + (Math.random() - 0.5) * 30
+        const ny = 128 + (Math.random() - 0.5) * 30
+        normalCtx.fillStyle = `rgb(${nx}, ${ny}, 255)`
+        normalCtx.fillRect(x, y, 1 + Math.random(), 1 + Math.random())
+      }
+
+      normalTexture = new THREE.CanvasTexture(normalCanvas)
+      normalTexture.wrapS = THREE.RepeatWrapping
+      normalTexture.wrapT = THREE.RepeatWrapping
+      normalTexture.repeat.set(6, 6)
+      normalTexture.needsUpdate = true
+    } else {
+      normalTexture = new THREE.Texture()
+      normalTexture.needsUpdate = true
     }
-
-    const normalTexture = new THREE.CanvasTexture(normalCanvas)
-    normalTexture.wrapS = THREE.RepeatWrapping
-    normalTexture.wrapT = THREE.RepeatWrapping
-    normalTexture.repeat.set(6, 6)
-    normalTexture.needsUpdate = true
 
     return { colorTexture, roughnessTexture, normalTexture }
   }, [])
@@ -1488,22 +1539,148 @@ function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard:
   )
 }
 
-// Responsive camera that adjusts based on viewport
+// Camera bounds for vertical panning
+const CAMERA_BOUNDS = {
+  minY: -6,
+  maxY: 6,
+}
+
+// Responsive camera with vertical touch/drag panning
 function ResponsiveCamera() {
-  const { viewport, camera } = useThree()
+  const { viewport, camera, gl } = useThree()
   const isPortrait = viewport.height > viewport.width
 
+  // Store base camera position and current offset
+  const basePosition = useRef({ x: 0, y: isPortrait ? -6 : -8, z: isPortrait ? 14 : 12 })
+  const offsetY = useRef(0)
+  const isDragging = useRef(false)
+  const lastTouchY = useRef(0)
+  const velocityY = useRef(0)
+
+  // Update base position when orientation changes
   React.useEffect(() => {
-    if (isPortrait) {
-      // Portrait: pull camera back and adjust angle for vertical view
-      camera.position.set(0, -6, 14)
-    } else {
-      // Landscape: standard view
-      camera.position.set(0, -8, 12)
+    basePosition.current = {
+      x: 0,
+      y: isPortrait ? -6 : -8,
+      z: isPortrait ? 14 : 12
     }
+    // Reset offset on orientation change
+    offsetY.current = 0
+    camera.position.set(
+      basePosition.current.x,
+      basePosition.current.y,
+      basePosition.current.z
+    )
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
   }, [isPortrait, camera])
+
+  // Clamp offset within bounds
+  const clampOffsetY = (y: number) => {
+    return Math.max(CAMERA_BOUNDS.minY, Math.min(CAMERA_BOUNDS.maxY, y))
+  }
+
+  // Handle touch/mouse events
+  React.useEffect(() => {
+    const canvas = gl.domElement
+
+    const handleStart = (clientY: number) => {
+      isDragging.current = true
+      lastTouchY.current = clientY
+      velocityY.current = 0
+    }
+
+    const handleMove = (clientY: number) => {
+      if (!isDragging.current) return
+
+      const deltaY = (clientY - lastTouchY.current) * 0.02
+
+      // Store velocity for momentum
+      velocityY.current = deltaY
+
+      // Update offset (inverted for natural drag feel)
+      offsetY.current = clampOffsetY(offsetY.current + deltaY)
+
+      // Update camera position
+      camera.position.y = basePosition.current.y + offsetY.current
+      camera.lookAt(0, offsetY.current, 0)
+
+      lastTouchY.current = clientY
+    }
+
+    const handleEnd = () => {
+      isDragging.current = false
+    }
+
+    // Touch events
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        handleStart(e.touches[0].clientY)
+      }
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        // Prevent pull-to-refresh browser behavior
+        e.preventDefault()
+        handleMove(e.touches[0].clientY)
+      }
+    }
+
+    const onTouchEnd = () => {
+      handleEnd()
+    }
+
+    // Mouse events (for testing on desktop)
+    const onMouseDown = (e: MouseEvent) => {
+      // Only handle middle mouse button or when holding shift
+      if (e.button === 1 || e.shiftKey) {
+        handleStart(e.clientY)
+        e.preventDefault()
+      }
+    }
+
+    const onMouseMove = (e: MouseEvent) => {
+      handleMove(e.clientY)
+    }
+
+    const onMouseUp = () => {
+      handleEnd()
+    }
+
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true })
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false })
+    canvas.addEventListener('touchend', onTouchEnd)
+    canvas.addEventListener('mousedown', onMouseDown)
+    canvas.addEventListener('mousemove', onMouseMove)
+    canvas.addEventListener('mouseup', onMouseUp)
+    canvas.addEventListener('mouseleave', onMouseUp)
+
+    return () => {
+      canvas.removeEventListener('touchstart', onTouchStart)
+      canvas.removeEventListener('touchmove', onTouchMove)
+      canvas.removeEventListener('touchend', onTouchEnd)
+      canvas.removeEventListener('mousedown', onMouseDown)
+      canvas.removeEventListener('mousemove', onMouseMove)
+      canvas.removeEventListener('mouseup', onMouseUp)
+      canvas.removeEventListener('mouseleave', onMouseUp)
+    }
+  }, [camera, gl])
+
+  // Momentum animation
+  useFrame(() => {
+    if (!isDragging.current && Math.abs(velocityY.current) > 0.001) {
+      // Apply friction
+      velocityY.current *= 0.92
+
+      // Update offset with momentum
+      offsetY.current = clampOffsetY(offsetY.current + velocityY.current)
+
+      // Update camera
+      camera.position.y = basePosition.current.y + offsetY.current
+      camera.lookAt(0, offsetY.current, 0)
+    }
+  })
 
   return null
 }
@@ -1560,8 +1737,8 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       <pointLight position={[8, -6, 4]} intensity={0.4} color="#cc8866" distance={20} />
       <pointLight position={[0, 0, 8]} intensity={0.25} color="#ffffff" distance={15} />
 
-      {/* Environment for realistic reflections */}
-      <Environment preset="city" environmentIntensity={0.7} />
+      {/* Environment for realistic reflections (background disabled) */}
+      <Environment preset="night" environmentIntensity={0.7} background={false} />
 
       {/* Game board scene */}
       <GameBoardScene {...props} />
