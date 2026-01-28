@@ -83,6 +83,15 @@ const sampleOpponentGraveyard: CardData[] = [
   { id: 505, color: '#999', label: 'Wraith', description: 'Vengeful spirit, banished.', attack: 5, health: 2 },
 ]
 
+const samplePlayerExile: CardData[] = [
+  { id: 601, color: '#4a4a5a', label: 'Banished', description: 'Removed from the game entirely.', attack: 3, health: 3 },
+]
+
+const sampleOpponentExile: CardData[] = [
+  { id: 701, color: '#5a4a4a', label: 'Exiled', description: 'Cast into the void.', attack: 4, health: 2 },
+  { id: 702, color: '#4a5a4a', label: 'Erased', description: 'Wiped from existence.', attack: 2, health: 5 },
+]
+
 // Sample steps for testing
 const sampleSteps: Step[] = [
   { id: 'untap', label: 'Untap', isActive: false },
@@ -160,13 +169,13 @@ function Card({
   )
 }
 
-// Render function for CardData cards - purely visual
-function renderSampleCard(card: CardData, faceDown: boolean): React.ReactNode {
+// Render function for CardData cards - purely visual (3D mesh version)
+function renderSampleCardMesh(card: CardData): React.ReactNode {
   return (
     <Card
-      faceDown={faceDown}
+      faceDown={false}
       color={card.color}
-      label={faceDown ? undefined : card.label}
+      label={card.label}
     />
   )
 }
@@ -393,16 +402,19 @@ export default function DummyGameBoard() {
       yourBattlefield={samplePlayerBattlefield}
       yourDeck={samplePlayerDeck}
       yourGraveyard={samplePlayerGraveyard}
+      yourExile={samplePlayerExile}
       yourHealth={25}
       opponentHand={sampleOpponentHand}
       opponentBattlefield={sampleOpponentBattlefield}
       opponentDeck={sampleOpponentDeck}
       opponentGraveyard={sampleOpponentGraveyard}
+      opponentsExile={sampleOpponentExile}
       opponentHealth={18}
-      renderCard={renderSampleCard}
-      renderHtmlCard={(card: CardData, faceDown: boolean) => <HtmlCard card={card} faceDown={faceDown} />}
+      renderCardMesh={renderSampleCardMesh}
+      renderHtmlCard={(card: CardData) => <HtmlCard card={card} faceDown={false} />}
       renderEmptySlot={() => <Card faceDown />}
       getCardId={getCardDataId}
+      onExileClick={(isOpponent) => console.log('Exile clicked:', isOpponent ? 'opponent' : 'player')}
       stack={stack}
       stackButton={() => (
         <button

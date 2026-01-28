@@ -225,6 +225,7 @@ const COLORS = {
   cardBorder: '#1a1a1a',
   deck: '#1e3a4c',
   graveyard: '#3d2c3d',
+  exile: '#2c2c3d',
   battlefield: '#2d5a3d',
   hand: '#4a3728',
 }
@@ -234,7 +235,7 @@ type Zone = 'hand' | 'battlefield' | 'deck' | 'graveyard'
 
 // Expanded pile data
 export type ExpandedPile<T> = {
-  type: 'deck' | 'graveyard'
+  type: 'deck' | 'graveyard' | 'exile'
   cards: T[]
   title: string
 }
@@ -399,6 +400,65 @@ function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = 
         </>
       )}
       {label && cardCount > 0 && (
+        <Text
+          position={[0, -CARD_HEIGHT / 2 - 0.15, 0.1]}
+          fontSize={0.1}
+          color="#888"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {label} ({cardCount})
+        </Text>
+      )}
+    </group>
+  )
+}
+
+type ExileProps<T> = {
+  cardCount?: number
+  position?: [number, number, number]
+  scale?: number
+  cards?: T[]
+  label?: string
+  renderCardMesh: (card: T) => React.ReactNode
+  renderEmptySlot: () => React.ReactNode
+  onClick?: () => void
+}
+
+function Exile<T>({ cardCount = 0, position = [0, 0, 0], scale = 1, cards = [], label = 'Exile', renderCardMesh, renderEmptySlot, onClick }: ExileProps<T>) {
+  // Don't render if no cards
+  if (cardCount === 0) return null
+
+  const stackHeight = Math.min(cardCount, 20) * 0.008
+  const topCard = cards.length > 0 ? cards[cards.length - 1] : null
+
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
+    onClick?.()
+  }, [onClick])
+
+  return (
+    <group position={position} scale={scale} onClick={handleClick}>
+      {/* Exile zone marker */}
+      <mesh position={[0, 0, -0.01]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[CARD_WIDTH + 0.1, CARD_HEIGHT + 0.1]} />
+        <meshStandardMaterial color={COLORS.exile} transparent opacity={0.5} />
+      </mesh>
+      {/* Stack of cards */}
+      <RoundedBox
+        args={[CARD_WIDTH, CARD_HEIGHT, stackHeight]}
+        radius={0.03}
+        smoothness={4}
+        position={[0, 0, stackHeight / 2]}
+      >
+        <meshStandardMaterial color={COLORS.exile} />
+      </RoundedBox>
+      {/* Top card (face up in exile) */}
+      <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
+        {topCard && renderCardMesh(topCard)}
+        {!topCard && renderEmptySlot()}
+      </group>
+      {label && (
         <Text
           position={[0, -CARD_HEIGHT / 2 - 0.15, 0.1]}
           fontSize={0.1}
@@ -947,6 +1007,7 @@ type PlayerAreaProps<T> = {
   isOpponent?: boolean
   deckCards?: T[]
   graveyardCards?: T[]
+  exileCards?: T[]
   handCards?: T[]
   battlefieldCards?: T[]
   renderCardMesh: (card: T) => React.ReactNode
@@ -954,6 +1015,7 @@ type PlayerAreaProps<T> = {
   getCardId: (card: T) => string | number
   onDeckClick?: () => void
   onGraveyardClick?: () => void
+  onExileClick?: () => void
 }
 
 type GameBoardProps<T> = {
@@ -961,12 +1023,14 @@ type GameBoardProps<T> = {
   yourBattlefield: T[]
   yourDeck: T[]
   yourGraveyard: T[]
+  yourExile: T[]
   yourHealth: number
   yourAvatarSrc?: string
   opponentHand: T[]
   opponentBattlefield: T[]
   opponentDeck: T[]
   opponentGraveyard: T[]
+  opponentsExile: T[]
   opponentHealth: number
   opponentAvatarSrc?: string
   renderHtmlCard: (card: T) => React.ReactNode
@@ -977,6 +1041,7 @@ type GameBoardProps<T> = {
   onCardHover?: (card: T | null) => void
   onDeckClick?: (isOpponent: boolean) => void
   onGraveyardClick?: (isOpponent: boolean) => void
+  onExileClick?: (isOpponent: boolean) => void
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
@@ -992,6 +1057,7 @@ function PlayerArea<T>({
   isOpponent = false,
   deckCards = [],
   graveyardCards = [],
+  exileCards = [],
   handCards = [],
   battlefieldCards = [],
   renderCardMesh,
@@ -999,6 +1065,7 @@ function PlayerArea<T>({
   getCardId,
   onDeckClick,
   onGraveyardClick,
+  onExileClick,
 }: PlayerAreaProps<T>) {
   const layout = useLayout()
   const { isPortrait, scale } = layout
@@ -1050,6 +1117,18 @@ function PlayerArea<T>({
         onClick={onDeckClick}
       />
 
+      {/* Exile (to the right of deck, only shown if cards present) */}
+      <Exile
+        cardCount={exileCards.length}
+        cards={exileCards}
+        label="Exile"
+        position={[sideX + (isPortrait ? 0.9 : 1.2), sideY, 0]}
+        scale={deckGraveyardScale}
+        renderCardMesh={renderCardMesh}
+        renderEmptySlot={renderEmptySlot}
+        onClick={onExileClick}
+      />
+
       {/* Graveyard (next to deck) */}
       <Graveyard
         cardCount={graveyardCards.length}
@@ -1070,12 +1149,14 @@ function GameBoardScene<T>({
   yourBattlefield,
   yourDeck,
   yourGraveyard,
+  yourExile,
   yourHealth,
   yourAvatarSrc,
   opponentHand,
   opponentBattlefield,
   opponentDeck,
   opponentGraveyard,
+  opponentsExile,
   opponentHealth,
   opponentAvatarSrc,
   renderCardMesh,
@@ -1083,6 +1164,7 @@ function GameBoardScene<T>({
   getCardId,
   onDeckClick,
   onGraveyardClick,
+  onExileClick,
   stack,
   stackButton,
   steps,
@@ -1126,6 +1208,7 @@ function GameBoardScene<T>({
         isOpponent={false}
         deckCards={yourDeck}
         graveyardCards={yourGraveyard}
+        exileCards={yourExile}
         handCards={yourHand}
         battlefieldCards={yourBattlefield}
         renderCardMesh={renderCardMesh}
@@ -1133,6 +1216,7 @@ function GameBoardScene<T>({
         getCardId={getCardId}
         onDeckClick={onDeckClick ? () => onDeckClick(false) : undefined}
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(false) : undefined}
+        onExileClick={onExileClick ? () => onExileClick(false) : undefined}
       />
 
       {/* Opponent's area (top) */}
@@ -1140,6 +1224,7 @@ function GameBoardScene<T>({
         isOpponent={true}
         deckCards={opponentDeck}
         graveyardCards={opponentGraveyard}
+        exileCards={opponentsExile}
         handCards={opponentHand}
         battlefieldCards={opponentBattlefield}
         renderCardMesh={renderCardMesh}
@@ -1147,6 +1232,7 @@ function GameBoardScene<T>({
         getCardId={getCardId}
         onDeckClick={onDeckClick ? () => onDeckClick(true) : undefined}
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(true) : undefined}
+        onExileClick={onExileClick ? () => onExileClick(true) : undefined}
       />
 
       {/* Player avatars with health - same vertical as deck/graveyard, on left side */}

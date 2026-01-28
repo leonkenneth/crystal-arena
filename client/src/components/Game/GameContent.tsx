@@ -151,7 +151,7 @@ function renderEmptySlot(): React.ReactNode {
 }
 
 type ExpandedZone = {
-  type: 'deck' | 'graveyard';
+  type: 'deck' | 'graveyard' | 'exile';
   isOpponent: boolean;
 } | null;
 
@@ -165,10 +165,12 @@ export default function GameContent() {
   const yourBattlefield = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents));
   const yourDeck = screen.zones.yourMainDeck.cards;
   const yourGraveyard = screen.zones.yourBreakZone.cards;
+  const yourExile = screen.zones.yourRemoveFromPlay.cards;
   const opponentHand = screen.zones.opponentsHand.cards;
   const opponentBattlefield = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents));
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
+  const opponentsExile = screen.zones.opponentsRemoveFromPlay.cards;
   const stack = screen.stack;
   const yourHealth = screen.you.life;
   const opponentHealth = screen.opponent.life;
@@ -229,15 +231,24 @@ export default function GameContent() {
     setExpandedZone({ type: 'graveyard', isOpponent });
   };
 
+  const handleExileClick = (isOpponent: boolean) => {
+    setExpandedZone({ type: 'exile', isOpponent });
+  };
+
   const renderOverlay = () => {
     if (!expandedZone) return null;
 
-    const cards = expandedZone.type === 'deck'
-      ? (expandedZone.isOpponent ? opponentDeck : yourDeck)
-      : (expandedZone.isOpponent ? opponentGraveyard : yourGraveyard);
+    let cards;
+    if (expandedZone.type === 'deck') {
+      cards = expandedZone.isOpponent ? opponentDeck : yourDeck;
+    } else if (expandedZone.type === 'graveyard') {
+      cards = expandedZone.isOpponent ? opponentGraveyard : yourGraveyard;
+    } else {
+      cards = expandedZone.isOpponent ? opponentsExile : yourExile;
+    }
 
     const ownerLabel = expandedZone.isOpponent ? "Opponent's" : "Your";
-    const zoneLabel = expandedZone.type === 'deck' ? 'Deck' : 'Graveyard';
+    const zoneLabel = expandedZone.type === 'deck' ? 'Deck' : expandedZone.type === 'graveyard' ? 'Graveyard' : 'Exile';
     const title = `${ownerLabel} ${zoneLabel}`;
 
     return (
@@ -258,6 +269,7 @@ export default function GameContent() {
       onCardClick={handleCardClick}
       onDeckClick={handleDeckClick}
       onGraveyardClick={handleGraveyardClick}
+      onExileClick={handleExileClick}
       renderHtmlCard={renderHtmlCard}
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
@@ -271,11 +283,13 @@ export default function GameContent() {
       yourBattlefield={yourBattlefield}
       yourDeck={yourDeck}
       yourGraveyard={yourGraveyard}
+      yourExile={yourExile}
       yourHealth={yourHealth}
       opponentHand={opponentHand}
       opponentBattlefield={opponentBattlefield}
       opponentDeck={opponentDeck}
       opponentGraveyard={opponentGraveyard}
+      opponentsExile={opponentsExile}
       opponentHealth={opponentHealth}
       stack={stack?.effects.map((effect) => ({
           card: effect.card,
