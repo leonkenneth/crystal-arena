@@ -421,12 +421,13 @@ type GraveyardProps<T> = {
   scale?: number
   cards?: T[]
   label?: string
+  isOpponent?: boolean
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   onClick?: () => void
 }
 
-function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', renderCardMesh, renderEmptySlot, onClick }: GraveyardProps<T>) {
+function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', isOpponent = false, renderCardMesh, renderEmptySlot, onClick }: GraveyardProps<T>) {
   const stackHeight = Math.min(cardCount, 20) * 0.008
   const topCard = cards.length > 0 ? cards[cards.length - 1] : null
 
@@ -470,6 +471,10 @@ function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = 
         >
           {label} ({cardCount})
         </Text>
+      )}
+      {/* Dropzone overlay (player side only) */}
+      {!isOpponent && (
+        <DropzoneBox width={CARD_WIDTH * 1.5} height={CARD_HEIGHT * 1.5} />
       )}
     </group>
   )
@@ -635,8 +640,45 @@ type BattlefieldProps<T> = {
   getCardId: (card: T) => string | number
 }
 
+type DropzoneBoxProps = {
+  width: number
+  height?: number
+  depth?: number
+  position?: [number, number, number]
+  color?: string
+  hoverColor?: string
+}
+
+function DropzoneBox({ width, height = 2.4, depth = 0.05, position = [0, 0, 0.5], color = '#ff4444', hoverColor = '#44ff44' }: DropzoneBoxProps) {
+  const [isHovered, setIsHovered] = useState(false)
+  const { dragState } = useCardContext()
+  const isDragging = dragState !== null
+  const isActive = isDragging && isHovered
+
+  return (
+    <mesh
+      position={position}
+      onPointerEnter={(e) => {
+        if (!isDragging) return
+        e.stopPropagation()
+        setIsHovered(true)
+      }}
+      onPointerLeave={() => setIsHovered(false)}
+    >
+      <boxGeometry args={[width, height, depth]} />
+      <meshStandardMaterial
+        color={isActive ? hoverColor : color}
+        transparent
+        opacity={isActive ? 0.2 : 0}
+      />
+    </mesh>
+  )
+}
+
 function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, maxSlots = 7, renderCardMesh, getCardId }: BattlefieldProps<T>) {
   const slotWidth = CARD_WIDTH + 0.15
+  const { isPortrait } = useLayout()
+  const dropzoneY = isPortrait ? 0.5 : 0
 
   return (
     <group position={position}>
@@ -645,6 +687,10 @@ function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, 
         <planeGeometry args={[slotWidth * maxSlots, CARD_HEIGHT + 0.3]} />
         <meshStandardMaterial color={COLORS.battlefield} transparent opacity={0.3} />
       </mesh>
+      {/* Dropzone overlay (player side only) */}
+      {!isOpponent && (
+        <DropzoneBox width={slotWidth * maxSlots} position={[0, dropzoneY, 0.5]} />
+      )}
       {/* Card slots */}
       {Array.from({ length: maxSlots }).map((_, index) => {
         const xPos = (index - (maxSlots - 1) / 2) * slotWidth
@@ -1238,6 +1284,7 @@ function PlayerArea<T>({
         label={`${playerLabel} Graveyard`}
         position={[sideX - (isPortrait ? 0.9 : 1.2), sideY, 0]}
         scale={deckGraveyardScale}
+        isOpponent={isOpponent}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         onClick={onGraveyardClick}
