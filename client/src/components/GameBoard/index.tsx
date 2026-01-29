@@ -585,6 +585,7 @@ type HandProps<T> = {
   spreadRadius?: number
   renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode
   getCardId: (card: T) => string | number
+  onClick?: () => void
 }
 
 function Hand<T>({
@@ -595,12 +596,18 @@ function Hand<T>({
   spreadRadius = 3,
   renderCardMesh,
   getCardId,
+  onClick,
 }: HandProps<T>) {
   const totalSpread = (cards.length - 1) * spreadAngle
   const startAngle = -totalSpread / 2 // Start from left
 
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
+    onClick?.()
+  }, [onClick])
+
   return (
-    <group position={position}>
+    <group position={position} onClick={onClick ? handleClick : undefined}>
       {cards.map((card, index) => {
         // Angle for this card in the fan (in radians)
         const angleDeg = startAngle + index * spreadAngle
@@ -1169,6 +1176,7 @@ type PlayerAreaProps<T> = {
   onDeckClick?: () => void
   onGraveyardClick?: () => void
   onExileClick?: () => void
+  onHandClick?: () => void
   canDropToZone?: (card: T, zone: DropZone) => boolean
 }
 
@@ -1201,6 +1209,7 @@ type GameBoardProps<T> = {
   onGraveyardClick?: (isOpponent: boolean) => void
   onExileClick?: (isOpponent: boolean) => void
   onPrizeCardsClick?: (isOpponent: boolean) => void
+  onOpponentsHandClick?: () => void
   onCardDragEnd?: (card: T, zone: string | null) => void
   canDropToZone?: (card: T, zone: DropZone) => boolean
   stack?: StackEffect<T>[] | null
@@ -1227,6 +1236,7 @@ function PlayerArea<T>({
   onDeckClick,
   onGraveyardClick,
   onExileClick,
+  onHandClick,
   canDropToZone,
 }: PlayerAreaProps<T>) {
   const layout = useLayout()
@@ -1256,6 +1266,7 @@ function PlayerArea<T>({
         spreadRadius={layout.handSpreadRadius}
         renderCardMesh={renderCardMesh}
         getCardId={getCardId}
+        onClick={onHandClick}
       />
 
       {/* Battlefield */}
@@ -1333,6 +1344,7 @@ function GameBoardScene<T>({
   onGraveyardClick,
   onExileClick,
   onPrizeCardsClick,
+  onOpponentsHandClick,
   canDropToZone,
   stack,
   stackButton,
@@ -1403,6 +1415,7 @@ function GameBoardScene<T>({
         onDeckClick={onDeckClick ? () => onDeckClick(true) : undefined}
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(true) : undefined}
         onExileClick={onExileClick ? () => onExileClick(true) : undefined}
+        onHandClick={onOpponentsHandClick}
       />
 
       {/* Player avatars with health - same vertical as deck/graveyard, on left side */}

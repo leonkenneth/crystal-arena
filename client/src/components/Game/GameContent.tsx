@@ -151,7 +151,7 @@ function renderEmptySlot(): React.ReactNode {
 }
 
 type ExpandedZone = {
-  type: 'deck' | 'graveyard' | 'exile' | 'prize';
+  type: 'deck' | 'graveyard' | 'exile' | 'prize' | 'opponentsHand';
   isOpponent: boolean;
 } | null;
 
@@ -241,6 +241,10 @@ export default function GameContent() {
     setExpandedZone({ type: 'prize', isOpponent });
   };
 
+  const handleOpponentsHandClick = () => {
+    setExpandedZone({ type: 'opponentsHand', isOpponent: true });
+  };
+
   const renderOverlay = () => {
     if (!expandedZone) return null;
 
@@ -251,6 +255,8 @@ export default function GameContent() {
       cards = expandedZone.isOpponent ? opponentGraveyard : yourGraveyard;
     } else if (expandedZone.type === 'exile') {
       cards = expandedZone.isOpponent ? opponentsExile : yourExile;
+    } else if (expandedZone.type === 'opponentsHand') {
+      cards = opponentHand;
     } else {
       cards = expandedZone.isOpponent ? opponentsPrizeCards : yourPrizeCards;
     }
@@ -261,6 +267,7 @@ export default function GameContent() {
       graveyard: 'Graveyard',
       exile: 'Exile',
       prize: 'Damage Zone',
+      opponentsHand: 'Hand',
     };
     const zoneLabel = zoneLabelMap[expandedZone.type];
     const title = `${ownerLabel} ${zoneLabel}`;
@@ -321,6 +328,7 @@ export default function GameContent() {
       onGraveyardClick={handleGraveyardClick}
       onExileClick={handleExileClick}
       onPrizeCardsClick={handlePrizeCardsClick}
+      onOpponentsHandClick={handleOpponentsHandClick}
       canDropToZone={canDropToZone}
       onCardDragEnd={handleCardDragEnd}
       renderHtmlCard={renderHtmlCard}
