@@ -26,6 +26,9 @@ type CardContextType<T> = {
   // Track if a card interaction is in progress (to prevent panning)
   isCardInteracting: boolean
   setIsCardInteracting: (value: boolean) => void
+  // Track currently hovered drop zone during drag
+  hoveredDropZone: string | null
+  setHoveredDropZone: (zone: string | null) => void
 }
 
 export const CardContext = createContext<CardContextType<any>>({
@@ -38,6 +41,8 @@ export const CardContext = createContext<CardContextType<any>>({
   onDragEnd: undefined,
   isCardInteracting: false,
   setIsCardInteracting: () => {},
+  hoveredDropZone: null,
+  setHoveredDropZone: () => {},
 })
 
 export default function useCardContext() {

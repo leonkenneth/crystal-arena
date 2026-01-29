@@ -293,6 +293,27 @@ export default function GameContent() {
     return false;
   };
 
+  const handleCardDragEnd = (card: CardState, zone: string | null) => {
+    if (!zone || !card.playableActivations) return;
+
+    let matchingActivation;
+    if (zone === 'battlefield') {
+      matchingActivation = card.playableActivations.find(
+        (activation) => activation.playZone === 'Battlefield' || activation.playZone === 'Stack'
+      );
+    } else if (zone === 'graveyard') {
+      matchingActivation = card.playableActivations.find(
+        (activation) => activation.playZone === 'BreakZone'
+      );
+    }
+
+    if (matchingActivation) {
+      doAction(loadedGameContext.gameId, card.oid, "ActivateAbilityFromAbilityId", {
+        abilityId: matchingActivation.abilityId,
+      });
+    }
+  };
+
   return (
   <GameBoard<CardState>
       onCardClick={handleCardClick}
@@ -301,6 +322,7 @@ export default function GameContent() {
       onExileClick={handleExileClick}
       onPrizeCardsClick={handlePrizeCardsClick}
       canDropToZone={canDropToZone}
+      onCardDragEnd={handleCardDragEnd}
       renderHtmlCard={renderHtmlCard}
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}

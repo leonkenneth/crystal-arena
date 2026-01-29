@@ -655,7 +655,7 @@ type DropzoneBoxProps<T> = {
 
 function DropzoneBox<T>({ width, height = 2.4, depth = 0.05, position = [0, 0, 0.5], color = '#ff4444', hoverColor = '#44ff44', zone, canDropToZone }: DropzoneBoxProps<T>) {
   const [isHovered, setIsHovered] = useState(false)
-  const { dragState } = useCardContext()
+  const { dragState, setHoveredDropZone } = useCardContext()
   const isDragging = dragState !== null
   const canDrop = isDragging && canDropToZone && canDropToZone(dragState?.card as T, zone)
   const isActive = canDrop && isHovered
@@ -667,8 +667,12 @@ function DropzoneBox<T>({ width, height = 2.4, depth = 0.05, position = [0, 0, 0
         if (!canDrop) return
         e.stopPropagation()
         setIsHovered(true)
+        setHoveredDropZone(zone)
       }}
-      onPointerLeave={() => setIsHovered(false)}
+      onPointerLeave={() => {
+        setIsHovered(false)
+        setHoveredDropZone(null)
+      }}
     >
       <boxGeometry args={[width, height, depth]} />
       <meshStandardMaterial
@@ -1904,6 +1908,7 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
   const [selectedCard, setSelectedCard] = useState<T | null>(null)
   const [dragState, setDragState] = useState<DragState<T>>(null)
   const [isCardInteracting, setIsCardInteracting] = useState(false)
+  const [hoveredDropZone, setHoveredDropZone] = useState<string | null>(null)
 
   // Handle drag end callback
   const handleDragEnd = useCallback((card: T, zone: string | null) => {
@@ -1921,11 +1926,11 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
       } : null)
     }
 
-    const handlePointerUp = (e: PointerEvent) => {
+    const handlePointerUp = () => {
       if (dragState) {
-        const zone = findDropZone(e.clientX, e.clientY)
-        handleDragEnd(dragState.card, zone)
+        handleDragEnd(dragState.card, hoveredDropZone)
         setDragState(null)
+        setHoveredDropZone(null)
         setIsCardInteracting(false)
       }
     }
@@ -1937,7 +1942,7 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerup', handlePointerUp)
     }
-  }, [dragState, handleDragEnd])
+  }, [dragState, handleDragEnd, hoveredDropZone])
 
   const dialogContent = props.renderDialog?.()
   const messageContent = props.renderMessage?.()
@@ -1958,7 +1963,9 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
     onDragEnd: handleDragEnd,
     isCardInteracting,
     setIsCardInteracting,
-  }), [previewCard, selectedCard, dragState, handleDragEnd, isCardInteracting, props])
+    hoveredDropZone,
+    setHoveredDropZone,
+  }), [previewCard, selectedCard, dragState, handleDragEnd, isCardInteracting, hoveredDropZone, props])
 
   return (
     <CardContext.Provider value={contextValue}>
