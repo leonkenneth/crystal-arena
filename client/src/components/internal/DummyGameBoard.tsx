@@ -108,6 +108,17 @@ const sampleOpponentPrizeCards: CardData[] = [
   { id: 906, color: '#6a5a5a', label: 'Prize 6', description: 'A hidden prize card.' },
 ]
 
+const samplePlayerSideHand: CardData[] = [
+  { id: 1001, color: '#d4a574', label: 'Reserve', description: 'A card held in reserve for special tactics.', attack: 3, health: 4 },
+  { id: 1002, color: '#74a5d4', label: 'Backup', description: 'Emergency reinforcement unit.', attack: 2, health: 3 },
+  { id: 1003, color: '#a574d4', label: 'Secret', description: 'A hidden ace up your sleeve.', attack: 4, health: 2 },
+]
+
+const sampleOpponentSideHand: CardData[] = [
+  { id: 1101, color: '#555', label: '?', description: 'Unknown reserve card.' },
+  { id: 1102, color: '#555', label: '?', description: 'Unknown reserve card.' },
+]
+
 // Sample steps for testing
 const sampleSteps: Step[] = [
   { id: 'untap', label: 'Untap', isActive: false },
@@ -415,6 +426,7 @@ export default function DummyGameBoard() {
   return (
     <GameBoard<CardData>
       yourHand={samplePlayerHand}
+      yourSideHand={samplePlayerSideHand}
       yourBattlefield={samplePlayerBattlefield}
       yourDeck={samplePlayerDeck}
       yourGraveyard={samplePlayerGraveyard}
@@ -422,6 +434,7 @@ export default function DummyGameBoard() {
       yourPrizeCards={samplePlayerPrizeCards}
       yourHealth={25}
       opponentHand={sampleOpponentHand}
+      opponentSideHand={sampleOpponentSideHand}
       opponentBattlefield={sampleOpponentBattlefield}
       opponentDeck={sampleOpponentDeck}
       opponentGraveyard={sampleOpponentGraveyard}
@@ -434,6 +447,7 @@ export default function DummyGameBoard() {
       getCardId={getCardDataId}
       onExileClick={(isOpponent) => console.log('Exile clicked:', isOpponent ? 'opponent' : 'player')}
       onPrizeCardsClick={(isOpponent) => console.log('Prize cards clicked:', isOpponent ? 'opponent' : 'player')}
+      onSideHandClick={() => console.log('Side hand clicked')}
       stack={stack}
       stackButton={() => (
         <button

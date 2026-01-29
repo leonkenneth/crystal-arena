@@ -151,7 +151,7 @@ function renderEmptySlot(): React.ReactNode {
 }
 
 type ExpandedZone = {
-  type: 'deck' | 'graveyard' | 'exile' | 'prize' | 'opponentsHand';
+  type: 'deck' | 'graveyard' | 'exile' | 'prize' | 'opponentsHand' | 'opponentsLimitBreak';
   isOpponent: boolean;
 } | null;
 
@@ -160,14 +160,21 @@ export default function GameContent() {
   const gameState = loadedGameContext.gameState;
   const screen = gameState.screen;
   const [expandedZone, setExpandedZone] = useState<ExpandedZone>(null);
+  const [handsSwapped, setHandsSwapped] = useState(false);
 
   const yourHand = screen.zones.yourHand.cards;
+  const yourLimitBreak = screen.zones.yourLimitBreak.cards;
   const yourBattlefield = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents));
   const yourDeck = screen.zones.yourMainDeck.cards;
   const yourGraveyard = screen.zones.yourBreakZone.cards;
   const yourExile = screen.zones.yourRemoveFromPlay.cards;
   const yourPrizeCards = screen.zones.yourDamageZone.cards;
   const opponentHand = screen.zones.opponentsHand.cards;
+  const opponentSideHand = screen.zones.opponentsLimitBreak.cards;
+
+  // Swap hand and side hand when handsSwapped is true
+  const displayedHand = handsSwapped ? yourLimitBreak : yourHand;
+  const displayedSideHand = handsSwapped ? yourHand : yourLimitBreak;
   const opponentBattlefield = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents));
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
@@ -245,6 +252,14 @@ export default function GameContent() {
     setExpandedZone({ type: 'opponentsHand', isOpponent: true });
   };
 
+  const handleOpponentSideHandClick = () => {
+    setExpandedZone({ type: 'opponentsLimitBreak', isOpponent: true });
+  };
+
+  const handleSideHandClick = () => {
+    setHandsSwapped((prev) => !prev);
+  };
+
   const renderOverlay = () => {
     if (!expandedZone) return null;
 
@@ -257,6 +272,8 @@ export default function GameContent() {
       cards = expandedZone.isOpponent ? opponentsExile : yourExile;
     } else if (expandedZone.type === 'opponentsHand') {
       cards = opponentHand;
+    } else if (expandedZone.type === 'opponentsLimitBreak') {
+      cards = opponentSideHand;
     } else {
       cards = expandedZone.isOpponent ? opponentsPrizeCards : yourPrizeCards;
     }
@@ -268,6 +285,7 @@ export default function GameContent() {
       exile: 'Exile',
       prize: 'Damage Zone',
       opponentsHand: 'Hand',
+      opponentsLimitBreak: 'Limit Break',
     };
     const zoneLabel = zoneLabelMap[expandedZone.type];
     const title = `${ownerLabel} ${zoneLabel}`;
@@ -329,6 +347,7 @@ export default function GameContent() {
       onExileClick={handleExileClick}
       onPrizeCardsClick={handlePrizeCardsClick}
       onOpponentsHandClick={handleOpponentsHandClick}
+      onSideHandClick={handleSideHandClick}
       canDropToZone={canDropToZone}
       onCardDragEnd={handleCardDragEnd}
       renderHtmlCard={renderHtmlCard}
@@ -340,7 +359,8 @@ export default function GameContent() {
       renderMessage={renderMessage}
       renderBottomBar={() => null}
       renderDialog={renderDialog}
-      yourHand={yourHand}
+      yourHand={displayedHand}
+      yourSideHand={displayedSideHand}
       yourBattlefield={yourBattlefield}
       yourDeck={yourDeck}
       yourGraveyard={yourGraveyard}
@@ -348,12 +368,14 @@ export default function GameContent() {
       yourPrizeCards={yourPrizeCards}
       yourHealth={yourHealth}
       opponentHand={opponentHand}
+      opponentSideHand={opponentSideHand}
       opponentBattlefield={opponentBattlefield}
       opponentDeck={opponentDeck}
       opponentGraveyard={opponentGraveyard}
       opponentsExile={opponentsExile}
       opponentsPrizeCards={opponentsPrizeCards}
       opponentHealth={opponentHealth}
+      onOpponentSideHandClick={handleOpponentSideHandClick}
       stack={stack?.effects.map((effect) => ({
           card: effect.card,
           targetCardIds: effect.targets.filter((t) => t.targetType === "Card").map((c) => c.cardId.toString()),

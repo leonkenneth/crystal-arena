@@ -577,6 +577,47 @@ function PrizeCards<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCard
   )
 }
 
+type SideHandProps<T> = {
+  cards?: T[]
+  position?: [number, number, number]
+  scale?: number
+  renderCardMesh: (card: T) => React.ReactNode
+  getCardId: (card: T) => string | number
+  onClick?: () => void
+}
+
+function SideHand<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCardMesh, getCardId, onClick }: SideHandProps<T>) {
+  if (cards.length === 0) return null
+
+  const cardSpacing = CARD_WIDTH * 0.5 // Horizontal spacing with overlap
+  const totalWidth = (cards.length - 1) * cardSpacing
+
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
+    onClick?.()
+  }, [onClick])
+
+  return (
+    <group position={position} scale={scale} onClick={handleClick}>
+      {/* Cards arranged horizontally, standing upright */}
+      {cards.map((card, index) => {
+        const xOffset = index * cardSpacing - totalWidth / 2
+        const zOffset = index * 0.02 // Slight z-stacking
+
+        return (
+          <group
+            key={getCardId(card)}
+            position={[xOffset, 0, zOffset]}
+            scale={0.6}
+          >
+            {renderCardMesh(card)}
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
 type HandProps<T> = {
   cards?: T[]
   isOpponent?: boolean
@@ -1169,6 +1210,7 @@ type PlayerAreaProps<T> = {
   graveyardCards?: T[]
   exileCards?: T[]
   handCards?: T[]
+  sideHandCards?: T[]
   battlefieldCards?: T[]
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
@@ -1177,6 +1219,7 @@ type PlayerAreaProps<T> = {
   onGraveyardClick?: () => void
   onExileClick?: () => void
   onHandClick?: () => void
+  onSideHandClick?: () => void
   canDropToZone?: (card: T, zone: DropZone) => boolean
 }
 
@@ -1184,6 +1227,7 @@ type DropZone = 'battlefield' | 'graveyard'
 
 type GameBoardProps<T> = {
   yourHand: T[]
+  yourSideHand?: T[]
   yourBattlefield: T[]
   yourDeck: T[]
   yourGraveyard: T[]
@@ -1192,6 +1236,7 @@ type GameBoardProps<T> = {
   yourHealth: number
   yourAvatarSrc?: string
   opponentHand: T[]
+  opponentSideHand?: T[]
   opponentBattlefield: T[]
   opponentDeck: T[]
   opponentGraveyard: T[]
@@ -1210,6 +1255,8 @@ type GameBoardProps<T> = {
   onExileClick?: (isOpponent: boolean) => void
   onPrizeCardsClick?: (isOpponent: boolean) => void
   onOpponentsHandClick?: () => void
+  onSideHandClick?: () => void
+  onOpponentSideHandClick?: () => void
   onCardDragEnd?: (card: T, zone: string | null) => void
   canDropToZone?: (card: T, zone: DropZone) => boolean
   stack?: StackEffect<T>[] | null
@@ -1229,6 +1276,7 @@ function PlayerArea<T>({
   graveyardCards = [],
   exileCards = [],
   handCards = [],
+  sideHandCards = [],
   battlefieldCards = [],
   renderCardMesh,
   renderEmptySlot,
@@ -1237,6 +1285,7 @@ function PlayerArea<T>({
   onGraveyardClick,
   onExileClick,
   onHandClick,
+  onSideHandClick,
   canDropToZone,
 }: PlayerAreaProps<T>) {
   const layout = useLayout()
@@ -1244,6 +1293,7 @@ function PlayerArea<T>({
 
   // Adjust positions based on orientation
   const handY = isOpponent ? (isPortrait ? 4.5 : 3.5) : isPortrait ? -4.5 : -3.5
+  const sideHandY = isOpponent ? (isPortrait ? 5.5 : 4.5) : isPortrait ? -5.5 : -4.5
 
   const battlefieldY = isOpponent ? (isPortrait ? 2 : 1.5) : isPortrait ? -2 : -1.5
 
@@ -1268,6 +1318,18 @@ function PlayerArea<T>({
         getCardId={getCardId}
         onClick={onHandClick}
       />
+
+      {/* Side Hand (laid flat on table, below battlefield) */}
+      {sideHandCards.length > 0 && (
+        <SideHand
+          cards={sideHandCards}
+          position={[0, sideHandY, 0]}
+          scale={deckGraveyardScale}
+          renderCardMesh={renderCardMesh}
+          getCardId={getCardId}
+          onClick={onSideHandClick}
+        />
+      )}
 
       {/* Battlefield */}
       <Battlefield
@@ -1322,6 +1384,7 @@ function PlayerArea<T>({
 
 function GameBoardScene<T>({
   yourHand,
+  yourSideHand,
   yourBattlefield,
   yourDeck,
   yourGraveyard,
@@ -1330,6 +1393,7 @@ function GameBoardScene<T>({
   yourHealth,
   yourAvatarSrc,
   opponentHand,
+  opponentSideHand,
   opponentBattlefield,
   opponentDeck,
   opponentGraveyard,
@@ -1345,6 +1409,8 @@ function GameBoardScene<T>({
   onExileClick,
   onPrizeCardsClick,
   onOpponentsHandClick,
+  onSideHandClick,
+  onOpponentSideHandClick,
   canDropToZone,
   stack,
   stackButton,
@@ -1391,6 +1457,7 @@ function GameBoardScene<T>({
         graveyardCards={yourGraveyard}
         exileCards={yourExile}
         handCards={yourHand}
+        sideHandCards={yourSideHand}
         battlefieldCards={yourBattlefield}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
@@ -1398,6 +1465,7 @@ function GameBoardScene<T>({
         onDeckClick={onDeckClick ? () => onDeckClick(false) : undefined}
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(false) : undefined}
         onExileClick={onExileClick ? () => onExileClick(false) : undefined}
+        onSideHandClick={onSideHandClick}
         canDropToZone={canDropToZone}
       />
 
@@ -1408,6 +1476,7 @@ function GameBoardScene<T>({
         graveyardCards={opponentGraveyard}
         exileCards={opponentsExile}
         handCards={opponentHand}
+        sideHandCards={opponentSideHand}
         battlefieldCards={opponentBattlefield}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
@@ -1416,6 +1485,7 @@ function GameBoardScene<T>({
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(true) : undefined}
         onExileClick={onExileClick ? () => onExileClick(true) : undefined}
         onHandClick={onOpponentsHandClick}
+        onSideHandClick={onOpponentSideHandClick}
       />
 
       {/* Player avatars with health - same vertical as deck/graveyard, on left side */}
