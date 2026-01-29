@@ -425,9 +425,10 @@ type GraveyardProps<T> = {
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   onClick?: () => void
+  canDropToZone?: (card: T, zone: DropZone) => boolean
 }
 
-function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', isOpponent = false, renderCardMesh, renderEmptySlot, onClick }: GraveyardProps<T>) {
+function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = [], label = 'Graveyard', isOpponent = false, renderCardMesh, renderEmptySlot, onClick, canDropToZone }: GraveyardProps<T>) {
   const stackHeight = Math.min(cardCount, 20) * 0.008
   const topCard = cards.length > 0 ? cards[cards.length - 1] : null
 
@@ -474,7 +475,7 @@ function Graveyard<T>({ cardCount = 5, position = [0, 0, 0], scale = 1, cards = 
       )}
       {/* Dropzone overlay (player side only) */}
       {!isOpponent && (
-        <DropzoneBox width={CARD_WIDTH * 1.5} height={CARD_HEIGHT * 1.5} />
+        <DropzoneBox width={CARD_WIDTH * 1.5} height={CARD_HEIGHT * 1.5} zone="graveyard" canDropToZone={canDropToZone} />
       )}
     </group>
   )
@@ -638,28 +639,32 @@ type BattlefieldProps<T> = {
   maxSlots?: number
   renderCardMesh: (card: T) => React.ReactNode
   getCardId: (card: T) => string | number
+  canDropToZone?: (card: T, zone: DropZone) => boolean
 }
 
-type DropzoneBoxProps = {
+type DropzoneBoxProps<T> = {
   width: number
   height?: number
   depth?: number
   position?: [number, number, number]
   color?: string
   hoverColor?: string
+  zone: DropZone
+  canDropToZone?: (card: T, zone: DropZone) => boolean
 }
 
-function DropzoneBox({ width, height = 2.4, depth = 0.05, position = [0, 0, 0.5], color = '#ff4444', hoverColor = '#44ff44' }: DropzoneBoxProps) {
+function DropzoneBox<T>({ width, height = 2.4, depth = 0.05, position = [0, 0, 0.5], color = '#ff4444', hoverColor = '#44ff44', zone, canDropToZone }: DropzoneBoxProps<T>) {
   const [isHovered, setIsHovered] = useState(false)
   const { dragState } = useCardContext()
   const isDragging = dragState !== null
-  const isActive = isDragging && isHovered
+  const canDrop = isDragging && canDropToZone && canDropToZone(dragState?.card as T, zone)
+  const isActive = canDrop && isHovered
 
   return (
     <mesh
       position={position}
       onPointerEnter={(e) => {
-        if (!isDragging) return
+        if (!canDrop) return
         e.stopPropagation()
         setIsHovered(true)
       }}
@@ -675,7 +680,7 @@ function DropzoneBox({ width, height = 2.4, depth = 0.05, position = [0, 0, 0.5]
   )
 }
 
-function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, maxSlots = 7, renderCardMesh, getCardId }: BattlefieldProps<T>) {
+function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, maxSlots = 7, renderCardMesh, getCardId, canDropToZone }: BattlefieldProps<T>) {
   const slotWidth = CARD_WIDTH + 0.15
   const { isPortrait } = useLayout()
   const dropzoneY = isPortrait ? 0.5 : 0
@@ -689,7 +694,7 @@ function Battlefield<T>({ cards = [], position = [0, 0, 0], isOpponent = false, 
       </mesh>
       {/* Dropzone overlay (player side only) */}
       {!isOpponent && (
-        <DropzoneBox width={slotWidth * maxSlots} position={[0, dropzoneY, 0.5]} />
+        <DropzoneBox width={slotWidth * maxSlots} position={[0, dropzoneY, 0.5]} zone="battlefield" canDropToZone={canDropToZone} />
       )}
       {/* Card slots */}
       {Array.from({ length: maxSlots }).map((_, index) => {
@@ -1160,7 +1165,10 @@ type PlayerAreaProps<T> = {
   onDeckClick?: () => void
   onGraveyardClick?: () => void
   onExileClick?: () => void
+  canDropToZone?: (card: T, zone: DropZone) => boolean
 }
+
+type DropZone = 'battlefield' | 'graveyard'
 
 type GameBoardProps<T> = {
   yourHand: T[]
@@ -1190,6 +1198,7 @@ type GameBoardProps<T> = {
   onExileClick?: (isOpponent: boolean) => void
   onPrizeCardsClick?: (isOpponent: boolean) => void
   onCardDragEnd?: (card: T, zone: string | null) => void
+  canDropToZone?: (card: T, zone: DropZone) => boolean
   stack?: StackEffect<T>[] | null
   stackButton?: () => React.ReactNode
   steps?: Step[]
@@ -1214,6 +1223,7 @@ function PlayerArea<T>({
   onDeckClick,
   onGraveyardClick,
   onExileClick,
+  canDropToZone,
 }: PlayerAreaProps<T>) {
   const layout = useLayout()
   const { isPortrait, scale } = layout
@@ -1252,6 +1262,7 @@ function PlayerArea<T>({
         maxSlots={layout.maxBattlefieldSlots}
         renderCardMesh={renderCardMesh}
         getCardId={getCardId}
+        canDropToZone={canDropToZone}
       />
 
       {/* Deck (on the right side from player's perspective) */}
@@ -1288,6 +1299,7 @@ function PlayerArea<T>({
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         onClick={onGraveyardClick}
+        canDropToZone={canDropToZone}
       />
     </group>
   )
@@ -1317,6 +1329,7 @@ function GameBoardScene<T>({
   onGraveyardClick,
   onExileClick,
   onPrizeCardsClick,
+  canDropToZone,
   stack,
   stackButton,
   steps,
@@ -1369,6 +1382,7 @@ function GameBoardScene<T>({
         onDeckClick={onDeckClick ? () => onDeckClick(false) : undefined}
         onGraveyardClick={onGraveyardClick ? () => onGraveyardClick(false) : undefined}
         onExileClick={onExileClick ? () => onExileClick(false) : undefined}
+        canDropToZone={canDropToZone}
       />
 
       {/* Opponent's area (top) */}

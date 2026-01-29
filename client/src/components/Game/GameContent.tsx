@@ -278,6 +278,21 @@ export default function GameContent() {
     );
   };
 
+  const canDropToZone = (card: CardState, zone: 'battlefield' | 'graveyard'): boolean => {
+    if (!card.playableActivations) return false;
+
+    if (zone === 'battlefield') {
+      return card.playableActivations.some(
+        (activation) => activation.playZone === 'Battlefield' || activation.playZone === 'Stack'
+      );
+    } else if (zone === 'graveyard') {
+      return card.playableActivations.some(
+        (activation) => activation.playZone === 'BreakZone'
+      );
+    }
+    return false;
+  };
+
   return (
   <GameBoard<CardState>
       onCardClick={handleCardClick}
@@ -285,6 +300,7 @@ export default function GameContent() {
       onGraveyardClick={handleGraveyardClick}
       onExileClick={handleExileClick}
       onPrizeCardsClick={handlePrizeCardsClick}
+      canDropToZone={canDropToZone}
       renderHtmlCard={renderHtmlCard}
       renderCardMesh={renderCardMesh}
       renderEmptySlot={renderEmptySlot}
