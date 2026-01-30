@@ -77,9 +77,14 @@ function getManaPoolTextures(manaPool: ManaPoolState): string[] {
   return textures;
 }
 
+function isSelectedOrTargeted(card: CardState): boolean {
+  // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
+  return card.isSelected || card.isSelectedForCombat || card.isTargetOfSpell;
+}
+
 function getCardBorderColor(card: CardState): string | null {
   // Blue border for selected/targeted cards (higher priority)
-  if (card.isSelected || card.isSelectedForCombat || card.isTargetOfSpell) {
+  if (isSelectedOrTargeted(card)) {
     return '#4488ff';
   }
   // Green border for playable cards

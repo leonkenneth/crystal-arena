@@ -214,13 +214,13 @@ function useBoardTextures() {
 }
 
 // Table surface with divider
-function TableSurface({ onClick }: { onClick: () => void }) {
+function TableSurface() {
   const { colorTexture, roughnessTexture, normalTexture } = useBoardTextures()
 
   return (
     <group>
       {/* Table surface with enhanced materials */}
-      <mesh position={[0, 0, -0.2]} onClick={onClick} receiveShadow>
+      <mesh position={[0, 0, -0.2]} receiveShadow>
         <boxGeometry args={[20, 15, 0.1]} />
         <meshStandardMaterial
           map={colorTexture}
@@ -378,7 +378,7 @@ type DeckProps<T> = {
   onClick?: () => void
 }
 
-function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], label = 'Deck', renderCardMesh, onClick }: DeckProps<T>) {
+function Deck<T>({ cardCount = 30, position = [0, 0, 0], scale = 1, cards = [], renderCardMesh, onClick }: DeckProps<T>) {
   const stackHeight = Math.min(cardCount, 30) * 0.01
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
@@ -493,9 +493,6 @@ type ExileProps<T> = {
 }
 
 function Exile<T>({ cardCount = 0, position = [0, 0, 0], scale = 1, cards = [], label = 'Exile', renderCardMesh, renderEmptySlot, onClick }: ExileProps<T>) {
-  // Don't render if no cards
-  if (cardCount === 0) return null
-
   const stackHeight = Math.min(cardCount, 20) * 0.008
   const topCard = cards.length > 0 ? cards[cards.length - 1] : null
 
@@ -503,6 +500,8 @@ function Exile<T>({ cardCount = 0, position = [0, 0, 0], scale = 1, cards = [], 
     e.stopPropagation()
     onClick?.()
   }, [onClick])
+
+  if (cardCount === 0) return null;
 
   return (
     <group position={position} scale={scale} onClick={handleClick}>
@@ -549,9 +548,6 @@ type PrizeCardsProps<T> = {
 }
 
 function PrizeCards<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCardMesh, onClick }: PrizeCardsProps<T>) {
-  // Don't render if no cards
-  if (cards.length === 0) return null
-
   const cardSpacing = CARD_HEIGHT * 0.25 // Tight vertical spacing for prize cards
   const totalHeight = (cards.length - 1) * cardSpacing
 
@@ -559,6 +555,8 @@ function PrizeCards<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCard
     e.stopPropagation()
     onClick?.()
   }, [onClick])
+
+  if (cards.length === 0) return null;
 
   return (
     <group position={position} scale={scale} onClick={handleClick}>
@@ -587,8 +585,6 @@ type SideHandProps<T> = {
 }
 
 function SideHand<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCardMesh, getCardId, onClick }: SideHandProps<T>) {
-  if (cards.length === 0) return null
-
   const cardSpacing = CARD_WIDTH * 0.5 // Horizontal spacing with overlap
   const totalWidth = (cards.length - 1) * cardSpacing
 
@@ -596,6 +592,8 @@ function SideHand<T>({ cards = [], position = [0, 0, 0], scale = 1, renderCardMe
     e.stopPropagation()
     onClick?.()
   }, [onClick])
+
+  if (cards.length === 0) return null;
 
   return (
     <group position={position} scale={scale} onClick={handleClick}>
@@ -671,7 +669,7 @@ function Hand<T>({
             <InteractiveCard
               card={card}
               interactive={!isOpponent}
-              renderCardMesh={renderCardMesh}
+              renderCardMesh={(card) => renderCardMesh(card, false)}
             />
           </group>
         )
@@ -1445,17 +1443,11 @@ function GameBoardScene<T>({
 }: GameBoardProps<T>) {
   const layout = useLayout()
   const { viewport, isPortrait, scale } = layout
-  const { setSelectedCard } = useCardContext()
-
-  // Click on empty space to deselect
-  const handleBackgroundClick = useCallback(() => {
-    setSelectedCard(null)
-  }, [setSelectedCard])
 
   return (
     <group>
       {/* Table surface with divider */}
-      <TableSurface onClick={handleBackgroundClick} />
+      <TableSurface />
 
       {/* Center divider line */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -0.05]}>
@@ -1589,146 +1581,11 @@ function PreviewCardOverlay<T>({ renderHtmlCard }: { renderHtmlCard: (card: T) =
   )
 }
 
-// Selected card overlay with action menu
-function SelectedCardOverlay<T>({ renderHtmlCard, getCardId }: { renderHtmlCard: (card: T) => React.ReactNode, getCardId: (card: T) => string | number }) {
-  const { selectedCard, setSelectedCard } = useCardContext()
-
-  if (!selectedCard) return null
-
-  const handleAction = (action: string) => {
-    console.log(`Action "${action}" triggered for card:`, getCardId(selectedCard))
-    // In a real game, this would trigger game logic
-    setSelectedCard(null)
-  }
-
-  const handleClose = () => {
-    setSelectedCard(null)
-  }
-
-  return (
-    <Html
-      center
-      position={[0, 0, 6]}
-      style={{
-        pointerEvents: 'none',
-      }}
-    >
-      {/* Full screen container */}
-      <div
-        onClick={handleClose}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'auto',
-        }}
-      >
-        {/* Card and menu container */}
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '16px',
-          }}
-        >
-        {/* Zoomed card */}
-        {renderHtmlCard(selectedCard)}
-
-        {/* Action menu */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            width: '200px',
-          }}
-        >
-          <button
-            onClick={() => handleAction('ability1')}
-            style={{
-              padding: '12px 16px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              backgroundColor: '#4a7c59',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              transition: 'transform 0.1s, background-color 0.1s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#5a9c69'
-              e.currentTarget.style.transform = 'scale(1.02)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#4a7c59'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
-          >
-            🎯 Use Special Ability
-          </button>
-
-          <button
-            onClick={() => handleAction('ability2')}
-            style={{
-              padding: '12px 16px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              backgroundColor: '#7c4a4a',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              transition: 'transform 0.1s, background-color 0.1s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#9c5a5a'
-              e.currentTarget.style.transform = 'scale(1.02)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#7c4a4a'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
-          >
-            ⚔️ Attack Enemy
-          </button>
-
-          <button
-            onClick={handleClose}
-            style={{
-              padding: '10px 16px',
-              fontSize: '13px',
-              backgroundColor: '#555',
-              color: '#ccc',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              marginTop: '4px',
-            }}
-          >
-            Cancel
-          </button>
-        </div>
-        </div>
-      </div>
-    </Html>
-  )
-}
 
 // Dragged card overlay - 3D card that follows pointer
 function DraggedCardOverlay<T>({ renderCardMesh }: { renderCardMesh: (card: T) => React.ReactNode }) {
   const { dragState } = useCardContext()
-  const { camera, viewport } = useThree()
+  const { camera } = useThree()
   const groupRef = useRef<THREE.Group>(null)
 
   // Convert screen coordinates to 3D world position
@@ -1994,28 +1851,13 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
 
       {/* Card overlays */}
       <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
-      <SelectedCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
       <DraggedCardOverlay renderCardMesh={props.renderCardMesh} />
     </>
   )
 }
 
-// Find drop zone based on screen coordinates
-function findDropZone(clientX: number, clientY: number): string | null {
-  const element = document.elementFromPoint(clientX, clientY)
-  if (!element) return null
-
-  const dropZoneElement = element.closest('[data-drop-zone]')
-  if (dropZoneElement) {
-    return dropZoneElement.getAttribute('data-drop-zone')
-  }
-
-  return null
-}
-
 export default function GameBoard<T>(props: GameBoardProps<T>) {
   const [previewCard, setPreviewCard] = useState<T | null>(null)
-  const [selectedCard, setSelectedCard] = useState<T | null>(null)
   const [dragState, setDragState] = useState<DragState<T>>(null)
   const [isCardInteracting, setIsCardInteracting] = useState(false)
   const [hoveredDropZone, setHoveredDropZone] = useState<string | null>(null)
@@ -2062,12 +1904,6 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
   const contextValue = useMemo(() => ({
     previewCard,
     setPreviewCard,
-    selectedCard,
-    setSelectedCard: (card: T | null) => {
-      if (card) {
-        props.onCardClick?.(card, 'hand')
-      }
-    },
     dragState,
     setDragState,
     onDragEnd: handleDragEnd,
@@ -2075,7 +1911,7 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
     setIsCardInteracting,
     hoveredDropZone,
     setHoveredDropZone,
-  }), [previewCard, selectedCard, dragState, handleDragEnd, isCardInteracting, hoveredDropZone, props])
+  }), [previewCard, dragState, handleDragEnd, isCardInteracting, hoveredDropZone, props])
 
   return (
     <CardContext.Provider value={contextValue}>

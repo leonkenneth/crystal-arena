@@ -16,8 +16,6 @@ type CardContextType<T> = {
   previewCard: T | null
   setPreviewCard: (card: T | null) => void
   // Click/tap selection (with actions menu)
-  selectedCard: T | null
-  setSelectedCard: (card: T | null) => void
   // Drag state
   dragState: DragState<T>
   setDragState: (state: DragState<T>) => void
@@ -31,11 +29,10 @@ type CardContextType<T> = {
   setHoveredDropZone: (zone: string | null) => void
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const CardContext = createContext<CardContextType<any>>({
   previewCard: null,
   setPreviewCard: () => {},
-  selectedCard: null,
-  setSelectedCard: () => {},
   dragState: null,
   setDragState: () => {},
   onDragEnd: undefined,
