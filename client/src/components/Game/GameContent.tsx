@@ -1,4 +1,5 @@
 import { useState } from "react";
+import QuitGameButton from "./QuitGameButton";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
 import GameBoard from "../GameBoard";
@@ -342,7 +343,9 @@ export default function GameContent() {
   };
 
   return (
-  <GameBoard<CardState>
+    <>
+      <QuitGameButton />
+      <GameBoard<CardState>
       onCardClick={handleCardClick}
       onDeckClick={handleDeckClick}
       onGraveyardClick={handleGraveyardClick}
@@ -391,5 +394,6 @@ export default function GameContent() {
       opponentAvatarSrc={computer.src}
       manaPoolTextures={getManaPoolTextures(screen.yourManaPool)}
     />
+    </>
   );
 }
