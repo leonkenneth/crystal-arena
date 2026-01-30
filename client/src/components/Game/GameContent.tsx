@@ -30,19 +30,19 @@ import dullIcon from "@/assets/icons/dull.png";
 import back from "@/assets/back.jpeg";
 import { ManaPoolState } from "@/types/player";
 
-const CARD_WIDTH = 0.7
-const CARD_HEIGHT = 1
-const CARD_DEPTH = 0.02
+const CARD_WIDTH = 0.7;
+const CARD_HEIGHT = 1;
+const CARD_DEPTH = 0.02;
 
 const COLORS = {
-  cardFront: '#e8e0d5',
-  cardBack: '#2a4858',
-  cardBorder: '#1a1a1a',
-  deck: '#1e3a4c',
-  graveyard: '#3d2c3d',
-  battlefield: '#2d5a3d',
-  hand: '#4a3728',
-}
+  cardFront: "#e8e0d5",
+  cardBack: "#2a4858",
+  cardBorder: "#1a1a1a",
+  deck: "#1e3a4c",
+  graveyard: "#3d2c3d",
+  battlefield: "#2d5a3d",
+  hand: "#4a3728",
+};
 
 const manaIconMap: Record<string, string> = {
   light: lightIcon.src,
@@ -62,8 +62,17 @@ function getManaPoolTextures(manaPool: ManaPoolState): string[] {
   const textures: string[] = [];
 
   const manaTypes: (keyof ManaPoolState)[] = [
-    'light', 'water', 'dark', 'fire', 'wind',
-    'ice', 'earth', 'lightning', 'crystal', 'colorless', 'multi'
+    "light",
+    "water",
+    "dark",
+    "fire",
+    "wind",
+    "ice",
+    "earth",
+    "lightning",
+    "crystal",
+    "colorless",
+    "multi",
   ];
 
   for (const manaType of manaTypes) {
@@ -87,11 +96,11 @@ function isSelectedOrTargeted(card: CardState): boolean {
 function getCardBorderColor(card: CardState): string | null {
   // Blue border for selected/targeted cards (higher priority)
   if (isSelectedOrTargeted(card)) {
-    return '#4488ff';
+    return "#4488ff";
   }
   // Green border for playable cards
   if (card.isPlayable) {
-    return '#44cc44';
+    return "#44cc44";
   }
   return null;
 }
@@ -124,16 +133,14 @@ function CardMesh({ card }: { card: CardState }) {
       )}
       {/* Card body */}
       <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.03} smoothness={4}>
-        <meshStandardMaterial
-          color={faceDown ? COLORS.cardBack : COLORS.cardFront}
-        />
+        <meshStandardMaterial color={faceDown ? COLORS.cardBack : COLORS.cardFront} />
       </RoundedBox>
       <mesh position={[0, 0, CARD_DEPTH / 2 + 0.002]}>
         <planeGeometry args={[imageWidth, imageHeight]} />
         <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
       </mesh>
     </group>
-  )
+  );
 }
 
 function renderCardMesh(card: CardState): React.ReactNode {
@@ -155,11 +162,11 @@ function renderEmptySlot(): React.ReactNode {
         <meshStandardMaterial color={COLORS.cardBack} />
       </RoundedBox>
     </group>
-  )
+  );
 }
 
 type ExpandedZone = {
-  type: 'deck' | 'graveyard' | 'exile' | 'prize' | 'opponentsHand' | 'opponentsLimitBreak';
+  type: "deck" | "graveyard" | "exile" | "prize" | "opponentsHand" | "opponentsLimitBreak";
   isOpponent: boolean;
 } | null;
 
@@ -172,8 +179,12 @@ export default function GameContent() {
 
   const yourHand = screen.zones.yourHand.cards;
   const yourLimitBreak = screen.zones.yourLimitBreak.cards;
-  const yourBattlefieldFrontRow = screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents);
-  const yourBattlefieldBackRow = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents);
+  const yourBattlefieldFrontRow = screen.yourBattlefield.row2.slots.flatMap(
+    (slot) => slot.permanents
+  );
+  const yourBattlefieldBackRow = screen.yourBattlefield.row1.slots.flatMap(
+    (slot) => slot.permanents
+  );
   const yourDeck = screen.zones.yourMainDeck.cards;
   const yourGraveyard = screen.zones.yourBreakZone.cards;
   const yourExile = screen.zones.yourRemoveFromPlay.cards;
@@ -184,8 +195,12 @@ export default function GameContent() {
   // Swap hand and side hand when handsSwapped is true
   const displayedHand = handsSwapped ? yourLimitBreak : yourHand;
   const displayedSideHand = handsSwapped ? yourHand : yourLimitBreak;
-  const opponentBattlefieldFrontRow = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents);
-  const opponentBattlefieldBackRow = screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents);
+  const opponentBattlefieldFrontRow = screen.opponentsBattlefield.row1.slots.flatMap(
+    (slot) => slot.permanents
+  );
+  const opponentBattlefieldBackRow = screen.opponentsBattlefield.row2.slots.flatMap(
+    (slot) => slot.permanents
+  );
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
   const opponentsExile = screen.zones.opponentsRemoveFromPlay.cards;
@@ -202,7 +217,7 @@ export default function GameContent() {
 
   const renderDialog = () => {
     return <Dialogs />;
-  }
+  };
 
   const renderMessage = () => {
     const messageBox = gameState.messageBox;
@@ -210,17 +225,17 @@ export default function GameContent() {
       return null;
     }
     return <MessageBox messageBox={messageBox} />;
-  }
+  };
 
   const renderHtmlCard = (card: CardState): React.ReactNode => {
     return (
       <ChakraProvider value={system}>
-      <LoadedGameContext.Provider value={loadedGameContext}>
-        <Card card={card} size="xl" />
-      </LoadedGameContext.Provider>
+        <LoadedGameContext.Provider value={loadedGameContext}>
+          <Card card={card} size="xl" />
+        </LoadedGameContext.Provider>
       </ChakraProvider>
     );
-  }
+  };
 
   const renderStackButton = () => {
     if (stack?.effects.length === 0) {
@@ -228,42 +243,42 @@ export default function GameContent() {
     }
     return (
       <ChakraProvider value={system}>
-      <LoadedGameContext.Provider value={loadedGameContext}>
-        <PassPriorityButton />
-      </LoadedGameContext.Provider>
+        <LoadedGameContext.Provider value={loadedGameContext}>
+          <PassPriorityButton />
+        </LoadedGameContext.Provider>
       </ChakraProvider>
     );
-  }
+  };
 
   const handleCardClick = (card: CardState | null) => {
     if (!card) {
       return;
     }
     return doAction(loadedGameContext.gameId, card.oid, "Select");
-  }
+  };
 
   const handleDeckClick = (isOpponent: boolean) => {
-    setExpandedZone({ type: 'deck', isOpponent });
+    setExpandedZone({ type: "deck", isOpponent });
   };
 
   const handleGraveyardClick = (isOpponent: boolean) => {
-    setExpandedZone({ type: 'graveyard', isOpponent });
+    setExpandedZone({ type: "graveyard", isOpponent });
   };
 
   const handleExileClick = (isOpponent: boolean) => {
-    setExpandedZone({ type: 'exile', isOpponent });
+    setExpandedZone({ type: "exile", isOpponent });
   };
 
   const handlePrizeCardsClick = (isOpponent: boolean) => {
-    setExpandedZone({ type: 'prize', isOpponent });
+    setExpandedZone({ type: "prize", isOpponent });
   };
 
   const handleOpponentsHandClick = () => {
-    setExpandedZone({ type: 'opponentsHand', isOpponent: true });
+    setExpandedZone({ type: "opponentsHand", isOpponent: true });
   };
 
   const handleOpponentSideHandClick = () => {
-    setExpandedZone({ type: 'opponentsLimitBreak', isOpponent: true });
+    setExpandedZone({ type: "opponentsLimitBreak", isOpponent: true });
   };
 
   const handleSideHandClick = () => {
@@ -274,15 +289,15 @@ export default function GameContent() {
     if (!expandedZone) return null;
 
     let cards;
-    if (expandedZone.type === 'deck') {
+    if (expandedZone.type === "deck") {
       cards = expandedZone.isOpponent ? opponentDeck : yourDeck;
-    } else if (expandedZone.type === 'graveyard') {
+    } else if (expandedZone.type === "graveyard") {
       cards = expandedZone.isOpponent ? opponentGraveyard : yourGraveyard;
-    } else if (expandedZone.type === 'exile') {
+    } else if (expandedZone.type === "exile") {
       cards = expandedZone.isOpponent ? opponentsExile : yourExile;
-    } else if (expandedZone.type === 'opponentsHand') {
+    } else if (expandedZone.type === "opponentsHand") {
       cards = opponentHand;
-    } else if (expandedZone.type === 'opponentsLimitBreak') {
+    } else if (expandedZone.type === "opponentsLimitBreak") {
       cards = opponentSideHand;
     } else {
       cards = expandedZone.isOpponent ? opponentsPrizeCards : yourPrizeCards;
@@ -290,12 +305,12 @@ export default function GameContent() {
 
     const ownerLabel = expandedZone.isOpponent ? "Opponent's" : "Your";
     const zoneLabelMap: Record<string, string> = {
-      deck: 'Deck',
-      graveyard: 'Graveyard',
-      exile: 'Exile',
-      prize: 'Damage Zone',
-      opponentsHand: 'Hand',
-      opponentsLimitBreak: 'Limit Break',
+      deck: "Deck",
+      graveyard: "Graveyard",
+      exile: "Exile",
+      prize: "Damage Zone",
+      opponentsHand: "Hand",
+      opponentsLimitBreak: "Limit Break",
     };
     const zoneLabel = zoneLabelMap[expandedZone.type];
     const title = `${ownerLabel} ${zoneLabel}`;
@@ -303,27 +318,21 @@ export default function GameContent() {
     return (
       <ChakraProvider value={system}>
         <LoadedGameContext.Provider value={loadedGameContext}>
-          <ExpandedZoneDialog
-            title={title}
-            cards={cards}
-            onClose={() => setExpandedZone(null)}
-          />
+          <ExpandedZoneDialog title={title} cards={cards} onClose={() => setExpandedZone(null)} />
         </LoadedGameContext.Provider>
       </ChakraProvider>
     );
   };
 
-  const canDropToZone = (card: CardState, zone: 'battlefield' | 'graveyard'): boolean => {
+  const canDropToZone = (card: CardState, zone: "battlefield" | "graveyard"): boolean => {
     if (!card.playableActivations) return false;
 
-    if (zone === 'battlefield') {
+    if (zone === "battlefield") {
       return card.playableActivations.some(
-        (activation) => activation.playZone === 'Battlefield' || activation.playZone === 'Stack'
+        (activation) => activation.playZone === "Battlefield" || activation.playZone === "Stack"
       );
-    } else if (zone === 'graveyard') {
-      return card.playableActivations.some(
-        (activation) => activation.playZone === 'BreakZone'
-      );
+    } else if (zone === "graveyard") {
+      return card.playableActivations.some((activation) => activation.playZone === "BreakZone");
     }
     return false;
   };
@@ -332,13 +341,13 @@ export default function GameContent() {
     if (!zone || !card.playableActivations) return;
 
     let matchingActivation;
-    if (zone === 'battlefield') {
+    if (zone === "battlefield") {
       matchingActivation = card.playableActivations.find(
-        (activation) => activation.playZone === 'Battlefield' || activation.playZone === 'Stack'
+        (activation) => activation.playZone === "Battlefield" || activation.playZone === "Stack"
       );
-    } else if (zone === 'graveyard') {
+    } else if (zone === "graveyard") {
       matchingActivation = card.playableActivations.find(
-        (activation) => activation.playZone === 'BreakZone'
+        (activation) => activation.playZone === "BreakZone"
       );
     }
 
@@ -353,54 +362,57 @@ export default function GameContent() {
     <>
       <QuitGameButton />
       <GameBoard<CardState>
-      onCardClick={handleCardClick}
-      onDeckClick={handleDeckClick}
-      onGraveyardClick={handleGraveyardClick}
-      onExileClick={handleExileClick}
-      onPrizeCardsClick={handlePrizeCardsClick}
-      onOpponentsHandClick={handleOpponentsHandClick}
-      onSideHandClick={handleSideHandClick}
-      canDropToZone={canDropToZone}
-      onCardDragEnd={handleCardDragEnd}
-      renderHtmlCard={renderHtmlCard}
-      renderCardMesh={renderCardMesh}
-      renderEmptySlot={renderEmptySlot}
-      renderOverlay={renderOverlay}
-      getCardId={(card: CardState) => card.cardId}
-      steps={steps}
-      renderMessage={renderMessage}
-      renderBottomBar={() => null}
-      renderDialog={renderDialog}
-      yourHand={displayedHand}
-      yourSideHand={displayedSideHand}
-      yourBattlefieldFrontRow={yourBattlefieldFrontRow}
-      yourBattlefieldBackRow={yourBattlefieldBackRow}
-      yourDeck={yourDeck}
-      yourGraveyard={yourGraveyard}
-      yourExile={yourExile}
-      yourPrizeCards={yourPrizeCards}
-      yourHealth={yourHealth}
-      opponentHand={opponentHand}
-      opponentSideHand={opponentSideHand}
-      opponentBattlefieldFrontRow={opponentBattlefieldFrontRow}
-      opponentBattlefieldBackRow={opponentBattlefieldBackRow}
-      opponentDeck={opponentDeck}
-      opponentGraveyard={opponentGraveyard}
-      opponentsExile={opponentsExile}
-      opponentsPrizeCards={opponentsPrizeCards}
-      opponentHealth={opponentHealth}
-      onOpponentSideHandClick={handleOpponentSideHandClick}
-      stack={stack?.effects.map((effect) => ({
-          card: effect.card,
-          targetCardIds: effect.targets.filter((t) => t.targetType === "Card").map((c) => c.cardId.toString()),
-        })) || []
-      }
-      stackButton={renderStackButton}
-      isOpponentTurn={screen.opponent.isActive}
-      yourAvatarSrc={human.src}
-      opponentAvatarSrc={computer.src}
-      manaPoolTextures={getManaPoolTextures(screen.yourManaPool)}
-    />
+        onCardClick={handleCardClick}
+        onDeckClick={handleDeckClick}
+        onGraveyardClick={handleGraveyardClick}
+        onExileClick={handleExileClick}
+        onPrizeCardsClick={handlePrizeCardsClick}
+        onOpponentsHandClick={handleOpponentsHandClick}
+        onSideHandClick={handleSideHandClick}
+        canDropToZone={canDropToZone}
+        onCardDragEnd={handleCardDragEnd}
+        renderHtmlCard={renderHtmlCard}
+        renderCardMesh={renderCardMesh}
+        renderEmptySlot={renderEmptySlot}
+        renderOverlay={renderOverlay}
+        getCardId={(card: CardState) => card.cardId}
+        steps={steps}
+        renderMessage={renderMessage}
+        renderBottomBar={() => null}
+        renderDialog={renderDialog}
+        yourHand={displayedHand}
+        yourSideHand={displayedSideHand}
+        yourBattlefieldFrontRow={yourBattlefieldFrontRow}
+        yourBattlefieldBackRow={yourBattlefieldBackRow}
+        yourDeck={yourDeck}
+        yourGraveyard={yourGraveyard}
+        yourExile={yourExile}
+        yourPrizeCards={yourPrizeCards}
+        yourHealth={yourHealth}
+        opponentHand={opponentHand}
+        opponentSideHand={opponentSideHand}
+        opponentBattlefieldFrontRow={opponentBattlefieldFrontRow}
+        opponentBattlefieldBackRow={opponentBattlefieldBackRow}
+        opponentDeck={opponentDeck}
+        opponentGraveyard={opponentGraveyard}
+        opponentsExile={opponentsExile}
+        opponentsPrizeCards={opponentsPrizeCards}
+        opponentHealth={opponentHealth}
+        onOpponentSideHandClick={handleOpponentSideHandClick}
+        stack={
+          stack?.effects.map((effect) => ({
+            card: effect.card,
+            targetCardIds: effect.targets
+              .filter((t) => t.targetType === "Card")
+              .map((c) => c.cardId.toString()),
+          })) || []
+        }
+        stackButton={renderStackButton}
+        isOpponentTurn={screen.opponent.isActive}
+        yourAvatarSrc={human.src}
+        opponentAvatarSrc={computer.src}
+        manaPoolTextures={getManaPoolTextures(screen.yourManaPool)}
+      />
     </>
   );
 }
