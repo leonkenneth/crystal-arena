@@ -34,15 +34,23 @@ const sampleOpponentHand: CardData[] = [
   { id: 104, color: '#555', label: '?', description: 'Unknown card' },
 ]
 
-const samplePlayerBattlefield: CardData[] = [
+const samplePlayerBattlefieldFrontRow: CardData[] = [
   { id: 11, color: '#c9a959', label: 'Knight', description: 'A brave warrior who fights for honor.', attack: 4, health: 5 },
   { id: 12, color: '#6b9bc3', label: 'Mage', description: 'Wields powerful arcane magic.', attack: 3, health: 3 },
-  { id: 13, color: '#7bc275', label: 'Healer', description: 'Restores health to wounded allies.', attack: 1, health: 4 },
 ]
 
-const sampleOpponentBattlefield: CardData[] = [
+const samplePlayerBattlefieldBackRow: CardData[] = [
+  { id: 13, color: '#7bc275', label: 'Healer', description: 'Restores health to wounded allies.', attack: 1, health: 4 },
+  { id: 14, color: '#9b7bc2', label: 'Rogue', description: 'Sneaky assassin who deals double damage from stealth.', attack: 6, health: 2 },
+]
+
+const sampleOpponentBattlefieldFrontRow: CardData[] = [
   { id: 111, color: '#c75d5d', label: 'Dragon', description: 'Ancient beast that breathes fire.', attack: 8, health: 8 },
+]
+
+const sampleOpponentBattlefieldBackRow: CardData[] = [
   { id: 112, color: '#9b7bc2', label: 'Demon', description: 'Creature from the underworld.', attack: 6, health: 5 },
+  { id: 113, color: '#5d7c5d', label: 'Troll', description: 'Regenerates health each turn.', attack: 4, health: 7 },
 ]
 
 const samplePlayerDeck: CardData[] = [
@@ -420,14 +428,15 @@ function HtmlCard({ card: previewCard }: { card: CardData, faceDown: boolean }):
 }
 
 export default function DummyGameBoard() {
-  const [showDialog, setShowDialog] = React.useState(true)
+  const [showDialog, setShowDialog] = React.useState(false)
   const [stack, setStack] = React.useState<StackEffect<CardData>[] | null>(sampleStack);
 
   return (
     <GameBoard<CardData>
       yourHand={samplePlayerHand}
       yourSideHand={samplePlayerSideHand}
-      yourBattlefield={samplePlayerBattlefield}
+      yourBattlefieldFrontRow={samplePlayerBattlefieldFrontRow}
+      yourBattlefieldBackRow={samplePlayerBattlefieldBackRow}
       yourDeck={samplePlayerDeck}
       yourGraveyard={samplePlayerGraveyard}
       yourExile={samplePlayerExile}
@@ -435,7 +444,8 @@ export default function DummyGameBoard() {
       yourHealth={25}
       opponentHand={sampleOpponentHand}
       opponentSideHand={sampleOpponentSideHand}
-      opponentBattlefield={sampleOpponentBattlefield}
+      opponentBattlefieldFrontRow={sampleOpponentBattlefieldFrontRow}
+      opponentBattlefieldBackRow={sampleOpponentBattlefieldBackRow}
       opponentDeck={sampleOpponentDeck}
       opponentGraveyard={sampleOpponentGraveyard}
       opponentsExile={sampleOpponentExile}

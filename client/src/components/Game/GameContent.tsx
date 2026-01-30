@@ -164,7 +164,8 @@ export default function GameContent() {
 
   const yourHand = screen.zones.yourHand.cards;
   const yourLimitBreak = screen.zones.yourLimitBreak.cards;
-  const yourBattlefield = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents));
+  const yourBattlefieldFrontRow = screen.yourBattlefield.row2.slots.flatMap((slot) => slot.permanents);
+  const yourBattlefieldBackRow = screen.yourBattlefield.row1.slots.flatMap((slot) => slot.permanents);
   const yourDeck = screen.zones.yourMainDeck.cards;
   const yourGraveyard = screen.zones.yourBreakZone.cards;
   const yourExile = screen.zones.yourRemoveFromPlay.cards;
@@ -175,7 +176,8 @@ export default function GameContent() {
   // Swap hand and side hand when handsSwapped is true
   const displayedHand = handsSwapped ? yourLimitBreak : yourHand;
   const displayedSideHand = handsSwapped ? yourHand : yourLimitBreak;
-  const opponentBattlefield = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents).concat(screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents));
+  const opponentBattlefieldFrontRow = screen.opponentsBattlefield.row1.slots.flatMap((slot) => slot.permanents);
+  const opponentBattlefieldBackRow = screen.opponentsBattlefield.row2.slots.flatMap((slot) => slot.permanents);
   const opponentDeck = screen.zones.opponentsMainDeck.cards;
   const opponentGraveyard = screen.zones.opponentsBreakZone.cards;
   const opponentsExile = screen.zones.opponentsRemoveFromPlay.cards;
@@ -361,7 +363,8 @@ export default function GameContent() {
       renderDialog={renderDialog}
       yourHand={displayedHand}
       yourSideHand={displayedSideHand}
-      yourBattlefield={yourBattlefield}
+      yourBattlefieldFrontRow={yourBattlefieldFrontRow}
+      yourBattlefieldBackRow={yourBattlefieldBackRow}
       yourDeck={yourDeck}
       yourGraveyard={yourGraveyard}
       yourExile={yourExile}
@@ -369,7 +372,8 @@ export default function GameContent() {
       yourHealth={yourHealth}
       opponentHand={opponentHand}
       opponentSideHand={opponentSideHand}
-      opponentBattlefield={opponentBattlefield}
+      opponentBattlefieldFrontRow={opponentBattlefieldFrontRow}
+      opponentBattlefieldBackRow={opponentBattlefieldBackRow}
       opponentDeck={opponentDeck}
       opponentGraveyard={opponentGraveyard}
       opponentsExile={opponentsExile}

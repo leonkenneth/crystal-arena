@@ -1211,7 +1211,8 @@ type PlayerAreaProps<T> = {
   exileCards?: T[]
   handCards?: T[]
   sideHandCards?: T[]
-  battlefieldCards?: T[]
+  battlefieldFrontRowCards?: T[]
+  battlefieldBackRowCards?: T[]
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
@@ -1228,7 +1229,8 @@ type DropZone = 'battlefield' | 'graveyard'
 type GameBoardProps<T> = {
   yourHand: T[]
   yourSideHand?: T[]
-  yourBattlefield: T[]
+  yourBattlefieldFrontRow: T[]
+  yourBattlefieldBackRow: T[]
   yourDeck: T[]
   yourGraveyard: T[]
   yourExile: T[]
@@ -1237,7 +1239,8 @@ type GameBoardProps<T> = {
   yourAvatarSrc?: string
   opponentHand: T[]
   opponentSideHand?: T[]
-  opponentBattlefield: T[]
+  opponentBattlefieldFrontRow: T[]
+  opponentBattlefieldBackRow: T[]
   opponentDeck: T[]
   opponentGraveyard: T[]
   opponentsExile: T[]
@@ -1277,7 +1280,8 @@ function PlayerArea<T>({
   exileCards = [],
   handCards = [],
   sideHandCards = [],
-  battlefieldCards = [],
+  battlefieldFrontRowCards = [],
+  battlefieldBackRowCards = [],
   renderCardMesh,
   renderEmptySlot,
   getCardId,
@@ -1295,7 +1299,15 @@ function PlayerArea<T>({
   const handY = isOpponent ? (isPortrait ? 4.5 : 3.5) : isPortrait ? -4.5 : -3.5
   const sideHandY = isOpponent ? (isPortrait ? 5.5 : 4.5) : isPortrait ? -5.5 : -4.5
 
-  const battlefieldY = isOpponent ? (isPortrait ? 2 : 1.5) : isPortrait ? -2 : -1.5
+  // Front row is closer to center, back row is closer to the player's side
+  const rowSpacing = isPortrait ? 1.2 : 1.4
+  const battlefieldCenterY = isOpponent ? (isPortrait ? 2 : 1.5) : isPortrait ? -2 : -1.5
+  const battlefieldFrontRowY = isOpponent
+    ? battlefieldCenterY - rowSpacing / 2
+    : battlefieldCenterY + rowSpacing / 2
+  const battlefieldBackRowY = isOpponent
+    ? battlefieldCenterY + rowSpacing / 2
+    : battlefieldCenterY - rowSpacing / 2
 
   // In portrait: deck/graveyard go to the side but closer
   // In landscape: deck/graveyard go further to the side
@@ -1331,11 +1343,22 @@ function PlayerArea<T>({
         />
       )}
 
-      {/* Battlefield */}
+      {/* Battlefield Front Row */}
       <Battlefield
-        cards={battlefieldCards}
+        cards={battlefieldFrontRowCards}
         isOpponent={isOpponent}
-        position={[0, battlefieldY, 0]}
+        position={[0, battlefieldFrontRowY, 0]}
+        maxSlots={layout.maxBattlefieldSlots}
+        renderCardMesh={renderCardMesh}
+        getCardId={getCardId}
+        canDropToZone={canDropToZone}
+      />
+
+      {/* Battlefield Back Row */}
+      <Battlefield
+        cards={battlefieldBackRowCards}
+        isOpponent={isOpponent}
+        position={[0, battlefieldBackRowY, 0]}
         maxSlots={layout.maxBattlefieldSlots}
         renderCardMesh={renderCardMesh}
         getCardId={getCardId}
@@ -1385,7 +1408,8 @@ function PlayerArea<T>({
 function GameBoardScene<T>({
   yourHand,
   yourSideHand,
-  yourBattlefield,
+  yourBattlefieldFrontRow,
+  yourBattlefieldBackRow,
   yourDeck,
   yourGraveyard,
   yourExile,
@@ -1394,7 +1418,8 @@ function GameBoardScene<T>({
   yourAvatarSrc,
   opponentHand,
   opponentSideHand,
-  opponentBattlefield,
+  opponentBattlefieldFrontRow,
+  opponentBattlefieldBackRow,
   opponentDeck,
   opponentGraveyard,
   opponentsExile,
@@ -1458,7 +1483,8 @@ function GameBoardScene<T>({
         exileCards={yourExile}
         handCards={yourHand}
         sideHandCards={yourSideHand}
-        battlefieldCards={yourBattlefield}
+        battlefieldFrontRowCards={yourBattlefieldFrontRow}
+        battlefieldBackRowCards={yourBattlefieldBackRow}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
@@ -1477,7 +1503,8 @@ function GameBoardScene<T>({
         exileCards={opponentsExile}
         handCards={opponentHand}
         sideHandCards={opponentSideHand}
-        battlefieldCards={opponentBattlefield}
+        battlefieldFrontRowCards={opponentBattlefieldFrontRow}
+        battlefieldBackRowCards={opponentBattlefieldBackRow}
         renderCardMesh={renderCardMesh}
         renderEmptySlot={renderEmptySlot}
         getCardId={getCardId}
