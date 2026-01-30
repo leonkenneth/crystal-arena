@@ -218,12 +218,13 @@ function useBoardTextures() {
 
 // Table surface with divider
 function TableSurface() {
+  const { setPreviewCard } = useCardContext()
   const { colorTexture, roughnessTexture, normalTexture } = useBoardTextures()
 
   return (
     <group>
       {/* Table surface with enhanced materials */}
-      <mesh position={[0, 0, -0.2]} receiveShadow>
+      <mesh position={[0, 0, -0.2]} receiveShadow onPointerOver={() => setPreviewCard(null)}>
         <boxGeometry args={[20, 15, 0.1]} />
         <meshStandardMaterial
           map={colorTexture}

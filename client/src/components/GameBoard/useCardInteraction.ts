@@ -21,7 +21,8 @@ export default function useCardInteraction<T>(cardData: T | null) {
   const isDragging = useRef(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  const handlePointerEnter = useCallback(() => {
+  const handlePointerEnter = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
     // Only show preview if no card is currently being dragged
     if (cardData && !dragState) {
       setPreviewCard(cardData)
@@ -29,7 +30,8 @@ export default function useCardInteraction<T>(cardData: T | null) {
     }
   }, [cardData, setPreviewCard, dragState])
 
-  const handlePointerLeave = useCallback(() => {
+  const handlePointerLeave = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current)
       longPressTimer.current = null
@@ -64,6 +66,7 @@ export default function useCardInteraction<T>(cardData: T | null) {
   }, [cardData, setPreviewCard, setIsCardInteracting])
 
   const handlePointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
     if (!cardData || !pointerDownPosition.current) return
 
     const dx = e.nativeEvent.clientX - pointerDownPosition.current.x
