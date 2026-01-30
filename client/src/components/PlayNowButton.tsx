@@ -11,6 +11,7 @@ type Props = ChakraButtonProps & {
   variant?: "primary" | "secondary";
 };
 
+// eslint-disable-next-line react-compiler/react-compiler
 export default function PlayNowButton({ children, ...props }: Props) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

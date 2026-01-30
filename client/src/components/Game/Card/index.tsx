@@ -23,6 +23,7 @@ type Props = {
   isInteractable?: boolean;
 };
 
+// eslint-disable-next-line react-compiler/react-compiler
 export default function Card({
   card,
   text,

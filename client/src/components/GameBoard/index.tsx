@@ -10,6 +10,7 @@ import { useDebugRerender } from "../../hooks/useDebugRerender";
 import { useTextureWithPlaceholder } from "./useTextureWithPlaceholder";
 
 // Create a procedural felt texture for the game board
+// eslint-disable-next-line react-compiler/react-compiler
 function useBoardTextures() {
   "use no memo";
   return useMemo(() => {
@@ -291,9 +292,6 @@ const COLORS = {
   battlefield: "#2d5a3d",
   hand: "#4a3728",
 };
-
-// Zone type for game areas
-type Zone = "hand" | "battlefield" | "deck" | "graveyard";
 
 // Expanded pile data
 export type ExpandedPile<T> = {
@@ -979,8 +977,8 @@ function AvatarImage({ src }: { src: string }) {
       map: { value: texture },
       radius: { value: 0.15 },
     }),
-    []
-  ); // eslint-disable-line react-hooks/exhaustive-deps
+    [texture]
+  );
 
   // Update texture uniform when it changes
   useEffect(() => {
@@ -1769,7 +1767,11 @@ function ResponsiveCamera() {
       offsetY.current = clampOffsetY(offsetY.current + deltaY);
 
       // Update camera position
-      camera.position.y = basePosition.current.y + offsetY.current;
+      camera.position.set(
+        basePosition.current.x,
+        basePosition.current.y + offsetY.current,
+        basePosition.current.z
+      );
       camera.lookAt(0, offsetY.current, 0);
 
       lastTouchY.current = clientY;
@@ -1850,7 +1852,11 @@ function ResponsiveCamera() {
       offsetY.current = clampOffsetY(offsetY.current + velocityY.current);
 
       // Update camera
-      camera.position.y = basePosition.current.y + offsetY.current;
+      camera.position.set(
+        basePosition.current.x,
+        basePosition.current.y + offsetY.current,
+        basePosition.current.z
+      );
       camera.lookAt(0, offsetY.current, 0);
     }
   });

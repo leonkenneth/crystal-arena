@@ -90,6 +90,7 @@ export const ArrowPortal = ({
     : null;
 };
 
+// eslint-disable-next-line react-compiler/react-compiler
 export default function TargetArrow({ fromCardId, toCardId }: Props) {
   const { gameState } = useLoadedGameContext();
   const [fromLocation, setFromLocation] = useState<DOMRectReadOnly | null>(null);
