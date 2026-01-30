@@ -6,6 +6,7 @@ import { RoundedBox, Text, Html, Environment, useTexture, Billboard } from '@rea
 import * as THREE from 'three'
 import useCardContext, { CardContext, DragState } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
+import { useDebugRerender } from '../../hooks/useDebugRerender'
 
 // Create a procedural felt texture for the game board
 function useBoardTextures() {
@@ -1794,6 +1795,7 @@ function ResponsiveCamera() {
 }
 
 function GameBoardCanvas<T>(props: GameBoardProps<T>) {
+  useDebugRerender('GameBoardCanvas', props as Record<string, unknown>)
   return (
     <>
       {/* Responsive camera adjustment */}
@@ -1859,6 +1861,7 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
 }
 
 export default function GameBoard<T>(props: GameBoardProps<T>) {
+  useDebugRerender('GameBoard', props as Record<string, unknown>)
   const { onCardDragEnd } = props
   const [previewCard, setPreviewCard] = useState<T | null>(null)
   const [dragState, setDragState] = useState<DragState<T>>(null)
@@ -1926,7 +1929,9 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
           gl={{ antialias: true }}
           onCreated={({ gl }) => gl.setClearColor('#1a1a2e')}
         >
-          <GameBoardCanvas {...props} />
+          <React.Suspense fallback={null}>
+            <GameBoardCanvas {...props} />
+          </React.Suspense>
         </Canvas>
         {messageContent && (
           <div
