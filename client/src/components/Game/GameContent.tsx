@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState } from "react";
 import QuitGameButton from "./QuitGameButton";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
 import GameBoard from "../GameBoard";
 import Card from "./Card";
 import { RoundedBox } from "@react-three/drei";
-import { TextureLoader, Texture, CanvasTexture } from "three";
 import Dialogs from "./Dialogs";
 import MessageBox from "./Dialogs/MessageBox";
 import ExpandedZoneDialog from "./CollapsedZone/ExpandedZoneDialog";
@@ -14,9 +13,8 @@ import { system } from "@/components/ui/system";
 import { getImageUrl } from "./Card/CardImage";
 import { doAction } from "@/utils/useDoAction";
 import PassPriorityButton from "./PassPriorityButton";
-const CARD_WIDTH = 0.7
-const CARD_HEIGHT = 1
-const CARD_DEPTH = 0.02
+import { useTextureWithPlaceholder } from "../GameBoard/useTextureWithPlaceholder";
+import { getStepsToDisplay } from "./Steps";
 import human from "@/assets/human.png";
 import computer from "@/assets/computer.png";
 import lightIcon from "@/assets/icons/light.png";
@@ -29,7 +27,12 @@ import earthIcon from "@/assets/icons/earth.png";
 import lightningIcon from "@/assets/icons/lightning.png";
 import crystalIcon from "@/assets/icons/crystal.png";
 import dullIcon from "@/assets/icons/dull.png";
+import back from "@/assets/back.jpeg";
 import { ManaPoolState } from "@/types/player";
+
+const CARD_WIDTH = 0.7
+const CARD_HEIGHT = 1
+const CARD_DEPTH = 0.02
 
 const COLORS = {
   cardFront: '#e8e0d5',
@@ -40,64 +43,6 @@ const COLORS = {
   battlefield: '#2d5a3d',
   hand: '#4a3728',
 }
-import back from "@/assets/back.jpeg";
-
-// Create a placeholder texture (solid gray) - created once at module level
-function createPlaceholderTexture(): CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 64;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.fillStyle = COLORS.cardBack;
-    ctx.fillRect(0, 0, 64, 64);
-  }
-  const texture = new CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-}
-
-// Lazy initialization of placeholder (for SSR compatibility)
-let placeholderTexture: CanvasTexture | null = null;
-function getPlaceholderTexture(): CanvasTexture {
-  if (!placeholderTexture && typeof document !== 'undefined') {
-    placeholderTexture = createPlaceholderTexture();
-  }
-  return placeholderTexture!;
-}
-
-// Global texture cache to avoid reloading the same texture
-const textureCache = new Map<string, Texture>();
-const textureLoader = typeof window !== 'undefined' ? new TextureLoader() : null;
-
-// Non-suspending texture hook - shows placeholder while loading
-function useTextureWithPlaceholder(url: string): Texture {
-  const [texture, setTexture] = useState<Texture>(() => {
-    // Check cache first
-    const cached = textureCache.get(url);
-    if (cached) return cached;
-    return getPlaceholderTexture();
-  });
-
-  useEffect(() => {
-    // Already cached
-    if (textureCache.has(url)) {
-      setTexture(textureCache.get(url)!);
-      return;
-    }
-
-    // Load texture
-    if (textureLoader) {
-      textureLoader.load(url, (loadedTexture) => {
-        textureCache.set(url, loadedTexture);
-        setTexture(loadedTexture);
-      });
-    }
-  }, [url]);
-
-  return texture;
-}
-import { getStepsToDisplay } from "./Steps";
 
 const manaIconMap: Record<string, string> = {
   light: lightIcon.src,

@@ -20,6 +20,7 @@ type CardContextType<T> = {
   dragState: DragState<T>
   setDragState: (state: DragState<T>) => void
   // Callback for when drag ends on a zone
+  onCardClick?: (card: T | null) => void
   onDragEnd?: (card: T, zone: string | null) => void
   // Track if a card interaction is in progress (to prevent panning)
   isCardInteracting: boolean
@@ -35,6 +36,7 @@ export const CardContext = createContext<CardContextType<any>>({
   setPreviewCard: () => {},
   dragState: null,
   setDragState: () => {},
+  onCardClick: undefined,
   onDragEnd: undefined,
   isCardInteracting: false,
   setIsCardInteracting: () => {},

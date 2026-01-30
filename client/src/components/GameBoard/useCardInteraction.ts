@@ -11,15 +11,9 @@ const LONG_PRESS_DURATION = 400
 // Drag activation distance in pixels
 const DRAG_DISTANCE_THRESHOLD = 8
 
-// Check if card has playable activations (can be dragged)
-function canDrag<T>(card: T): boolean {
-  const cardAny = card as any
-  return cardAny?.playableActivations && cardAny.playableActivations.length > 0
-}
-
 // Hook for handling hover, long-press, click, and drag
 export default function useCardInteraction<T>(cardData: T | null) {
-  const { previewCard, setPreviewCard, setSelectedCard, selectedCard, dragState, setDragState, onDragEnd, setIsCardInteracting } = useCardContext()
+  const { previewCard, setPreviewCard, dragState, setDragState, onCardClick, onDragEnd, setIsCardInteracting } = useCardContext()
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isLongPress = useRef(false)
   const pointerDownTime = useRef(0)
@@ -28,12 +22,12 @@ export default function useCardInteraction<T>(cardData: T | null) {
   const [isHovered, setIsHovered] = useState(false)
 
   const handlePointerEnter = useCallback(() => {
-    // Only show preview if no card is currently selected and not dragging
-    if (cardData && !selectedCard && !dragState) {
+    // Only show preview if no card is currently being dragged
+    if (cardData && !dragState) {
       setPreviewCard(cardData)
       setIsHovered(true)
     }
-  }, [cardData, setPreviewCard, selectedCard, dragState])
+  }, [cardData, setPreviewCard, dragState])
 
   const handlePointerLeave = useCallback(() => {
     if (longPressTimer.current) {
@@ -77,7 +71,7 @@ export default function useCardInteraction<T>(cardData: T | null) {
     const distance = Math.sqrt(dx * dx + dy * dy)
 
     // Check if we should start dragging
-    if (!isDragging.current && distance >= DRAG_DISTANCE_THRESHOLD && canDrag(cardData)) {
+    if (!isDragging.current && distance >= DRAG_DISTANCE_THRESHOLD) {
       isDragging.current = true
 
       // Cancel long press timer when drag starts
@@ -149,9 +143,9 @@ export default function useCardInteraction<T>(cardData: T | null) {
     // Short tap/click - select the card and show action menu
     if (pressDuration < LONG_PRESS_DURATION) {
       setPreviewCard(null)
-      setSelectedCard(cardData)
+      onCardClick?.(cardData)
     }
-  }, [cardData, setPreviewCard, setSelectedCard, onDragEnd, setDragState, setIsCardInteracting])
+  }, [cardData, setPreviewCard, onCardClick, onDragEnd, setDragState, setIsCardInteracting])
 
   // Stop click events from propagating to the table surface
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {

@@ -2,11 +2,12 @@
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { Canvas, useThree, ThreeEvent, useFrame } from '@react-three/fiber'
-import { RoundedBox, Text, Html, Environment, useTexture, Billboard } from '@react-three/drei'
+import { RoundedBox, Text, Html, Environment, Billboard } from '@react-three/drei'
 import * as THREE from 'three'
 import useCardContext, { CardContext, DragState } from './useCardContext'
 import useCardInteraction from './useCardInteraction'
 import { useDebugRerender } from '../../hooks/useDebugRerender'
+import { useTextureWithPlaceholder } from './useTextureWithPlaceholder'
 
 // Create a procedural felt texture for the game board
 function useBoardTextures() {
@@ -893,18 +894,28 @@ const roundedAvatarShader = {
 
 // Inner component that loads and displays the avatar texture with rounded corners
 function AvatarImage({ src }: { src: string }) {
-  const texture = useTexture(src)
+  const texture = useTextureWithPlaceholder(src)
+  const materialRef = useRef<THREE.ShaderMaterial>(null)
 
-  // Create unique uniforms for each instance
+  // Create uniforms once
   const uniforms = useMemo(() => ({
     map: { value: texture },
     radius: { value: 0.15 },
-  }), [texture])
+  }), []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update texture uniform when it changes
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.map.value = texture
+      materialRef.current.needsUpdate = true
+    }
+  }, [texture])
 
   return (
     <mesh position={[0, 0.15, 0.08]}>
       <planeGeometry args={[1.0, 1.0]} />
       <shaderMaterial
+        ref={materialRef}
         attach="material"
         uniforms={uniforms}
         vertexShader={roundedAvatarShader.vertexShader}
@@ -1084,7 +1095,7 @@ function ManaSphere({
   visible?: boolean
   delay?: number
 }) {
-  const texture = useTexture(src)
+  const texture = useTextureWithPlaceholder(src)
   const groupRef = useRef<THREE.Group>(null)
   const animationState = useRef({
     currentScale: 0,
@@ -1251,7 +1262,7 @@ type GameBoardProps<T> = {
   renderCardMesh: (card: T) => React.ReactNode
   renderEmptySlot: () => React.ReactNode
   getCardId: (card: T) => string | number
-  onCardClick?: (card: T, zone: Zone) => void
+  onCardClick?: (card: T | null) => void
   onCardHover?: (card: T | null) => void
   onDeckClick?: (isOpponent: boolean) => void
   onGraveyardClick?: (isOpponent: boolean) => void
@@ -1862,13 +1873,16 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
 
 export default function GameBoard<T>(props: GameBoardProps<T>) {
   useDebugRerender('GameBoard', props as Record<string, unknown>)
-  const { onCardDragEnd } = props
+  const { onCardDragEnd, onCardClick } = props
   const [previewCard, setPreviewCard] = useState<T | null>(null)
   const [dragState, setDragState] = useState<DragState<T>>(null)
   const [isCardInteracting, setIsCardInteracting] = useState(false)
   const [hoveredDropZone, setHoveredDropZone] = useState<string | null>(null)
 
-  // Handle drag end callback
+  const handleCardClick = useCallback((card: T | null) => {
+    onCardClick?.(card)
+  }, [onCardClick])
+
   const handleDragEnd = useCallback((card: T, zone: string | null) => {
     onCardDragEnd?.(card, zone)
   }, [onCardDragEnd])
@@ -1912,12 +1926,13 @@ export default function GameBoard<T>(props: GameBoardProps<T>) {
     setPreviewCard,
     dragState,
     setDragState,
+    onCardClick: handleCardClick,
     onDragEnd: handleDragEnd,
     isCardInteracting,
     setIsCardInteracting,
     hoveredDropZone,
     setHoveredDropZone,
-  }), [previewCard, dragState, handleDragEnd, isCardInteracting, hoveredDropZone])
+  }), [previewCard, dragState, handleCardClick, handleDragEnd, isCardInteracting, hoveredDropZone])
 
   return (
     <CardContext.Provider value={contextValue}>
