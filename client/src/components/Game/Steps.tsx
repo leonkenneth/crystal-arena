@@ -53,19 +53,22 @@ function isCombatStep(step: StepState) {
   return combatSteps.includes(step.name);
 }
 
+export function getStepsToDisplay(steps: StepState[]) {
+  const activeStep = steps.find((step) => step.isCurrent);
+  const activeStepIsCombatStep = activeStep && isCombatStep(activeStep);
+  if (activeStepIsCombatStep) {
+    return steps.filter((step) => stepsToDisplayInCombat.includes(step.name));
+  } else {
+    return steps.filter((step) => nonCombatStepsToDisplay.includes(step.name));
+  }
+}
+
 export default function Steps() {
   const { gameState } = useLoadedGameContext();
   const steps = gameState.screen.steps;
   const isYourTurn = gameState.screen.you.isActive;
-  const activeStep = steps.steps.find((step) => step.isCurrent);
-  const activeStepIsCombatStep = activeStep && isCombatStep(activeStep);
 
-  let stepsToDisplay = [];
-  if (activeStepIsCombatStep) {
-    stepsToDisplay = steps.steps.filter((step) => stepsToDisplayInCombat.includes(step.name));
-  } else {
-    stepsToDisplay = steps.steps.filter((step) => nonCombatStepsToDisplay.includes(step.name));
-  }
+  const stepsToDisplay = getStepsToDisplay(steps.steps);
   const activeStepIndex = stepsToDisplay.findIndex((step) => step.isCurrent);
 
   return (

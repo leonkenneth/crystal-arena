@@ -70,8 +70,9 @@ function Game({ id }: { id: string }) {
   );
 }
 
+const queryClient = new QueryClient();
+
 export default function GameWithQueryProvider({ id }: { id: string }) {
-  const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
       <Game id={id} />

@@ -20,6 +20,7 @@ function HoverableDiv({
   return <div ref={ref}>{children}</div>;
 }
 
+// eslint-disable-next-line react-compiler/react-compiler
 export default function Playground() {
   const [divsState, setDivsState] = useState<{ [key: string]: boolean }>({});
   return (
