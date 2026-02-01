@@ -77,15 +77,29 @@ export default function TargetArrow3D({
     const to = getPosition(toCardId)
 
     if (from && to && meshRef.current) {
-      // Start/end positions (slightly above cards)
+      // Calculate direction between cards (in XY plane)
+      const direction = new THREE.Vector3().subVectors(to, from)
+      direction.z = 0 // Keep direction in XY plane
+      const distance = direction.length()
+      direction.normalize()
+
+      // Card edge offset (approximate card radius)
+      const cardOffset = 0.6
+
+      // Start/end positions offset to card edges (slightly above cards)
       const start = from.clone()
+      start.add(direction.clone().multiplyScalar(cardOffset))
       start.z += 0.1
+
       const end = to.clone()
+      end.sub(direction.clone().multiplyScalar(cardOffset))
       end.z += 0.1
 
       // Control point: midpoint raised in Z for arc effect
+      // Scale arc height based on distance
+      const arcHeight = Math.min(1.5, Math.max(0.5, distance * 0.3))
       const mid = new THREE.Vector3().lerpVectors(start, end, 0.5)
-      mid.z += 1.5 // Arc height
+      mid.z += arcHeight
 
       // Create quadratic bezier curve
       const curve = new THREE.QuadraticBezierCurve3(start, mid, end)
