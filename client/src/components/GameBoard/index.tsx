@@ -8,7 +8,11 @@ import useCardContext, { CardContext, DragState } from "./useCardContext";
 import useCardInteraction from "./useCardInteraction";
 import { useDebugRerender } from "../../hooks/useDebugRerender";
 import { useTextureWithPlaceholder } from "./useTextureWithPlaceholder";
-import { CardPositionsContext, useCardPositions, useCardPositionsProvider } from "./useCardPositions";
+import {
+  CardPositionsContext,
+  useCardPositions,
+  useCardPositionsProvider,
+} from "./useCardPositions";
 import TargetArrow3D from "./TargetArrow3D";
 
 // Create a procedural felt texture for the game board
@@ -338,7 +342,12 @@ type InteractiveCardProps<T> = {
   renderCardMesh: (card: T) => React.ReactNode;
 };
 
-function InteractiveCard<T>({ card, cardId, interactive, renderCardMesh }: InteractiveCardProps<T>) {
+function InteractiveCard<T>({
+  card,
+  cardId,
+  interactive,
+  renderCardMesh,
+}: InteractiveCardProps<T>) {
   const { isHovered, ...interactions } = useCardInteraction<T>(interactive ? card : null);
   const { dragState } = useCardContext();
   const { registerPosition, unregisterPosition } = useCardPositions();
