@@ -8,6 +8,12 @@ import useCardContext, { CardContext, DragState } from "./useCardContext";
 import useCardInteraction from "./useCardInteraction";
 import { useDebugRerender } from "../../hooks/useDebugRerender";
 import { useTextureWithPlaceholder } from "./useTextureWithPlaceholder";
+import {
+  CardPositionsContext,
+  useCardPositions,
+  useCardPositionsProvider,
+} from "./useCardPositions";
+import TargetArrow3D from "./TargetArrow3D";
 
 // Create a procedural felt texture for the game board
 // eslint-disable-next-line react-compiler/react-compiler
@@ -331,21 +337,44 @@ function useLayout() {
 // Wrapper component that adds interaction to rendered cards
 type InteractiveCardProps<T> = {
   card: T;
+  cardId?: string;
   interactive: boolean;
   renderCardMesh: (card: T) => React.ReactNode;
 };
 
-function InteractiveCard<T>({ card, interactive, renderCardMesh }: InteractiveCardProps<T>) {
+function InteractiveCard<T>({
+  card,
+  cardId,
+  interactive,
+  renderCardMesh,
+}: InteractiveCardProps<T>) {
   const { isHovered, ...interactions } = useCardInteraction<T>(interactive ? card : null);
   const { dragState } = useCardContext();
+  const { registerPosition, unregisterPosition } = useCardPositions();
   const groupRef = useRef<THREE.Group>(null);
+  const worldPosition = useRef(new THREE.Vector3());
 
   // Check if this card is being dragged
   const isBeingDragged = dragState?.card === card;
 
+  // Unregister position on unmount
+  useEffect(() => {
+    return () => {
+      if (cardId) {
+        unregisterPosition(cardId);
+      }
+    };
+  }, [cardId, unregisterPosition]);
+
   // Animate hover effect - small zoom towards camera
   useFrame((_, delta) => {
     if (!groupRef.current) return undefined;
+
+    // Register world position for target arrows
+    if (cardId) {
+      groupRef.current.getWorldPosition(worldPosition.current);
+      registerPosition(cardId, worldPosition.current);
+    }
 
     // Hide card while dragging
     if (isBeingDragged) {
@@ -730,6 +759,7 @@ function Hand<T>({
           >
             <InteractiveCard
               card={card}
+              cardId={String(getCardId(card))}
               interactive={!isOpponent}
               renderCardMesh={(card) => renderCardMesh(card, false)}
             />
@@ -845,7 +875,12 @@ function Battlefield<T>({
             {/* Card if present */}
             {card && (
               <group position={[0, 0, CARD_DEPTH / 2]}>
-                <InteractiveCard card={card} interactive={true} renderCardMesh={renderCardMesh} />
+                <InteractiveCard
+                  card={card}
+                  cardId={String(getCardId(card))}
+                  interactive={true}
+                  renderCardMesh={renderCardMesh}
+                />
               </group>
             )}
           </group>
@@ -911,6 +946,7 @@ function StackDisplay<T>({
           >
             <InteractiveCard
               card={effect.card}
+              cardId={String(getCardId(effect.card))}
               interactive={true}
               renderCardMesh={renderCardMesh}
             />
@@ -1866,8 +1902,10 @@ function ResponsiveCamera() {
 
 function GameBoardCanvas<T>(props: GameBoardProps<T>) {
   useDebugRerender("GameBoardCanvas", props as Record<string, unknown>);
+  const cardPositionsValue = useCardPositionsProvider();
+
   return (
-    <>
+    <CardPositionsContext.Provider value={cardPositionsValue}>
       {/* Responsive camera adjustment */}
       <ResponsiveCamera />
 
@@ -1922,7 +1960,18 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
       {/* Card overlays */}
       <PreviewCardOverlay renderHtmlCard={props.renderHtmlCard} getCardId={props.getCardId} />
       <DraggedCardOverlay renderCardMesh={props.renderCardMesh} />
-    </>
+
+      {/* Target arrows for stack effects */}
+      {props.stack?.map((effect) =>
+        effect.targetCardIds.map((targetId) => (
+          <TargetArrow3D
+            key={`arrow-${props.getCardId(effect.card)}-${targetId}`}
+            fromCardId={String(props.getCardId(effect.card))}
+            toCardId={targetId}
+          />
+        ))
+      )}
+    </CardPositionsContext.Provider>
   );
 }
 
