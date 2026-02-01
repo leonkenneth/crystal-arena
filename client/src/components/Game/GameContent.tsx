@@ -1,5 +1,5 @@
 import { useState } from "react";
-import QuitGameButton from "./QuitGameButton";
+import MenuButton from "./MenuButton";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
 import GameBoard from "../GameBoard";
@@ -360,7 +360,7 @@ export default function GameContent() {
 
   return (
     <>
-      <QuitGameButton />
+      <MenuButton />
       <GameBoard<CardState>
         onCardClick={handleCardClick}
         onDeckClick={handleDeckClick}
