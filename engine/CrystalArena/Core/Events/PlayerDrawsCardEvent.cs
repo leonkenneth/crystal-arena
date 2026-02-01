@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class PlayerDrawsCardEvent
+    public class PlayerDrawsCardEvent : ITriggerMessage
     {
         public readonly Player Player;
 

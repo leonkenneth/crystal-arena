@@ -9,6 +9,7 @@ namespace CrystalArena.UserInterface.SelectAbility
     {
         private readonly List<CardText> _descriptions = new List<CardText>();
         private int _selectedIndex;
+        private readonly Card _owningCard;
 
         public override object ToJson()
         {
@@ -18,14 +19,16 @@ namespace CrystalArena.UserInterface.SelectAbility
                 CanCancel,
                 Descriptions = Descriptions.Select(d => d.ToString()),
                 SelectedIndex,
+                OwningCard = Ui.Dialogs.Card.Create(_owningCard).ToJson(),
                 Oid = base.ToJsonWithOid(),
             };
         }
 
-        public ViewModel(IEnumerable<CardText> descriptions, bool canCancel = true)
+        public ViewModel(IEnumerable<CardText> descriptions, Card owningCard, bool canCancel = true)
         {
             _descriptions.AddRange(descriptions);
             _selectedIndex = -1;
+            _owningCard = owningCard;
             CanCancel = canCancel;
         }
 
@@ -86,7 +89,7 @@ namespace CrystalArena.UserInterface.SelectAbility
 
         public interface IFactory
         {
-            ViewModel Create(IEnumerable<CardText> descriptions, bool canCancel = true);
+            ViewModel Create(IEnumerable<CardText> descriptions, Card owningCard, bool canCancel = true);
         }
     }
 }

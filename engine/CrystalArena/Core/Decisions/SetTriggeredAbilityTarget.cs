@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.Decisions
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Decisions
 {
     using System;
     using System.Collections.Generic;
@@ -137,7 +139,7 @@
                     D._p.MachineRules.Where(x => x is TargetingRule).Cast<TargetingRule>(),
                     D._p.DistributeAmount,
                     force: true,
-                    triggerMessage: D._p.Effect.TriggerMessage<object>()
+                    triggerMessage: D._p.Effect.TriggerMessage<ITriggerMessage>()
                 );
 
                 return targetsCandidates.Take(Ai.CurrentTargetCount);
@@ -192,7 +194,7 @@
                     {
                         Validator = validator,
                         CanCancel = false,
-                        TriggerMessage = D._p.Effect.TriggerMessage<object>(),
+                        TriggerMessage = D._p.Effect.TriggerMessage<ITriggerMessage>(),
                     };
 
                     var dialog = Ui.Dialogs.SelectTarget.Create(selectTargetParameters);
@@ -233,7 +235,7 @@
             {
                 foreach (var target in GenerateTargets(validator.IsZoneValid))
                 {
-                    if (validator.IsTargetValid(target, D._p.Effect.TriggerMessage<object>()))
+                    if (validator.IsTargetValid(target, D._p.Effect.TriggerMessage<ITriggerMessage>()))
                         return false;
                 }
 

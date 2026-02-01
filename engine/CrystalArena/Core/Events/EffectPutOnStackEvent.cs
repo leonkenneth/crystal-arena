@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class EffectPutOnStackEvent
+    public class EffectPutOnStackEvent : ITriggerMessage
     {
         public readonly Effect Effect;
 

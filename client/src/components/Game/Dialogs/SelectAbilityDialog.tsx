@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";
 import CardText from "../Card/CardText";
+import CardDialogBody from "./CardDialogBody";
 
 function AbilityButton({ description, onClick }: { description: string; onClick: () => void }) {
   return (
@@ -21,8 +22,7 @@ function AbilityButton({ description, onClick }: { description: string; onClick:
 
 export default function SelectAbilityDialog() {
   const { gameState } = useLoadedGameContext();
-  const dialog = gameState.screen.largeDialog || gameState.screen.smallDialog;
-  const { oid, canCancel, descriptions } = dialog as SelectAbilityDialogState;
+  const { oid, canCancel, descriptions, owningCard } = (gameState.screen.largeDialog || gameState.screen.smallDialog) as SelectAbilityDialogState;
   const doAction = useDoAction(oid);
 
   const onCancelClick = () => doAction("Cancel");
@@ -39,6 +39,7 @@ export default function SelectAbilityDialog() {
         )
       }
     >
+      <CardDialogBody card={owningCard} />
       {descriptions.map((description, index) => (
         <AbilityButton
           key={description}

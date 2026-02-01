@@ -43,7 +43,7 @@
 
         public event EventHandler<TriggerEventArgs> Triggered = delegate { };
 
-        protected void Set(object context = null)
+        protected void Set(ITriggerMessage context = null)
         {
             if (Condition(new Context(this, Game)))
                 Triggered(this, new TriggerEventArgs(context));
@@ -68,12 +68,12 @@
 
         public class TriggerEventArgs : EventArgs
         {
-            public TriggerEventArgs(object triggerMessage)
+            public TriggerEventArgs(ITriggerMessage triggerMessage)
             {
                 TriggerMessage = triggerMessage;
             }
 
-            public object TriggerMessage { get; private set; }
+            public ITriggerMessage TriggerMessage { get; private set; }
         }
 
         public class Context

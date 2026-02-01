@@ -1,4 +1,6 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena
 {
     using System;
     using System.Collections.Generic;
@@ -60,7 +62,7 @@
             putToZone(ctx.OwningCard, ctx);
         }
 
-        public bool IsTargetStillValid(ITarget target, object triggerMessage)
+        public bool IsTargetStillValid(ITarget target, ITriggerMessage triggerMessage)
         {
             return _p.TargetSelector.IsValidEffectTarget(target, triggerMessage);
         }
@@ -208,7 +210,7 @@
 
         public bool CanTarget(ITarget target)
         {
-            return _p.TargetSelector.Effect[0].IsTargetValid(target, _card);
+            return _p.TargetSelector.Effect[0].IsTargetValid(target);
         }
 
         public bool IsGoodTarget(ITarget target, Player controller)

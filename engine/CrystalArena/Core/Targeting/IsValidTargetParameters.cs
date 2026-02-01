@@ -1,4 +1,6 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena
 {
     public class IsValidTargetParameters
     {
@@ -13,7 +15,7 @@
             Game game,
             Card owningCard,
             ITarget target,
-            object triggerMessage = null
+            ITriggerMessage triggerMessage = null
         )
         {
             Controller = controller;

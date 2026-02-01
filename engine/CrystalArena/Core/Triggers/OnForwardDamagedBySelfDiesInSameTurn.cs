@@ -30,12 +30,12 @@ namespace CrystalArena.Triggers
             _damagedCards.Clear();
         }
 
-        public void Receive(OnZoneChanged message)
+        public void Receive(ZoneChangedEvent message)
         {
             if (
                 message.To == Zone.BreakZone
                 && message.From == Zone.Battlefield
-                && _damagedCards.Contains(message.OwningCard)
+                && _damagedCards.Contains(message.Card)
             )
             {
                 Set(message);

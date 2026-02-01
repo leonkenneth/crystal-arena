@@ -23,9 +23,10 @@ export default function PlayNowButton({ children, ...props }: Props) {
       const response = await post("/internal/games");
       const data = await response.json();
       router.push(`/games/${data.uuid}`);
+      // We don't reset isLoading here.
+      // It will give a user feedback waiting for the page change
     } catch {
       setError("Failed to create game.");
-    } finally {
       setIsLoading(false);
     }
   };

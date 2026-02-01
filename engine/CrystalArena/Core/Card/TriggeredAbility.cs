@@ -12,7 +12,7 @@
     {
         private readonly Parameters _p;
         private readonly Trackable<int> _lastTrigger = new Trackable<int>();
-        private object? _originalTriggerMessage;
+        private ITriggerMessage? _originalTriggerMessage;
 
         private TriggeredAbility() { }
 
@@ -114,7 +114,7 @@
             }
         }
 
-        public virtual void Execute(object triggerMessage)
+        public virtual void Execute(ITriggerMessage triggerMessage)
         {
             var effectParameters = new EffectParameters
             {

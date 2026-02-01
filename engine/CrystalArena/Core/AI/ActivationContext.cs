@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.AI
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.AI
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +12,7 @@
         public bool CanCancel = true;
         public bool CancelActivation;
         public int Repeat = 1;
-        public object TriggerMessage;
+        public ITriggerMessage TriggerMessage;
         public int? X;
 
         public ActivationContext(

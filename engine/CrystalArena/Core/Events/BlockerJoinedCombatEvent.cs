@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CrystalArena.Triggers;
 
 namespace CrystalArena.Events
 {
-    public class BlockerJoinedCombatEvent
+    public class BlockerJoinedCombatEvent : ITriggerMessage
     {
         public readonly Party Party;
         public readonly Blocker Blocker;

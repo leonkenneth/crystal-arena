@@ -1,8 +1,10 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
     using System.Collections.Generic;
 
-    public class AttackersDeclaredEvent
+    public class AttackersDeclaredEvent : ITriggerMessage
     {
         public readonly IEnumerable<Attacker> Attackers;
 

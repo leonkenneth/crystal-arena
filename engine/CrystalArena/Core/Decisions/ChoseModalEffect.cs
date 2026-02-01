@@ -84,8 +84,10 @@ namespace CrystalArena.Decisions
         {
             protected override void ExecuteQuery()
             {
+                var owningCard = D._p.Effect.Source.OwningCard;
                 var dialog = Ui.Dialogs.SelectAbility.Create(
                     D._p.Effect.ChildEffects.Select(e => new CardText(e.Text)),
+                    owningCard,
                     false
                 );
                 Ui.Shell.ShowModalDialog(dialog, DialogType.Small, InteractionState.SelectTarget);

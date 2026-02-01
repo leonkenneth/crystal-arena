@@ -630,8 +630,10 @@
                         t.Is.Card(card => !card.IsRevealed, canTargetSelf: false).In.OwnersLBDeck(),
                     parameters =>
                     {
-                        parameters.MinCount = cp.LimitBreakLevel;
-                        parameters.MaxCount = cp.LimitBreakLevel;
+                        var requiredCardsCount = cp.LimitBreakLevel;
+                        parameters.MinCount = requiredCardsCount;
+                        parameters.MaxCount = requiredCardsCount;
+                        parameters.Message = "Select {1} LB cards to reveal.";
                     }
                 );
             }

@@ -27,7 +27,7 @@
         private readonly List<EffectTag> _tags = new List<EffectTag>();
         private readonly Trackable<bool> _wasResolved = new Trackable<bool>();
         private Value _toughnessReduction = 0;
-        private object _triggerMessage;
+        private ITriggerMessage _triggerMessage;
 
         // Allows extending effect on the fly
         public EffectAction AfterResolve = delegate { };

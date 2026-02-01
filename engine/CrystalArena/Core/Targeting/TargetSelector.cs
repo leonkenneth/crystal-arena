@@ -1,4 +1,6 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena
 {
     using System;
     using System.Collections.Generic;
@@ -102,7 +104,7 @@
         }
 
         public TargetsCandidates GenerateCandidates(
-            object triggerMessage = null,
+            ITriggerMessage triggerMessage = null,
             ITarget excluded = null
         )
         {
@@ -141,7 +143,7 @@
             return all;
         }
 
-        public bool IsValidEffectTarget(ITarget target, object triggerMessage = null)
+        public bool IsValidEffectTarget(ITarget target, ITriggerMessage triggerMessage = null)
         {
             // Currently there is no way to figure out
             // to which validator the target belongs.

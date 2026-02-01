@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.Decisions
+﻿using CrystalArena.FFTCGCards.Opus23;
+
+namespace CrystalArena.Decisions
 {
     using System;
     using System.Collections.Generic;
@@ -174,6 +176,7 @@
 
                 var dialog = Ui.Dialogs.SelectAbility.Create(
                     prerequisites.Select(x => x.Description),
+                    D._p.Card,
                     canCancel: false
                 );
                 Ui.Shell.ShowModalDialog(dialog, DialogType.Large, InteractionState.Disabled);

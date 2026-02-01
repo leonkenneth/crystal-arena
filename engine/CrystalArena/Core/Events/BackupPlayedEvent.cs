@@ -1,8 +1,10 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
     using System;
 
-    public class BackupPlayedEvent
+    public class BackupPlayedEvent : ITriggerMessage
     {
         public readonly Card Card;
 

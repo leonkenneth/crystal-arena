@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class PlayerSearchesMainDeck
+    public class PlayerSearchesMainDeck : ITriggerMessage
     {
         public readonly Player Player;
 

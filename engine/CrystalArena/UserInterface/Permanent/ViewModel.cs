@@ -267,7 +267,8 @@
                 return playableActivators[0];
 
             var dialog = ViewModels.SelectAbility.Create(
-                playableActivators.Select(x => x.Prerequisites.Description)
+                playableActivators.Select(x => x.Prerequisites.Description),
+                Card
             );
             Shell.ShowModalDialog(dialog, DialogType.Large, InteractionState.Disabled);
 

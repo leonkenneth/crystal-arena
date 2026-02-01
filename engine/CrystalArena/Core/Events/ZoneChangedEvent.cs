@@ -1,8 +1,10 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
     using System;
 
-    public class ZoneChangedEvent
+    public class ZoneChangedEvent : ITriggerMessage
     {
         public readonly Card Card;
         public readonly Zone From;

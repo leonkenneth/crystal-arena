@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.AI
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.AI
 {
     using System.Collections.Generic;
     using TargetingRules;
@@ -36,7 +38,7 @@
             IEnumerable<TargetingRule> rules,
             int distributeAmount,
             bool force = false,
-            object triggerMessage = null
+            ITriggerMessage triggerMessage = null
         )
         {
             var activation = new ActivationContext(

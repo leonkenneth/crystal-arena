@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.UserInterface
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.UserInterface
 {
     using System.Linq;
 
@@ -81,6 +83,7 @@
 
         private SelectTarget.ViewModel ShowSelectTargetDialog(
             TargetValidator validator,
+            ITriggerMessage triggerMessage,
             int? x,
             bool canCancel
         )
@@ -88,6 +91,7 @@
             var selectTargetParameters = new SelectTarget.SelectTargetParameters
             {
                 Validator = validator,
+                TriggerMessage = triggerMessage,
                 CanCancel = canCancel,
                 X = x,
             };

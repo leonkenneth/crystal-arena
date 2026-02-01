@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CrystalArena.Triggers;
+using Newtonsoft.Json;
 
 namespace CrystalArena.UserInterface.Spell
 {
@@ -187,7 +188,8 @@ namespace CrystalArena.UserInterface.Spell
                 return activations[0];
 
             var dialog = ViewModels.SelectAbility.Create(
-                activations.Select(x => x.Prerequisites.Description)
+                activations.Select(x => x.Prerequisites.Description),
+                Card
             );
             Shell.ShowModalDialog(dialog, DialogType.Large, InteractionState.Disabled);
 
@@ -364,11 +366,12 @@ namespace CrystalArena.UserInterface.Spell
             return dialog.Distribution;
         }
 
-        private SelectTarget.ViewModel ShowSelectorDialog(TargetValidator validator, int? x)
+        private SelectTarget.ViewModel ShowSelectorDialog(TargetValidator validator, ITriggerMessage triggerMessage, int? x)
         {
             var selectTargetParameters = new SelectTargetParameters
             {
                 Validator = validator,
+                TriggerMessage = triggerMessage,
                 CanCancel = true,
                 X = x,
             };

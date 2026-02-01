@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class DamageDealtEvent
+    public class DamageDealtEvent : ITriggerMessage
     {
         public readonly IDamage Damage;
         public readonly object Receiver;

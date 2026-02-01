@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class PermanentTappedEvent
+    public class PermanentTappedEvent : ITriggerMessage
     {
         public readonly Card Card;
 

@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.Effects
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Effects
 {
     using System.Collections.Generic;
 
@@ -12,7 +14,7 @@
         void EffectPushedOnStack();
         void EffectResolved(Effect.Context ctx);
 
-        bool IsTargetStillValid(ITarget target, object triggerMessage = null);
+        bool IsTargetStillValid(ITarget target, ITriggerMessage triggerMessage = null);
         bool ValidateTargetDependencies(List<ITarget> costTargets, List<ITarget> effectTargets);
     }
 }

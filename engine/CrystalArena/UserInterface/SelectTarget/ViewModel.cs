@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.UserInterface.SelectTarget
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.UserInterface.SelectTarget
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +14,7 @@
         private readonly BindableCollection<ITarget> _selection = new BindableCollection<ITarget>();
         private readonly Action<ITarget> _targetSelected;
         private readonly Action<ITarget> _targetUnselected;
-        private readonly object? _triggerMessage;
+        private readonly ITriggerMessage _triggerMessage;
         private readonly int? _x;
 
         public override object ToJson()
@@ -25,6 +27,7 @@
                 TriggerMessage = _triggerMessage?.ToString(),
                 TargetValidator = TargetValidator.ToJson(),
                 CanCancel = _canCancel,
+                OwningCard = TargetValidator.OwningCard == null ? null : Ui.Dialogs.Card.Create(TargetValidator.OwningCard).ToJson(),
                 Oid = base.ToJsonWithOid(),
             };
         }

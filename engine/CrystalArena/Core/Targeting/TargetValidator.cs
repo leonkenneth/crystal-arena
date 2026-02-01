@@ -1,4 +1,7 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Triggers;
+using CrystalArena.UserInterface;
+
+namespace CrystalArena
 {
     using System;
     using CrystalArena.Modifiers;
@@ -13,7 +16,8 @@
         private readonly Func<IsValidZoneParameters, bool> _isValidZone;
         private readonly bool _mustBeTargetable;
         private Player _controller;
-        private Card _owningCard;
+        private Card? _owningCard;
+        public Card? OwningCard => _owningCard;
 
         private TargetValidator() { }
 
@@ -75,11 +79,11 @@
             {
                 Message,
                 MinCount = MinCount.GetValue(null),
-                MaxCount = MaxCount.GetValue(null),
+                MaxCount = MaxCount.GetValue(null)
             };
         }
 
-        public bool IsTargetValid(ITarget target, object triggerMessage = null)
+        public bool IsTargetValid(ITarget target, ITriggerMessage triggerMessage = null)
         {
             var parameters = new IsValidTargetParameters(
                 _controller,
@@ -152,7 +156,7 @@
             );
         }
 
-        public bool HasValidZoneAndIsValid(ITarget target, object? triggerMessage = null)
+        public bool HasValidZoneAndIsValid(ITarget target, ITriggerMessage? triggerMessage = null)
         {
             return HasValidZone(target) && IsTargetValid(target, triggerMessage);
         }

@@ -1,10 +1,11 @@
 import { CardOutsideFieldState, SelectTargetDialogState } from "@/types";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
-import { HStack } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import Button from "@/components/ui/Button";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";
 import { selection } from "@/utils/gameStateQueries";
+import CardDialogBody from "./CardDialogBody";
 
 function selectAttackerMessage(selection: CardOutsideFieldState[]) {
   if (selection.length === 0) {
@@ -45,9 +46,23 @@ function validateTargetMessage(selection: CardOutsideFieldState[]) {
   return `Validate ${selection.length} targets`;
 }
 
+function getValidatorInstructions(targetValidator: { message: string; minCount: number; maxCount: number }, selectedCards: CardOutsideFieldState[]) {
+  const minCount = targetValidator.minCount;
+  const maxCount = targetValidator.maxCount;
+
+  if (minCount === maxCount) {
+    return `Select exactly ${minCount} target(s) (currently ${selectedCards.length})`;
+  }
+  if (minCount === 0) {
+    return `Select at most ${maxCount} target(s) (currently ${selectedCards.length})`;
+  }
+
+  return `Select at least ${minCount} and at most ${maxCount} targets (currently ${selectedCards.length})`;
+}
+
 export default function SelectTargetDialog() {
   const { gameState } = useLoadedGameContext();
-  const { oid, canCancel, text } = gameState.screen.smallDialog as SelectTargetDialogState;
+  const { oid, canCancel, text, owningCard, targetValidator } = gameState.screen.smallDialog as SelectTargetDialogState;
   const doAction = useDoAction(oid);
 
   const onCancelClick = () => doAction("Cancel");
@@ -55,6 +70,8 @@ export default function SelectTargetDialog() {
 
   let validateButtonText = "";
   const selectedCards = selection(gameState, { only: "yours" });
+  const isValidatable = selectedCards.length >= targetValidator.minCount && selectedCards.length <= targetValidator.maxCount;
+  const validatorInstructions = getValidatorInstructions(targetValidator, selectedCards);
   if (text === "Select an attacker.") {
     validateButtonText = selectAttackerMessage(selectedCards);
   } else if (text === "Select a blocker.") {
@@ -64,7 +81,6 @@ export default function SelectTargetDialog() {
   }
 
   return (
-    // @ts-expect-error - children is not defined in the DialogProps type
     <Dialog
       title={text}
       footer={
@@ -74,12 +90,17 @@ export default function SelectTargetDialog() {
               Cancel
             </Button>
           )}
-          <Button variant="primary" onClick={onOkClick}>
+          <Button variant="primary" onClick={onOkClick} disabled={!isValidatable}>
             {validateButtonText}
           </Button>
         </HStack>
       }
       isModal={false}
-    ></Dialog>
+    >
+      <CardDialogBody card={owningCard} />
+      <Text textAlign="center" fontSize="sm" color="fg">
+        {validatorInstructions}
+      </Text>
+    </Dialog>
   );
 }

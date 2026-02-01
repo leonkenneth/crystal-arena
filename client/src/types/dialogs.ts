@@ -1,4 +1,5 @@
 import { ObjectIdContainer } from "./oid";
+import { CardState } from "./cards";
 
 export type QuitGameDialogState = { type: "QuitGame" };
 
@@ -23,6 +24,14 @@ export type SelectTargetDialogState = {
   type: "SelectTarget";
   canCancel: boolean;
   text: string;
+  instructions: string;
+  triggerMessage: string;
+  owningCard: CardState;
+  targetValidator: {
+    message: string;
+    minCount: number;
+    maxCount: number;
+  };
 };
 
 export type SelectAbilityDialogState = {
@@ -30,6 +39,7 @@ export type SelectAbilityDialogState = {
   oid: ObjectIdContainer;
   descriptions: string[];
   canCancel: boolean;
+  owningCard: CardState;
 };
 
 export type NextTurnDialogState = {

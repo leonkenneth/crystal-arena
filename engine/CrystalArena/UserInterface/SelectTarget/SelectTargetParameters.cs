@@ -1,4 +1,6 @@
-﻿namespace CrystalArena.UserInterface.SelectTarget
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.UserInterface.SelectTarget
 {
     using System;
 
@@ -8,7 +10,7 @@
         public string Instructions;
         public Action<ITarget> TargetSelected;
         public Action<ITarget> TargetUnselected;
-        public object TriggerMessage;
+        public required ITriggerMessage TriggerMessage;
         public TargetValidator Validator;
         public int? X;
     }

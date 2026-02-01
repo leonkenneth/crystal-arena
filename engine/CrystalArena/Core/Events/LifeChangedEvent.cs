@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class LifeChangedEvent
+    public class LifeChangedEvent : ITriggerMessage
     {
         public readonly int NewValue;
         public readonly int OldValue;

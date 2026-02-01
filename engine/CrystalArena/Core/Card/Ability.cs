@@ -1,4 +1,6 @@
-﻿namespace CrystalArena
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena
 {
     using System.Collections.Generic;
     using Effects;
@@ -35,7 +37,7 @@
 
         void IEffectSource.EffectResolved(Effect.Context ctx) { }
 
-        bool IEffectSource.IsTargetStillValid(ITarget target, object triggerMessage)
+        bool IEffectSource.IsTargetStillValid(ITarget target, ITriggerMessage triggerMessage)
         {
             return _p.TargetSelector.IsValidEffectTarget(target, triggerMessage);
         }

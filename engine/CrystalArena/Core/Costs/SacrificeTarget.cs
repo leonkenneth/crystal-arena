@@ -7,7 +7,7 @@
         public override CanPayResult CanPayPartial(bool needsToPayManaCost)
         {
             return Controller.Battlefield.Any(permanent =>
-                permanent != Card && Validator.IsTargetValid(permanent, Card)
+                permanent != Card && Validator.IsTargetValid(permanent)
             );
         }
 

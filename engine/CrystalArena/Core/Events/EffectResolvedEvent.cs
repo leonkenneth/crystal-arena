@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class EffectResolvedEvent
+    public class EffectResolvedEvent : ITriggerMessage
     {
         public readonly Effect Effect;
 

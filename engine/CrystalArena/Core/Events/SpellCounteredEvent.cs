@@ -1,8 +1,10 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
     using Effects;
 
-    public class SpellCounteredEvent
+    public class SpellCounteredEvent : ITriggerMessage
     {
         public readonly Card Card;
         public readonly SpellCounterReason Reason;

@@ -1,6 +1,8 @@
-﻿namespace CrystalArena.Events
+﻿using CrystalArena.Triggers;
+
+namespace CrystalArena.Events
 {
-    public class AttachmentDetachedEvent
+    public class AttachmentDetachedEvent : ITriggerMessage
     {
         public readonly Card AttachedTo;
         public readonly Card Attachment;
