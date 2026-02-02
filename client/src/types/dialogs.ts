@@ -28,6 +28,7 @@ export type SelectTargetDialogState = {
 export type SelectAbilityDialogState = {
   type: "SelectAbility";
   oid: ObjectIdContainer;
+  owningCardId: number;
   descriptions: string[];
   canCancel: boolean;
 };

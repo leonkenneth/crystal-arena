@@ -85,6 +85,7 @@ namespace CrystalArena.Decisions
             protected override void ExecuteQuery()
             {
                 var dialog = Ui.Dialogs.SelectAbility.Create(
+                    D._p.Effect.Card(),
                     D._p.Effect.ChildEffects.Select(e => new CardText(e.Text)),
                     false
                 );

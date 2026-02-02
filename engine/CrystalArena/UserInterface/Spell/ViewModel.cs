@@ -187,6 +187,7 @@ namespace CrystalArena.UserInterface.Spell
                 return activations[0];
 
             var dialog = ViewModels.SelectAbility.Create(
+                Card,
                 activations.Select(x => x.Prerequisites.Description)
             );
             Shell.ShowModalDialog(dialog, DialogType.Large, InteractionState.Disabled);
