@@ -6,7 +6,6 @@ import { RoundedBox, Text, Html, Environment, Billboard } from "@react-three/dre
 import * as THREE from "three";
 import useCardContext, { CardContext, DragState } from "./useCardContext";
 import useCardInteraction from "./useCardInteraction";
-import { useDebugRerender } from "../../hooks/useDebugRerender";
 import { useTextureWithPlaceholder } from "./useTextureWithPlaceholder";
 import {
   CardPositionsContext,
@@ -1005,32 +1004,22 @@ const roundedAvatarShader = {
 // Inner component that loads and displays the avatar texture with rounded corners
 function AvatarImage({ src }: { src: string }) {
   const texture = useTextureWithPlaceholder(src);
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-
-  // Create uniforms once
-  const uniforms = useMemo(
-    () => ({
-      map: { value: texture },
-      radius: { value: 0.15 },
-    }),
-    [texture]
-  );
+  const uniformsRef = useRef({
+    map: { value: texture },
+    radius: { value: 0.15 },
+  });
 
   // Update texture uniform when it changes
   useEffect(() => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.map.value = texture;
-      materialRef.current.needsUpdate = true;
-    }
+    uniformsRef.current.map.value = texture;
   }, [texture]);
 
   return (
     <mesh position={[0, 0.15, 0.08]}>
       <planeGeometry args={[1.0, 1.0]} />
       <shaderMaterial
-        ref={materialRef}
         attach="material"
-        uniforms={uniforms}
+        uniforms={uniformsRef.current}
         vertexShader={roundedAvatarShader.vertexShader}
         fragmentShader={roundedAvatarShader.fragmentShader}
         transparent
@@ -1901,7 +1890,6 @@ function ResponsiveCamera() {
 }
 
 function GameBoardCanvas<T>(props: GameBoardProps<T>) {
-  useDebugRerender("GameBoardCanvas", props as Record<string, unknown>);
   const cardPositionsValue = useCardPositionsProvider();
 
   return (
@@ -1976,7 +1964,6 @@ function GameBoardCanvas<T>(props: GameBoardProps<T>) {
 }
 
 export default function GameBoard<T>(props: GameBoardProps<T>) {
-  useDebugRerender("GameBoard", props as Record<string, unknown>);
   const { onCardDragEnd, onCardClick } = props;
   const [previewCard, setPreviewCard] = useState<T | null>(null);
   const [dragState, setDragState] = useState<DragState<T>>(null);
