@@ -12,6 +12,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { system } from "@/components/ui/system";
 import { getImageUrl } from "./Card/CardImage";
 import { doAction } from "@/utils/useDoAction";
+import { isTargeted } from "@/utils/gameStateQueries";
 import PassPriorityButton from "./PassPriorityButton";
 import { useTextureWithPlaceholder } from "../GameBoard/useTextureWithPlaceholder";
 import { getStepsToDisplay } from "./Steps";
@@ -143,31 +144,6 @@ function CardMesh({ card }: { card: CardState }) {
   );
 }
 
-function renderCardMesh(
-  card: CardState,
-  isTopOfCollapsedZone: boolean,
-  collapsedZoneCards: CardState[]
-): React.ReactNode {
-  const isTapped = card.isTapped;
-  const rotation: [number, number, number] = isTapped ? [0, 0, -Math.PI / 12] : [0, 0, 0];
-  const scale = isTapped ? 0.95 : 1;
-
-  // Override isPlayable for collapsed zone top cards
-  let displayCard = card;
-  if (isTopOfCollapsedZone && !card.isPlayable) {
-    const anyPlayable = collapsedZoneCards.some((c) => c.isPlayable);
-    if (anyPlayable) {
-      displayCard = { ...card, isPlayable: true };
-    }
-  }
-
-  return (
-    <group rotation={rotation} scale={scale}>
-      <CardMesh card={displayCard} />
-    </group>
-  );
-}
-
 function renderEmptySlot(): React.ReactNode {
   return (
     <group>
@@ -227,6 +203,55 @@ export default function GameContent() {
     label: step.name,
     isActive: step.isCurrent,
   }));
+
+  const renderCardMesh = (
+    card: CardState,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: CardState[]
+  ): React.ReactNode => {
+    const isTapped = card.isTapped;
+    const rotation: [number, number, number] = isTapped ? [0, 0, -Math.PI / 12] : [0, 0, 0];
+    const scale = isTapped ? 0.95 : 1;
+
+    // Check if card is targeted using stack effects (same as HTML Card component)
+    const cardIsTargeted = isTargeted(gameState, card.cardId);
+
+    // Check if card is the top of the stack (first effect)
+    const isTopOfStack = stack?.effects.length > 0 && stack.effects[0].card.cardId === card.cardId;
+
+    // Override visual states for collapsed zone top cards, targeted cards, or top of stack
+    let displayCard = card;
+    const needsOverride =
+      cardIsTargeted ||
+      isTopOfStack ||
+      (isTopOfCollapsedZone &&
+        (collapsedZoneCards.some((c) => c.isPlayable) ||
+          collapsedZoneCards.some((c) => c.isSelected) ||
+          collapsedZoneCards.some((c) => isTargeted(gameState, c.cardId))));
+
+    if (needsOverride) {
+      const anyPlayable =
+        isTopOfCollapsedZone && !card.isPlayable && collapsedZoneCards.some((c) => c.isPlayable);
+      const anySelected =
+        isTopOfCollapsedZone && !card.isSelected && collapsedZoneCards.some((c) => c.isSelected);
+      const anyTargeted =
+        cardIsTargeted ||
+        (isTopOfCollapsedZone && collapsedZoneCards.some((c) => isTargeted(gameState, c.cardId)));
+
+      displayCard = {
+        ...card,
+        ...(anyPlayable && { isPlayable: true }),
+        ...((anySelected || isTopOfStack) && { isSelected: true }),
+        ...(anyTargeted && { isTargetOfSpell: true }),
+      };
+    }
+
+    return (
+      <group rotation={rotation} scale={scale}>
+        <CardMesh card={displayCard} />
+      </group>
+    );
+  };
 
   const renderDialog = () => {
     return <Dialogs />;
