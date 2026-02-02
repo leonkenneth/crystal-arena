@@ -32,7 +32,10 @@ public class Opus23_025C_Shelke : CardTemplateSource
                 p.Trigger(
                     new OnZoneChanged(
                         to: Zone.Battlefield,
-                        selector: ((card, ctx) => card.HasJob("Tsviets"))
+                        selector: (
+                            (card, ctx) =>
+                                card.HasJob("Tsviets") && card.Owner == ctx.OwningCard.Owner
+                        )
                     )
                 );
                 p.Effect = () => new AddManaToPool("{Z}".Parse());
