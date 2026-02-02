@@ -173,6 +173,7 @@
                     return prerequisites[0];
 
                 var dialog = Ui.Dialogs.SelectAbility.Create(
+                    D._p.Card,
                     prerequisites.Select(x => x.Description),
                     canCancel: false
                 );

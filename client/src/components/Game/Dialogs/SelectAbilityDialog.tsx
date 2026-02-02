@@ -4,6 +4,9 @@ import Button from "@/components/ui/Button";
 import useDoAction from "@/utils/useDoAction";
 import Dialog from "@/components/ui/Dialog";
 import CardText from "../Card/CardText";
+import Card from "../Card";
+import { getCard } from "@/utils/gameStateQueries";
+import { Box } from "@chakra-ui/react";
 
 function AbilityButton({ description, onClick }: { description: string; onClick: () => void }) {
   return (
@@ -22,14 +25,14 @@ function AbilityButton({ description, onClick }: { description: string; onClick:
 export default function SelectAbilityDialog() {
   const { gameState } = useLoadedGameContext();
   const dialog = gameState.screen.largeDialog || gameState.screen.smallDialog;
-  const { oid, canCancel, descriptions } = dialog as SelectAbilityDialogState;
+  const { oid, owningCardId, canCancel, descriptions } = dialog as SelectAbilityDialogState;
   const doAction = useDoAction(oid);
+  const card = getCard(gameState, owningCardId);
 
   const onCancelClick = () => doAction("Cancel");
 
   return (
     <Dialog
-      title="Select an ability"
       compact={false}
       footer={
         canCancel && (
@@ -39,6 +42,11 @@ export default function SelectAbilityDialog() {
         )
       }
     >
+      {card && (
+        <Box marginBottom="1rem" marginTop="-12rem" display="flex" justifyContent="center">
+          <Card card={{ ...card, isPlayable: true }} size="xl" isInteractable={false} />
+        </Box>
+      )}
       {descriptions.map((description, index) => (
         <AbilityButton
           key={description}
