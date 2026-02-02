@@ -143,14 +143,27 @@ function CardMesh({ card }: { card: CardState }) {
   );
 }
 
-function renderCardMesh(card: CardState): React.ReactNode {
+function renderCardMesh(
+  card: CardState,
+  isTopOfCollapsedZone: boolean,
+  collapsedZoneCards: CardState[]
+): React.ReactNode {
   const isTapped = card.isTapped;
   const rotation: [number, number, number] = isTapped ? [0, 0, -Math.PI / 12] : [0, 0, 0];
   const scale = isTapped ? 0.95 : 1;
 
+  // Override isPlayable for collapsed zone top cards
+  let displayCard = card;
+  if (isTopOfCollapsedZone && !card.isPlayable) {
+    const anyPlayable = collapsedZoneCards.some((c) => c.isPlayable);
+    if (anyPlayable) {
+      displayCard = { ...card, isPlayable: true };
+    }
+  }
+
   return (
     <group rotation={rotation} scale={scale}>
-      <CardMesh card={card} />
+      <CardMesh card={displayCard} />
     </group>
   );
 }

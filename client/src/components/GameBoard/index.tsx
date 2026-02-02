@@ -405,7 +405,11 @@ type DeckProps<T> = {
   scale?: number;
   cards?: T[];
   label?: string;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   onClick?: () => void;
 };
 
@@ -440,7 +444,7 @@ function Deck<T>({
       </RoundedBox>
       {/* Top card - face down */}
       <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-        {cards.length > 0 && renderCardMesh(cards[0]!)}
+        {cards.length > 0 && renderCardMesh(cards[0]!, true, cards)}
       </group>
       {/* Card count */}
       <Text
@@ -463,7 +467,11 @@ type GraveyardProps<T> = {
   cards?: T[];
   label?: string;
   isOpponent?: boolean;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   renderEmptySlot: () => React.ReactNode;
   onClick?: () => void;
   canDropToZone?: (card: T, zone: DropZone) => boolean;
@@ -512,7 +520,7 @@ function Graveyard<T>({
           </RoundedBox>
           {/* Top card (face up in graveyard) */}
           <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-            {topCard && renderCardMesh(topCard)}
+            {topCard && renderCardMesh(topCard, true, cards)}
             {!topCard && renderEmptySlot()}
           </group>
         </>
@@ -547,7 +555,11 @@ type ExileProps<T> = {
   scale?: number;
   cards?: T[];
   label?: string;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   renderEmptySlot: () => React.ReactNode;
   onClick?: () => void;
 };
@@ -593,7 +605,7 @@ function Exile<T>({
       </RoundedBox>
       {/* Top card (face up in exile) */}
       <group position={[0, 0, stackHeight + CARD_DEPTH / 2]}>
-        {topCard && renderCardMesh(topCard)}
+        {topCard && renderCardMesh(topCard, false, [])}
         {!topCard && renderEmptySlot()}
       </group>
       {label && (
@@ -615,7 +627,11 @@ type PrizeCardsProps<T> = {
   cards?: T[];
   position?: [number, number, number];
   scale?: number;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   onClick?: () => void;
 };
 
@@ -648,7 +664,7 @@ function PrizeCards<T>({
 
         return (
           <group key={index} position={[0, yOffset, zOffset]} scale={0.6}>
-            {renderCardMesh(card)}
+            {renderCardMesh(card, false, [])}
           </group>
         );
       })}
@@ -660,7 +676,11 @@ type SideHandProps<T> = {
   cards?: T[];
   position?: [number, number, number];
   scale?: number;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   getCardId: (card: T) => string | number;
   onClick?: () => void;
 };
@@ -695,7 +715,7 @@ function SideHand<T>({
 
         return (
           <group key={getCardId(card)} position={[xOffset, 0, zOffset]} scale={0.6}>
-            {renderCardMesh(card)}
+            {renderCardMesh(card, false, [])}
           </group>
         );
       })}
@@ -709,7 +729,11 @@ type HandProps<T> = {
   position?: [number, number, number];
   spreadAngle?: number;
   spreadRadius?: number;
-  renderCardMesh: (card: T, faceDown: boolean) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   getCardId: (card: T) => string | number;
   onClick?: () => void;
 };
@@ -760,7 +784,7 @@ function Hand<T>({
               card={card}
               cardId={String(getCardId(card))}
               interactive={!isOpponent}
-              renderCardMesh={(card) => renderCardMesh(card, false)}
+              renderCardMesh={(card) => renderCardMesh(card, false, [])}
             />
           </group>
         );
@@ -774,7 +798,11 @@ type BattlefieldProps<T> = {
   position?: [number, number, number];
   isOpponent?: boolean;
   maxSlots?: number;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   getCardId: (card: T) => string | number;
   canDropToZone?: (card: T, zone: DropZone) => boolean;
 };
@@ -878,7 +906,7 @@ function Battlefield<T>({
                   card={card}
                   cardId={String(getCardId(card))}
                   interactive={true}
-                  renderCardMesh={renderCardMesh}
+                  renderCardMesh={(card) => renderCardMesh(card, false, [])}
                 />
               </group>
             )}
@@ -893,7 +921,11 @@ type StackDisplayProps<T> = {
   stack: StackEffect<T>[];
   position?: [number, number, number];
   scale?: number;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   getCardId: (card: T) => string | number;
   renderButton?: () => React.ReactNode;
 };
@@ -947,7 +979,7 @@ function StackDisplay<T>({
               card={effect.card}
               cardId={String(getCardId(effect.card))}
               interactive={true}
-              renderCardMesh={renderCardMesh}
+              renderCardMesh={(card) => renderCardMesh(card, false, [])}
             />
           </group>
         );
@@ -1297,7 +1329,11 @@ type PlayerAreaProps<T> = {
   sideHandCards?: T[];
   battlefieldFrontRowCards?: T[];
   battlefieldBackRowCards?: T[];
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   renderEmptySlot: () => React.ReactNode;
   getCardId: (card: T) => string | number;
   onDeckClick?: () => void;
@@ -1332,7 +1368,11 @@ type GameBoardProps<T> = {
   opponentHealth: number;
   opponentAvatarSrc?: string;
   renderHtmlCard: (card: T) => React.ReactNode;
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
   renderEmptySlot: () => React.ReactNode;
   getCardId: (card: T) => string | number;
   onCardClick?: (card: T | null) => void;
@@ -1676,7 +1716,11 @@ function PreviewCardOverlay<T>({
 function DraggedCardOverlay<T>({
   renderCardMesh,
 }: {
-  renderCardMesh: (card: T) => React.ReactNode;
+  renderCardMesh: (
+    card: T,
+    isTopOfCollapsedZone: boolean,
+    collapsedZoneCards: T[]
+  ) => React.ReactNode;
 }) {
   const { dragState } = useCardContext();
   const { camera } = useThree();
@@ -1711,7 +1755,7 @@ function DraggedCardOverlay<T>({
     <group ref={groupRef}>
       <group rotation={[0, 0, -0.1]} scale={1.1}>
         {/* Render the card mesh with transparency */}
-        <group>{renderCardMesh(dragState.card)}</group>
+        <group>{renderCardMesh(dragState.card, false, [])}</group>
         {/* Add a semi-transparent overlay to indicate dragging */}
         <mesh position={[0, 0, 0.03]}>
           <planeGeometry args={[CARD_WIDTH, CARD_HEIGHT]} />
