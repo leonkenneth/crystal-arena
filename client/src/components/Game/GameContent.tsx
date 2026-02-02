@@ -412,6 +412,7 @@ export default function GameContent() {
         yourAvatarSrc={human.src}
         opponentAvatarSrc={computer.src}
         manaPoolTextures={getManaPoolTextures(screen.yourManaPool)}
+        opponentManaPoolTextures={getManaPoolTextures(screen.opponentsManaPool)}
       />
     </>
   );

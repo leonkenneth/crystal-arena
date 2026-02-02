@@ -1351,6 +1351,7 @@ type GameBoardProps<T> = {
   steps?: Step[];
   isOpponentTurn?: boolean;
   manaPoolTextures?: string[];
+  opponentManaPoolTextures?: string[];
   renderDialog?: () => React.ReactNode | null;
   renderMessage?: () => React.ReactNode | null;
   renderBottomBar?: () => React.ReactNode | null;
@@ -1526,6 +1527,7 @@ function GameBoardScene<T>({
   steps,
   isOpponentTurn,
   manaPoolTextures,
+  opponentManaPoolTextures,
 }: GameBoardProps<T>) {
   const layout = useLayout();
   const { viewport, isPortrait, scale } = layout;
@@ -1640,6 +1642,15 @@ function GameBoardScene<T>({
         <ManaPool
           textures={manaPoolTextures}
           position={[(isPortrait ? 2 : 4) * scale, (isPortrait ? -5.5 : -4.5) * scale, 1]}
+          scale={scale * (isPortrait ? 0.8 : 1)}
+        />
+      )}
+
+      {/* Opponent's mana pool in top-right corner */}
+      {opponentManaPoolTextures && opponentManaPoolTextures.length > 0 && (
+        <ManaPool
+          textures={opponentManaPoolTextures}
+          position={[(isPortrait ? 2 : 4) * scale, (isPortrait ? 5.5 : 4.5) * scale, 1]}
           scale={scale * (isPortrait ? 0.8 : 1)}
         />
       )}
