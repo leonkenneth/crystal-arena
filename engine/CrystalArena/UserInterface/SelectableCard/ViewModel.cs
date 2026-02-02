@@ -24,6 +24,7 @@ namespace CrystalArena.UserInterface.SelectableCard
 
             json["type"] = "SelectableCard"; // Override the Type
             json["isSelected"] = IsSelected;
+            json["isPlayable"] = IsPlayable;
             json["oid"] = base.ToJsonWithOid();
 
             return json;
@@ -54,15 +55,19 @@ namespace CrystalArena.UserInterface.SelectableCard
                 case (InteractionState.SelectTarget):
                 {
                     _select = ChangeSelection;
+                    IsPlayable = IsValidTarget();
                     break;
                 }
                 default:
                     _select = delegate { };
+                    IsPlayable = false;
                     break;
             }
 
             IsSelected = false;
         }
+
+        public bool IsPlayable { get; set; }
 
         private void ChangeSelection()
         {
