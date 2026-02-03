@@ -97,7 +97,12 @@ function isSelectedOrTargeted(card: CardState): boolean {
 }
 
 function getCardBorderColor(card: CardState): string | null {
-  // Blue border for selected/targeted cards (higher priority)
+  // Red border for combat selection (highest priority)
+  // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
+  if (card.isSelectedForCombat) {
+    return "#ff4444";
+  }
+  // Blue border for selected/targeted cards
   if (isSelectedOrTargeted(card)) {
     return "#4488ff";
   }

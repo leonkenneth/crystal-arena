@@ -55,13 +55,16 @@ export default function Card({
 
   const cardIsTargeted = isTargeted(gameState, card.cardId);
   // @ts-expect-error - card.isSelected is not defined in the CardState type
-  const isSelected = card.isSelected || card.isSelectedForCombat || cardIsTargeted;
+  const isSelected = card.isSelected || cardIsTargeted;
+  // @ts-expect-error - card.isSelectedForCombat is not defined in the CardState type
+  const isSelectedForCombat = card.isSelectedForCombat;
 
   return (
     <CardContainer
       isTapped={card.isTapped}
       isPlayable={card.isPlayable}
       isSelected={isSelected}
+      isSelectedForCombat={isSelectedForCombat}
       isInteractable={isInteractable}
       dataCardId={dataCardId || `card-${card.cardId}`}
       onClick={isInteractable ? onClick : undefined}
