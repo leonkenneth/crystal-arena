@@ -275,6 +275,58 @@ function CardMesh({ card }: { card: CardState }) {
           <SummoningSicknessWhirlwind />
         </>
       )}
+      {/* Frozen state - ice crystals at corners and edges */}
+      {"isFrozen" in card && card.isFrozen && !faceDown && (
+        <>
+          {/* Large ice crystals at corners */}
+          {[
+            {
+              pos: [CARD_WIDTH / 2 + 0.02, CARD_HEIGHT / 2 - 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [0.3, 0, -0.5],
+            },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, CARD_HEIGHT / 2 - 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [0.3, 0, 0.5],
+            },
+            {
+              pos: [CARD_WIDTH / 2 + 0.02, -CARD_HEIGHT / 2 + 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [-0.3, 0, -2.6],
+            },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, -CARD_HEIGHT / 2 + 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [-0.3, 0, 2.6],
+            },
+          ].map((crystal, i) => (
+            <mesh
+              key={`corner-${i}`}
+              position={crystal.pos as [number, number, number]}
+              rotation={crystal.rot as [number, number, number]}
+            >
+              <coneGeometry args={[0.06, 0.18, 4]} />
+              <meshStandardMaterial color="#66ddff" emissive="#66ddff" emissiveIntensity={0.8} />
+            </mesh>
+          ))}
+          {/* Smaller ice crystals on edges */}
+          {[
+            { pos: [0, CARD_HEIGHT / 2 + 0.02, CARD_DEPTH / 2 + 0.02], rot: [0.4, 0, Math.PI] },
+            { pos: [0, -CARD_HEIGHT / 2 - 0.02, CARD_DEPTH / 2 + 0.02], rot: [-0.4, 0, 0] },
+            { pos: [CARD_WIDTH / 2 + 0.02, 0, CARD_DEPTH / 2 + 0.02], rot: [0, 0.4, -Math.PI / 2] },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, 0, CARD_DEPTH / 2 + 0.02],
+              rot: [0, -0.4, Math.PI / 2],
+            },
+          ].map((crystal, i) => (
+            <mesh
+              key={`edge-${i}`}
+              position={crystal.pos as [number, number, number]}
+              rotation={crystal.rot as [number, number, number]}
+            >
+              <coneGeometry args={[0.04, 0.12, 4]} />
+              <meshStandardMaterial color="#66ddff" emissive="#66ddff" emissiveIntensity={0.8} />
+            </mesh>
+          ))}
+        </>
+      )}
     </group>
   );
 }
@@ -404,7 +456,7 @@ export default function GameContent() {
     return (
       <ChakraProvider value={system}>
         <LoadedGameContext.Provider value={loadedGameContext}>
-          <Card card={card} size="xl" />
+          <Card card={card} size="xl" overrideIsTapped={false} />
         </LoadedGameContext.Provider>
       </ChakraProvider>
     );

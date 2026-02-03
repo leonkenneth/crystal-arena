@@ -22,6 +22,7 @@ type Props = {
   displayTextOverlay?: boolean;
   displayHoverCard?: boolean;
   isInteractable?: boolean;
+  overrideIsTapped?: boolean;
 };
 
 // eslint-disable-next-line react-compiler/react-compiler
@@ -34,6 +35,7 @@ export default function Card({
   displayTextOverlay = true,
   displayHoverCard = card.isVisibleInUi,
   isInteractable = card.isPlayable,
+  overrideIsTapped = card.isTapped,
 }: Props) {
   const doAction = useDoAction(card.oid);
   const { gameState } = useLoadedGameContext();
@@ -54,14 +56,13 @@ export default function Card({
   };
 
   const cardIsTargeted = isTargeted(gameState, card.cardId);
-  // @ts-expect-error - card.isSelected is not defined in the CardState type
   const isSelected = card.isSelected || cardIsTargeted;
   // @ts-expect-error - card.isSelectedForCombat is not defined in the CardState type
   const isSelectedForCombat = card.isSelectedForCombat;
 
   return (
     <CardContainer
-      isTapped={card.isTapped}
+      isTapped={typeof overrideIsTapped === "boolean" ? overrideIsTapped : card.isTapped}
       isPlayable={card.isPlayable}
       isSelected={isSelected}
       isSelectedForCombat={isSelectedForCombat}
