@@ -11,6 +11,7 @@ import { isTargeted } from "@/utils/gameStateQueries";
 import { useLoadedGameContext } from "@/utils/LoadedGameContext";
 import CardText from "./CardText";
 import CardImage from "./CardImage";
+import CardPower from "./CardPower";
 
 type Props = {
   card: CardState;
@@ -71,6 +72,7 @@ export default function Card({
       {card.isVisibleInUi ? (
         <>
           <CardImage card={card} />
+          {card.toughness > 0 && <CardPower card={card} />}
           {displayTextOverlay && displayedText && (
             <CardBody
               style={{

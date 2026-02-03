@@ -20,6 +20,9 @@ type BaseCardState = {
   text: string;
   power: number;
   toughness: number;
+  basePower: number;
+  baseToughness: number;
+  damage: number;
   isVisibleInUi: boolean;
   colors: string[];
   isTapped: boolean;

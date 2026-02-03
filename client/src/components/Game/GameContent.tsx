@@ -114,6 +114,7 @@ function CardMesh({ card }: { card: CardState }) {
   const imageHeight = CARD_HEIGHT * 0.96;
   const faceDown = !card.isVisibleInUi;
   const borderColor = getCardBorderColor(card);
+  const hasDamage = card.damage > 0;
 
   return (
     <group>
@@ -140,6 +141,26 @@ function CardMesh({ card }: { card: CardState }) {
         <planeGeometry args={[imageWidth, imageHeight]} />
         <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
       </mesh>
+      {/* Damage indicator - red scratch mark */}
+      {hasDamage && !faceDown && (
+        <group position={[0, 0, CARD_DEPTH / 2 + 0.005]}>
+          {/* Main diagonal scratch */}
+          <mesh rotation={[0, 0, Math.PI / 4]}>
+            <planeGeometry args={[0.45, 0.06]} />
+            <meshBasicMaterial color="#dd2222" />
+          </mesh>
+          {/* Second scratch line */}
+          <mesh rotation={[0, 0, Math.PI / 4]} position={[0.08, -0.08, 0]}>
+            <planeGeometry args={[0.35, 0.05]} />
+            <meshBasicMaterial color="#bb1111" />
+          </mesh>
+          {/* Third scratch line */}
+          <mesh rotation={[0, 0, Math.PI / 4]} position={[-0.08, 0.08, 0]}>
+            <planeGeometry args={[0.3, 0.045]} />
+            <meshBasicMaterial color="#cc1818" />
+          </mesh>
+        </group>
+      )}
     </group>
   );
 }
