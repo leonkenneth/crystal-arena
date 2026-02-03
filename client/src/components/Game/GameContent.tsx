@@ -108,6 +108,54 @@ function getCardBorderColor(card: CardState): string | null {
   return null;
 }
 
+// Animated whirlwind effect for summoning sickness
+function SummoningSicknessWhirlwind() {
+  const groupRef = useRef<THREE.Group>(null);
+  const wispRefs = useRef<THREE.Mesh[]>([]);
+
+  // Create wisp data - positions around a spiral
+  const wispCount = 6;
+  const wisps = Array.from({ length: wispCount }, (_, i) => ({
+    angle: (i / wispCount) * Math.PI * 2,
+    radius: 0.15 + (i % 2) * 0.1,
+    speed: 1.5 + (i % 3) * 0.3,
+    yOffset: (i / wispCount) * 0.3 - 0.15,
+  }));
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+
+    const time = state.clock.elapsedTime;
+
+    wispRefs.current.forEach((mesh, i) => {
+      if (!mesh) return;
+      const wisp = wisps[i];
+      const angle = wisp.angle + time * wisp.speed;
+      mesh.position.x = Math.cos(angle) * wisp.radius;
+      mesh.position.y = wisp.yOffset + Math.sin(time * 2 + i) * 0.05;
+      mesh.rotation.z = angle + Math.PI / 2;
+    });
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, CARD_DEPTH / 2 + 0.008]}>
+      {wisps.map((wisp, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            if (el) wispRefs.current[i] = el;
+          }}
+          position={[Math.cos(wisp.angle) * wisp.radius, wisp.yOffset, 0]}
+          rotation={[0, 0, wisp.angle + Math.PI / 2]}
+        >
+          <planeGeometry args={[0.18, 0.04]} />
+          <meshBasicMaterial color="#778899" transparent opacity={0.5} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 // Animated halo effect for buff/debuff
 function StatHalo({ color, direction }: { color: string; direction: "up" | "down" }) {
   const ringRef = useRef<THREE.Mesh>(null);
@@ -121,9 +169,7 @@ function StatHalo({ color, direction }: { color: string; direction: "up" | "down
 
     // Move in direction and reset
     ringRef.current.position.y += delta * 0.4 * (isUp ? 1 : -1);
-    const pastEnd = isUp
-      ? ringRef.current.position.y > endY
-      : ringRef.current.position.y < endY;
+    const pastEnd = isUp ? ringRef.current.position.y > endY : ringRef.current.position.y < endY;
 
     if (pastEnd) {
       ringRef.current.position.y = startY;
@@ -148,12 +194,7 @@ function StatHalo({ color, direction }: { color: string; direction: "up" | "down
       rotation={[Math.PI / 2, 0, 0]}
     >
       <torusGeometry args={[0.25, 0.02, 8, 32]} />
-      <meshBasicMaterial
-        ref={materialRef}
-        color={color}
-        transparent
-        opacity={0.6}
-      />
+      <meshBasicMaterial ref={materialRef} color={color} transparent opacity={0.6} />
     </mesh>
   );
 }
@@ -218,6 +259,16 @@ function CardMesh({ card }: { card: CardState }) {
             <meshBasicMaterial color="#cc1818" />
           </mesh>
         </group>
+      )}
+      {/* Summoning sickness - grey filter + swirling whirlwind */}
+      {card.hasSummoningSickness && !faceDown && (
+        <>
+          <mesh position={[0, 0, CARD_DEPTH / 2 + 0.004]}>
+            <planeGeometry args={[imageWidth, imageHeight]} />
+            <meshBasicMaterial color="#667788" transparent opacity={0.3} />
+          </mesh>
+          <SummoningSicknessWhirlwind />
+        </>
       )}
     </group>
   );
