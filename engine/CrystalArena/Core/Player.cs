@@ -508,9 +508,9 @@
 
         public void PutCardToBreakZone(Card card)
         {
-            if (card.Is().Token)
+            if (card.IsLimitBreak)
             {
-                PutCardToRemovedFromPlay(card);
+                PutCardToLBRevealed(card);
                 return;
             }
 
@@ -585,6 +585,12 @@
             _removedFromPlay.Add(card);
         }
 
+        public void PutCardToLBRevealed(Card card)
+        {
+            card.Reveal();
+            _limitBreak.Add(card);
+        }
+
         public void Mill(int count)
         {
             for (var i = 0; i < count; i++)
@@ -605,9 +611,9 @@
 
         public void PutCardToHand(Card card)
         {
-            if (card.Is().Token)
+            if (card.IsLimitBreak)
             {
-                PutCardToRemovedFromPlay(card);
+                PutCardToLBRevealed(card);
                 return;
             }
 
@@ -616,9 +622,9 @@
 
         public void PutCardOnTopOfMainDeck(Card card)
         {
-            if (card.Is().Token)
+            if (card.IsLimitBreak)
             {
-                PutCardToRemovedFromPlay(card);
+                PutCardToLBRevealed(card);
                 return;
             }
 
@@ -627,9 +633,9 @@
 
         public void PutCardIntoMainDeckAtPosition(int positionFromTop, Card card)
         {
-            if (card.Is().Token)
+            if (card.IsLimitBreak)
             {
-                PutCardToRemovedFromPlay(card);
+                PutCardToLBRevealed(card);
                 return;
             }
 
@@ -638,9 +644,9 @@
 
         public void PutOnBottomOfMainDeck(Card card)
         {
-            if (card.Is().Token)
+            if (card.IsLimitBreak)
             {
-                PutCardToRemovedFromPlay(card);
+                PutCardToLBRevealed(card);
                 return;
             }
 

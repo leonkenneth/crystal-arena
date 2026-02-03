@@ -180,6 +180,11 @@
             if (card.Is().Backup)
                 return 2;
 
+            // Shouldn't be in breakzone but we remove the conditions
+            // to move tokens to exile on leaving field
+            if (card.Is().Token)
+                return 0;
+
             return card.ManaCost.Converted;
         }
 

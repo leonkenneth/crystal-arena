@@ -45,7 +45,8 @@ public class Opus22_112R_Zack : CardTemplateSource
                 p.Effect = () => new DealDamageToTargets(3000);
                 p.TargetSelector.AddEffect(
                     t => t.Is.Forward().On.Battlefield(),
-                    p => p.Message = "Select Forward to deal damage to.");
+                    p => p.Message = "Select Forward to deal damage to."
+                );
             });
     }
 }
