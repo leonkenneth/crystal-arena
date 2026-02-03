@@ -45,16 +45,33 @@ function validateTargetMessage(selection: CardOutsideFieldState[]) {
   return `Validate ${selection.length} targets`;
 }
 
+function getInstructionsFromValidator(minCount: number, maxCount: number): string {
+  if (minCount === maxCount) {
+    return `Select exactly ${minCount} card${minCount !== 1 ? "s" : ""}.`;
+  }
+  if (minCount === 0) {
+    return `Select up to ${maxCount} card${maxCount !== 1 ? "s" : ""}.`;
+  }
+  return `Select ${minCount} to ${maxCount} cards.`;
+}
+
+function isSelectionValid(selectionCount: number, minCount: number, maxCount: number): boolean {
+  return selectionCount >= minCount && selectionCount <= maxCount;
+}
+
 export default function SelectTargetDialog() {
   const { gameState } = useLoadedGameContext();
-  const { oid, canCancel, text } = gameState.screen.smallDialog as SelectTargetDialogState;
+  const { oid, canCancel, text, instructions, targetValidator } = gameState.screen
+    .smallDialog as SelectTargetDialogState;
   const doAction = useDoAction(oid);
 
   const onCancelClick = () => doAction("Cancel");
   const onOkClick = () => doAction("Done");
 
-  let validateButtonText = "";
   const selectedCards = selection(gameState, { only: "yours" });
+  const selectionCount = selectedCards.length;
+
+  let validateButtonText = "";
   if (text === "Select an attacker.") {
     validateButtonText = selectAttackerMessage(selectedCards);
   } else if (text === "Select a blocker.") {
@@ -63,8 +80,17 @@ export default function SelectTargetDialog() {
     validateButtonText = validateTargetMessage(selectedCards);
   }
 
+  const displayInstructions =
+    instructions ||
+    (targetValidator
+      ? getInstructionsFromValidator(targetValidator.minCount, targetValidator.maxCount)
+      : null);
+
+  const isSubmitDisabled = targetValidator
+    ? !isSelectionValid(selectionCount, targetValidator.minCount, targetValidator.maxCount)
+    : false;
+
   return (
-    // @ts-expect-error - children is not defined in the DialogProps type
     <Dialog
       title={text}
       footer={
@@ -74,12 +100,14 @@ export default function SelectTargetDialog() {
               Cancel
             </Button>
           )}
-          <Button variant="primary" onClick={onOkClick}>
+          <Button variant="primary" onClick={onOkClick} disabled={isSubmitDisabled}>
             {validateButtonText}
           </Button>
         </HStack>
       }
       isModal={false}
-    ></Dialog>
+    >
+      {displayInstructions && <p className="text-center">{displayInstructions}</p>}
+    </Dialog>
   );
 }

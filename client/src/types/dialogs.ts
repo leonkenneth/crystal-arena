@@ -18,11 +18,19 @@ export type PriorityDialogState = {
   type: "Priority";
 };
 
+export type TargetValidator = {
+  message: string;
+  minCount: number;
+  maxCount: number;
+};
+
 export type SelectTargetDialogState = {
   oid: ObjectIdContainer;
   type: "SelectTarget";
   canCancel: boolean;
   text: string;
+  instructions: string | null;
+  targetValidator: TargetValidator | null;
 };
 
 export type SelectAbilityDialogState = {
