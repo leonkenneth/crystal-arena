@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import MenuButton from "./MenuButton";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
@@ -106,6 +108,56 @@ function getCardBorderColor(card: CardState): string | null {
   return null;
 }
 
+// Animated halo effect for buff/debuff
+function StatHalo({ color, direction }: { color: string; direction: "up" | "down" }) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const isUp = direction === "up";
+  const startY = isUp ? -CARD_HEIGHT / 2 : CARD_HEIGHT / 2;
+  const endY = isUp ? CARD_HEIGHT / 2 + 0.1 : -CARD_HEIGHT / 2 - 0.1;
+
+  useFrame((_, delta) => {
+    if (!ringRef.current || !materialRef.current) return;
+
+    // Move in direction and reset
+    ringRef.current.position.y += delta * 0.4 * (isUp ? 1 : -1);
+    const pastEnd = isUp
+      ? ringRef.current.position.y > endY
+      : ringRef.current.position.y < endY;
+
+    if (pastEnd) {
+      ringRef.current.position.y = startY;
+      materialRef.current.opacity = 0.6;
+    }
+
+    // Fade out as it moves
+    const totalDistance = Math.abs(endY - startY);
+    const currentDistance = Math.abs(ringRef.current.position.y - startY);
+    const progress = currentDistance / totalDistance;
+    materialRef.current.opacity = 0.6 * (1 - progress);
+
+    // Expand slightly as it moves
+    const scale = 1 + progress * 0.3;
+    ringRef.current.scale.set(scale, scale, 1);
+  });
+
+  return (
+    <mesh
+      ref={ringRef}
+      position={[0, startY, CARD_DEPTH / 2 + 0.003]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      <torusGeometry args={[0.25, 0.02, 8, 32]} />
+      <meshBasicMaterial
+        ref={materialRef}
+        color={color}
+        transparent
+        opacity={0.6}
+      />
+    </mesh>
+  );
+}
+
 function CardMesh({ card }: { card: CardState }) {
   const imageUrl = getImageUrl(card);
   const frontTexture = useTextureWithPlaceholder(imageUrl);
@@ -115,6 +167,8 @@ function CardMesh({ card }: { card: CardState }) {
   const faceDown = !card.isVisibleInUi;
   const borderColor = getCardBorderColor(card);
   const hasDamage = card.damage > 0;
+  const hasBuffedToughness = card.toughness > card.baseToughness;
+  const hasDebuffedToughness = card.toughness < card.baseToughness;
 
   return (
     <group>
@@ -141,6 +195,10 @@ function CardMesh({ card }: { card: CardState }) {
         <planeGeometry args={[imageWidth, imageHeight]} />
         <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
       </mesh>
+      {/* Buff indicator - rising yellow halo */}
+      {hasBuffedToughness && !faceDown && <StatHalo color="#ffdd44" direction="up" />}
+      {/* Debuff indicator - falling purple halo */}
+      {hasDebuffedToughness && !faceDown && <StatHalo color="#aa44dd" direction="down" />}
       {/* Damage indicator - red scratch mark */}
       {hasDamage && !faceDown && (
         <group position={[0, 0, CARD_DEPTH / 2 + 0.005]}>
