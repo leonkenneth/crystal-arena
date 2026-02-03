@@ -1,5 +1,5 @@
 import { CardState } from "@/types";
-import { CloseButton, Dialog, HStack, Portal, VStack, Text } from "@chakra-ui/react";
+import { Box, CloseButton, Dialog, HStack, Portal, VStack, Text } from "@chakra-ui/react";
 import Button from "@/components/ui/Button";
 import Card from "../Card";
 
@@ -19,18 +19,20 @@ function DialogBody({ cards, title }: { cards: CardState[]; title: string }) {
   }
 
   return (
-    <VStack w="full" justify="center" align="center" overflow="scroll">
-      <HStack w="full" justify="center" align="center" overflow="scroll">
-        {cards.map((card) => (
-          <Card
-            card={card}
-            key={card.cardId}
-            containerProps={{
-              size: "lg",
-            }}
-          />
-        ))}
-      </HStack>
+    <VStack w="full" justify="center" align="center">
+      <Box w="full" overflowX="auto">
+        <HStack justify="center" align="center" minW="min-content" mx="auto">
+          {cards.map((card) => (
+            <Card
+              card={card}
+              key={card.cardId}
+              containerProps={{
+                size: "lg",
+              }}
+            />
+          ))}
+        </HStack>
+      </Box>
       <Text color="fg">{cards.length > 1 ? `${cards.length} cards in ${title}` : title}</Text>
     </VStack>
   );
