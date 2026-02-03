@@ -72,7 +72,7 @@ export default function Card({
       {card.isVisibleInUi ? (
         <>
           <CardImage card={card} />
-          {card.toughness > 0 && <CardPower card={card} />}
+          {card.toughness > 0 && card.type === "Permanent" && <CardPower card={card} />}
           {displayTextOverlay && displayedText && (
             <CardBody
               style={{
