@@ -1280,6 +1280,10 @@ namespace CrystalArena
             if (_isHidden == true)
                 return false;
 
+            // LB decks are public Zones, but face down cards can only be seen by the owner
+            if (Zone == Zone.LimitBreak)
+                return player == Controller;
+
             if (Zone.IsPublicZone())
                 return true;
 
