@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import MenuButton from "./MenuButton";
 import { CardState } from "@/types";
 import { LoadedGameContext, useLoadedGameContext } from "@/utils/LoadedGameContext";
@@ -95,7 +97,12 @@ function isSelectedOrTargeted(card: CardState): boolean {
 }
 
 function getCardBorderColor(card: CardState): string | null {
-  // Blue border for selected/targeted cards (higher priority)
+  // Red border for combat selection (highest priority)
+  // @ts-expect-error - isSelectedForCombat is not defined on the CardOutsideFieldState type
+  if (card.isSelectedForCombat) {
+    return "#ff4444";
+  }
+  // Blue border for selected/targeted cards
   if (isSelectedOrTargeted(card)) {
     return "#4488ff";
   }
@@ -104,6 +111,97 @@ function getCardBorderColor(card: CardState): string | null {
     return "#44cc44";
   }
   return null;
+}
+
+// Animated whirlwind effect for summoning sickness
+function SummoningSicknessWhirlwind() {
+  const groupRef = useRef<THREE.Group>(null);
+  const wispRefs = useRef<THREE.Mesh[]>([]);
+
+  // Create wisp data - positions around a spiral
+  const wispCount = 6;
+  const wisps = Array.from({ length: wispCount }, (_, i) => ({
+    angle: (i / wispCount) * Math.PI * 2,
+    radius: 0.15 + (i % 2) * 0.1,
+    speed: 1.5 + (i % 3) * 0.3,
+    yOffset: (i / wispCount) * 0.3 - 0.15,
+  }));
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+
+    const time = state.clock.elapsedTime;
+
+    wispRefs.current.forEach((mesh, i) => {
+      if (!mesh) return;
+      const wisp = wisps[i];
+      const angle = wisp.angle + time * wisp.speed;
+      mesh.position.x = Math.cos(angle) * wisp.radius;
+      mesh.position.y = wisp.yOffset + Math.sin(time * 2 + i) * 0.05;
+      mesh.rotation.z = angle + Math.PI / 2;
+    });
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, CARD_DEPTH / 2 + 0.008]}>
+      {wisps.map((wisp, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            if (el) wispRefs.current[i] = el;
+          }}
+          position={[Math.cos(wisp.angle) * wisp.radius, wisp.yOffset, 0]}
+          rotation={[0, 0, wisp.angle + Math.PI / 2]}
+        >
+          <planeGeometry args={[0.18, 0.04]} />
+          <meshBasicMaterial color="#778899" transparent opacity={0.5} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Animated halo effect for buff/debuff
+function StatHalo({ color, direction }: { color: string; direction: "up" | "down" }) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const isUp = direction === "up";
+  const startY = isUp ? -CARD_HEIGHT / 2 : CARD_HEIGHT / 2;
+  const endY = isUp ? CARD_HEIGHT / 2 + 0.1 : -CARD_HEIGHT / 2 - 0.1;
+
+  useFrame((_, delta) => {
+    if (!ringRef.current || !materialRef.current) return;
+
+    // Move in direction and reset
+    ringRef.current.position.y += delta * 0.4 * (isUp ? 1 : -1);
+    const pastEnd = isUp ? ringRef.current.position.y > endY : ringRef.current.position.y < endY;
+
+    if (pastEnd) {
+      ringRef.current.position.y = startY;
+      materialRef.current.opacity = 0.6;
+    }
+
+    // Fade out as it moves
+    const totalDistance = Math.abs(endY - startY);
+    const currentDistance = Math.abs(ringRef.current.position.y - startY);
+    const progress = currentDistance / totalDistance;
+    materialRef.current.opacity = 0.6 * (1 - progress);
+
+    // Expand slightly as it moves
+    const scale = 1 + progress * 0.3;
+    ringRef.current.scale.set(scale, scale, 1);
+  });
+
+  return (
+    <mesh
+      ref={ringRef}
+      position={[0, startY, CARD_DEPTH / 2 + 0.003]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      <torusGeometry args={[0.25, 0.02, 8, 32]} />
+      <meshBasicMaterial ref={materialRef} color={color} transparent opacity={0.6} />
+    </mesh>
+  );
 }
 
 function CardMesh({ card }: { card: CardState }) {
@@ -115,6 +213,8 @@ function CardMesh({ card }: { card: CardState }) {
   const faceDown = !card.isVisibleInUi;
   const borderColor = getCardBorderColor(card);
   const hasDamage = card.damage > 0;
+  const hasBuffedToughness = card.toughness > card.baseToughness;
+  const hasDebuffedToughness = card.toughness < card.baseToughness;
 
   return (
     <group>
@@ -141,6 +241,10 @@ function CardMesh({ card }: { card: CardState }) {
         <planeGeometry args={[imageWidth, imageHeight]} />
         <meshStandardMaterial map={faceDown ? backTexture : frontTexture} />
       </mesh>
+      {/* Buff indicator - rising yellow halo */}
+      {hasBuffedToughness && !faceDown && <StatHalo color="#ffdd44" direction="up" />}
+      {/* Debuff indicator - falling purple halo */}
+      {hasDebuffedToughness && !faceDown && <StatHalo color="#aa44dd" direction="down" />}
       {/* Damage indicator - red scratch mark */}
       {hasDamage && !faceDown && (
         <group position={[0, 0, CARD_DEPTH / 2 + 0.005]}>
@@ -160,6 +264,68 @@ function CardMesh({ card }: { card: CardState }) {
             <meshBasicMaterial color="#cc1818" />
           </mesh>
         </group>
+      )}
+      {/* Summoning sickness - grey filter + swirling whirlwind */}
+      {card.hasSummoningSickness && !faceDown && (
+        <>
+          <mesh position={[0, 0, CARD_DEPTH / 2 + 0.004]}>
+            <planeGeometry args={[imageWidth, imageHeight]} />
+            <meshBasicMaterial color="#667788" transparent opacity={0.3} />
+          </mesh>
+          <SummoningSicknessWhirlwind />
+        </>
+      )}
+      {/* Frozen state - ice crystals at corners and edges */}
+      {"isFrozen" in card && card.isFrozen && !faceDown && (
+        <>
+          {/* Large ice crystals at corners */}
+          {[
+            {
+              pos: [CARD_WIDTH / 2 + 0.02, CARD_HEIGHT / 2 - 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [0.3, 0, -0.5],
+            },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, CARD_HEIGHT / 2 - 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [0.3, 0, 0.5],
+            },
+            {
+              pos: [CARD_WIDTH / 2 + 0.02, -CARD_HEIGHT / 2 + 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [-0.3, 0, -2.6],
+            },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, -CARD_HEIGHT / 2 + 0.05, CARD_DEPTH / 2 + 0.02],
+              rot: [-0.3, 0, 2.6],
+            },
+          ].map((crystal, i) => (
+            <mesh
+              key={`corner-${i}`}
+              position={crystal.pos as [number, number, number]}
+              rotation={crystal.rot as [number, number, number]}
+            >
+              <coneGeometry args={[0.06, 0.18, 4]} />
+              <meshStandardMaterial color="#66ddff" emissive="#66ddff" emissiveIntensity={0.8} />
+            </mesh>
+          ))}
+          {/* Smaller ice crystals on edges */}
+          {[
+            { pos: [0, CARD_HEIGHT / 2 + 0.02, CARD_DEPTH / 2 + 0.02], rot: [0.4, 0, Math.PI] },
+            { pos: [0, -CARD_HEIGHT / 2 - 0.02, CARD_DEPTH / 2 + 0.02], rot: [-0.4, 0, 0] },
+            { pos: [CARD_WIDTH / 2 + 0.02, 0, CARD_DEPTH / 2 + 0.02], rot: [0, 0.4, -Math.PI / 2] },
+            {
+              pos: [-CARD_WIDTH / 2 - 0.02, 0, CARD_DEPTH / 2 + 0.02],
+              rot: [0, -0.4, Math.PI / 2],
+            },
+          ].map((crystal, i) => (
+            <mesh
+              key={`edge-${i}`}
+              position={crystal.pos as [number, number, number]}
+              rotation={crystal.rot as [number, number, number]}
+            >
+              <coneGeometry args={[0.04, 0.12, 4]} />
+              <meshStandardMaterial color="#66ddff" emissive="#66ddff" emissiveIntensity={0.8} />
+            </mesh>
+          ))}
+        </>
       )}
     </group>
   );
@@ -290,7 +456,7 @@ export default function GameContent() {
     return (
       <ChakraProvider value={system}>
         <LoadedGameContext.Provider value={loadedGameContext}>
-          <Card card={card} size="xl" />
+          <Card card={card} size="xl" overrideIsTapped={false} />
         </LoadedGameContext.Provider>
       </ChakraProvider>
     );

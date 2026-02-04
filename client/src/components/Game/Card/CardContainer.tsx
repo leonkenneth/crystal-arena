@@ -7,13 +7,24 @@ export type Props = {
   isPlayable?: boolean;
   isTapped?: boolean;
   isSelected?: boolean;
+  isSelectedForCombat?: boolean;
   size?: CardSize;
   isInteractable?: boolean;
   dataCardId?: string;
 } & ChakraCard.RootProps;
 
 export default forwardRef(function CardContainer(
-  { dataCardId, children, isInteractable, isPlayable, isTapped, isSelected, size, ...props }: Props,
+  {
+    dataCardId,
+    children,
+    isInteractable,
+    isPlayable,
+    isTapped,
+    isSelected,
+    isSelectedForCombat,
+    size,
+    ...props
+  }: Props,
   ref: React.Ref<HTMLDivElement>
 ) {
   const actualSize = size || "sm";
@@ -23,6 +34,10 @@ export default forwardRef(function CardContainer(
   const isDisplayedHovered = isInteractable && isHovered;
 
   const getBorderColor = function () {
+    if (isSelectedForCombat) {
+      return "red.500";
+    }
+
     if (isSelected) {
       return "blue.500";
     }
