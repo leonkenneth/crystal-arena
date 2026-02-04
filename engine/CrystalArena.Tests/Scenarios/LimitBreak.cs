@@ -85,6 +85,27 @@
                         })
                 );
             }
+
+            [Fact]
+            public void BrokenLBCardGoesToLBDeckRevealed()
+            {
+                var limitBreakForward = C("0-007X");
+                var breakSummon = C("0-005X");
+                Battlefield(P1, limitBreakForward);
+                Hand(P1, breakSummon);
+
+                Exec(
+                    At(Step.FirstMain)
+                        .Cast(breakSummon, targets: Ts(limitBreakForward))
+                        .Verify(() =>
+                        {
+                            Equal(0, P1.Battlefield.Count); // LB Forward was broken
+                            Equal(1, P1.BreakZone.Count); // LB card doesn't go to breakzone, but summon does
+                            Equal(1, P1.LimitBreak.Count); // LB card returned to LB Deck
+                            True(limitBreakForward.Card.IsRevealed); // LB card is revealed
+                        })
+                );
+            }
         }
     }
 }

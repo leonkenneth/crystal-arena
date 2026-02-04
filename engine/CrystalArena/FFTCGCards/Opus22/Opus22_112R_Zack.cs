@@ -43,7 +43,10 @@ public class Opus22_112R_Zack : CardTemplateSource
                 p.Text = "When Zack enters the field, choose 1 Forward. Deal it 3000 damage.";
                 p.Trigger(new OnZoneChanged(to: Zone.Battlefield));
                 p.Effect = () => new DealDamageToTargets(3000);
-                p.TargetSelector.AddEffect(t => t.Is.Forward().On.Battlefield());
+                p.TargetSelector.AddEffect(
+                    t => t.Is.Forward().On.Battlefield(),
+                    p => p.Message = "Select Forward to deal damage to."
+                );
             });
     }
 }

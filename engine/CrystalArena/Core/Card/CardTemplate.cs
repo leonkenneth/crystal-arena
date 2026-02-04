@@ -632,6 +632,10 @@
                     {
                         parameters.MinCount = cp.LimitBreakLevel;
                         parameters.MaxCount = cp.LimitBreakLevel;
+                        parameters.Message =
+                            "Choose "
+                            + cp.LimitBreakLevel
+                            + " cards from your LB deck to reveal as LB cost.";
                     }
                 );
             }
