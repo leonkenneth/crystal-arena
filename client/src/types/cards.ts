@@ -10,6 +10,7 @@ export type PlayableActivationState = {
 type CardType = "forward" | "backup" | "summon" | "monster";
 
 type BaseCardState = {
+  type: "Permanent" | "Spell" | "SelectableCard";
   cardId: number;
   cardTypes: CardType[];
   jobs: string[];
@@ -20,6 +21,9 @@ type BaseCardState = {
   text: string;
   power: number;
   toughness: number;
+  basePower: number;
+  baseToughness: number;
+  damage: number;
   isVisibleInUi: boolean;
   colors: string[];
   isTapped: boolean;
