@@ -6,12 +6,19 @@ import { GameState } from "@/types";
 import GameContent from "./GameContent";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LoadedGameContext } from "@/utils/LoadedGameContext";
-import { Center, Text } from "@chakra-ui/react";
+import { Center, Text, VStack } from "@chakra-ui/react";
+import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 function ErrorMessage({ children }: { children: React.ReactNode }) {
   return (
-    <Center h="100dvh" w="100vw">
-      <Text color="black">{children}</Text>
+    <Center h="100dvh" w="100vw" bg="gray.900">
+      <VStack gap={4}>
+        <Text color="white">{children}</Text>
+        <Link href="/">
+          <Button variant="secondary">Back to home</Button>
+        </Link>
+      </VStack>
     </Center>
   );
 }
