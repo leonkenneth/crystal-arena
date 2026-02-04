@@ -54,8 +54,6 @@
 
         public void EffectResolved(Effect.Context ctx)
         {
-            if (!CanBeCastAtThisTime())
-                return;
             var putToZone = _p.AfterResolve ?? PutToZoneAfterResolve;
             putToZone(ctx.OwningCard, ctx);
         }
@@ -111,7 +109,7 @@
         private bool CanBeCastAtThisTime()
         {
             if (_card.Is().Summon || _card.Has().Flash)
-                return true;
+                return _card.Zone == Zone.Hand;
 
             if (_card.IsLimitBreak)
             {
