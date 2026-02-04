@@ -16,6 +16,12 @@ function AbilityButton({ description, onClick }: { description: string; onClick:
       onClick={onClick}
       marginBottom="0.5rem"
       width="100%"
+      height="auto"
+      minHeight="2.5rem"
+      paddingY="0.5rem"
+      whiteSpace="normal"
+      textAlign="left"
+      borderRadius="xl"
     >
       <CardText text={description} />
     </Button>
