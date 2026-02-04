@@ -19,20 +19,11 @@
         public TargetSelector Selector;
         public Zone? PlayZone;
 
-        public bool HasXInCost
-        {
-            get { return MaxX.HasValue; }
-        }
+        public bool HasXInCost => MaxX.HasValue;
 
-        public bool CanBePlayed
-        {
-            get { return CanBePlayedAtThisTime && CanBePlayedRegardlessofTime; }
-        }
+        public bool CanBePlayed => CanBePlayedAtThisTime && CanBePlayedRegardlessofTime;
 
-        public bool CanBePlayedAndPayed
-        {
-            get { return CanBePlayed && CanBePayed; }
-        }
+        public bool CanBePlayedAndPayed => CanBePlayed && CanBePayed;
 
         public string? AbilityId;
     }

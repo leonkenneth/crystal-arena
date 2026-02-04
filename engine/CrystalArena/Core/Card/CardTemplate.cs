@@ -800,7 +800,12 @@
                 {
                     p.Cost = new DiscardTarget();
                 }
-                p.TargetSelector.AddCost(t => t.Is.Card(c => c.Name == cardName).In.OwnersHand());
+                p.TargetSelector.AddCost(
+                    t => t.Is.Card(c => c.Name == cardName).In.OwnersHand(),
+                    p =>
+                        p.Message =
+                            $"Discard card with name {cardName} to pay for special of {abilityName}."
+                );
             });
         }
 

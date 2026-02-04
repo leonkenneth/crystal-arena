@@ -34,7 +34,7 @@ public class Opus23_007C_Samurai : CardTemplateSource
             .ActivatedAbility(p =>
             {
                 p.Text =
-                    "{T}, put Samurai into the Break Zone: Choose 1 Forward. If it deals damage to a Forward this turn, the damage increases by 1000 instead. You can only use this ability during your turn.";
+                    "{T}, put Samurai into the Break Zone: Choose 1 Forward. If it deals damage to a Forward this turn, the damage increases by 1000 instead.";
                 p.Cost = new AggregateCost(new Tap(), new Sacrifice());
                 p.Effect = () =>
                     new ReplaceDamageToTargets(

@@ -15,7 +15,7 @@ public class Opus23_003C_Kain : CardTemplateSource
         yield return Card.Code("23-003C")
             .Named("Kain")
             .Text(
-                "Haste First Strike\nWhen Kain attacks, all the Forwards with Haste or First Strike you control gain +2000 power until the end of the turn.\nDouble Jump {S}: Choose 1 Forward. Deal it 8000 damage."
+                "Haste First Strike\nWhen Kain attacks, all the Forwards with Haste or First Strike you control gain +2000 power until the end of the turn.\nDouble Jump {S}{R}: Choose 1 Forward. Deal it 8000 damage."
             )
             .Cost(4, "R")
             .Power(7000)
@@ -41,11 +41,15 @@ public class Opus23_003C_Kain : CardTemplateSource
                 "Double Jump",
                 p =>
                 {
-                    p.Text = "Double Jump {S}: Choose 1 Forward. Deal it 8000 damage.";
+                    p.Text = "Double Jump {S}{R}: Choose 1 Forward. Deal it 8000 damage.";
                     p.Effect = () => new DealDamageToTargets(8000);
-                    p.TargetSelector.AddEffect(trg => trg.Is.Forward().On.Battlefield());
+                    p.TargetSelector.AddEffect(
+                        trg => trg.Is.Forward().On.Battlefield(),
+                        p => p.Message = "Choose a Forward to deal damage to."
+                    );
                     p.TargetingRule(new EffectDealDamage(8000));
-                }
+                },
+                new PayMana("{R}".Parse())
             );
     }
 }
