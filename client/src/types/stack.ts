@@ -1,4 +1,5 @@
 import { CardState } from "./cards";
+import { ObjectIdContainer } from "./oid";
 
 export type TargetTypeAndId = {
   targetType: "Card"; // Probably needs Effects and so on
@@ -13,4 +14,4 @@ export type EffectState = {
   targets: TargetTypeAndId[];
 };
 
-export type StackState = { effects: EffectState[] };
+export type StackState = { effects: EffectState[]; oid: ObjectIdContainer };

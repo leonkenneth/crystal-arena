@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Newtonsoft.Json;
 
 namespace CrystalArena.UserInterface.Stack
 {
@@ -37,7 +38,7 @@ namespace CrystalArena.UserInterface.Stack
 
         public override object ToJson()
         {
-            return new { Effects = _effects.Select(e => EffectToJson(e)) };
+            return new { Effects = _effects.Select(e => EffectToJson(e)), Oid = base.ToJsonWithOid() };
         }
 
         private object? EffectToJson(Effect effect)
@@ -89,6 +90,24 @@ namespace CrystalArena.UserInterface.Stack
         private void OnEffectAdded(object sender, StackChangedEventArgs e)
         {
             _effects.Add(e.Effect);
+        }
+
+        class SelectEffectMessage
+        {
+            public int Index { get; set; }
+        }
+
+        public override void ReceiveMessageType(string type, string message)
+        {
+            switch (type)
+            {
+                case "SelectEffect":
+                    var msg = JsonConvert.DeserializeObject<SelectEffectMessage>(message);
+                    Select(_effects[msg.Index]);
+                    break;
+                default:
+                    throw new Exception($"Unknown message type: {type}");
+            }
         }
 
         public void Select(Effect effect)

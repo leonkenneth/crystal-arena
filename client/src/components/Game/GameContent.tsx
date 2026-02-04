@@ -479,6 +479,14 @@ export default function GameContent() {
     if (!card) {
       return;
     }
+    const effectIndex = stack?.effects.findIndex(
+      (e) => e.card.cardId === card.cardId
+    );
+    if (effectIndex !== undefined && effectIndex >= 0 && stack?.oid) {
+      return doAction(loadedGameContext.gameId, stack.oid, "SelectEffect", {
+        index: effectIndex,
+      });
+    }
     return doAction(loadedGameContext.gameId, card.oid, "Select");
   };
 

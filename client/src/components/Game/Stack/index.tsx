@@ -16,8 +16,13 @@ export default function Stack() {
   return (
     <StackDrawer footer={<PassPriorityButton />}>
       <Container display="flex" alignItems="center" justifyContent="center">
-        {stack.effects.map((effect: EffectState) => (
-          <StackEffect key={`effect-${effect.card.cardId}-${effect.text}`} effect={effect} />
+        {stack.effects.map((effect: EffectState, index: number) => (
+          <StackEffect
+            key={`effect-${effect.card.cardId}-${effect.text}`}
+            effect={effect}
+            stackOid={stack.oid}
+            effectIndex={index}
+          />
         ))}
       </Container>
     </StackDrawer>

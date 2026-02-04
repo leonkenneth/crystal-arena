@@ -57,6 +57,24 @@
             return CreateZoneBuilder();
         }
 
+        public IsValidZoneBuilder CounterableTriggeredAbility(Func<Effect, bool> filter = null)
+        {
+            filter =
+                filter
+                ?? delegate
+                {
+                    return true;
+                };
+
+            IsValidTarget = p =>
+                p.Target.IsEffect()
+                && p.Target.Effect().CanBeCountered
+                && p.Target.Effect().Source is TriggeredAbility
+                && filter(p.Target.Effect());
+
+            return CreateZoneBuilder();
+        }
+
         public IsValidZoneBuilder AttackerOrBlocker()
         {
             IsValidTarget = p =>
