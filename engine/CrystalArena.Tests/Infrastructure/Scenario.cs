@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using AI;
+    using CrystalArena.Infrastructure;
     using Decisions;
     using log4net.Config;
     using Modifiers;
@@ -20,6 +21,9 @@
             SearchParameters searchParameters = null
         )
         {
+            // Reset any stale Guard state from previous tests on this thread
+            ChangeTracker.Guard.Disable();
+
             var settings = Settings.Load();
 
             var player1Controller = player1ControlledByScript
