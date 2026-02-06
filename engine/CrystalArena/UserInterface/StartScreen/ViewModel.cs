@@ -103,7 +103,11 @@
         public void PlayRandom(bool onlyBots = false)
         {
             var decks = ChooseRandomDecks();
+            Play(decks[0], decks[1], onlyBots);
+        }
 
+        public void Play(Deck deck1, Deck deck2, bool onlyBots = false)
+        {
             try
             {
                 var mp = MatchParameters.Default(
@@ -111,13 +115,13 @@
                     {
                         Name = YourName,
                         AvatarId = RandomEx.Next(),
-                        Deck = decks[0],
+                        Deck = deck1,
                     },
                     player2: new PlayerParameters
                     {
                         Name = NameGenerator.GenerateRandomName(MediaMainDeck.GetPlayerUnitNames()),
                         AvatarId = RandomEx.Next(),
-                        Deck = decks[1],
+                        Deck = deck2,
                     },
                     isTournament: false
                 );

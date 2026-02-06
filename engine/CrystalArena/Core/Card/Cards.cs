@@ -25,6 +25,13 @@ namespace CrystalArena
             Templates = GetTemplates(sources);
         }
 
+        public static List<CardTemplate> FFTCGTemplates()
+        {
+            return Templates
+                .Where(x => LooksLikeFFTCGSerial(x.Serial) && !x.Serial.StartsWith("0"))
+                .ToList();
+        }
+
         public static int Count
         {
             get { return All.Count; }

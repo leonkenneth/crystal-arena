@@ -11,8 +11,12 @@ export function api(url: string, init?: RequestInit): Promise<Response> {
   return fetch(`${apiBaseUrl}${url}`, init);
 }
 
-export function post(url: string, body?: string) {
-  return api(url, { method: "POST", body: JSON.stringify(body) });
+export function post(url: string, body?: unknown) {
+  return api(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
 }
 
 export function get(url: string, init?: Omit<RequestInit, "method">) {

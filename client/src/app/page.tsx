@@ -1,7 +1,7 @@
 "use client";
 
-import PlayNowButton from "@/components/PlayNowButton";
 import { VStack, Heading, Text, HStack, Link } from "@chakra-ui/react";
+import Button from "@/components/ui/Button";
 
 export default function Home() {
   return (
@@ -30,9 +30,11 @@ export default function Home() {
           flexDirection={{ base: "column", sm: "row" }}
           w={{ base: "full", sm: "auto" }}
         >
-          <PlayNowButton variant="primary" gap={2}>
-            Play now
-          </PlayNowButton>
+          <Link href="/new" textDecoration="none" w={{ base: "full", sm: "auto" }}>
+            <Button variant="primary" gap={2} w="full">
+              Play now
+            </Button>
+          </Link>
           <Link
             href="https://github.com/leonkenneth/crystal-arena"
             target="_blank"
