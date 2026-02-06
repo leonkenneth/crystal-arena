@@ -15,6 +15,8 @@ using Sentry;
 
 namespace CrystalArena;
 
+public record CreateGameRequest(string[] PlayerDeck, string[] ComputerDeck);
+
 sealed class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
@@ -105,13 +107,59 @@ sealed class Program
                 return "oid callbacked";
             }
         );
+        app.MapGet(
+            "/cards",
+            () =>
+            {
+                return Cards.FFTCGTemplates().Select(x => new { code = x.Serial }).ToList();
+            }
+        );
+        app.MapGet(
+            "/decks/test",
+            () =>
+            {
+                var decks = new[]
+                {
+                    new
+                    {
+                        name = "Test fire deck",
+                        cards = DeckLibrary.CreateTestFire().Select(x => x.Serial).ToList(),
+                    },
+                    new
+                    {
+                        name = "Test ice deck",
+                        cards = DeckLibrary.CreateTestIce().Select(x => x.Serial).ToList(),
+                    },
+                };
+                return decks;
+            }
+        );
 
         app.MapGet(
             "/internal/region",
             () => new { Region = Environment.GetEnvironmentVariable("FLY_REGION") }
         );
         app.MapPost(
-            "/internal/games",
+            "/games",
+            (CreateGameRequest request) =>
+            {
+                var nextGameId = GameRepository.NextId();
+                var ui = GameRepository.ResolveUi(nextGameId, createIfMissing: true);
+                var startScreenVM = ui.Dialogs.StartScreen.Create();
+
+                var deck1 = new Deck(
+                    request.PlayerDeck.Select(code => new CardInfo(code, serial: code))
+                );
+                var deck2 = new Deck(
+                    request.ComputerDeck.Select(code => new CardInfo(code, serial: code))
+                );
+
+                Task.Run(() => startScreenVM.Play(deck1, deck2));
+                return new { Uuid = nextGameId, ui.PlayerToken };
+            }
+        );
+        app.MapPost(
+            "/internal/games/random",
             () =>
             {
                 var nextGameId = GameRepository.NextId();
