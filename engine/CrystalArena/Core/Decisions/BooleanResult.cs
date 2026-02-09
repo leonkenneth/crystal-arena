@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public class BooleanResult
+    public class BooleanResult : IDecisionResult
     {
         public BooleanResult(bool value)
         {

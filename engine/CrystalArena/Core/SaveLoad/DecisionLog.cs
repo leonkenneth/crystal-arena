@@ -1,4 +1,8 @@
-﻿namespace CrystalArena
+﻿using System;
+using System.Collections.Generic;
+using CrystalArena.Decisions;
+
+namespace CrystalArena
 {
     using System.IO;
     using System.Runtime.Serialization;
@@ -7,52 +11,39 @@
 
     public class DecisionLog
     {
-        private readonly BinaryFormatter _formatter;
-        private MemoryStream _stream;
+        private readonly List<IDecisionResult> _savedDecisions = new List<IDecisionResult>();
+        private readonly SerializationContext _context;
+        private int _currentIndex = 0;
 
-        public DecisionLog(Game game, MemoryStream savedDecisions)
+        public DecisionLog(Game game, List<IDecisionResult>? savedDecisions)
         {
-            _stream = savedDecisions ?? new MemoryStream();
-            _formatter = new BinaryFormatter
-            {
-                AssemblyFormat = FormatterAssemblyStyle.Simple,
-                Context = new StreamingContext(
-                    StreamingContextStates.All,
-                    new SerializationContext { Game = game }
-                ),
-                Binder = new RenameBinder(),
-            };
+            _savedDecisions = savedDecisions ?? new List<IDecisionResult>();
+            _context = new SerializationContext { Game = game };
         }
 
         public bool IsAtTheEnd
         {
-            get { return _stream.Position == _stream.Length; }
+            get { return _currentIndex == _savedDecisions.Count; }
         }
 
-        public void SetStream(MemoryStream stream)
+        public void SaveResult(IDecisionResult result)
         {
-            _stream = stream;
+            _savedDecisions.Add(result);
         }
 
-        public void SaveResult(object result)
+        public T LoadResult<T>() where T : IDecisionResult
         {
-            _formatter.Serialize(_stream, result);
-        }
+            if (_currentIndex >= _savedDecisions.Count)
+                return default;
 
-        public object LoadResult()
-        {
-            return _formatter.Deserialize(_stream);
+            var result = _savedDecisions[_currentIndex];
+            _currentIndex++;
+            return (T)result;
         }
 
         public void DiscardUnloadedResults()
         {
-            _stream.SetLength(_stream.Position);
-        }
-
-        public void WriteTo(Stream stream)
-        {
-            _stream.Position = 0;
-            _stream.CopyTo(stream);
+            throw new NotImplementedException();
         }
     }
 }

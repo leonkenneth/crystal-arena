@@ -60,7 +60,7 @@ namespace CrystalArena
             get { return Game.ChangeTracker; }
         }
 
-        public void SaveDecisionResult(object result)
+        public void SaveDecisionResult(IDecisionResult result)
         {
             Game.Recorder.SaveDecisionResult(result);
         }

@@ -1,4 +1,7 @@
-﻿namespace CrystalArena
+﻿using System.Collections.Generic;
+using CrystalArena.Decisions;
+
+namespace CrystalArena
 {
     using System;
     using System.IO;
@@ -6,7 +9,7 @@
     [Serializable]
     public class SavedGame
     {
-        public MemoryStream Decisions;
+        public List<IDecisionResult> Decisions;
         public PlayerParameters Player1;
         public PlayerParameters Player2;
         public int RandomSeed;
