@@ -5,7 +5,7 @@
     using CrystalArena.Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenPlayer : ISerializable
+    public class ChosenPlayer : ISerializable, IDecisionResult
     {
         private ChosenPlayer() { }
 

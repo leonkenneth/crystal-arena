@@ -140,7 +140,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenPlayable)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenPlayable>();
             }
         }
 

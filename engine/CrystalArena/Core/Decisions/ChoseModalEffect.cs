@@ -76,7 +76,7 @@ namespace CrystalArena.Decisions
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenModalEffectIndex)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenModalEffectIndex>();
             }
         }
 

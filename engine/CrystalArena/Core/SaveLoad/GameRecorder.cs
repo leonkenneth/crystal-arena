@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CrystalArena.Decisions;
+using DynamicData;
 
 namespace CrystalArena
 {
@@ -54,10 +55,6 @@ namespace CrystalArena
 
         public SavedGame SaveGame()
         {
-            throw new System.NotImplementedException();
-            var decisions = new MemoryStream();
-            //_decisionLog.WriteTo(decisions);
-
             var player1 = _game.Players.Player1;
             var player2 = _game.Players.Player2;
 
@@ -76,7 +73,7 @@ namespace CrystalArena
                     Deck = player2.Deck,
                 },
                 RandomSeed = _game.Random.Seed,
-                Decisions = decisions,
+                Decisions = new DecisionLog(_game, new List<IDecisionResult>(_decisionLog.SavedDecisions)),
                 StateCount = _game.Turn.StateCount,
             };
 

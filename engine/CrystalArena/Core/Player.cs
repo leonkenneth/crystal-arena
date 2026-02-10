@@ -31,6 +31,7 @@
             new TrackableList<IPlayerModifier>();
         private readonly TrackableList<Emblem> _emblems = new TrackableList<Emblem>();
         private readonly SkipSteps _skipSteps = new SkipSteps();
+        private int _isActiveChangeCalls = 0;
 
         public Player(PlayerParameters p, PlayerType controllerType)
         {
@@ -137,8 +138,14 @@
         public virtual bool IsActive
         {
             get { return _isActive.Value; }
-            set { _isActive.Value = value; }
+            set
+            {
+                _isActive.Value = value;
+                _isActiveChangeCalls++;
+            }
         }
+        
+        public int IsActiveChangeCalls => _isActiveChangeCalls;
 
         public bool IsHuman
         {

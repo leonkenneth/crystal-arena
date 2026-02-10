@@ -4,7 +4,7 @@
     using CrystalArena.Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenPlayable
+    public class ChosenPlayable : IDecisionResult
     {
         public IPlayable Playable { get; set; }
         public bool WasPriorityPassed

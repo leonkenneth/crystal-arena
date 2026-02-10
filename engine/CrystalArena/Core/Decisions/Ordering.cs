@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public class Ordering
+    public class Ordering : IDecisionResult
     {
         public Ordering(params int[] indices)
         {

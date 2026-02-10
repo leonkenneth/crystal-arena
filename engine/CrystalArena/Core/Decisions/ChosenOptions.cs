@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     [Serializable]
-    public class ChosenOptions
+    public class ChosenOptions : IDecisionResult
     {
         private readonly List<object> _options = new List<object>();
 

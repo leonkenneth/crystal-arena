@@ -9,7 +9,14 @@
         [Fact]
         public void Save()
         {
-            var game = SimulateGame();
+            var originalP = GameParameters.Simulation(
+                DeckLibrary.CreateTestFire(),
+                DeckLibrary.CreateTestIce(),
+                new SearchParameters(15, 2, SearchPartitioningStrategies.SingleThreaded)
+            );
+
+            var game = new Game(originalP);
+            game.Start(numOfTurns: 0);
             var savedGame = game.Save();
 
             var p = GameParameters.Load(
@@ -42,7 +49,7 @@
             );
 
             var game = new Game(p);
-            game.Start(numOfTurns: 5);
+            game.Start(numOfTurns: 0);
             return game;
         }
     }

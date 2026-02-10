@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     [Serializable]
-    public class ChosenModalEffectIndex
+    public class ChosenModalEffectIndex : IDecisionResult
     {
         private readonly List<int> _indices = new List<int>();
 

@@ -261,18 +261,10 @@
 
             protected override void ExecuteQuery()
             {
-                var chosenAttackers = Game.Recorder.LoadDecisionResult();
+                var chosenAttackers = Game.Recorder.LoadDecisionResult<ChosenAttackers>();
 
-                if (chosenAttackers is ChosenAttackers)
-                {
-                    Result = (ChosenAttackers)chosenAttackers;
-                }
-                else
-                {
-                    // For backward compatibility reasons
-                    // so old savegames can be loaded.
-                    Result = new ChosenAttackers((ChosenCards)chosenAttackers);
-                }
+                Result = chosenAttackers;
+                
             }
         }
 

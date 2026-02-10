@@ -8,7 +8,7 @@
     using Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenAttackers : IEnumerable<ChosenAttackers.Attacker>
+    public class ChosenAttackers : IEnumerable<ChosenAttackers.Attacker>, IDecisionResult
     {
         private readonly List<Attacker> _attackers = new List<Attacker>();
 

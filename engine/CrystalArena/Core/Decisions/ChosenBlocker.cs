@@ -8,7 +8,7 @@
     using Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenBlocker : ISerializable
+    public class ChosenBlocker : ISerializable, IDecisionResult
     {
         public static readonly ChosenBlocker None = new();
         public Card? Blocker;

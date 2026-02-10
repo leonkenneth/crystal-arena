@@ -9,7 +9,7 @@ namespace CrystalArena
     [Serializable]
     public class SavedGame
     {
-        public List<IDecisionResult> Decisions;
+        public DecisionLog Decisions;
         public PlayerParameters Player1;
         public PlayerParameters Player2;
         public int RandomSeed;

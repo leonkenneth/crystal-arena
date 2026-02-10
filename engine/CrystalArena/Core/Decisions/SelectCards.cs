@@ -151,7 +151,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenCards)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenCards>();
             }
         }
 

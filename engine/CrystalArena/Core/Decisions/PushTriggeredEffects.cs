@@ -83,7 +83,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (Ordering)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<Ordering>();
             }
         }
 

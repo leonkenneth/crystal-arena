@@ -7,7 +7,7 @@
     using CrystalArena.Infrastructure;
 
     [Copyable, Serializable]
-    public class DamageAssignment : ISerializable
+    public class DamageAssignment : ISerializable, IDecisionResult
     {
         private readonly Dictionary<Attacker, int> _attackerDamageAssigments =
             new Dictionary<Attacker, int>();

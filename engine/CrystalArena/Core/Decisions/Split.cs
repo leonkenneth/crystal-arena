@@ -6,7 +6,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class Split : ISerializable
+    public class Split : ISerializable, IDecisionResult
     {
         private readonly List<List<Card>> _groups;
 

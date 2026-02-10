@@ -77,7 +77,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (Split)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<Split>();
             }
         }
 

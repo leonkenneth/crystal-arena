@@ -161,7 +161,7 @@ namespace CrystalArena.Decisions
 
             protected override void ExecuteQuery()
             {
-                Result = (DamageAssignment)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<DamageAssignment>();
             }
         }
 

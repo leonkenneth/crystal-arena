@@ -7,7 +7,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class ChosenCards : IEnumerable<Card>, ISerializable
+    public class ChosenCards : IEnumerable<Card>, ISerializable, IDecisionResult
     {
         private readonly List<Card> _cards = new List<Card>();
 

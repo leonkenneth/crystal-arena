@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public class ChosenTargets
+    public class ChosenTargets : IDecisionResult
     {
         public ChosenTargets(Targets targets)
         {
