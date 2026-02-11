@@ -6,7 +6,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class Split : ISerializable, IDecisionResult
+    public class Split : DecisionResult, ISerializable
     {
         private readonly List<List<Card>> _groups;
 
@@ -40,6 +40,24 @@
         {
             var groupsWithCardIds = _groups.Select(x => x.Select(y => y.Id).ToList()).ToList();
             info.AddValue("groups", groupsWithCardIds);
+        }
+
+        public override string TypeName => nameof(Split);
+
+        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        {
+            var groupsWithCardIds = _groups.Select(x => x.Select(y => y.Id).ToList()).ToList();
+            info.AddValue("groups", groupsWithCardIds);
+        }
+
+        internal static Split FromObjectData(JsonFormatter.ISerializationInfo info)
+        {
+            var ctx = info.Context;
+            var groupsWithCardIds = (List<List<int>>)info.GetValue("groups", typeof(List<List<int>>));
+            var groups = groupsWithCardIds
+                .Select(x => x.Select(y => (Card)ctx.Recorder.GetObject(y)).ToList())
+                .ToList();
+            return new Split(groups);
         }
     }
 }

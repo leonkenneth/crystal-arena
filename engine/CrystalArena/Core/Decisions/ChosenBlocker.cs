@@ -8,7 +8,7 @@
     using Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenBlocker : ISerializable, IDecisionResult
+    public class ChosenBlocker : DecisionResult
     {
         public static readonly ChosenBlocker None = new();
         public Card? Blocker;
@@ -37,6 +37,28 @@
             var cardId = Blocker?.Id;
 
             info.AddValue("card", cardId);
+        }
+
+        public override string TypeName => nameof(ChosenBlocker);
+
+        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        {
+            var cardId = Blocker?.Id;
+            info.AddValue("card", cardId);
+        }
+
+        internal static ChosenBlocker FromObjectData(JsonFormatter.ISerializationInfo info)
+        {
+            var ctx = info.Context;
+            var cardId = info.GetNullableInt32("card");
+
+            if (cardId.HasValue)
+            {
+                var card = (Card)ctx.Recorder.GetObject(cardId.Value);
+                return new ChosenBlocker(card);
+            }
+
+            return new ChosenBlocker();
         }
     }
 }

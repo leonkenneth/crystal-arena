@@ -8,7 +8,7 @@
     using Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenAttackers : IEnumerable<ChosenAttackers.Attacker>, IDecisionResult
+    public class ChosenAttackers : DecisionResult, IEnumerable<ChosenAttackers.Attacker>
     {
         private readonly List<Attacker> _attackers = new List<Attacker>();
 
@@ -53,6 +53,34 @@
             }
         }
 
+        public override string TypeName => nameof(ChosenAttackers);
+
+        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        {
+            info.AddNestedList("attackers", list =>
+            {
+                foreach (var attacker in _attackers)
+                {
+                    var attackerInfo = info.CreateNested();
+                    attacker.Serialize(attackerInfo);
+                    list.Add(attackerInfo);
+                }
+            });
+        }
+
+        internal static ChosenAttackers FromObjectData(JsonFormatter.ISerializationInfo info)
+        {
+            var result = new ChosenAttackers();
+            var attackersList = info.GetNestedList("attackers");
+            
+            foreach (var attackerInfo in attackersList)
+            {
+                result._attackers.Add(Attacker.Deserialize(attackerInfo));
+            }
+            
+            return result;
+        }
+
         [Copyable, Serializable]
         public class Attacker : ISerializable
         {
@@ -89,6 +117,25 @@
                 var planeswalkerId = Planeswalker == null ? (int?)null : Planeswalker.Id;
 
                 info.AddValue("planeswalker", planeswalkerId);
+            }
+
+            public void Serialize(JsonFormatter.ISerializationInfo info)
+            {
+                info.AddValue("card", Card.Id);
+                var planeswalkerId = Planeswalker?.Id;
+                info.AddValue("planeswalker", planeswalkerId);
+            }
+
+            public static Attacker Deserialize(JsonFormatter.ISerializationInfo info)
+            {
+                var ctx = info.Context; // Access to SerializationContext
+                var cardId = info.GetInt32("card");
+                var planeswalkerId = info.GetNullableInt32("planeswalker");
+
+                var card = (Card)ctx.Recorder.GetObject(cardId);
+                var planeswalker = planeswalkerId.HasValue ? (Card)ctx.Recorder.GetObject(planeswalkerId.Value) : null;
+
+                return new Attacker(card, planeswalker);
             }
         }
     }

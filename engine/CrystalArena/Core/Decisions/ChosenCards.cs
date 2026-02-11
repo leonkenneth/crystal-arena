@@ -7,7 +7,7 @@
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class ChosenCards : IEnumerable<Card>, ISerializable, IDecisionResult
+    public class ChosenCards : DecisionResult, IEnumerable<Card>, ISerializable
     {
         private readonly List<Card> _cards = new List<Card>();
 
@@ -59,6 +59,22 @@
         {
             var cardIds = _cards.Select(x => x.Id).ToList();
             info.AddValue("cards", cardIds);
+        }
+
+        public override string TypeName => nameof(ChosenCards);
+
+        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        {
+            var cardIds = _cards.Select(x => x.Id).ToList();
+            info.AddValue("cards", cardIds);
+        }
+
+        internal static ChosenCards FromObjectData(JsonFormatter.ISerializationInfo info)
+        {
+            var ctx = info.Context;
+            var cardIds = (List<int>)info.GetValue("cards", typeof(List<int>));
+            var cards = cardIds.Select(x => (Card)ctx.Recorder.GetObject(x));
+            return new ChosenCards(cards);
         }
 
         public void Add(Card card)

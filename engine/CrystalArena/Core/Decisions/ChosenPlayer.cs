@@ -5,7 +5,7 @@
     using CrystalArena.Infrastructure;
 
     [Copyable, Serializable]
-    public class ChosenPlayer : ISerializable, IDecisionResult
+    public class ChosenPlayer : DecisionResult, ISerializable
     {
         private ChosenPlayer() { }
 
@@ -25,6 +25,21 @@
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("player", Player.Id);
+        }
+
+        public override string TypeName => nameof(ChosenPlayer);
+
+        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        {
+            info.AddValue("player", Player.Id);
+        }
+
+        internal static ChosenPlayer FromObjectData(JsonFormatter.ISerializationInfo info)
+        {
+            var ctx = info.Context;
+            var playerId = info.GetInt32("player");
+            var player = (Player)ctx.Recorder.GetObject(playerId);
+            return new ChosenPlayer(player);
         }
     }
 }

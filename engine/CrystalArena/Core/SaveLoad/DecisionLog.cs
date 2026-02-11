@@ -11,37 +11,38 @@ namespace CrystalArena
 
     public class DecisionLog
     {
-        private List<IDecisionResult> _savedDecisions = new List<IDecisionResult>();
+        private List<string> _savedDecisions = new List<string>();
         private readonly SerializationContext? _context;
         private int _currentIndex = 0;
+        private readonly JsonFormatter _serializer;
 
-        public DecisionLog(Game? game, List<IDecisionResult>? savedDecisions)
+        public DecisionLog(Game game, List<string>? savedDecisions)
         {
-            _savedDecisions = savedDecisions ?? new List<IDecisionResult>();
-            _context = game == null ? null : new SerializationContext { Game = game };
+            _savedDecisions = savedDecisions ?? new List<string>();
+            _context = new SerializationContext { Game = game };
+            _serializer = new JsonFormatter(_context);
         }
 
-        public bool IsAtTheEnd
-        {
-            get { return _currentIndex == _savedDecisions.Count; }
-        }
+        public bool IsAtTheEnd => _currentIndex == _savedDecisions.Count;
 
-        public List<IDecisionResult>? SavedDecisions => _savedDecisions;
+        public List<string>? SavedDecisions => _savedDecisions;
 
-        public void SaveResult(IDecisionResult result)
+        public void SaveResult(DecisionResult result)
         {
-            _savedDecisions.Add(result);
+            var serializedDecisionResult = _serializer.Serialize(result);
+            _savedDecisions.Add(serializedDecisionResult);
             _currentIndex++;
         }
 
-        public T LoadResult<T>() where T : IDecisionResult
+        public T LoadResult<T>() where T : DecisionResult
         {
             if (_currentIndex >= _savedDecisions.Count)
-                return default;
+                throw new ArgumentException("There are no saved decisions left.");
 
             var result = _savedDecisions[_currentIndex];
             _currentIndex++;
-            return (T)result;
+            var decisionResult = _serializer.Deserialize(result);
+            return (T)decisionResult;
         }
 
         public void DiscardUnloadedResults()

@@ -12,7 +12,7 @@ namespace CrystalArena
         private readonly Game _game;
         private readonly IdentityManager _identityManager;
 
-        public GameRecorder(Game game, List<IDecisionResult>? savedDecisions = null)
+        public GameRecorder(Game game, List<string>? savedDecisions = null)
         {
             _game = game;
             _identityManager = new IdentityManager();
@@ -40,7 +40,7 @@ namespace CrystalArena
             return _identityManager.GetObject(id);
         }
 
-        public void SaveDecisionResult(IDecisionResult result)
+        public void SaveDecisionResult(DecisionResult result)
         {
             if (_game.Ai.IsSearchInProgress)
                 return;
@@ -48,7 +48,7 @@ namespace CrystalArena
             _decisionLog.SaveResult(result);
         }
 
-        public T LoadDecisionResult<T>() where T : IDecisionResult
+        public T LoadDecisionResult<T>() where T : DecisionResult
         {
             return _decisionLog.LoadResult<T>();
         }
@@ -73,7 +73,7 @@ namespace CrystalArena
                     Deck = player2.Deck,
                 },
                 RandomSeed = _game.Random.Seed,
-                Decisions = new DecisionLog(_game, new List<IDecisionResult>(_decisionLog.SavedDecisions)),
+                Decisions = new DecisionLog(_game, new List<string>(_decisionLog.SavedDecisions)),
                 StateCount = _game.Turn.StateCount,
             };
 
