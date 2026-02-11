@@ -144,7 +144,7 @@
                 _isActiveChangeCalls++;
             }
         }
-        
+
         public int IsActiveChangeCalls => _isActiveChangeCalls;
 
         public bool IsHuman

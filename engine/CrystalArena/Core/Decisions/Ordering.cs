@@ -1,8 +1,7 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class Ordering : DecisionResult
     {
         public Ordering(params int[] indices)
@@ -14,14 +13,14 @@
 
         public override string TypeName => nameof(Ordering);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            info.AddValue("indices", Indices);
+            json["indices"] = new JArray(Indices);
         }
 
-        internal static Ordering FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new Ordering ReadJson(JObject json, SerializationContext ctx)
         {
-            var indices = (int[])info.GetValue("indices", typeof(int[]));
+            var indices = json["indices"]!.ToObject<int[]>()!;
             return new Ordering(indices);
         }
     }

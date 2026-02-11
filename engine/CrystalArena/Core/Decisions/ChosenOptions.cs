@@ -1,9 +1,8 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class ChosenOptions : DecisionResult
     {
         private readonly List<object> _options = new List<object>();
@@ -20,14 +19,14 @@
 
         public override string TypeName => nameof(ChosenOptions);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            info.AddValue("options", _options);
+            json["options"] = JArray.FromObject(_options);
         }
 
-        internal static ChosenOptions FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new ChosenOptions ReadJson(JObject json, SerializationContext ctx)
         {
-            var options = (List<object>)info.GetValue("options", typeof(List<object>));
+            var options = json["options"]!.ToObject<List<object>>()!;
             return new ChosenOptions(options.ToArray());
         }
     }

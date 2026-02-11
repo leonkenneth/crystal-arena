@@ -48,7 +48,8 @@ namespace CrystalArena
             _decisionLog.SaveResult(result);
         }
 
-        public T LoadDecisionResult<T>() where T : DecisionResult
+        public T LoadDecisionResult<T>()
+            where T : DecisionResult
         {
             return _decisionLog.LoadResult<T>();
         }

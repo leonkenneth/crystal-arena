@@ -1,9 +1,8 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class ChosenModalEffectIndex : DecisionResult
     {
         private readonly List<int> _indices = new List<int>();
@@ -20,14 +19,14 @@
 
         public override string TypeName => nameof(ChosenModalEffectIndex);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            info.AddValue("indices", _indices);
+            json["indices"] = new JArray(_indices);
         }
 
-        internal static ChosenModalEffectIndex FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new ChosenModalEffectIndex ReadJson(JObject json, SerializationContext ctx)
         {
-            var indices = (List<int>)info.GetValue("indices", typeof(List<int>));
+            var indices = json["indices"]!.ToObject<List<int>>()!;
             return new ChosenModalEffectIndex(indices.ToArray());
         }
     }

@@ -1,11 +1,10 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-    using System.Runtime.Serialization;
     using CrystalArena.Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class ChosenPlayer : DecisionResult, ISerializable
+    [Copyable]
+    public class ChosenPlayer : DecisionResult
     {
         private ChosenPlayer() { }
 
@@ -14,30 +13,18 @@
             Player = player;
         }
 
-        protected ChosenPlayer(SerializationInfo info, StreamingContext context)
-        {
-            var ctx = (SerializationContext)context.Context;
-            Player = (Player)ctx.Recorder.GetObject(info.GetInt32("player"));
-        }
-
         public Player Player { get; private set; }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("player", Player.Id);
-        }
 
         public override string TypeName => nameof(ChosenPlayer);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            info.AddValue("player", Player.Id);
+            json["player"] = Player.Id;
         }
 
-        internal static ChosenPlayer FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new ChosenPlayer ReadJson(JObject json, SerializationContext ctx)
         {
-            var ctx = info.Context;
-            var playerId = info.GetInt32("player");
+            var playerId = json["player"]!.Value<int>();
             var player = (Player)ctx.Recorder.GetObject(playerId);
             return new ChosenPlayer(player);
         }

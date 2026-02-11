@@ -264,7 +264,6 @@
                 var chosenAttackers = Game.Recorder.LoadDecisionResult<ChosenAttackers>();
 
                 Result = chosenAttackers;
-                
             }
         }
 

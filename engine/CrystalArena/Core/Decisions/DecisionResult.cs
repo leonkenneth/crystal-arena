@@ -1,29 +1,31 @@
 namespace CrystalArena.Decisions;
 
+using Newtonsoft.Json.Linq;
+
 public abstract class DecisionResult
 {
     public abstract string TypeName { get; }
 
-    public abstract void Serialize(JsonFormatter.ISerializationInfo info);
+    public abstract void WriteJson(JObject json, SerializationContext ctx);
 
-    public static DecisionResult Deserialize(JsonFormatter.ISerializationInfo info)
+    public static DecisionResult ReadJson(JObject json, SerializationContext ctx)
     {
-        var typeName = info.GetString("$type");
+        var typeName = json["$type"]?.ToString();
         return typeName switch
         {
-            nameof(BooleanResult) => BooleanResult.FromObjectData(info),
-            nameof(ChosenAttackers) => ChosenAttackers.FromObjectData(info),
-            nameof(ChosenBlocker) => ChosenBlocker.FromObjectData(info),
-            nameof(ChosenCards) => ChosenCards.FromObjectData(info),
-            nameof(ChosenModalEffectIndex) => ChosenModalEffectIndex.FromObjectData(info),
-            nameof(ChosenOptions) => ChosenOptions.FromObjectData(info),
-            nameof(ChosenPlayable) => ChosenPlayable.FromObjectData(info),
-            nameof(ChosenPlayer) => ChosenPlayer.FromObjectData(info),
-            nameof(ChosenTargets) => ChosenTargets.FromObjectData(info),
-            nameof(DamageAssignment) => DamageAssignment.FromObjectData(info),
-            nameof(Ordering) => Ordering.FromObjectData(info),
-            nameof(Split) => Split.FromObjectData(info),
-            _ => throw new System.NotSupportedException($"Unknown DecisionResult type: {typeName}")
+            nameof(BooleanResult) => BooleanResult.ReadJson(json, ctx),
+            nameof(ChosenAttackers) => ChosenAttackers.ReadJson(json, ctx),
+            nameof(ChosenBlocker) => ChosenBlocker.ReadJson(json, ctx),
+            nameof(ChosenCards) => ChosenCards.ReadJson(json, ctx),
+            nameof(ChosenModalEffectIndex) => ChosenModalEffectIndex.ReadJson(json, ctx),
+            nameof(ChosenOptions) => ChosenOptions.ReadJson(json, ctx),
+            nameof(ChosenPlayable) => ChosenPlayable.ReadJson(json, ctx),
+            nameof(ChosenPlayer) => ChosenPlayer.ReadJson(json, ctx),
+            nameof(ChosenTargets) => ChosenTargets.ReadJson(json, ctx),
+            nameof(DamageAssignment) => DamageAssignment.ReadJson(json, ctx),
+            nameof(Ordering) => Ordering.ReadJson(json, ctx),
+            nameof(Split) => Split.ReadJson(json, ctx),
+            _ => throw new System.NotSupportedException($"Unknown DecisionResult type: {typeName}"),
         };
     }
 }

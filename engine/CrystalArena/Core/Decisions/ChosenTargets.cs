@@ -1,10 +1,8 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Linq;
-    using System.Collections.Generic;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class ChosenTargets : DecisionResult
     {
         public ChosenTargets(Targets targets)
@@ -26,42 +24,24 @@
 
         public override string TypeName => nameof(ChosenTargets);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            // Targets class already implements ISerializable, we can serialize it as nested
-            info.AddNested("targets", nested =>
+            if (Targets != null)
             {
-                var costTargetsIds = Targets.Cost.Select(x => x.Id).ToList();
-                var effectTargetsIds = Targets.Effect.Select(x => x.Id).ToList();
-                nested.AddValue("costTargets", costTargetsIds);
-                nested.AddValue("effectTargets", effectTargetsIds);
-                nested.AddValue("distribution", Targets.Distribution);
-            });
+                var targetsJson = new JObject();
+                Targets.WriteJson(targetsJson, ctx);
+                json["targets"] = targetsJson;
+            }
         }
 
-        internal static ChosenTargets FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new ChosenTargets ReadJson(JObject json, SerializationContext ctx)
         {
-            var ctx = info.Context;
-            var targetsInfo = info.GetNested("targets");
-
-            var costTargetsIds = (List<int>)targetsInfo.GetValue("costTargets", typeof(List<int>));
-            var effectTargetsIds = (List<int>)targetsInfo.GetValue("effectTargets", typeof(List<int>));
-            var distribution = (List<int>)targetsInfo.GetValue("distribution", typeof(List<int>));
-
-            var targets = new Targets();
-            targets.Distribution = distribution;
-
-            foreach (var id in costTargetsIds)
+            var targetsToken = json["targets"];
+            if (targetsToken != null && targetsToken.Type != JTokenType.Null)
             {
-                targets.Cost.Add((ITarget)ctx.Recorder.GetObject(id));
+                return new ChosenTargets(Targets.ReadJson((JObject)targetsToken, ctx));
             }
-
-            foreach (var id in effectTargetsIds)
-            {
-                targets.Effect.Add((ITarget)ctx.Recorder.GetObject(id));
-            }
-
-            return new ChosenTargets(targets);
+            return new ChosenTargets(new Targets());
         }
     }
 }

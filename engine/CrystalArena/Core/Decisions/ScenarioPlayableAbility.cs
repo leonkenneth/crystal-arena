@@ -1,15 +1,10 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class ScenarioPlayableAbility : PlayableAbility
     {
         public ScenarioPlayableAbility() { }
-
-        protected ScenarioPlayableAbility(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
 
         public override void Play()
         {
@@ -30,6 +25,25 @@
             }
 
             Card.Controller.AddManaToManaPool(manaCost);
+        }
+
+        public new void WriteJson(JObject json, SerializationContext ctx)
+        {
+            json["card"] = Card.Id;
+            json["index"] = Index;
+            var paramsJson = new JObject();
+            ActivationParameters.WriteJson(paramsJson, ctx);
+            json["parameters"] = paramsJson;
+        }
+
+        public static new ScenarioPlayableAbility ReadJson(JObject json, SerializationContext ctx)
+        {
+            var ability = new ScenarioPlayableAbility();
+            ability.Card = (Card)ctx.Recorder.GetObject(json["card"]!.Value<int>());
+            ability.Index = json["index"]!.Value<int>();
+            var paramsJson = (JObject)json["parameters"]!;
+            ability.ActivationParameters = ActivationParameters.ReadJson(paramsJson, ctx);
+            return ability;
         }
     }
 }

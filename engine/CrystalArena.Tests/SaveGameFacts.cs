@@ -16,7 +16,7 @@
             );
 
             var game = new Game(originalP);
-            game.Start(numOfTurns: 0);
+            game.Start(numOfTurns: 5);
             var savedGame = game.Save();
 
             var p = GameParameters.Load(

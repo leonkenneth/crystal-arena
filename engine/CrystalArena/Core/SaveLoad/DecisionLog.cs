@@ -34,7 +34,8 @@ namespace CrystalArena
             _currentIndex++;
         }
 
-        public T LoadResult<T>() where T : DecisionResult
+        public T LoadResult<T>()
+            where T : DecisionResult
         {
             if (_currentIndex >= _savedDecisions.Count)
                 throw new ArgumentException("There are no saved decisions left.");

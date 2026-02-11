@@ -1,13 +1,9 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
+    [Copyable]
     public class ChosenBlocker : DecisionResult
     {
         public static readonly ChosenBlocker None = new();
@@ -20,41 +16,20 @@
             Blocker = card;
         }
 
-        private ChosenBlocker(SerializationInfo info, StreamingContext context)
-        {
-            var ctx = (SerializationContext)context.Context;
-
-            var cardId = (int?)info.GetValue("card", typeof(int?));
-
-            if (cardId.HasValue)
-            {
-                Blocker = (Card)ctx.Recorder.GetObject(cardId.Value);
-            }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            var cardId = Blocker?.Id;
-
-            info.AddValue("card", cardId);
-        }
-
         public override string TypeName => nameof(ChosenBlocker);
 
-        public override void Serialize(JsonFormatter.ISerializationInfo info)
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            var cardId = Blocker?.Id;
-            info.AddValue("card", cardId);
+            json["card"] = Blocker?.Id;
         }
 
-        internal static ChosenBlocker FromObjectData(JsonFormatter.ISerializationInfo info)
+        internal static new ChosenBlocker ReadJson(JObject json, SerializationContext ctx)
         {
-            var ctx = info.Context;
-            var cardId = info.GetNullableInt32("card");
-
-            if (cardId.HasValue)
+            var cardToken = json["card"];
+            if (cardToken != null && cardToken.Type != JTokenType.Null)
             {
-                var card = (Card)ctx.Recorder.GetObject(cardId.Value);
+                var cardId = cardToken.Value<int>();
+                var card = (Card)ctx.Recorder.GetObject(cardId);
                 return new ChosenBlocker(card);
             }
 
