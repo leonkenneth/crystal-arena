@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CrystalArena.Decisions;
 using DynamicData;
+using Newtonsoft.Json.Linq;
 
 namespace CrystalArena
 {
@@ -12,7 +13,7 @@ namespace CrystalArena
         private readonly Game _game;
         private readonly IdentityManager _identityManager;
 
-        public GameRecorder(Game game, List<string>? savedDecisions = null)
+        public GameRecorder(Game game, List<JObject>? savedDecisions = null)
         {
             _game = game;
             _identityManager = new IdentityManager();
@@ -74,7 +75,7 @@ namespace CrystalArena
                     Deck = player2.Deck,
                 },
                 RandomSeed = _game.Random.Seed,
-                Decisions = new DecisionLog(_game, new List<string>(_decisionLog.SavedDecisions)),
+                Decisions = _decisionLog.SavedDecisions,
                 StateCount = _game.Turn.StateCount,
             };
 

@@ -58,7 +58,7 @@ namespace CrystalArena
             if (p.IsSavedGame)
             {
                 Random = new RandomGenerator(p.SavedGame.RandomSeed);
-                Recorder = new GameRecorder(this, p.SavedGame.Decisions.SavedDecisions);
+                Recorder = new GameRecorder(this, p.SavedGame.Decisions);
             }
             else
             {
@@ -70,8 +70,6 @@ namespace CrystalArena
 
             if (p.IsSavedGame)
             {
-                p.SavedGame.Decisions.ResetIndex();
-
                 Player looser = null;
 
                 if (p.Looser != null)

@@ -1,26 +1,27 @@
 using System;
 using System.Collections.Generic;
 using CrystalArena.Decisions;
+using Newtonsoft.Json.Linq;
 
 namespace CrystalArena
 {
     public class DecisionLog
     {
-        private List<string> _savedDecisions = new List<string>();
+        private List<JObject> _savedDecisions = new List<JObject>();
         private readonly SerializationContext? _context;
         private int _currentIndex = 0;
         private readonly JsonFormatter _serializer;
 
-        public DecisionLog(Game game, List<string>? savedDecisions)
+        public DecisionLog(Game game, List<JObject>? savedDecisions)
         {
-            _savedDecisions = savedDecisions ?? new List<string>();
+            _savedDecisions = savedDecisions ?? new List<JObject>();
             _context = new SerializationContext { Game = game };
             _serializer = new JsonFormatter(_context);
         }
 
         public bool IsAtTheEnd => _currentIndex == _savedDecisions.Count;
 
-        public List<string>? SavedDecisions => _savedDecisions;
+        public List<JObject>? SavedDecisions => _savedDecisions;
 
         public void SaveResult(DecisionResult result)
         {

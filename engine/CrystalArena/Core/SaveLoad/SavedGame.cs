@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -6,7 +7,7 @@ namespace CrystalArena
 {
     public class SavedGame
     {
-        public DecisionLog Decisions;
+        public List<JObject> Decisions;
         public PlayerParameters Player1;
         public PlayerParameters Player2;
         public int RandomSeed;
@@ -19,11 +20,11 @@ namespace CrystalArena
             json["stateCount"] = StateCount;
             json["player1"] = JObject.FromObject(Player1);
             json["player2"] = JObject.FromObject(Player2);
-            json["decisions"] = new JArray(Decisions.SavedDecisions.Select(d => JObject.Parse(d)));
+            json["decisions"] = new JArray(Decisions);
             return json;
         }
 
-        public static SavedGame FromJson(JObject json, Game game)
+        public static SavedGame FromJson(JObject json)
         {
             var savedGame = new SavedGame();
             savedGame.RandomSeed = json["randomSeed"]!.Value<int>();
@@ -32,8 +33,7 @@ namespace CrystalArena
             savedGame.Player2 = json["player2"]!.ToObject<PlayerParameters>()!;
 
             var decisionsArray = (JArray)json["decisions"]!;
-            var decisionStrings = decisionsArray.Select(d => d.ToString(Formatting.None)).ToList();
-            savedGame.Decisions = new DecisionLog(game, decisionStrings);
+            savedGame.Decisions = decisionsArray.Select(a => (JObject)a).ToList();
 
             return savedGame;
         }

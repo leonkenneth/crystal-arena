@@ -14,17 +14,16 @@ public class JsonFormatter
         _context = context;
     }
 
-    public string Serialize(DecisionResult result)
+    public JObject Serialize(DecisionResult result)
     {
         var json = new JObject();
         json["$type"] = result.TypeName;
         result.WriteJson(json, _context);
-        return json.ToString(Newtonsoft.Json.Formatting.None);
+        return json;
     }
 
-    public DecisionResult Deserialize(string json)
+    public DecisionResult Deserialize(JObject jsonObject)
     {
-        var jsonObject = JObject.Parse(json);
         return DecisionResult.ReadJson(jsonObject, _context);
     }
 
