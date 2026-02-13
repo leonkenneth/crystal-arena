@@ -1,4 +1,4 @@
-﻿namespace CrystalArena
+namespace CrystalArena
 {
     using System;
 

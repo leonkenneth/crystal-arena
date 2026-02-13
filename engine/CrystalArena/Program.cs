@@ -89,6 +89,16 @@ sealed class Program
                 return ui.Shell.ToJson();
             }
         );
+        app.MapPost(
+            "/games/{id}/save",
+            (string id) =>
+            {
+                var ui = GameRepository.ResolveUi(id);
+                var game = ui.Match.Game;
+                var save = game.Save();
+                return save.ToJson().ToString();
+            }
+        );
         app.MapGet(
             "/games/{gameId}/callback/{id}/{result}",
             (string gameId, string id, string result) =>

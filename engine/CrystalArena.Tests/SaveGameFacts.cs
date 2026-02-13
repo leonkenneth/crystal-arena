@@ -2,6 +2,7 @@
 {
     using AI;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
     using Xunit;
 
     public class SaveGameFacts : Scenario
@@ -16,7 +17,7 @@
             );
 
             var game = new Game(originalP);
-            game.Start(numOfTurns: 5);
+            game.Start(numOfTurns: 7);
             var savedGame = game.Save();
 
             var p = GameParameters.Load(
@@ -38,6 +39,32 @@
             game1.Players.Searching = game1.Players.Player1;
 
             Assert.Equal(game.CalculateHash(), game1.CalculateHash());
+        }
+
+        [Fact]
+        public void ToJson()
+        {
+            var game = SimulateGame();
+            var savedGame = game.Save();
+            var json = savedGame.ToJson();
+
+            Assert.True(json.ContainsKey("randomSeed"));
+            Assert.Equal(savedGame.RandomSeed, json["randomSeed"]!.Value<int>());
+
+            Assert.True(json.ContainsKey("stateCount"));
+            Assert.Equal(savedGame.StateCount, json["stateCount"]!.Value<int>());
+
+            Assert.True(json.ContainsKey("player1"));
+            var p1 = (JObject)json["player1"]!;
+            Assert.Equal("Player1", p1["Name"]!.Value<string>());
+
+            Assert.True(json.ContainsKey("player2"));
+            var p2 = (JObject)json["player2"]!;
+            Assert.Equal("Player2", p2["Name"]!.Value<string>());
+
+            Assert.True(json.ContainsKey("decisions"));
+            var decisions = (JArray)json["decisions"]!;
+            Assert.All(decisions, d => Assert.IsType<JObject>(d));
         }
 
         private Game SimulateGame()
