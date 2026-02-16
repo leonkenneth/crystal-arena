@@ -7,6 +7,7 @@
     using Events;
     using Infrastructure;
     using Modifiers;
+    using Newtonsoft.Json.Linq;
 
     public class Player : GameObject, ITarget, IDamageable, IHasLife, IModifiable
     {
@@ -318,6 +319,25 @@
                 _backupLimit.Value.GetValueOrDefault(),
                 _backupsPlayedCount.Value
             );
+        }
+
+        public JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["name"] = Name;
+            json["life"] = Life;
+            json["hasPriority"] = HasPriority;
+            json["isActive"] = IsActive;
+            json["battlefield"] = _battlefield.DebugCalculateHash(calc);
+            json["breakZone"] = _breakZone.DebugCalculateHash(calc);
+            json["library"] = _library.DebugCalculateHash(calc);
+            json["hand"] = _hand.DebugCalculateHash(calc);
+            json["removedFromPlay"] = _removedFromPlay.DebugCalculateHash(calc);
+            json["damageZone"] = _damageZone.DebugCalculateHash(calc);
+            json["backupLimit"] = _backupLimit.Value.GetValueOrDefault();
+            json["backupsPlayedCount"] = _backupsPlayedCount.Value;
+            return json;
         }
 
         public int CalculatePreventedReceivedDamageAmount(
