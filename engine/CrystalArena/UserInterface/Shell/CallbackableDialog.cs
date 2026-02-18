@@ -1,7 +1,7 @@
 using System;
 using CrystalArena.Infrastructure;
 using Lucene.Net.QueryParsers.Flexible.Core;
-using MsBox.Avalonia.Enums;
+using CrystalArena.UserInterface.MessageBox;
 
 namespace CrystalArena.UserInterface.Shell;
 

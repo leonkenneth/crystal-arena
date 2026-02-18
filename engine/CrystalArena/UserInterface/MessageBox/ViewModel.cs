@@ -1,6 +1,4 @@
-﻿using MsBox.Avalonia.Enums;
-
-namespace CrystalArena.UserInterface.MessageBox
+﻿namespace CrystalArena.UserInterface.MessageBox
 {
     using System;
     using System.Windows;

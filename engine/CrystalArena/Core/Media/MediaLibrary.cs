@@ -1,5 +1,3 @@
-﻿using Avalonia;
-
 namespace CrystalArena.Media
 {
     using System;
@@ -7,7 +5,6 @@ namespace CrystalArena.Media
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Avalonia.Media.Imaging;
     using Infrastructure;
 
     public static class MediaMainDeck
@@ -33,63 +30,27 @@ namespace CrystalArena.Media
             }
         }
 
-        private static readonly Dictionary<string, Bitmap> Clipart =
-            new Dictionary<string, Bitmap>();
-        private static readonly Dictionary<string, Bitmap> CardImages =
-            new Dictionary<string, Bitmap>();
+        private static readonly Dictionary<string, object?> Clipart =
+            new Dictionary<string, object?>();
+        private static readonly Dictionary<string, object?> CardImages =
+            new Dictionary<string, object?>();
         private static readonly Dictionary<string, MagicSet> Sets =
             new Dictionary<string, MagicSet>();
-        private static readonly List<Bitmap> Avatars = new List<Bitmap>();
+        private static readonly List<object?> Avatars = new List<object?>();
         private static readonly List<string> PlayerNames = new List<string>();
 
-        public static Bitmap MissingImage
+        public static object? MissingImage
         {
-            get { return SingleRedPixelBitmap(); }
+            get { return null; }
         }
 
-        public static Bitmap SingleRedPixelBitmap()
+        public static object? SingleRedPixelBitmap()
         {
-            // Create a 1x1 array of bytes representing a single fire pixel (RGBA format).
-            byte[] pixelData = { 255, 0, 0, 255 }; // Fire, Wind, Water, Alpha (opaque fire)
-
-            // Create a new Avalonia bitmap with width 1, height 1, and PixelFormat as Bgra8888
-            using (var stream = new MemoryStream())
-            {
-                // Create a WriteableBitmap with 1x1 dimensions
-                using (
-                    var bitmap = new WriteableBitmap(
-                        new PixelSize(1, 1),
-                        new Vector(96, 96),
-                        Avalonia.Platform.PixelFormat.Bgra8888
-                    )
-                )
-                {
-                    // Lock the bitmap for writing
-                    using (var frameBuffer = bitmap.Lock())
-                    {
-                        IntPtr bufferPtr = frameBuffer.Address;
-
-                        // Write the fire pixel (Bgra8888: Water, Wind, Fire, Alpha)
-                        unsafe
-                        {
-                            // Assuming little-endian, this corresponds to a fully opaque fire pixel
-                            *((uint*)bufferPtr) = 0xFFFF0000; // AARRGGBB: Alpha(FF), Fire(FF), Wind(00), Water(00)
-                        }
-                    }
-
-                    // Save the WriteableBitmap into the memory stream
-                    bitmap.Save(stream);
-                }
-
-                // Reset stream position to 0
-                stream.Position = 0;
-
-                // Return a new Bitmap from the stream
-                return new Bitmap(stream);
-            }
+            // Stub - images are served by image_proxy
+            return null;
         }
 
-        public static void LoadAll(ProgressIndicator showProgress = null)
+        public static void LoadAll(ProgressIndicator? showProgress = null)
         {
             showProgress = showProgress ?? delegate { };
             var totalBytes = Folders.GetSize();
@@ -115,7 +76,11 @@ namespace CrystalArena.Media
 
         private static void LoadPlayerNames()
         {
-            var rows = File.ReadAllLines(Path.Combine(BasePath, "player-names.txt"));
+            var path = Path.Combine(BasePath, "player-names.txt");
+            if (!File.Exists(path))
+                return;
+
+            var rows = File.ReadAllLines(path);
 
             foreach (var row in rows)
             {
@@ -141,7 +106,7 @@ namespace CrystalArena.Media
             }
         }
 
-        public static void LoadSets(Action<long> showProgress = null)
+        public static void LoadSets(Action<long>? showProgress = null)
         {
             showProgress = showProgress ?? delegate { };
 
@@ -163,7 +128,8 @@ namespace CrystalArena.Media
                 Folders.Avatars,
                 r =>
                 {
-                    Avatars.Add(CreateBitmap(r.Content));
+                    // Stub - images are served by image_proxy
+                    Avatars.Add(null);
                     showProgress(r.Content.Length);
                 }
             );
@@ -175,7 +141,8 @@ namespace CrystalArena.Media
                 Folders.Clipart,
                 r =>
                 {
-                    Clipart.Add(r.Name.ToLowerInvariant(), CreateBitmap(r.Content));
+                    // Stub - images are served by image_proxy
+                    Clipart.Add(r.Name.ToLowerInvariant(), null);
                     showProgress(r.Content.Length);
                 }
             );
@@ -187,16 +154,11 @@ namespace CrystalArena.Media
                 Folders.Cards,
                 r =>
                 {
-                    CardImages.Add(r.Name.ToLowerInvariant(), CreateBitmap(r.Content));
+                    // Stub - images are served by image_proxy
+                    CardImages.Add(r.Name.ToLowerInvariant(), null);
                     showProgress(r.Content.Length);
                 }
             );
-        }
-
-        private static Bitmap CreateBitmap(byte[] content)
-        {
-            var image = new Bitmap(new MemoryStream(content));
-            return image;
         }
 
         public static List<string> GetPlayerUnitNames()
@@ -204,7 +166,7 @@ namespace CrystalArena.Media
             return PlayerNames;
         }
 
-        public static Bitmap GetCardImage(string name)
+        public static object? GetCardImage(string name)
         {
             var filename = name.ToLowerInvariant() + ".jpg";
 
@@ -214,7 +176,7 @@ namespace CrystalArena.Media
             return MissingImage;
         }
 
-        public static Bitmap GetAvatar(int id)
+        public static object? GetAvatar(int id)
         {
             if (Avatars.Count == 0)
                 return MissingImage;
@@ -239,15 +201,13 @@ namespace CrystalArena.Media
             return Sets[name.ToLowerInvariant()];
         }
 
-        public static Bitmap GetImage(string filename)
+        public static object? GetImage(string filename)
         {
-            filename = filename.ToLowerInvariant();
-
-            return new Bitmap(filename);
-            ;
+            // Stub - images are served by image_proxy
+            return null;
         }
 
-        public static IEnumerable<Bitmap> GetImages(Func<string, bool> filter)
+        public static IEnumerable<object?> GetImages(Func<string, bool> filter)
         {
             foreach (var keyValuePair in Clipart)
             {
@@ -256,7 +216,7 @@ namespace CrystalArena.Media
             }
         }
 
-        public static object GetSetImage(string set, Rarity? rarity)
+        public static object? GetSetImage(string set, Rarity? rarity)
         {
             if (String.IsNullOrEmpty(set) || rarity == null)
             {

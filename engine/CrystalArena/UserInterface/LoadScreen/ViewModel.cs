@@ -1,4 +1,4 @@
-﻿using MsBox.Avalonia.Enums;
+﻿using CrystalArena.UserInterface.MessageBox;
 
 namespace CrystalArena.UserInterface.LoadScreen
 {
