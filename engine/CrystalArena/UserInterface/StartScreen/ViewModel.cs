@@ -138,15 +138,12 @@
 
             Shell.ChangeScreen(this);
         }
-        
+
         public void ResumeGame(SavedGame savedGame)
         {
             try
             {
-                var savedMatch = new SavedMatch
-                {
-                    SavedGame = savedGame
-                };
+                var savedMatch = new SavedMatch { SavedGame = savedGame };
                 var mp = MatchParameters.Load(savedMatch, false);
 
                 Ui.Match = new Match(Ui, mp);

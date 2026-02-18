@@ -42,11 +42,11 @@
                 var debug1 = game.DebugCalculateHash();
                 var debug2 = game1.DebugCalculateHash();
                 Assert.Fail(
-                    $"Hash mismatch.\nGame 1:\n{debug1.ToString(Formatting.Indented)}\n" +
-                    $"Game 2:\n{debug2.ToString(Formatting.Indented)}\n\n" +
-                    "---\n\n" +
-                    $"Saved Game 1:\n{savedGame1.ToString(Formatting.Indented)}\n"+
-                    $"Saved Game 2:\n{savedGame2.ToString(Formatting.Indented)}\n"
+                    $"Hash mismatch.\nGame 1:\n{debug1.ToString(Formatting.Indented)}\n"
+                        + $"Game 2:\n{debug2.ToString(Formatting.Indented)}\n\n"
+                        + "---\n\n"
+                        + $"Saved Game 1:\n{savedGame1.ToString(Formatting.Indented)}\n"
+                        + $"Saved Game 2:\n{savedGame2.ToString(Formatting.Indented)}\n"
                 );
             }
         }
