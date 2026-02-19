@@ -4,7 +4,6 @@ namespace CrystalArena.UserInterface.LoadScreen
 {
     using System.Threading.Tasks;
     using Infrastructure;
-    using Media;
 
     public class ViewModel : ViewModelBase
     {
@@ -22,42 +21,8 @@ namespace CrystalArena.UserInterface.LoadScreen
 
         public override void Initialize()
         {
-            Task.Factory.StartNew(() => MediaMainDeck.LoadAll(ShowProgress))
-                .ContinueWith(
-                    tsk =>
-                    {
-                        if (tsk.IsFaulted)
-                        {
-                            var message = tsk.Exception.GetBaseException().Message;
-
-                            Ui.Shell.ShowMessageBox(
-                                message,
-                                ButtonEnum.Ok,
-                                DialogType.Large,
-                                "Initialization error"
-                            );
-
-                            LogFile.Error(message);
-
-                            //Application.Current.Shutdown();
-                            return;
-                        }
-
-                        var startScreen = ViewModels.StartScreen.Create();
-                        Shell.ChangeScreen(startScreen);
-                    },
-                    TaskScheduler.FromCurrentSynchronizationContext()
-                );
-        }
-
-        private void ShowProgress(long current, long total)
-        {
-            var completed = current * 100 / total;
-
-            if (completed > Completed)
-            {
-                Completed = completed;
-            }
+            var startScreen = ViewModels.StartScreen.Create();
+            Shell.ChangeScreen(startScreen);
         }
 
         public interface IFactory

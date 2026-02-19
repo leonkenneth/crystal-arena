@@ -88,16 +88,6 @@ namespace CrystalArena.UserInterface
 
         protected void SaveGame()
         {
-            if (Match == null)
-                return;
-
-            var saveFileHeader = new SaveFileHeader();
-            object gameData;
-
-            saveFileHeader.Description = string.Format("Single match, {0}", Match.Description);
-            gameData = Match.Save();
-
-            SavedGames.Write(saveFileHeader, gameData);
         }
 
         protected void HandleException(Exception ex)

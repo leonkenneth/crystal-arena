@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Media;
 
     public class CardText : IEnumerable<Token>
     {
@@ -304,7 +303,7 @@
 
         public object? Image
         {
-            get { return MediaMainDeck.GetImage(Value + ".png"); }
+            get { return null; }
         }
     }
 }

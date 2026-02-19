@@ -74,14 +74,6 @@
 
         private void LoadDecks()
         {
-            var decks = DeckLibrary.ReadDecks();
-
-            foreach (var deck in decks)
-            {
-                var deckVm = CreateReadonlyDeckVm(deck);
-                _decks.Add(deckVm);
-            }
-
             Selected = _decks.FirstOrDefault();
         }
 

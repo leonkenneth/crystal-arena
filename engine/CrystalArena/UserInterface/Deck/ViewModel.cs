@@ -194,14 +194,12 @@
 
         public virtual void Save()
         {
-            DeckLibrary.Write(_deck);
             IsSaved = true;
         }
 
         public virtual void SaveAs(string name)
         {
             _deck.Name = name;
-            DeckLibrary.Write(_deck);
 
             IsSaved = true;
             IsNew = false;
