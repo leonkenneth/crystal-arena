@@ -6,7 +6,6 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
   </PropertyGroup>
 

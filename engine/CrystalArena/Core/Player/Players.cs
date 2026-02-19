@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
     public class Players : GameObject, IEnumerable<Player>, IHashable
     {
@@ -118,6 +119,17 @@
                 calc.Calculate(Searching),
                 calc.Calculate(_extraTurns)
             );
+        }
+
+        public JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["player1"] = Player1.DebugCalculateHash(calc);
+            json["player2"] = Player2.DebugCalculateHash(calc);
+            json["searching"] = Searching != null ? calc.Calculate(Searching) : 0;
+            json["extraTurns"] = calc.Calculate(_extraTurns);
+            return json;
         }
 
         public void Initialize(Game game)

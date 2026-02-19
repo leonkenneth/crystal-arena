@@ -2,6 +2,8 @@
 {
     using AI;
     using Infrastructure;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Xunit;
 
     public class SaveGameFacts : Scenario
@@ -30,7 +32,49 @@
             game.Players.Searching = game.Players.Player1;
             game1.Players.Searching = game1.Players.Player1;
 
-            Assert.Equal(game.CalculateHash(), game1.CalculateHash());
+            var hash1 = game.CalculateHash();
+            var hash2 = game1.CalculateHash();
+
+            if (hash1 != hash2)
+            {
+                var savedGame1 = game.Save().ToJson();
+                var savedGame2 = game1.Save().ToJson();
+                var debug1 = game.DebugCalculateHash();
+                var debug2 = game1.DebugCalculateHash();
+                Assert.Fail(
+                    $"Hash mismatch.\nGame 1:\n{debug1.ToString(Formatting.Indented)}\n"
+                        + $"Game 2:\n{debug2.ToString(Formatting.Indented)}\n\n"
+                        + "---\n\n"
+                        + $"Saved Game 1:\n{savedGame1.ToString(Formatting.Indented)}\n"
+                        + $"Saved Game 2:\n{savedGame2.ToString(Formatting.Indented)}\n"
+                );
+            }
+        }
+
+        [Fact]
+        public void ToJson()
+        {
+            var game = SimulateGame();
+            var savedGame = game.Save();
+            var json = savedGame.ToJson();
+
+            Assert.True(json.ContainsKey("randomSeed"));
+            Assert.Equal(savedGame.RandomSeed, json["randomSeed"]!.Value<int>());
+
+            Assert.True(json.ContainsKey("stateCount"));
+            Assert.Equal(savedGame.StateCount, json["stateCount"]!.Value<int>());
+
+            Assert.True(json.ContainsKey("player1"));
+            var p1 = (JObject)json["player1"]!;
+            Assert.Equal("Player1", p1["Name"]!.Value<string>());
+
+            Assert.True(json.ContainsKey("player2"));
+            var p2 = (JObject)json["player2"]!;
+            Assert.Equal("Player2", p2["Name"]!.Value<string>());
+
+            Assert.True(json.ContainsKey("decisions"));
+            var decisions = (JArray)json["decisions"]!;
+            Assert.All(decisions, d => Assert.IsType<JObject>(d));
         }
 
         private Game SimulateGame()

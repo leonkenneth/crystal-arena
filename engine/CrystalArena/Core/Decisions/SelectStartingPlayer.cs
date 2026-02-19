@@ -50,7 +50,7 @@ namespace CrystalArena.Decisions
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenPlayer)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenPlayer>();
             }
         }
 

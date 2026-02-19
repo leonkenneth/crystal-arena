@@ -1,8 +1,5 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-
-    [Serializable]
     public class Pass : IPlayable
     {
         public bool WasPriorityPassed

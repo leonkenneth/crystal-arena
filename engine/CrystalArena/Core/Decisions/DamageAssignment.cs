@@ -1,13 +1,11 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
     using CrystalArena.Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class DamageAssignment : ISerializable
+    [Copyable]
+    public class DamageAssignment : DecisionResult
     {
         private readonly Dictionary<Attacker, int> _attackerDamageAssigments =
             new Dictionary<Attacker, int>();
@@ -15,49 +13,39 @@
 
         public DamageAssignment() { }
 
-        protected DamageAssignment(SerializationInfo info, StreamingContext context)
-        {
-            var ctx = (SerializationContext)context.Context;
-
-            var forwardDamageAssignments =
-                (List<ForwardDamageAssignment>)
-                    info.GetValue(
-                        "forwardDamageAssignments",
-                        typeof(List<ForwardDamageAssignment>)
-                    );
-
-            foreach (var forwardDamageAssignment in forwardDamageAssignments)
-            {
-                var attacker = ctx.Game.Combat.FindAttacker(
-                    (Card)ctx.Recorder.GetObject(forwardDamageAssignment.CardId)
-                );
-                _attackerDamageAssigments.Add(attacker, forwardDamageAssignment.Damage);
-            }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            var forwardDamageAssignments = _attackerDamageAssigments
-                .Select(x => new ForwardDamageAssignment()
-                {
-                    CardId = x.Key.Card.Id,
-                    Damage = x.Value,
-                })
-                .ToList();
-
-            info.AddValue("forwardDamageAssignments", forwardDamageAssignments);
-        }
-
         public void Assign(Attacker attacker, int damage)
         {
             _attackerDamageAssigments[attacker] = damage;
         }
 
-        [Serializable]
-        public class ForwardDamageAssignment
+        public override string TypeName => nameof(DamageAssignment);
+
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            public int CardId;
-            public int Damage;
+            var array = new JArray();
+            foreach (var kvp in _attackerDamageAssigments)
+            {
+                var item = new JObject();
+                item["cardId"] = kvp.Key.Card.Id;
+                item["damage"] = kvp.Value;
+                array.Add(item);
+            }
+            json["forwardDamageAssignments"] = array;
+        }
+
+        internal static new DamageAssignment ReadJson(JObject json, SerializationContext ctx)
+        {
+            var result = new DamageAssignment();
+            var assignments = (JArray)json["forwardDamageAssignments"]!;
+
+            foreach (var item in assignments)
+            {
+                var cardId = item["cardId"]!.Value<int>();
+                var damage = item["damage"]!.Value<int>();
+                var attacker = ctx.Game.Combat.FindAttacker((Card)ctx.Recorder.GetObject(cardId));
+                result._attackerDamageAssigments.Add(attacker, damage);
+            }
+            return result;
         }
     }
 }

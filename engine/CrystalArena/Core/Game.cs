@@ -10,6 +10,7 @@ namespace CrystalArena
     using Decisions;
     using Infrastructure;
     using Modifiers;
+    using Newtonsoft.Json.Linq;
 
     [Copyable]
     public class Game : IModifiable
@@ -70,8 +71,6 @@ namespace CrystalArena
 
             if (p.IsSavedGame)
             {
-                p.SavedGame.Decisions.Position = 0;
-
                 Player looser = null;
 
                 if (p.Looser != null)
@@ -219,6 +218,32 @@ namespace CrystalArena
                 calc.Calculate(_damageRedirections),
                 calc.Calculate(_decisionQueue)
             );
+        }
+
+        public JObject DebugCalculateHash()
+        {
+            var calc = new HashCalculator();
+
+            var hash = HashCalculator.Combine(
+                calc.Calculate(Players),
+                calc.Calculate(Stack),
+                calc.Calculate(Turn),
+                calc.Calculate(Combat),
+                calc.Calculate(_damagePreventions),
+                calc.Calculate(_damageRedirections),
+                calc.Calculate(_decisionQueue)
+            );
+
+            var json = new JObject();
+            json["hash"] = hash;
+            json["players"] = Players.DebugCalculateHash(calc);
+            json["stack"] = calc.Calculate(Stack);
+            json["turn"] = Turn.DebugCalculateHash(calc);
+            json["combat"] = calc.Calculate(Combat);
+            json["damagePreventions"] = calc.Calculate(_damagePreventions);
+            json["damageRedirections"] = calc.Calculate(_damageRedirections);
+            json["decisionQueue"] = calc.Calculate(_decisionQueue);
+            return json;
         }
 
         public void RollbackToSnapshot(Snapshot snaphost)

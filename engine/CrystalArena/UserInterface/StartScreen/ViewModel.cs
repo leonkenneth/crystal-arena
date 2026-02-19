@@ -139,6 +139,26 @@
             Shell.ChangeScreen(this);
         }
 
+        public void ResumeGame(SavedGame savedGame)
+        {
+            try
+            {
+                var savedMatch = new SavedMatch { SavedGame = savedGame };
+                var mp = MatchParameters.Load(savedMatch, false);
+
+                Ui.Match = new Match(Ui, mp);
+                var player1Controller = PlayerType.Human;
+                var player2Controller = PlayerType.Machine;
+                Ui.Match.Start(player1Controller, player2Controller);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+            }
+
+            Shell.ChangeScreen(this);
+        }
+
         private Deck[] ChooseRandomDecks()
         {
             return new[] { DeckLibrary.RandomDeck(), DeckLibrary.RandomDeck() };

@@ -1,14 +1,13 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class ChosenAttackers : IEnumerable<ChosenAttackers.Attacker>
+    [Copyable]
+    public class ChosenAttackers : DecisionResult, IEnumerable<ChosenAttackers.Attacker>
     {
         private readonly List<Attacker> _attackers = new List<Attacker>();
 
@@ -53,8 +52,33 @@
             }
         }
 
-        [Copyable, Serializable]
-        public class Attacker : ISerializable
+        public override string TypeName => nameof(ChosenAttackers);
+
+        public override void WriteJson(JObject json, SerializationContext ctx)
+        {
+            var array = new JArray();
+            foreach (var attacker in _attackers)
+            {
+                var attackerJson = new JObject();
+                attacker.WriteJson(attackerJson);
+                array.Add(attackerJson);
+            }
+            json["attackers"] = array;
+        }
+
+        internal static new ChosenAttackers ReadJson(JObject json, SerializationContext ctx)
+        {
+            var result = new ChosenAttackers();
+            var attackersList = (JArray)json["attackers"]!;
+            foreach (var item in attackersList)
+            {
+                result._attackers.Add(Attacker.ReadJson((JObject)item, ctx));
+            }
+            return result;
+        }
+
+        [Copyable]
+        public class Attacker
         {
             public readonly Card Card;
             public readonly Card Planeswalker;
@@ -67,28 +91,25 @@
                 Planeswalker = planeswalker;
             }
 
-            private Attacker(SerializationInfo info, StreamingContext context)
+            public void WriteJson(JObject json)
             {
-                var ctx = (SerializationContext)context.Context;
-
-                var cardId = info.GetInt32("card");
-                var planesalkerId = (int?)info.GetValue("planeswalker", typeof(int?));
-
-                Card = (Card)ctx.Recorder.GetObject(cardId);
-
-                if (planesalkerId.HasValue)
-                {
-                    Planeswalker = (Card)ctx.Recorder.GetObject(planesalkerId.Value);
-                }
+                json["card"] = Card.Id;
+                json["planeswalker"] = Planeswalker?.Id;
             }
 
-            public void GetObjectData(SerializationInfo info, StreamingContext context)
+            public static Attacker ReadJson(JObject json, SerializationContext ctx)
             {
-                info.AddValue("card", Card.Id);
+                var cardId = json["card"]!.Value<int>();
+                var planeswalkerId =
+                    json["planeswalker"]?.Type != JTokenType.Null
+                        ? json["planeswalker"]?.Value<int>()
+                        : null;
 
-                var planeswalkerId = Planeswalker == null ? (int?)null : Planeswalker.Id;
-
-                info.AddValue("planeswalker", planeswalkerId);
+                var card = (Card)ctx.Recorder.GetObject(cardId);
+                var planeswalker = planeswalkerId.HasValue
+                    ? (Card)ctx.Recorder.GetObject(planeswalkerId.Value)
+                    : null;
+                return new Attacker(card, planeswalker);
             }
         }
     }

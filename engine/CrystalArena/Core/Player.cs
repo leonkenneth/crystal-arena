@@ -7,6 +7,7 @@
     using Events;
     using Infrastructure;
     using Modifiers;
+    using Newtonsoft.Json.Linq;
 
     public class Player : GameObject, ITarget, IDamageable, IHasLife, IModifiable
     {
@@ -31,6 +32,7 @@
             new TrackableList<IPlayerModifier>();
         private readonly TrackableList<Emblem> _emblems = new TrackableList<Emblem>();
         private readonly SkipSteps _skipSteps = new SkipSteps();
+        private int _isActiveChangeCalls = 0;
 
         public Player(PlayerParameters p, PlayerType controllerType)
         {
@@ -137,8 +139,14 @@
         public virtual bool IsActive
         {
             get { return _isActive.Value; }
-            set { _isActive.Value = value; }
+            set
+            {
+                _isActive.Value = value;
+                _isActiveChangeCalls++;
+            }
         }
+
+        public int IsActiveChangeCalls => _isActiveChangeCalls;
 
         public bool IsHuman
         {
@@ -311,6 +319,25 @@
                 _backupLimit.Value.GetValueOrDefault(),
                 _backupsPlayedCount.Value
             );
+        }
+
+        public JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["name"] = Name;
+            json["life"] = Life;
+            json["hasPriority"] = HasPriority;
+            json["isActive"] = IsActive;
+            json["battlefield"] = _battlefield.DebugCalculateHash(calc);
+            json["breakZone"] = _breakZone.DebugCalculateHash(calc);
+            json["library"] = _library.DebugCalculateHash(calc);
+            json["hand"] = _hand.DebugCalculateHash(calc);
+            json["removedFromPlay"] = _removedFromPlay.DebugCalculateHash(calc);
+            json["damageZone"] = _damageZone.DebugCalculateHash(calc);
+            json["backupLimit"] = _backupLimit.Value.GetValueOrDefault();
+            json["backupsPlayedCount"] = _backupsPlayedCount.Value;
+            return json;
         }
 
         public int CalculatePreventedReceivedDamageAmount(

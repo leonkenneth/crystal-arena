@@ -1,4 +1,9 @@
-﻿namespace CrystalArena
+﻿using System.Collections.Generic;
+using CrystalArena.Decisions;
+using DynamicData;
+using Newtonsoft.Json.Linq;
+
+namespace CrystalArena
 {
     using System.IO;
 
@@ -8,7 +13,7 @@
         private readonly Game _game;
         private readonly IdentityManager _identityManager;
 
-        public GameRecorder(Game game, MemoryStream savedDecisions = null)
+        public GameRecorder(Game game, List<JObject>? savedDecisions = null)
         {
             _game = game;
             _identityManager = new IdentityManager();
@@ -36,7 +41,7 @@
             return _identityManager.GetObject(id);
         }
 
-        public void SaveDecisionResult(object result)
+        public void SaveDecisionResult(DecisionResult result)
         {
             if (_game.Ai.IsSearchInProgress)
                 return;
@@ -44,16 +49,14 @@
             _decisionLog.SaveResult(result);
         }
 
-        public object LoadDecisionResult()
+        public T LoadDecisionResult<T>()
+            where T : DecisionResult
         {
-            return _decisionLog.LoadResult();
+            return _decisionLog.LoadResult<T>();
         }
 
         public SavedGame SaveGame()
         {
-            var decisions = new MemoryStream();
-            _decisionLog.WriteTo(decisions);
-
             var player1 = _game.Players.Player1;
             var player2 = _game.Players.Player2;
 
@@ -72,7 +75,7 @@
                     Deck = player2.Deck,
                 },
                 RandomSeed = _game.Random.Seed,
-                Decisions = decisions,
+                Decisions = _decisionLog.SavedDecisions,
                 StateCount = _game.Turn.StateCount,
             };
 

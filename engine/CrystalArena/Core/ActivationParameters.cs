@@ -1,13 +1,12 @@
-﻿namespace CrystalArena
+namespace CrystalArena
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class ActivationParameters : ISerializable
+    [Copyable]
+    public class ActivationParameters
     {
         public bool PayManaCost = true;
         public int Repeat = 1;
@@ -20,49 +19,45 @@
 
         public ActivationParameters() { }
 
-        protected ActivationParameters(SerializationInfo info, StreamingContext context)
+        public void WriteJson(JObject json, SerializationContext ctx)
         {
-            var ctx = (SerializationContext)context.Context;
+            json["PayManaCost"] = PayManaCost;
+            json["Repeat"] = Repeat;
+            json["SkipStack"] = SkipStack;
+            json["X"] = X;
 
-            Repeat = (int)info.GetValue("Repeat", typeof(int));
-            SkipStack = (bool)info.GetValue("SkipStack", typeof(bool));
-            Targets = (Targets)info.GetValue("Targets", typeof(Targets));
-            X = (int?)info.GetValue("X", typeof(int?));
+            var targetsJson = new JObject();
+            Targets.WriteJson(targetsJson, ctx);
+            json["Targets"] = targetsJson;
 
-            // backward compatibility, convoke, delve
-            try
-            {
-                var convokeTargetsIds =
-                    (List<int>)info.GetValue("convokeTargets", typeof(List<int>));
-                var delveTargetsIds = (List<int>)info.GetValue("delveTargets", typeof(List<int>));
-
-                PayManaCost = (bool)info.GetValue("PayManaCost", typeof(bool));
-                ConvokeTargets.AddRange(
-                    convokeTargetsIds.Select(id => (Card)ctx.Recorder.GetObject(id))
-                );
-                DelveTargets.AddRange(
-                    delveTargetsIds.Select(id => (Card)ctx.Recorder.GetObject(id))
-                );
-            }
-            catch (SerializationException)
-            {
-                // ignore
-            }
+            json["convokeTargets"] = new JArray(ConvokeTargets.Select(x => x.Id));
+            json["delveTargets"] = new JArray(DelveTargets.Select(x => x.Id));
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public static ActivationParameters ReadJson(JObject json, SerializationContext ctx)
         {
-            info.AddValue("PayManaCost", PayManaCost);
-            info.AddValue("Repeat", Repeat);
-            info.AddValue("SkipStack", SkipStack);
-            info.AddValue("Targets", Targets);
-            info.AddValue("X", X);
+            var parameters = new ActivationParameters();
+            parameters.PayManaCost = json["PayManaCost"]!.Value<bool>();
+            parameters.Repeat = json["Repeat"]!.Value<int>();
+            parameters.SkipStack = json["SkipStack"]!.Value<bool>();
 
-            var convokeTargetsIds = ConvokeTargets.Select(x => x.Id).ToList();
-            var delveTargetsIds = DelveTargets.Select(x => x.Id).ToList();
+            var xToken = json["X"];
+            parameters.X =
+                xToken != null && xToken.Type != JTokenType.Null ? xToken.Value<int>() : null;
 
-            info.AddValue("convokeTargets", convokeTargetsIds);
-            info.AddValue("delveTargets", delveTargetsIds);
+            var targetsJson = (JObject)json["Targets"]!;
+            parameters.Targets = Targets.ReadJson(targetsJson, ctx);
+
+            var convokeIds = json["convokeTargets"]!.ToObject<List<int>>()!;
+            var delveIds = json["delveTargets"]!.ToObject<List<int>>()!;
+            parameters.ConvokeTargets.AddRange(
+                convokeIds.Select(id => (Card)ctx.Recorder.GetObject(id))
+            );
+            parameters.DelveTargets.AddRange(
+                delveIds.Select(id => (Card)ctx.Recorder.GetObject(id))
+            );
+
+            return parameters;
         }
     }
 }

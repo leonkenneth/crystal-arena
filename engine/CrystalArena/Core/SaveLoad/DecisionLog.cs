@@ -1,58 +1,56 @@
-﻿namespace CrystalArena
-{
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters;
-    using System.Runtime.Serialization.Formatters.Binary;
+using System;
+using System.Collections.Generic;
+using CrystalArena.Decisions;
+using Newtonsoft.Json.Linq;
 
+namespace CrystalArena
+{
     public class DecisionLog
     {
-        private readonly BinaryFormatter _formatter;
-        private MemoryStream _stream;
+        private List<JObject> _savedDecisions = new List<JObject>();
+        private readonly SerializationContext? _context;
+        private int _currentIndex = 0;
+        private readonly JsonFormatter _serializer;
 
-        public DecisionLog(Game game, MemoryStream savedDecisions)
+        public DecisionLog(Game game, List<JObject>? savedDecisions)
         {
-            _stream = savedDecisions ?? new MemoryStream();
-            _formatter = new BinaryFormatter
-            {
-                AssemblyFormat = FormatterAssemblyStyle.Simple,
-                Context = new StreamingContext(
-                    StreamingContextStates.All,
-                    new SerializationContext { Game = game }
-                ),
-                Binder = new RenameBinder(),
-            };
+            _savedDecisions = savedDecisions ?? new List<JObject>();
+            _context = new SerializationContext { Game = game };
+            _serializer = new JsonFormatter(_context);
         }
 
-        public bool IsAtTheEnd
+        public bool IsAtTheEnd => _currentIndex == _savedDecisions.Count;
+
+        public List<JObject>? SavedDecisions => _savedDecisions;
+
+        public void SaveResult(DecisionResult result)
         {
-            get { return _stream.Position == _stream.Length; }
+            var serializedDecisionResult = _serializer.Serialize(result);
+            _savedDecisions.Add(serializedDecisionResult);
+            _currentIndex++;
         }
 
-        public void SetStream(MemoryStream stream)
+        public T LoadResult<T>()
+            where T : DecisionResult
         {
-            _stream = stream;
-        }
+            if (_currentIndex >= _savedDecisions.Count)
+                throw new ArgumentException("There are no saved decisions left.");
 
-        public void SaveResult(object result)
-        {
-            _formatter.Serialize(_stream, result);
-        }
-
-        public object LoadResult()
-        {
-            return _formatter.Deserialize(_stream);
+            var result = _savedDecisions[_currentIndex];
+            _currentIndex++;
+            var decisionResult = _serializer.Deserialize(result);
+            return (T)decisionResult;
         }
 
         public void DiscardUnloadedResults()
         {
-            _stream.SetLength(_stream.Position);
+            // Truncate savedDecisions to currentIndex size
+            _savedDecisions = _savedDecisions.GetRange(0, _currentIndex);
         }
 
-        public void WriteTo(Stream stream)
+        public void ResetIndex()
         {
-            _stream.Position = 0;
-            _stream.CopyTo(stream);
+            _currentIndex = 0;
         }
     }
 }

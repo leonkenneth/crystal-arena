@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using CrystalArena.Infrastructure;
+    using Newtonsoft.Json.Linq;
 
     [Copyable]
     public abstract class OrderedZone : GameObject, IEnumerable<Card>, IHashable, IZone
@@ -48,6 +49,24 @@
         public virtual int CalculateHash(HashCalculator calc)
         {
             return calc.Calculate(_cards);
+        }
+
+        public virtual JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["zone"] = Name.ToString();
+            json["count"] = Count;
+            var cards = new JArray();
+            foreach (var card in this)
+            {
+                var c = new JObject();
+                c["name"] = card.Name;
+                c["hash"] = calc.Calculate(card);
+                cards.Add(c);
+            }
+            json["cards"] = cards;
+            return json;
         }
 
         public abstract Zone Name { get; }

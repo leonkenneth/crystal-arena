@@ -1,13 +1,11 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
-    public class ChosenCards : IEnumerable<Card>, ISerializable
+    public class ChosenCards : DecisionResult, IEnumerable<Card>
     {
         private readonly List<Card> _cards = new List<Card>();
 
@@ -21,14 +19,6 @@
         public ChosenCards(IEnumerable<Card> cards)
         {
             _cards.AddRange(cards);
-        }
-
-        public ChosenCards(SerializationInfo info, StreamingContext context)
-        {
-            var ctx = (SerializationContext)context.Context;
-            var cardIds = (List<int>)info.GetValue("cards", typeof(List<int>));
-
-            _cards.AddRange(cardIds.Select(x => (Card)ctx.Recorder.GetObject(x)));
         }
 
         public static ChosenCards None
@@ -55,10 +45,18 @@
             return GetEnumerator();
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override string TypeName => nameof(ChosenCards);
+
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            var cardIds = _cards.Select(x => x.Id).ToList();
-            info.AddValue("cards", cardIds);
+            json["cards"] = new JArray(_cards.Select(x => x.Id));
+        }
+
+        internal static new ChosenCards ReadJson(JObject json, SerializationContext ctx)
+        {
+            var cardIds = json["cards"]!.ToObject<List<int>>()!;
+            var cards = cardIds.Select(id => (Card)ctx.Recorder.GetObject(id));
+            return new ChosenCards(cards);
         }
 
         public void Add(Card card)

@@ -1,14 +1,13 @@
-﻿namespace CrystalArena
+namespace CrystalArena
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class Targets : IEnumerable<ITarget>, IHashable, ISerializable
+    [Copyable]
+    public class Targets : IEnumerable<ITarget>, IHashable
     {
         private readonly List<ITarget> _costTargets = new List<ITarget>();
         private readonly List<ITarget> _effectTargets = new List<ITarget>();
@@ -25,20 +24,6 @@
         {
             _costTargets.Add(cost);
             _effectTargets.Add(effect);
-        }
-
-        protected Targets(SerializationInfo info, StreamingContext context)
-        {
-            var ctx = (SerializationContext)context.Context;
-
-            var costTargetsIds = (List<int>)info.GetValue("costTargets", typeof(List<int>));
-            var effectTargetsIds = (List<int>)info.GetValue("effectTargets", typeof(List<int>));
-
-            Distribution = (List<int>)info.GetValue("distribution", typeof(List<int>));
-            _costTargets.AddRange(costTargetsIds.Select(id => (ITarget)ctx.Recorder.GetObject(id)));
-            _effectTargets.AddRange(
-                effectTargetsIds.Select(id => (ITarget)ctx.Recorder.GetObject(id))
-            );
         }
 
         public int Count
@@ -80,14 +65,31 @@
             );
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public void WriteJson(JObject json, SerializationContext ctx)
         {
-            var costTargetsIds = _costTargets.Select(x => x.Id).ToList();
-            var effectTargetsIds = _effectTargets.Select(x => x.Id).ToList();
+            json["costTargets"] = new JArray(_costTargets.Select(x => x.Id));
+            json["effectTargets"] = new JArray(_effectTargets.Select(x => x.Id));
+            json["distribution"] = Distribution != null ? new JArray(Distribution) : null;
+        }
 
-            info.AddValue("costTargets", costTargetsIds);
-            info.AddValue("effectTargets", effectTargetsIds);
-            info.AddValue("distribution", Distribution);
+        public static Targets ReadJson(JObject json, SerializationContext ctx)
+        {
+            var targets = new Targets();
+            var costTargetIds = json["costTargets"]!.ToObject<List<int>>()!;
+            var effectTargetIds = json["effectTargets"]!.ToObject<List<int>>()!;
+
+            var distributionToken = json["distribution"];
+            targets.Distribution =
+                distributionToken != null && distributionToken.Type != JTokenType.Null
+                    ? distributionToken.ToObject<List<int>>()
+                    : null;
+
+            foreach (var id in costTargetIds)
+                targets._costTargets.Add((ITarget)ctx.Recorder.GetObject(id));
+            foreach (var id in effectTargetIds)
+                targets._effectTargets.Add((ITarget)ctx.Recorder.GetObject(id));
+
+            return targets;
         }
 
         public Targets AddCost(ITarget target)

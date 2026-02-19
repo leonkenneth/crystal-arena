@@ -1,7 +1,7 @@
 ﻿namespace CrystalArena.Decisions
 {
     public abstract class DecisionHandler<TDecision, TResult> : GameObject, IDecisionHandler
-        where TResult : class
+        where TResult : DecisionResult
         where TDecision : Decision
     {
         protected TDecision D;

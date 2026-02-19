@@ -2,6 +2,7 @@
 {
     using Events;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
     public class TurnInfo : GameObject, IHashable
     {
@@ -61,6 +62,17 @@
         public int CalculateHash(HashCalculator calc)
         {
             return HashCalculator.Combine(Step.GetHashCode(), TurnCount, State.GetHashCode());
+        }
+
+        public JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["step"] = Step.ToString();
+            json["turnCount"] = TurnCount;
+            json["state"] = State;
+            json["stateCount"] = StateCount;
+            return json;
         }
 
         public void NextTurn()

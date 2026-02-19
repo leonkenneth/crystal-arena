@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Security.Policy;
     using CrystalArena.Infrastructure;
+    using Newtonsoft.Json.Linq;
 
     public class MainDeck : OrderedZone, IMainDeckQuery
     {
@@ -35,6 +36,25 @@
                 return Count;
 
             return HashCalculator.Combine(Count, calc.Calculate(visible, true));
+        }
+
+        public override JObject DebugCalculateHash(HashCalculator calc)
+        {
+            var json = new JObject();
+            json["hash"] = CalculateHash(calc);
+            json["zone"] = Name.ToString();
+            json["count"] = Count;
+            var cards = new JArray();
+            foreach (var card in this)
+            {
+                var c = new JObject();
+                c["name"] = card.Name;
+                c["visible"] = card.IsVisibleToPlayer(Owner);
+                c["hash"] = calc.Calculate(card);
+                cards.Add(c);
+            }
+            json["cards"] = cards;
+            return json;
         }
 
         public void PutOnTop(Card card)

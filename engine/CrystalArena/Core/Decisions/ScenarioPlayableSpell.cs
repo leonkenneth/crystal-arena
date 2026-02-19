@@ -1,16 +1,11 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-    using System.Runtime.Serialization;
     using CrystalArena.Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Serializable]
     public class ScenarioPlayableSpell : PlayableSpell
     {
         public ScenarioPlayableSpell() { }
-
-        protected ScenarioPlayableSpell(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
 
         public override void Play()
         {
@@ -30,6 +25,25 @@
                 manaCost = manaCost.Add(ActivationParameters.X.Value.Colorless());
 
             Controller.AddManaToManaPool(manaCost);
+        }
+
+        public new void WriteJson(JObject json, SerializationContext ctx)
+        {
+            json["card"] = Card.Id;
+            json["index"] = Index;
+            var paramsJson = new JObject();
+            ActivationParameters.WriteJson(paramsJson, ctx);
+            json["parameters"] = paramsJson;
+        }
+
+        public static new ScenarioPlayableSpell ReadJson(JObject json, SerializationContext ctx)
+        {
+            var spell = new ScenarioPlayableSpell();
+            spell.Card = (Card)ctx.Recorder.GetObject(json["card"]!.Value<int>());
+            spell.Index = json["index"]!.Value<int>();
+            var paramsJson = (JObject)json["parameters"]!;
+            spell.ActivationParameters = ActivationParameters.ReadJson(paramsJson, ctx);
+            return spell;
         }
     }
 }

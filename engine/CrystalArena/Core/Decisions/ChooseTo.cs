@@ -72,7 +72,7 @@ namespace CrystalArena.Decisions
 
             protected override void ExecuteQuery()
             {
-                Result = (BooleanResult)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<BooleanResult>();
             }
         }
 

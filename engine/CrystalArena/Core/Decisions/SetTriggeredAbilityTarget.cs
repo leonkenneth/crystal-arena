@@ -165,7 +165,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenTargets)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenTargets>();
             }
         }
 

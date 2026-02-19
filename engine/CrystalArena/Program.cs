@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using Sentry;
 
 namespace CrystalArena;
@@ -87,6 +90,30 @@ sealed class Program
             {
                 var ui = GameRepository.ResolveUi(id);
                 return ui.Shell.ToJson();
+            }
+        );
+        app.MapPost(
+            "/games/{id}/save",
+            (string id) =>
+            {
+                var ui = GameRepository.ResolveUi(id);
+                var game = ui.Match.Game;
+                var save = game.Save();
+                return save.ToJson().ToString();
+            }
+        );
+        app.MapPost(
+            "/games/{id}/restore",
+            async (string id, HttpRequest request) =>
+            {
+                using var reader = new StreamReader(request.Body);
+                var savedGameJson = await reader.ReadToEndAsync();
+                var savedGame = SavedGame.FromJson(JObject.Parse(savedGameJson));
+                var ui = GameRepository.ResolveUi(id, createIfMissing: true);
+                var startScreenVM = ui.Dialogs.StartScreen.Create();
+
+                Task.Run(() => startScreenVM.ResumeGame(savedGame));
+                return new { Uuid = ui.GameId, ui.PlayerToken };
             }
         );
         app.MapGet(

@@ -1,14 +1,10 @@
-﻿namespace CrystalArena.Decisions
+namespace CrystalArena.Decisions
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.Serialization;
     using Infrastructure;
+    using Newtonsoft.Json.Linq;
 
-    [Copyable, Serializable]
-    public class ChosenBlocker : ISerializable
+    [Copyable]
+    public class ChosenBlocker : DecisionResult
     {
         public static readonly ChosenBlocker None = new();
         public Card? Blocker;
@@ -20,23 +16,24 @@
             Blocker = card;
         }
 
-        private ChosenBlocker(SerializationInfo info, StreamingContext context)
+        public override string TypeName => nameof(ChosenBlocker);
+
+        public override void WriteJson(JObject json, SerializationContext ctx)
         {
-            var ctx = (SerializationContext)context.Context;
-
-            var cardId = (int?)info.GetValue("card", typeof(int?));
-
-            if (cardId.HasValue)
-            {
-                Blocker = (Card)ctx.Recorder.GetObject(cardId.Value);
-            }
+            json["card"] = Blocker?.Id;
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        internal static new ChosenBlocker ReadJson(JObject json, SerializationContext ctx)
         {
-            var cardId = Blocker?.Id;
+            var cardToken = json["card"];
+            if (cardToken != null && cardToken.Type != JTokenType.Null)
+            {
+                var cardId = cardToken.Value<int>();
+                var card = (Card)ctx.Recorder.GetObject(cardId);
+                return new ChosenBlocker(card);
+            }
 
-            info.AddValue("card", cardId);
+            return new ChosenBlocker();
         }
     }
 }

@@ -198,7 +198,7 @@
 
             protected override void ExecuteQuery()
             {
-                Result = (ChosenBlocker)Game.Recorder.LoadDecisionResult();
+                Result = Game.Recorder.LoadDecisionResult<ChosenBlocker>();
             }
         }
 
