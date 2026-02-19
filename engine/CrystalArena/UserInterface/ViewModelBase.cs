@@ -86,9 +86,7 @@ namespace CrystalArena.UserInterface
             Ui.Publisher.Publish(new PlayersInterestChanged { Visual = card });
         }
 
-        protected void SaveGame()
-        {
-        }
+        protected void SaveGame() { }
 
         protected void HandleException(Exception ex)
         {

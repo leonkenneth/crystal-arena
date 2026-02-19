@@ -4,7 +4,7 @@ namespace CrystalArena.UserInterface.MessageBox
     {
         Ok,
         YesNo,
-        YesNoCancel
+        YesNoCancel,
     }
 
     public enum ButtonResult
@@ -13,6 +13,6 @@ namespace CrystalArena.UserInterface.MessageBox
         Ok,
         Yes,
         No,
-        Cancel
+        Cancel,
     }
 }
