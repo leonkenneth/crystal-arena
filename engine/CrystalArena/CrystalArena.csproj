@@ -8,18 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro.Core" Version="4.0.212" />
-    <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="Caliburn.Micro.Core" Version="5.0.258" />
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
     <PackageReference Include="Castle.Windsor" Version="6.0.0" />
-    <PackageReference Include="log4net" Version="3.0.0-preview.2" />
-    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
-    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
+    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Sentry.AspNetCore" Version="4.12.1" />
-    <PackageReference
-      Include="System.Runtime.Serialization.Formatters"
-      Version="10.0.0-rc.2.25502.107"
-    />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Sentry.AspNetCore" Version="6.1.0" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
   </ItemGroup>
 </Project>
