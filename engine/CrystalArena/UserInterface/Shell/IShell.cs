@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using MsBox.Avalonia.Enums;
+using CrystalArena.UserInterface.MessageBox;
 
 namespace CrystalArena.UserInterface.Shell
 {

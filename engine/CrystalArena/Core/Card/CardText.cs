@@ -6,8 +6,6 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Avalonia.Media.Imaging;
-    using Media;
 
     public class CardText : IEnumerable<Token>
     {
@@ -303,9 +301,9 @@
         public ManaSymbolToken(string value)
             : base(value) { }
 
-        public Bitmap Image
+        public object? Image
         {
-            get { return MediaMainDeck.GetImage(Value + ".png"); }
+            get { return null; }
         }
     }
 }

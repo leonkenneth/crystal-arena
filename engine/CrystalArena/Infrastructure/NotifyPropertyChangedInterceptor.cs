@@ -1,8 +1,7 @@
-﻿namespace CrystalArena.Infrastructure
+namespace CrystalArena.Infrastructure
 {
     using System.ComponentModel;
     using System.Reflection;
-    using Caliburn.Micro;
     using Castle.DynamicProxy;
 
     public interface INotifyPropertyChangedRaiser
@@ -37,11 +36,9 @@
             {
                 var propertyName = invocation.Method.PropertyName();
 
-                Execute.OnUIThread(() =>
-                    _propertyChangedSubscribers(
-                        invocation.InvocationTarget,
-                        new PropertyChangedEventArgs(propertyName)
-                    )
+                _propertyChangedSubscribers(
+                    invocation.InvocationTarget,
+                    new PropertyChangedEventArgs(propertyName)
                 );
             }
 
@@ -54,13 +51,9 @@
                 var updatesAttribute = memberToInspect.GetAttribute<UpdatesAttribute>();
                 foreach (var propertyName in updatesAttribute.PropertyNames)
                 {
-                    var propName = propertyName;
-
-                    Execute.OnUIThread(() =>
-                        _propertyChangedSubscribers(
-                            invocation.Proxy,
-                            new PropertyChangedEventArgs(propName)
-                        )
+                    _propertyChangedSubscribers(
+                        invocation.Proxy,
+                        new PropertyChangedEventArgs(propertyName)
                     );
                 }
             }
@@ -91,11 +84,9 @@
                 return false;
 
             var propertyName = (string)invocation.Arguments[0];
-            Execute.OnUIThread(() =>
-                _propertyChangedSubscribers(
-                    invocation.Proxy,
-                    new PropertyChangedEventArgs(propertyName)
-                )
+            _propertyChangedSubscribers(
+                invocation.Proxy,
+                new PropertyChangedEventArgs(propertyName)
             );
 
             return true;

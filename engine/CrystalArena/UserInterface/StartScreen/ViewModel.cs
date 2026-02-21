@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Windows;
     using Infrastructure;
-    using Media;
     using SelectDeck;
     using Deck = CrystalArena.Deck;
 
@@ -70,7 +69,7 @@
                                             player2: new PlayerParameters
                                             {
                                                 Name = NameGenerator.GenerateRandomName(
-                                                    MediaMainDeck.GetPlayerUnitNames()
+                                                    Array.Empty<string>()
                                                 ),
                                                 AvatarId = RandomEx.Next(),
                                                 Deck = deck2,
@@ -119,7 +118,7 @@
                     },
                     player2: new PlayerParameters
                     {
-                        Name = NameGenerator.GenerateRandomName(MediaMainDeck.GetPlayerUnitNames()),
+                        Name = NameGenerator.GenerateRandomName(Array.Empty<string>()),
                         AvatarId = RandomEx.Next(),
                         Deck = deck2,
                     },

@@ -1,4 +1,4 @@
-﻿using MsBox.Avalonia.Enums;
+﻿using CrystalArena.UserInterface.MessageBox;
 using Sentry;
 
 namespace CrystalArena.UserInterface
@@ -86,19 +86,7 @@ namespace CrystalArena.UserInterface
             Ui.Publisher.Publish(new PlayersInterestChanged { Visual = card });
         }
 
-        protected void SaveGame()
-        {
-            if (Match == null)
-                return;
-
-            var saveFileHeader = new SaveFileHeader();
-            object gameData;
-
-            saveFileHeader.Description = string.Format("Single match, {0}", Match.Description);
-            gameData = Match.Save();
-
-            SavedGames.Write(saveFileHeader, gameData);
-        }
+        protected void SaveGame() { }
 
         protected void HandleException(Exception ex)
         {

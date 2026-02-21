@@ -4,7 +4,6 @@
     using System.IO;
     using System.Reflection;
     using Infrastructure;
-    using Media;
 
     internal class Program
     {

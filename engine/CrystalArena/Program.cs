@@ -5,8 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.ReactiveUI;
 using CrystalArena.UserInterface;
 using CrystalArena.UserInterface.Shell;
 using Microsoft.AspNetCore.Builder;
@@ -22,10 +20,6 @@ public record CreateGameRequest(string[] PlayerDeck, string[] ComputerDeck);
 
 sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
-    [STAThread]
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -206,13 +200,4 @@ sealed class Program
 
         app.Run();
     }
-
-    // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp() =>
-        AppBuilder
-            .Configure<App>()
-            .UsePlatformDetect()
-            .WithInterFont()
-            .LogToTrace()
-            .UseReactiveUI();
 }
