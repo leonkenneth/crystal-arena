@@ -8,20 +8,21 @@ It's adapted from [magicgrove](https://github.com/pinky39/grove), but as an API 
 
 # Screenshots and demo
 
-![Screenshot](https://sh-misc.s3.fr-par.scw.cloud/crystal-arena/screen1.png)
-[Live demo](https://crystal-arena.vercel.app/)
+<img src="https://sh-misc.s3.fr-par.scw.cloud/crystal-arena/screen1.png" width="500">
+
+[Demo](https://crystal-arena.vercel.app/)
 
 ## Current State
 
-- Very few cards implemented: a couple Opus 23 ones - and even then with quite a few bugs. [See list in codebase](https://github.com/leonkenneth/crystal-arena/tree/main/engine/CrystalArena/FFTCGCards)
-- Lots of bugs and known issues (see [meta-issue](https://github.com/leonkenneth/crystal-arena/issues/32))
+- Very few cards implemented: a couple Opus 23 ones - and even then with quite a few bugs.
+- Lots of bugs and known issues (see [issue](https://github.com/leonkenneth/crystal-arena/issues/32))
 - Missing major mechanics
 - Still a lot of cleaning pending from the MTG origin of the engine
 
 ## Contributing
 
 Don't hesitate to open an issue to start a discussion.
-Please check or comment on the [known issues and missing mechanics](https://github.com/leonkenneth/crystal-arena/issues/32) meta-issue though: there is _a lot_ missing or buggy.
+Please check the [known issues and missing mechanics](https://github.com/leonkenneth/crystal-arena/issues/32) issue though: there is _a lot_ missing or buggy.
 
 Help is especially needed to implement cards and related mechanics.
 
@@ -48,5 +49,4 @@ Then open http://localhost:3000.
 ## Credits
 
 - FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd. This is only a fan endeavor
-- Engine is a modification of https://github.com/pinky39/grove?tab=readme-ov-file#how-ai-is-implemented
-- Components are licensed separately — see each subdirectory's LICENSE file
+- Engine is a modification of https://github.com/pinky39/grove?tab=readme-ov-file#how-ai-is-implemented and is GPL-licensed
