@@ -44,7 +44,8 @@ public class Opus23_007C_Samurai : CardTemplateSource
                                     damage.Source == target
                                     && damage.Target.IsPermanent()
                                     && damage.Target.Permanent().Is().Forward,
-                                dmg => dmg.Amount += 1000
+                                dmg => dmg.Amount += 1000,
+                                hashDependency: target
                             ),
                         true
                     );

@@ -8,21 +8,30 @@ namespace CrystalArena
     {
         private readonly Action<IDamage> _replacement;
         private readonly Predicate<IDamage> _condition;
+        private readonly IHashable _hashDependency;
 
         private ReplaceDamage() { }
 
-        public ReplaceDamage(Predicate<IDamage> condition, Action<IDamage> replacement)
+        public ReplaceDamage(
+            Predicate<IDamage> condition,
+            Action<IDamage> replacement,
+            IHashable hashDependency
+        )
         {
             _replacement = replacement;
             _condition = condition;
+            _hashDependency =
+                hashDependency ?? throw new ArgumentNullException(nameof(hashDependency));
         }
 
         public override int CalculateHash(HashCalculator calc)
         {
+            // Delegate hashes are not stable across equivalent game instances.
             return HashCalculator.Combine(
                 GetType().GetHashCode(),
-                calc.Calculate(_replacement),
-                calc.Calculate(_condition)
+                _condition.Method.GetHashCode(),
+                _replacement.Method.GetHashCode(),
+                calc.Calculate(_hashDependency)
             );
         }
 

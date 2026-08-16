@@ -39,7 +39,8 @@ public class Opus23_004R_Kefka : CardTemplateSource
                 {
                     return new AddDamageRedirection(modifier => new ReplaceDamage(
                         dmg => dmg.Source == modifier.SourceCard,
-                        dmg => dmg.Amount *= 2
+                        dmg => dmg.Amount *= 2,
+                        hashDependency: modifier.SourceCard
                     ));
                 });
                 p.Condition = cond => cond.YouHaveLessThanXLife(2);
