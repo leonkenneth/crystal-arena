@@ -15,6 +15,11 @@
             _colors.Add(color);
         }
 
+        public SetColors(params CardColor[] colors)
+        {
+            _colors.AddRange(colors);
+        }
+
         public override void Apply(ColorsOfCard colors)
         {
             _colorsOfCard = colors;

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author New Cards"
+  short_description: "Implement and test CrystalArena cards"
+  default_prompt: "Use $author-new-cards to implement a new CrystalArena card test-first."
