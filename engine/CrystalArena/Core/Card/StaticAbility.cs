@@ -179,7 +179,7 @@
             OwningCard = owningCard;
 
             _lifetimes.Initialize(ChangeTracker);
-            _isEnabled.Initialize(ChangeTracker);
+            _isEnabled.Initialize(ChangeTracker, owningCard);
             _isActivated.Initialize(ChangeTracker);
 
             if (_enabledInAllZones || owningCard.Zone == Zone.Battlefield)

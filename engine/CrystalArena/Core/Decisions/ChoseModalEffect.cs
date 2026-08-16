@@ -54,7 +54,8 @@ namespace CrystalArena.Decisions
 
             protected override void ExecuteQuery()
             {
-                var chosen = Game.Random.RollADice(NumberOfChoices);
+                // Replayed decisions must not advance Game.Random.
+                var chosen = Infrastructure.RandomEx.Next(1, NumberOfChoices);
                 Result = new ChosenModalEffectIndex(chosen);
             }
         }

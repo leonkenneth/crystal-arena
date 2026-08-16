@@ -591,40 +591,47 @@ namespace CrystalArena
                 return Zone.GetHashCode();
             }
 
+            // Only AI-search copies use the cache because not every nested change invalidates it.
+            // Cards with the same name deliberately share identity to reduce the search tree.
+            if (!Ai.IsSearchInProgress)
+            {
+                return ComputeHash(calc);
+            }
+
             if (_hash.Value.HasValue == false)
             {
-                // this value can be same for different cards with same NAME,
-                // sometimes this is good sometimes not, currently we favor
-                // smaller tree sizes and less accurate results.
-                // if tree size is no longer a problem we will replace NAME with
-                // a guid.
-                _hash.Value = HashCalculator.Combine(
-                    Name.GetHashCode(),
-                    _hasSummoningSickness.Value.GetHashCode(),
-                    UsageScore.GetHashCode(),
-                    IsTapped.GetHashCode(),
-                    Damage,
-                    HasRegenerationShield.GetHashCode(),
-                    HasLeathalDamage.GetHashCode(),
-                    calc.Calculate(_strength),
-                    Level.GetHashCode(),
-                    Counters.GetHashCode(),
-                    calc.Calculate(_typeOfCard.Value),
-                    Zone.GetHashCode(),
-                    _isRevealed.Value.GetHashCode(),
-                    _isPeeked.Value.GetHashCode(),
-                    _isHidden.Value.GetHashCode(),
-                    calc.Calculate(_simpleAbilities),
-                    calc.Calculate(_staticAbilities),
-                    calc.Calculate(_triggeredAbilities),
-                    calc.Calculate(_activatedAbilities),
-                    calc.Calculate(_protections),
-                    calc.Calculate(_attachments),
-                    calc.Calculate(_colors)
-                );
+                _hash.Value = ComputeHash(calc);
             }
 
             return _hash.Value.GetValueOrDefault();
+        }
+
+        private int ComputeHash(HashCalculator calc)
+        {
+            return HashCalculator.Combine(
+                Name.GetHashCode(),
+                _hasSummoningSickness.Value.GetHashCode(),
+                UsageScore.GetHashCode(),
+                IsTapped.GetHashCode(),
+                Damage,
+                HasRegenerationShield.GetHashCode(),
+                HasLeathalDamage.GetHashCode(),
+                calc.Calculate(_strength),
+                Level.GetHashCode(),
+                Counters.GetHashCode(),
+                calc.Calculate(_typeOfCard.Value),
+                Zone.GetHashCode(),
+                _isRevealed.Value.GetHashCode(),
+                _isPeeked.Value.GetHashCode(),
+                _isHidden.Value.GetHashCode(),
+                calc.Calculate(_simpleAbilities),
+                calc.Calculate(_staticAbilities),
+                calc.Calculate(_triggeredAbilities),
+                calc.Calculate(_activatedAbilities),
+                calc.Calculate(_protections),
+                calc.Calculate(_attachments),
+                calc.Calculate(_colors)
+            );
         }
 
         public Player GetControllerOfACardThisIsAttachedTo()
